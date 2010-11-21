@@ -1,0 +1,19 @@
+func doDraw(Data)
+  fvar(b,obj)
+  b = Bitmap
+  switch(DrawSource)
+    case 0:
+      obj = b + '.'
+      b = ''
+    case 1:
+      obj = ''
+      lng.decl_loc_var(dc, 'HDC') 
+      println(dc, ' := GetDC(', e_int(b), ');')
+      b = dc && ', '
+    case 2:
+      obj = ''
+      b = e_int(b) && ', '
+  end
+  println(obj, 'SetPixel(', b, X, ', ', Y, ', ', Color, ');')
+  event(onDraw, _data_)
+end

@@ -1,0 +1,8 @@
+func Point3D(_data)
+  fvar(pt)
+  pt = ' ' & ' ' & ' '
+  pt[0] = X
+  pt[1] = Y
+  pt[2] = Z
+  return(pt)
+end

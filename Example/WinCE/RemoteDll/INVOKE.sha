@@ -1,0 +1,75 @@
+Make(delphi)
+Add(MainForm,5232596,21,105)
+{
+ Left=20
+ Top=105
+ Width=602
+ Height=362
+}
+Add(CeInit,9431712,287,84)
+{
+ link(onInit,6314562:doCase,[])
+}
+Add(Button,2947817,154,84)
+{
+ Left=10
+ Top=15
+ Caption="Init"
+ link(onClick,6421277:doStart,[])
+}
+Add(Button,16332679,154,140)
+{
+ Left=10
+ Top=50
+ Caption="UnInit"
+ link(onClick,9431712:doUnInit,[(264,146)(264,97)])
+}
+Add(Thread,6421277,217,84)
+{
+ Delay=0
+ FastStop=0
+ link(onExec,9431712:doInit,[])
+}
+Add(Message,12638918,399,91)
+{
+ Message="I`m connected"
+ Caption="All right"
+}
+Add(Edit,13371666,273,294)
+{
+ Left=100
+ Top=15
+ Width=140
+ Text="\MySLib.dll"
+}
+Add(Button,15995413,217,378)
+{
+ Left=10
+ Top=95
+ link(onClick,9516968:doCall,[])
+}
+Add(Memo,3312869,217,280)
+{
+ Left=100
+ Top=50
+ Width=305
+ Height=225
+ Strings=#13:HiAsm Example|13:    Привет!!!|
+ ScrollBars=2
+}
+Add(CeCallDLL,9516968,273,378)
+{
+ FuncName="testme"
+ link(onEnd,6747481:doMessage,[])
+ link(DLLName,13371666:Text,[])
+ link(Param,3312869:Text,[(293,340)(223,340)])
+}
+Add(Message,6747481,336,378)
+{
+ link(Message,9516968:Data,[(342,366)(310,366)(310,422)(279,422)])
+}
+Add(Case,6314562,336,84)
+{
+ Value=Integer(0)
+ link(onTrue,12638918:doMessage,[])
+}

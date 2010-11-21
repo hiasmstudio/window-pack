@@ -1,0 +1,3 @@
+func Point()
+  return(X & Y)
+end

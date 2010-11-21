@@ -1,0 +1,5 @@
+func doMessage(_data)
+  println('MessageBox(', isset(WIN_PARENT) ? (WIN_PARENT + '.Handle') : '0', ', PChar(', Message, '), ', 'PChar(', Caption, '), MB_OK);')
+  event(onMessage)
+end
+

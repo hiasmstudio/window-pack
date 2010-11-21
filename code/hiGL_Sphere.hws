@@ -1,0 +1,16 @@
+func Init()
+  fvar(old)
+  old = block.select(BLK_UNITS)
+  if(not block.intext('OpenGL'))
+    print(',', 'OpenGL')
+  end
+  if(not block.intext('DGlut'))
+    print(',', 'DGlut')
+  end
+  block.select(old)
+end
+
+func doDraw(_data)
+  println('gluSphere(quadObj,', Radius, ',', Slices, ',', Stacks, ');')
+  event(onDraw, _data_)
+end

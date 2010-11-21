@@ -1,0 +1,127 @@
+Make(delphi)
+Add(MainForm,14489239,21,42)
+{
+ Left=20
+ Top=105
+ Width=187
+ Height=138
+ Caption="File streams"
+}
+Add(CeInit,9431712,238,105)
+{
+ link(onInit,15907080:doEvent,[])
+}
+Add(Button,2947817,21,98)
+{
+ Left=10
+ Top=15
+ Caption="Init"
+ link(onClick,5496669:doStartMonitoring,[])
+}
+Add(Button,16332679,126,154)
+{
+ Left=10
+ Top=50
+ Caption="UnInit"
+ link(onClick,11747345:doEvent2,[(170,160)(170,125)])
+}
+Add(Button,6242226,49,336)
+{
+ Left=100
+ Top=15
+ Caption="From DEV"
+ link(onClick,2687588:doOpen,[])
+}
+Add(Button,14511753,14,441)
+{
+ Left=100
+ Top=50
+ Caption="To DEV"
+ link(onClick,16276208:doExecute,[])
+}
+Add(CeFileStream,2687588,182,336)
+{
+ link(onLoad,10820457:doExecute,[])
+ link(FileName,2294192:Var2,[])
+}
+Add(SDialog,10820457,231,336)
+{
+ link(onExecute,16053069:doValue,[])
+}
+Add(DoData,11857990,329,336)
+{
+ link(onEventData,7128083:doEvent1,[])
+ link(Data,2687588:Stream,[(335,324)(270,324)(270,380)(188,380)])
+}
+Add(FileStream,8359569,441,322)
+{
+ Mode=1
+ AutoCopy=0
+ Point(doCopyFromStream)
+ link(FileName,16053069:Value,[(447,310)(367,310)(367,380)(286,380)])
+}
+Add(Memory,16053069,280,336)
+{
+ link(onData,11857990:doData,[])
+}
+Add(CeFileStream,12090701,189,427)
+{
+ Mode=1
+ AutoCopy=0
+ Point(doCopyFromStream)
+ link(FileName,2294192:Var3,[(195,317)])
+}
+Add(ODialog,16276208,70,441)
+{
+ link(onExecute,16718163:doOpen,[])
+}
+Add(FileStream,16718163,119,441)
+{
+ link(onLoad,12090701:doCopyFromStream,[])
+}
+Add(Hub,7128083,378,336)
+{
+ link(onEvent1,8359569:doCopyFromStream,[])
+ link(onEvent2,13422877:In,[(432,349)(432,370)])
+}
+Add(CeNotify,5496669,70,98)
+{
+ link(onNotify,16175709:doEvent,[])
+}
+Add(IndexToChanel,16175709,126,98)
+{
+ link(onEvent1,11747345:doEvent1,[(170,104)(170,118)])
+ link(onEvent2,9431712:doInit,[])
+}
+Add(Hub,11747345,182,112)
+{
+ InCount=2
+ OutCount=1
+ link(onEvent1,9431712:doUnInit,[])
+}
+Add(Message,13707367,336,105)
+{
+ Message="I`m connected"
+ Caption="Hello"
+}
+Add(IndexToChanel,15907080,287,105)
+{
+ link(onEvent1,13707367:doMessage,[])
+}
+Add(LineBreak,14592638,49,378)
+{
+ Caption="close"
+ link(Out,2687588:doClose,[(128,384)(128,349)])
+ Primary=[13422877,406,-14]
+}
+Add(Edit,3727165,182,266)
+{
+ Left=10
+ Top=85
+ Width=145
+ Text="\TestFile.bin"
+}
+Add(GetDataEx,2294192,175,308)
+{
+ link(Data,3727165:Text,[])
+}

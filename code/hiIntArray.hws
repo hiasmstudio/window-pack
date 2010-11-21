@@ -1,0 +1,24 @@
+func Init
+  lang(arr:array)
+  if(isndef(Numbers))
+    fvar(s, n, i, old)
+
+    s = Numbers
+    if(_arr.count(s))
+      for(i = 0; i < _arr.count(s); i++)
+        n &= s[i][0]
+      end  
+      s = _arr.join(n, ',') 
+    else
+      s = ''
+    end
+    old = block.select(BLK_CONSTS)
+    println(arr, ':array[0..' + (i-1) + '] of integer = (' + code(s) + ');')
+    block.select(old)
+  end
+  sub(arr, 13 & 1)
+end
+
+func Array()
+  return(arr)
+end

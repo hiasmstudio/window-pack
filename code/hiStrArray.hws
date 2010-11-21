@@ -1,0 +1,23 @@
+func Init
+  lang(arr:array)
+  if(isndef(Strings))
+    fvar(s, old, c)
+
+    s = Strings
+    c = _arr.count(s)
+    if(c)
+      s = _arr.join(s, ',') 
+    else
+      s = ''
+    end
+    
+    old = block.select(BLK_CONSTS)
+    println(arr, ':array[0..' + (c-1) + '] of ' + ItemType + ' = (' + code(s) + ');')
+    block.select(old)
+  end
+  sub(arr, 13 & 2)
+end
+
+func Array()
+  return(arr)
+end

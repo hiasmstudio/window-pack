@@ -1,0 +1,26 @@
+func Init()
+  if(linked(Result) and linked(doLength))
+    lng.decl_loc_var(len, 'integer')
+  end
+end
+
+func _create(data)
+  return('Length(' && SrcStr && ')')
+end
+
+func doLength(Data)
+  if(linked(Result))
+    println(len, ' := ', _create(Data), ';')
+    event(onLength, len)
+  else
+    event(onLength, _create(Data))
+  end
+end
+
+func Result(Data)
+  if(linked(doLength))
+    return(len)
+  else
+    return(_create(Data))
+  end
+end

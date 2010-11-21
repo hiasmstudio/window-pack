@@ -1,0 +1,23 @@
+func Init
+  if(linked(Size) and linked(doGetSize))
+    lang(_size:int)
+    lng.decl_loc_var(_size,'integer')
+  end
+end
+
+func doGetSize(_data)
+  if(linked(Size))
+    println(_size, ' := high(', Array, ') + 1;')
+    event(onGetSize, _size)
+  else 
+    event(onGetSize, '(high(' && Array && ') + 1)')
+  end
+end
+
+func Size()
+  if(linked(doGetSize))
+    return(_size)
+  else
+    return('(high(' && Array && ') + 1)')
+  end
+end

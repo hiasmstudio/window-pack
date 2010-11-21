@@ -1,0 +1,20 @@
+func Init()
+  lng.decl_loc_var(si, 'string')
+end
+
+func _create(Data)
+  println(si, ' := ', SrcStr, ';')
+  println('Insert(', SubStr, ',', si, ',', Position, ');')
+end
+
+func doInsert(Data)
+  _create(Data)
+  event(onInsert, si)
+end
+
+func Result(Data)
+  if(not linked(doInsert))  
+    _create(Data)
+  end
+  return(si)
+end

@@ -1,0 +1,27 @@
+func doFor
+  fvar(old,step_code,end_num,start_num)
+  lang(i:int)
+  
+  end_num = End         
+  start_num = Start
+  
+  lng.decl_loc_var(i,'integer')
+  if(isndef(IncludeEnd))
+    end_num = end_num && ' - 1'
+  end
+  
+  println('for ', i, ' := ', start_num, ' to ', end_num, ' do')
+  lng.begin()
+    event(onEvent, i)
+  lng.end()
+
+  event(onStop)
+end
+
+func doStop
+  println('break;')
+end
+
+func Position
+  return(i)
+end

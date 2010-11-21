@@ -1,0 +1,116 @@
+Make(delphi)
+Add(MainForm,14489239,21,105)
+{
+ Left=20
+ Top=105
+ Width=322
+ Height=295
+ Caption="Search file on WinCE device"
+}
+Add(ChildPanelEx,3840002,77,105)
+{
+ link(onFString,9721921:doAdd,[])
+ link(onClick,9721921:doClear,[])
+}
+BEGIN_SDK
+  Add(EditMultiEx,4568423,21,21)
+  {
+   EventCount=#9:onFString|7:onClick|
+   Width=328
+   Height=326
+  }
+  Add(Panel,14946472,42,63)
+  {
+   Width=314
+   Height=60
+   Align=2
+   BevelInner=0
+  }
+  Add(CeInit,9431712,196,252)
+  {
+   link(onInit,16175709:doEvent,[])
+  }
+  Add(Button,2947817,63,252)
+  {
+   Left=5
+   Top=10
+   Caption="Init"
+   link(onClick,12211654:doStart,[])
+  }
+  Add(Button,16332679,63,308)
+  {
+   Left=5
+   Top=35
+   Caption="UnInit"
+   link(onClick,9431712:doUnInit,[(173,314)(173,265)])
+  }
+  Add(Thread,12211654,126,252)
+  {
+   Delay=0
+   FastStop=0
+   link(onExec,9431712:doInit,[])
+  }
+  Add(Message,13707367,301,252)
+  {
+   Message="I`m connected"
+   Caption="Hello"
+  }
+  Add(IndexToChanel,16175709,252,252)
+  {
+   link(onEvent1,13707367:doMessage,[])
+  }
+  Add(Button,663802,63,147)
+  {
+   Left=195
+   Top=35
+   Caption="Search"
+   link(onClick,7348808:doFastSearch,[(103,153)(103,167)])
+  }
+  Add(Edit,3809840,140,63)
+  {
+   Left=75
+   Top=10
+   Width=165
+   Text="\Windows"
+  }
+  Add(Edit,1964453,91,63)
+  {
+   Left=245
+   Top=10
+   Width=65
+   Text="*.*"
+  }
+  Add(Button,14848366,63,196)
+  {
+   Left=255
+   Top=35
+   Caption="Clear"
+   link(onClick,4568423:onClick,[(283,202)(283,34)])
+  }
+  Add(CeFileSearch,7348808,112,147)
+  {
+   Ext=""
+   Dir=""
+   SubDir=1
+   FullName=1
+   Point(doFastSearch)
+   Point(NamesArray)
+   Point(SizesArray)
+   link(onSearch,16011849:doString,[])
+   link(Ext,1964453:Text,[(118,121)(97,121)])
+   link(Dir,3809840:Text,[(125,121)(146,121)])
+  }
+  Add(FormatStr,16011849,168,147)
+  {
+   Mask="%1 - %2 байт"
+   link(onFString,4568423:onFString,[(274,153)(274,27)])
+   link(Str2,7348808:Size,[(181,135)(153,135)(153,191)(125,191)])
+  }
+END_SDK
+Add(ListBox,9721921,133,105)
+{
+ Top=60
+ Width=314
+ Height=210
+ Align=5
+}

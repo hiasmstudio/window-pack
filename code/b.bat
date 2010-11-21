@@ -1,0 +1,12 @@
+del hiInlineCode_*.*
+del hiMultiElement_*.*
+del hiChildPanel_*.*
+del hiChildForm_*.*
+del hiChildGroupBox_*.*
+del hiMultiElementEx_*.*
+del hiChildPanelEx_*.*
+del hiChildFormEx_*.*
+del hiChildGroupBoxEx_*.*
+del *.exe
+del *.or
+del *.dcu

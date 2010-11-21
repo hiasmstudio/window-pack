@@ -1,0 +1,33 @@
+Make(Delphi)
+Pos(0,0)
+Add(MultiElement,15071255,91,59)
+{
+ @Hint=#11:Поиск папок|
+}
+BEGIN_SDK
+  Add(EditMulti,14838,3,3)
+  {
+   EventCount=1
+   WorkCount=1
+   Width=265
+   Height=158
+   link(doWork1,40289:doSearch,[(54,9)(54,111)])
+  }
+  Add(Memory,15595,84,35)
+  {
+   Default=String(*.txt)
+   @Hint=#36:Расширение=расширение искомых файлов|
+  }
+  Add(FileSearch,40289,105,105)
+  {
+   Ext=""
+   MakeExt(Dir,директория в которой необходимо найти файлы,Папка)
+   link(onSearch,14838:onEvent1,[(192,111)(192,9)])
+   link(Ext,15595:Value,[(111,86)(90,86)])
+  }
+  Add(Icon,6000902,217,105)
+  {
+   Icon=[ZIP5E07000078DA636060044209090610C9E0C1CEC020C6C0C0A001C4402106030688380828B0338C8251300A46015EF07F150AA28A21641B356A0E7DE26B88823F270D805805813D0A18FEFCFFC3F0CFFF0FC3EFFFFF193E02F10F20FE53FF9FE19FFD7F86FFF240DC50CFF0FF803D10CB63E20740F10F4079A01E100600107B8243]
+   @Hint=#5:#main|
+  }
+END_SDK

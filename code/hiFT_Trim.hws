@@ -1,0 +1,26 @@
+func Init()
+  if(linked(Result) and linked(doTrim))
+    lng.decl_loc_var(strim, 'string')
+  end
+end
+
+func _create(data)
+  return('Trim(' && Text && ')')
+end
+
+func doTrim(Data)
+  if(linked(Result))
+    println(strim, ' := ', _create(Data), ';')
+    event(onTrim, strim)
+  else
+    event(onTrim, _create(Data))
+  end
+end
+
+func Result(Data)
+  if(linked(doTrim))
+    return(strim)
+  else
+    return(_create(Data))
+  end
+end

@@ -1,0 +1,1490 @@
+Make(delphi)
+Pos(41,0)
+Add(ToolBar,12433727,204,273)
+{
+ Left=4
+ Top=3
+ Width=60
+ Caption=0
+ Flat=1
+ Wrapable=1
+ Buttons=['=Обновить'=[ZIP3604000078DA9D92D10D8030084431710047F0D3091CC07FB762A92ED0B5D0A2445211883597D4348FA347B77D1D81D77A6A3935DD1A60BE0EEE73BD088844FC9B94E6323510919562FB2FEB89064BF13DB82F61D1E66BADAC863C7B78FC51B1868F304DCDCFE455565ECFA6BFE6C8CFE1B37F55A7407929E431CE5BE799CE9FFC3711CEDFA921BCF4E3E6E7F8CB5CA3D959F7EFDFC797A2F9FFD1018245D92F],'=Выход'=[ZIP3604000078DAA593B10E0151104557A21359CF176CA2118544A3581DA528B45AFF20F115EAAD542AAD52AD544A282444424224BE60EC1D6633C62A30C94D36EFCDB97BDFBCDD66A79EF5B8EAB1CAB10A4F65BCE0B1F1DCD7451E111445D1D712F6974A3CE26A34B694CB8DC9F7671F34A57C7EC2425FB5BA4E3C50BEBFA052E94095CABB82609BA858DC90734BF6D03CF66AB51DB55A7B56181E587A4D3C9C5B710ECBA31F7D52C2E935C96079E4B4BDE2A14B32601E9A47CE76FBC8B28C66E51C98A9E691BDDB3DB1D272C81C85776EFEC263BDD74B67EDFBE16579E4165E17CE65E7F189EFF7CFECA17BE50E2D8FEF45F3E086C36BE2A1CF6295F67E70A3D18D06830B3F6B1F087395BB411E7B7F60C1489FBE4BFB3DCA1CB9FEF8FF84BD03ED4AECCD]]
+ link(onClick,10041796:doEvent1,[])
+}
+Add(IndexToChanel,2440433,302,196)
+{
+ link(onEvent1,13986866:doWork3,[(362,202)])
+ link(onEvent2,1196250:doWork2,[])
+}
+Add(MainForm,16213434,57,105)
+{
+ Left=20
+ Top=105
+ Width=777
+ Height=524
+ Visible=1
+ Caption="-= EnumProcess =-   ver 3.00"
+ BorderStyle=3
+ Icon=[ZIP5E07000078DAB5D55D4C5A571C00F0BB64897BE9F6E0DA344D96366BB274DDCB1E96F46549932E59FAD0A6C9E81A37DC58DA6449BB255BB6AAD52A68159D9B3A0B7E4C5BBB6E156B4505148B8DA0F603455040E4E35240E15E1014E443BEEF8777E7A2D62E97ED693BFCCFCDB9E77FF8E59C732F07087A057C0E1E84E82B74BA00820E4010740C54D005BD0F6DF7D3E54801F4FF97060EA79CC32929669716178378B951C2DE6DB3D9F46D31FB2A9BFDE3E79F5DBE7891E9F4575C7DAEE885E577E1D1DFE1913B36D92D58DA0D4BBB6C920EDB503B3CD4661B14DAC402DB402B08EB400BDCFF5B63F935A623ABE7651C4FD3F6E9B47D320D2BD3D64729CB78CA3C96328DA6166529A32469184AEAC5C98581D47C7F42D797D18E096B6F301D79535DC635FBEC6EF3444BA5F2265729E0ED8590F7B75B014F0506DCE40A6FD4309DB1663EE6D1A9BB2B2D5AD5E28CC20462F691716ED26150F997E4668DC2A49B34CE81D44390B2EB54C069CBE78CB7FE9445F520EBA3280F4179282A4A8112D1B8B3ED8D7DE9B0294351FECC4EAC5154CEE1319DA98E26CC67025937BE33F87ABB91FF35AFB2F18FC2129DACAEFC0CAB67417A2F8091DB597A5DD5791C75770BEEB7822CB2EB709FB88ED79B4E76582F05A8A3DFA85EBBBDDA3FD24B068D2F395CA6A3E969C5D6EC2F9C1FEA9427B8EAEA1875C94EB0B591B336F2C385F8A1D3F7D452C99EC3AD623ADA3F8578D005B228410F132C853986F41527358146CABE287AEBB2E86D7910122152FDD29E5355C974CCA24E7CC34DCF87D85957EDD3104B8F3B6299B20BE7DEF9557A7C2ACA9FB32C27327B4E651EC7D6DF8547BC2FE603E2C16377B1694B8FF8CE9DF8E0A31EC9A9F96C6CD5B3F3C848DA115CAF603A56C96D22E607D9C0EEF30D511468BB1C4B2C166BD66809535488A4FC59CA974BD1F3A9C8E3AC8CF4129B41907506579F234E07E270214E8FD7E5F6AFF8D6977D0104F1BA1C1E87DD05DB57ECDEE032ED9497331DF4E17D22111E29828658D0D07968F01348FC29DD00B7C317E8EB60AE5FCE795DF1E5AB5D45EF4AAEBC27C8F73B4555222215B5371CF3FE7CC4CBDF8FD6BE89D6167AEB0E8040EBF6A3358548F53E0F6F5FE097C3E1A643F30D1F6BF8A784D7CA98CEDA93FB64260E28321921131B443C48C4024474156C3EBE81E0A1157CDD055E30CC6FC57CE62CBA883D5608CAF23841F503329B021499DE24692D4C539B6B60F3F1880F0F23C4861BBC603862C6611D669EC1C665C2D252A613D688B7B04C8E4AE6B418A0C8448888AFE726E62322687C79C929EEB3F5DCB275B69B5B9BEBBFFF8EE944B5C35B0446020A4B93594025C8D426998C12DB138BAD8135FA0D6A6D67EDAA88B3DC75565EF555DEF339AE976D11388963249EA5292C4553E94DB063C4EE1A7D06B5A9AF39A1F8D62238F34FE77CD622DF22412176B59D8911B935D254321430696CA36D86DE9A7FF9BFC8EA45846736EB984EC2D361F374D0A05C5F98F0CF8D233372E4D9A853298195C306F19DA94E7EDEAFD3679E1B2AF80FEB1BA01E06F524A83CEA2F36B8B711]
+ TaskBar=1
+ DragForm=0
+ Position=1
+ Point(Close)
+ Point(doVisible)
+ Point(Handle)
+ link(onCreate,16633208:doEvent1,[])
+}
+Add(PopupMenuEx,7748171,757,462)
+{
+ Menu=#25:Добавить процесс в список|25:Удалить процесс из списка|15:Очистить список|22:Запросить все процессы|29:Установить параметры процесса|
+ BumpText=0
+ Font=[MS Sans Serif,8,1,0,1]
+ SelColorLight=15263976
+ SelColorDark=12632256
+ Bitmaps=['Bitmap'=[ZIP3604000078DAA592C10D80200C4531710047F0E8040CE0DD9D188D91BC7BA816413F5540B0C98F50FAFA53645E74AF5CE843D3A1C1AB53E379E0CF31481195E4CA40B5F5AC7523275E1B630ACCBDB7D63A3183BCEC213DB047C84B1E7B843AF44116F3A999D10719E99FE399E1792553BAFF70571CFC8DEAA1F08D7FFB5F9249F95F79A288FBFA6690AD7D67D823B7AF518BFF83353FF846B675F61DD5DF8208],'Bitmap'=[ZIP3604000078DA73F235636100033320D600620128666450804840E591C17F86FFFFA981F3F2F2C0981CBD95F1AFFE6B32DCFF6FAFB1EC7F6A6A2A5EB549019BFEEBB1DFC0AADF80EBF6FF60BF2C9C66B8691E06AB8B72DB86D30DB63297FEC7C7C763C85B499C05DB8B4D2F0C5725BC069B116471F87F4A4A0A497AD1CD08343FFC3F3820EEBFB1D0F1FF3A6CD789D28BEE17903E6DD66BFFB3927A488E137D8E9B6033DCB58F90AC1FD9BF66FC0FFE47DA12EF06905EF43872967FF4DF4BE32E41332CC5CFE08CDF7887E7FF4DF9EEE334039F5E6433406AD0C51D651F80C541E98B9CF46F26F0F0BFAFCEC3FFD4CA8BA46000D2C0C5D8],'Bitmap'=[ZIP3604000078DA73F235636100033320D600620128666450804840E591C17F86FFFF41B8A2A282240CD307C379797960FCE1F77F82185D7F65FCABFF9A0CF7FFDB6B2CFB9F9A9A8AA276F5EAD5FF41CE84D149019BFEEBB1DFC0AADF80EBF6FF60BF2C0C3360D84DF330585D94DB360CF7C3CCB095B9F43F3E3E1E43AF95C459B0BD20BDD8FC0F12AB4A780D3623C8E2F0FF949414B09B39393951F462F33F4C3F480E6646A0F9E1FFC10171FF8D858EFFD761BB0ED74B483FC84E985F40FAB459AFFDCF4AEA81BB85907E18D6E7B80936C35DFB08583FBEF843D68FEE5F33FE07FF236D116E20A41FA417164730FB9CE51FFDF7D2B80B77072EFD96E267E07A91C303E4A67887E7FF4DF9EE83CDC0A61F592FCC0EF434003203A4065DBFA3EC03B038287DC1F4C168E4B48BCBFF66020FFFFBEA3CFC8F9E1789CD3FD830B1F917005EACCDD9],'Bitmap'=[ZIP3604000078DA9D92D10D8030084431710047F0D3091CC07FB762A92ED0B5D0A2445211883597D4348FA347B77D1D81D77A6A3935DD1A60BE0EEE73BD088844FC9B94E6323510919562FB2FEB89064BF13DB82F61D1E66BADAC863C7B78FC51B1868F304DCDCFE455565ECFA6BFE6C8CFE1B37F55A7407929E431CE5BE799CE9FFC3711CEDFA921BCF4E3E6E7F8CB5CA3D959F7EFDFC797A2F9FFD1018245D92F],'Bitmap'=[ZIP3604000078DA73F235636100033320D600620128666450804840E591C17F86FFFF29C1BEBEBE24616CFA8905F8F4C3CDFF8FDD4D84F40F75FBF1EA21D1FDC8EA2F5FBE8CD3FDD3180C51E4D0D5C2F8301A390D80F422EBC7A507998661101F593F3AC6A7178661FA71A5697C7A09E94736031B46763F39790B39FC28CDBF00AAC0E020]]
+ link(MenuItemIdx,13932232:doEvent,[])
+}
+Add(PopupMenuEx,8464246,253,196)
+{
+ Menu=#10:Развернуть|5:Выход|
+ BumpText=0
+ Font=[MS Sans Serif,8,1,0,1]
+ SelColorLight=15263976
+ SelColorDark=12632256
+ Bitmaps=['Maximaze'=[ZIP3604000078DA73F235636100033320D600620128666450804840E591C17F86FFFF070766201163D14F2C18D53F3CF55323FD00E9161C18590DF5ED1F180C004D470FA4],'Exit'=[ZIP3604000078DAA593B10E0151104557A21359CF176CA2118544A3581DA528B45AFF20F115EAAD542AAD52AD544A282444424224BE60EC1D6633C62A30C94D36EFCDB97BDFBCDD66A79EF5B8EAB1CAB10A4F65BCE0B1F1DCD7451E111445D1D712F6974A3CE26A34B694CB8DC9F7671F34A57C7EC2425FB5BA4E3C50BEBFA052E94095CABB82609BA858DC90734BF6D03CF66AB51DB55A7B56181E587A4D3C9C5B710ECBA31F7D52C2E935C96079E4B4BDE2A14B32601E9A47CE76FBC8B28C66E51C98A9E691BDDB3DB1D272C81C85776EFEC263BDD74B67EDFBE16579E4165E17CE65E7F189EFF7CFECA17BE50E2D8FEF45F3E086C36BE2A1CF6295F67E70A3D18D06830B3F6B1F087395BB411E7B7F60C1489FBE4BFB3DCA1CB9FEF8FF84BD03ED4AECCD]]
+ Point(doCheckItems)
+ Point(onCheckItems)
+ link(MenuItemIdx,2440433:doEvent,[])
+}
+Add(LineBreak,5234273,785,189)
+{
+ Caption="EndIdxIcon"
+ Type=1
+ link(Data,2370435:EndIdxIcons,[])
+ Primary=[14249502,-483,343]
+}
+Add(LineBreak,6509752,778,203)
+{
+ Caption="Matrix_01"
+ Type=1
+ link(Data,2370435:Matrix,[])
+ Primary=[9046822,126,343]
+}
+Add(Memory,13213801,953,280)
+{
+ Default=Integer(0)
+}
+Add(ArrayRW,4939693,323,406)
+{
+ link(onRead,12331471:In,[])
+ link(Array,1895217:Array,[])
+}
+Add(FormatStr,16272494,302,581)
+{
+ DataCount=8
+ Mask="%1;%2;%3;%4;%5;%6;%7;%8 Kb"
+ link(onFString,14184348:In,[])
+ link(Str1,9173441:Var2,[])
+ link(Str2,9959949:Var2,[])
+ link(Str3,10852654:Var2,[])
+ link(Str4,4939693:Item,[])
+ link(Str5,7675205:Value,[(336,541)(385,541)])
+ link(Str6,12644486:Value,[])
+ link(Str7,14376800:Value,[(350,552)(399,552)])
+}
+Add(GetDataEx,9173441,295,560)
+{
+ link(Data,14249502:Var,[])
+}
+Add(GetDataEx,9959949,302,553)
+{
+ link(Data,5776471:Var,[])
+}
+Add(MultiElementEx,8847110,953,343)
+{
+ link(onEvent1,1102525:In,[(1008,349)(1008,335)])
+ link(onEvent2,16460114:In,[(1015,356)(1015,349)])
+ link(onEvent11,16769739:In,[])
+ link(onExtIcon,5447307:In,[(1008,370)(1008,377)])
+ link(Index,13213801:Value,[])
+ link(NIcon,2173780:Var,[])
+}
+BEGIN_SDK
+  Add(EditMultiEx,5025318,3,40)
+  {
+   WorkCount=#7:doValue|9:doExtIcon|
+   EventCount=#8:onEvent1|8:onEvent2|9:onEvent11|9:onExtIcon|
+   VarCount=#5:Value|6:Value1|
+   DataCount=#5:Index|5:NIcon|
+   Width=349
+   Height=179
+   link(doValue,9318217:doValue,[(12,46)(12,118)])
+   link(doExtIcon,9463871:doEvent1,[(61,53)(61,55)])
+   link(Value,6175353:Value,[(9,203)(76,203)])
+   link(Value1,6291692:Value,[(16,206)(118,206)])
+  }
+  Add(Icon,6341193,266,63)
+  {
+   Icon=[ZIP7E03000078DA63606004420101062029C190C1CCC020C6C0C0A001C44021060506883808383033D01D34900220EA0F1C38F09F0830AA9E78F5A486FF7E0606340434900195C4AF1E1321AB2706C0D5939A844802FFC19E210F830000A45ECC05]
+   Transparent=-16777201
+   Point(doLoadFromBitmap)
+  }
+  Add(IndexToChanel,11107983,266,168)
+  {
+   Point(Index)
+   link(onEvent1,5025318:onEvent1,[(314,174)(314,46)])
+   link(onEvent2,5025318:onEvent2,[(314,181)(314,53)])
+   link(Index,5025318:Index,[(272,101)(9,101)])
+  }
+  Add(Hub,13449454,217,161)
+  {
+   link(onEvent1,5025318:onEvent11,[(314,167)(314,60)])
+   link(onEvent2,11107983:doEvent,[])
+  }
+  Add(Memory,9318217,21,112)
+  {
+   link(onData,5052922:doAdd,[(187,118)(187,118)])
+  }
+  Add(Hub,9463871,84,49)
+  {
+   OutCount=3
+   link(onEvent1,7703420:doOperation,[(146,55)(146,118)])
+   link(onEvent2,3198160:doPart,[(128,62)(128,111)(9,111)(9,160)])
+   link(onEvent3,11170803:doAdd,[(138,69)(138,167)])
+  }
+  Add(FilePart,3198160,21,154)
+  {
+   NameWOExt=1
+   link(onPath,6175353:doValue,[])
+   link(onName,6291692:doValue,[])
+   link(FileName,9318217:Value,[])
+  }
+  Add(Memory,6175353,70,154)
+  {
+  }
+  Add(Memory,6291692,112,161)
+  {
+  }
+  Add(Math,7703420,161,112)
+  {
+   Op2=1
+   ResultType=0
+   link(Op1,5025318:NIcon,[(167,87)(16,87)])
+  }
+  Add(MT_Add,5052922,210,112)
+  {
+   Data=Integer(0)
+   link(onAdd,8134947:doAdd,[])
+  }
+  Add(MT_Add,11170803,161,161)
+  {
+   InputMT=1
+   link(onAdd,13449454:doEvent1,[(205,167)(205,167)])
+   link(Data,7703420:Result,[])
+  }
+  Add(MT_Add,8134947,266,112)
+  {
+   link(onAdd,5025318:onExtIcon,[(314,118)(314,67)])
+   link(Data,6341193:Icon,[])
+  }
+END_SDK
+Add(LineBreak,12616785,771,217)
+{
+ Caption="CountIcons"
+ Type=1
+ link(Data,2370435:CountIcons,[])
+ Primary=[2173780,189,98]
+}
+Add(WinTools,15078085,57,168)
+{
+ Point(doNormal)
+ link(Handle,16213434:Handle,[])
+}
+Add(LineBreak,1601313,-13,119)
+{
+ Caption="Close"
+ link(Out,16213434:doClose,[(42,125)(42,132)])
+ Primary=[7361420,455,91]
+}
+Add(StrList,1895217,309,343)
+{
+ Strings=#7:средний|6:низкий|7:высокий|8:реальный|13:ниже среднего|13:выше среднего|
+}
+Add(LineBreak,13349861,729,280)
+{
+ Caption="onExeProcess"
+ link(Out,5152440:doEvent1,[])
+ Primary=[11240034,-287,154]
+}
+Add(LineBreak,15418686,603,455)
+{
+ Caption="onMouseDown"
+ link(Out,5373490:doEvent,[])
+ Primary=[3378445,245,-399]
+}
+Add(LineBreakEx,14896394,939,434)
+{
+ Caption="Index01"
+ Type=2
+}
+Add(Memory,14376800,393,504)
+{
+ link(onData,705931:In,[])
+}
+Add(IndexToChanel,3514697,239,455)
+{
+ Data=String(Нет)
+ link(onEvent1,12644486:doValue,[])
+ link(onEvent2,12644486:doClear,[])
+}
+Add(GetDataEx,10852654,309,546)
+{
+ link(Data,3055184:Var,[])
+}
+Add(DoData,12930904,806,385)
+{
+ link(onEventData,8145321:doEvent2,[(847,391)(847,349)])
+ link(Data,14706551:Value,[(812,377)(729,377)(729,412)(644,412)])
+}
+Add(TrayIcon,8561672,393,154)
+{
+ Hint="-= EnumProcess =-"
+ FormHook=0
+ ShowWORemoveIcon=0
+ Point(doHint)
+ Point(doAddTrayIcon)
+ link(onClick,1449790:In,[])
+ link(onDblClick,13152497:In,[(434,167)(434,174)])
+}
+Add(IndexToChanel,15156857,204,154)
+{
+ link(onEvent1,10837804:doWork2,[])
+}
+Add(Hub,8145321,855,336)
+{
+ InCount=2
+ link(onEvent1,13213801:doClear,[(944,342)(944,293)])
+ link(onEvent2,3408484:doWork2,[])
+}
+Add(LineBreak,7162768,-13,490)
+{
+ Caption="doGetMemInfo"
+ link(Out,5614850:doGetMemoryInfo,[(146,496)(146,482)])
+ Primary=[705931,455,14]
+}
+Add(GetDataEx,3130091,169,497)
+{
+ link(Data,5614850:CPUCount,[])
+}
+Add(LineBreak,9742608,729,336)
+{
+ Caption="AddProc"
+ link(Out,13601535:doExecute,[])
+ Primary=[14688876,140,126]
+}
+Add(HubEx,3408484,897,336)
+{
+ link(onEvent,8847110:doValue,[])
+}
+Add(Hub,5152440,855,280)
+{
+ link(onEvent1,13699904:doData,[])
+ link(onEvent2,3408484:doWork1,[(901,293)])
+}
+Add(DoData,13699904,904,280)
+{
+ Data=Integer(1)
+ link(onEventData,13213801:doValue,[])
+}
+Add(IndexToChanel,4929347,302,280)
+{
+ link(onEvent1,15529245:In,[])
+ link(onEvent2,1196250:doWork3,[(362,293)])
+}
+Add(LineBreak,7684611,764,231)
+{
+ Caption="Select"
+ Type=1
+ link(Data,2370435:Select,[])
+ Primary=[6584988,119,273]
+}
+Add(Convertor,13048792,239,490)
+{
+ Mode=8
+ Digits=8
+ link(onResult,7675205:doValue,[])
+}
+Add(LineBreak,13822468,722,574)
+{
+ Caption="DblClick"
+ link(Out,15313247:doEvent,[])
+ Primary=[15853735,126,-490]
+}
+Add(LineBreak,16489056,-13,196)
+{
+ Caption="Normal"
+ link(Out,15078085:doNormal,[])
+ Primary=[11366584,959,378]
+}
+Add(Memory,12644486,337,455)
+{
+ Default=String(Есть)
+ link(onData,11723648:In,[])
+}
+Add(LineBreak,14181836,-13,462)
+{
+ Caption="doGetBoost"
+ link(Out,5614850:doGetProcBoost,[])
+ Primary=[16460114,1043,-119]
+}
+Add(IndexToChanel,8686127,204,189)
+{
+ link(onEvent1,10837804:doWork3,[(271,195)])
+ link(onEvent2,8464246:doPopupHere,[])
+}
+Add(LineBreak,14135070,617,112)
+{
+ Caption="doAddIcon"
+ link(Out,2370435:doMT_InsertIcon,[])
+ Primary=[16769739,413,245]
+}
+Add(Hub,9935783,92,392)
+{
+ InCount=2
+ link(onEvent1,7992374:doEvent2,[(137,398)(137,384)])
+ link(onEvent2,5614850:doEnum,[(138,405)(138,433)])
+}
+Add(Math,11808362,218,581)
+{
+ OpType=3
+ Op2=1024
+ ResultType=0
+ link(onResult,16272494:doString,[])
+}
+Add(LineBreak,3899069,-13,406)
+{
+ Caption="ReadProc_02"
+ link(Out,9935783:doEvent2,[(80,412)(80,405)])
+ Primary=[15529245,455,-126]
+}
+Add(IndexToChanel,5373490,708,455)
+{
+ link(onEvent2,7748171:doPopupHere,[])
+}
+Add(LineBreak,5865962,-13,371)
+{
+ Caption="ClearAll_02"
+ link(Out,7992374:doEvent1,[])
+ Primary=[6969609,1050,112]
+}
+Add(IndexToChanel,13932232,806,462)
+{
+ Count=5
+ link(onEvent1,14688876:In,[])
+ link(onEvent2,1107840:doData,[])
+ link(onEvent3,13139753:doMessage,[])
+ link(onEvent4,9991424:In,[])
+ link(onEvent5,4657512:doWork1,[(859,496)])
+}
+Add(ODialog,13601535,806,336)
+{
+ Filter="Файлы программ (*.exe)|*.exe"
+ Title="Добавить"
+ link(onExecute,8145321:doEvent1,[])
+}
+Add(StringTableMT,2370435,757,49)
+{
+ Top=25
+ Width=771
+ Height=466
+ Font=[MS Sans Serif,8,1,0,1]
+ Columns=#11:Процесс=145|8:Путь=150|16:Приоритет=110==2|17:CPU (7...0)=80==2|12:Форсаж=65==2|19:Пользователь=130==0|12:Память=70==1|
+ ColumnClick=1
+ Flat=1
+ TextColor=0
+ TextBkColor=13692411
+ BkColor=13692411
+ AssignedIList=0
+ IconsCheck=[]
+ MiscIcons=[]
+ Icons=[]
+ SaveImgIndex=0
+ SaveItemsColor=0
+ Point(onMouseDown)
+ Point(doSelEndStr)
+ Point(CountIcons)
+ Point(onColumnClick)
+ Point(doSort)
+ Point(FileName)
+ Point(Matrix)
+ Point(doSelect)
+ Point(doClearIcons)
+ Point(doMT_InsertIcon)
+ Point(doMT_LoadExtIcon)
+ Point(onExtIcon)
+ Point(EndIdxIcons)
+ Point(onDblClick)
+ Point(Index)
+ Point(CheckBoxes)
+ Point(doAddStrLst)
+ Point(doTblStrLst)
+ Point(doClearStrLst)
+ Point(doSetFocus)
+ link(onMouseDown,3378445:In,[])
+ link(onColumnClick,2370435:doSort,[(822,69)(822,87)(746,87)(746,97)])
+ link(onExtIcon,1005369:In,[])
+ link(onDblClick,15853735:In,[(836,83)(836,90)])
+}
+Add(Convertor,1707381,267,623)
+{
+ Mode=8
+ Digits=8
+ link(onResult,1251364:doString,[])
+}
+Add(Hub,10041796,253,273)
+{
+ link(onEvent1,8427747:doProcessMessages,[(293,279)(293,244)])
+ link(onEvent2,4929347:doEvent,[])
+}
+Add(Application,8427747,302,238)
+{
+ Info="EnumProcess"
+}
+Add(Message,4378313,393,203)
+{
+ Message="Вы точно хотите выйти из программы?"
+ Caption="-= EnumProcess =-   Внимание!"
+ Type=2
+ Icon=3
+ Point(onYES)
+ link(onYES,7361420:In,[])
+}
+Add(LineBreak,4032643,617,168)
+{
+ Caption="doClearLst"
+ link(Out,2370435:doClearStrLst,[(747,174)(747,146)])
+ Primary=[13068648,-392,217]
+}
+Add(FormatStr,1251364,365,623)
+{
+ DataCount=4
+ Mask="%1;%2;%3;средний;%4;Есть;;"
+ link(onFString,16021985:In,[])
+ link(Str1,9173441:Var3,[(371,569)])
+ link(Str2,9959949:Var3,[(378,562)])
+ link(Str3,10852654:Var3,[(385,555)])
+}
+Add(LineBreakEx,15389310,792,175)
+{
+ Caption="Index01"
+ Type=3
+ link(_Data,2370435:Index,[])
+}
+Add(LineBreakEx,9463807,897,532)
+{
+ Caption="Index01"
+ Type=2
+}
+Add(DoData,1107840,939,469)
+{
+ link(onEventData,11719196:In,[])
+ link(Data,14896394:getVar,[])
+}
+Add(LineBreak,13956580,617,154)
+{
+ Caption="onEndEnum"
+ link(Out,2370435:doTblStrLst,[(724,160)(724,139)])
+ Primary=[10353492,-175,315]
+}
+Add(LineBreak,14593692,953,399)
+{
+ Caption="PathProc"
+ Type=1
+ link(Data,8847110:Value,[])
+ Primary=[3055184,-637,91]
+}
+Add(StrMask,5712170,281,427)
+{
+ Mask="*.exe"
+ link(onTrue,11240034:In,[])
+}
+Add(HubEx,4657512,855,567)
+{
+ link(onEvent,5162211:Open,[])
+}
+Add(LineBreak,5736281,855,399)
+{
+ Caption="onExtIcon"
+ link(Out,8847110:doExtIcon,[(936,405)(936,356)])
+ Primary=[1005369,-7,-329]
+}
+Add(LineBreak,12813501,-13,623)
+{
+ Caption="doFormatStr"
+ link(Out,1435530:doOperation,[])
+ Primary=[1102525,1043,-294]
+}
+Add(ChildFormEx,5162211,883,574)
+{
+ link(Restore,11366584:In,[])
+ link(SelectStr,6584988:Var,[])
+ link(CPUCount,997017:Var,[])
+ link(NumberStr,9463807:getVar,[])
+ link(MatrixStr,9046822:Var,[])
+}
+BEGIN_SDK
+  Add(EditMultiEx,10005682,24,24)
+  {
+   WorkCount=#4:Open|
+   EventCount=#7:Restore|7:onCheck|
+   VarCount=#5:Check|
+   DataCount=#9:SelectStr|8:CPUCount|9:NumberStr|9:MatrixStr|
+   Width=633
+   Height=488
+   link(Open,11378920:doEvent1,[(40,30)(40,125)])
+   link(Check,10577893:Var,[(30,498)(48,498)])
+  }
+  Add(MainForm,11326919,336,98)
+  {
+   Left=35
+   Top=105
+   Width=254
+   Height=247
+   Visible=1
+   Caption="Параметры процесса"
+   BorderStyle=4
+   Position=1
+   Point(doVisible)
+   Point(Close)
+   link(Close,58884:GetData,[])
+  }
+  Add(ChildGroupBox,10281510,189,119)
+  {
+  }
+  BEGIN_SDK
+    Add(EditMulti,695635,3,3)
+    {
+     WorkCount=1
+     VarCount=1
+     Width=318
+     Height=270
+     link(doWork1,5230903:doRead,[(19,9)(19,111)])
+     link(Var1,8333762:Item,[(9,202)(272,202)])
+    }
+    Add(GroupBox,15369184,35,14)
+    {
+     Left=5
+     Top=30
+     Width=163
+     Height=144
+     Font=[MS Sans Serif,8,1,8388608,1]
+     Caption="Приоритет"
+     Point(doVisible)
+    }
+    Add(RadioButton,1213886,154,14)
+    {
+     Left=10
+     Top=20
+     Width=150
+     Font=[MS Sans Serif,8,1,0,1]
+     TabOrder=-1
+     Caption="Реального времени"
+     link(onSelect,9823576:doWork1,[(202,20)(202,111)])
+    }
+    Add(RadioButton,2517610,154,56)
+    {
+     Left=10
+     Top=40
+     Width=150
+     Font=[MS Sans Serif,8,1,0,1]
+     TabOrder=-1
+     Caption="Высокий"
+     link(onSelect,9823576:doWork2,[(202,62)(202,118)])
+    }
+    Add(RadioButton,5763337,154,98)
+    {
+     Left=10
+     Top=60
+     Width=150
+     Font=[MS Sans Serif,8,1,0,1]
+     TabOrder=-1
+     Caption="Выше среднего"
+     link(onSelect,9823576:doWork3,[(202,104)(202,125)])
+    }
+    Add(RadioButton,5566069,154,140)
+    {
+     Left=10
+     Top=80
+     Width=150
+     Font=[MS Sans Serif,8,1,0,1]
+     TabOrder=-1
+     Caption="Средний"
+     link(onSelect,9823576:doWork4,[(202,146)(202,132)])
+    }
+    Add(RadioButton,10223414,154,182)
+    {
+     Left=10
+     Top=100
+     Width=150
+     Font=[MS Sans Serif,8,1,0,1]
+     TabOrder=-1
+     Caption="Ниже среднего"
+     link(onSelect,9823576:doWork5,[(202,188)(202,139)])
+    }
+    Add(RadioButton,1472305,154,224)
+    {
+     Left=10
+     Top=120
+     Width=150
+     Font=[MS Sans Serif,8,1,0,1]
+     TabOrder=-1
+     Caption="Низкий"
+     link(onSelect,9823576:doWork6,[(202,230)(202,146)])
+    }
+    Add(IndexToChanel,9092999,91,105)
+    {
+     Count=6
+     Data=Integer(1)
+     link(onEvent1,1213886:doSelect,[(139,111)(139,20)])
+     link(onEvent2,2517610:doSelect,[(139,118)(139,62)])
+     link(onEvent3,5763337:doSelect,[(139,125)(139,104)])
+     link(onEvent4,5566069:doSelect,[(139,132)(139,146)])
+     link(onEvent5,10223414:doSelect,[(139,139)(139,188)])
+     link(onEvent6,1472305:doSelect,[(139,146)(139,230)])
+    }
+    Add(ArrayRW,5230903,35,105)
+    {
+     link(onRead,9092999:doEvent,[])
+     link(Array,12421312:Array,[])
+    }
+    Add(IntegerArray,12421312,35,56)
+    {
+     IntArray=['реальный'=0,'высокий'=1,'выше среднего'=2,'средний'=3,'ниже среднего'=4,'низкий'=5]
+     UseName=0
+    }
+    Add(StrList,1895217,252,42)
+    {
+     Strings=#8:реальный|7:высокий|13:выше среднего|7:средний|13:ниже среднего|6:низкий|
+    }
+    Add(ChanelToIndex,9823576,217,105)
+    {
+     Count=6
+     link(onIndex,8333762:doRead,[])
+    }
+    Add(ArrayRW,8333762,266,105)
+    {
+     link(Array,1895217:Array,[])
+    }
+  END_SDK
+  Add(ChildGroupBox,12729486,147,119)
+  {
+   link(onEvent1,10281510:doWork1,[])
+   link(onEvent2,6622249:doText,[])
+   link(onEvent3,14480971:doWork1,[])
+   link(Data1,10783576:Var,[])
+   link(Data2,835279:Var,[])
+  }
+  BEGIN_SDK
+    Add(EditMulti,7382919,3,3)
+    {
+     EventCount=3
+     WorkCount=1
+     DataCount=2
+     VarCount=3
+     Width=447
+     Height=389
+     link(doWork1,990490:doEvent1,[(12,9)(12,62)])
+     link(Var1,10812330:Var,[(9,360)(13,360)])
+     link(Var2,15041094:Var,[(16,368)(20,368)])
+     link(Var3,11447292:Var,[(23,374)(27,374)])
+    }
+    Add(GroupBox,7826234,70,112)
+    {
+     Left=175
+     Top=30
+     Width=67
+     Height=187
+     Font=[MS Sans Serif,8,1,8388608,1]
+     Caption="CPU"
+     Point(doVisible)
+    }
+    Add(CheckBox,11200755,350,210)
+    {
+     Left=10
+     Top=15
+     Font=[MS Sans Serif,8,1,0,1]
+     Enabled=1
+     TabOrder=-1
+     Caption="CPU0"
+     Point(doEnabled)
+    }
+    Add(CheckBox,12060631,357,217)
+    {
+     Left=10
+     Top=35
+     Font=[MS Sans Serif,8,1,0,1]
+     Enabled=1
+     TabOrder=-1
+     Caption="CPU1"
+     Point(doEnabled)
+    }
+    Add(CheckBox,13633327,364,224)
+    {
+     Left=10
+     Top=55
+     Font=[MS Sans Serif,8,1,0,1]
+     Enabled=1
+     TabOrder=-1
+     Caption="CPU2"
+     Point(doEnabled)
+    }
+    Add(CheckBox,10325086,371,231)
+    {
+     Left=10
+     Top=75
+     Font=[MS Sans Serif,8,1,0,1]
+     Enabled=1
+     TabOrder=-1
+     Caption="CPU3"
+     Point(doEnabled)
+    }
+    Add(CheckBox,4759690,378,238)
+    {
+     Left=10
+     Top=95
+     Font=[MS Sans Serif,8,1,0,1]
+     Enabled=1
+     TabOrder=-1
+     Caption="CPU4"
+     Point(doEnabled)
+    }
+    Add(CheckBox,1079483,385,245)
+    {
+     Left=10
+     Top=115
+     Font=[MS Sans Serif,8,1,0,1]
+     Enabled=1
+     TabOrder=-1
+     Caption="CPU5"
+     Point(doEnabled)
+    }
+    Add(CheckBox,4276820,392,252)
+    {
+     Left=10
+     Top=135
+     Font=[MS Sans Serif,8,1,0,1]
+     Enabled=1
+     TabOrder=-1
+     Caption="CPU6"
+     Point(doEnabled)
+    }
+    Add(CheckBox,5870982,399,259)
+    {
+     Left=10
+     Top=155
+     Font=[MS Sans Serif,8,1,0,1]
+     Enabled=1
+     TabOrder=-1
+     Caption="CPU7"
+     Point(doEnabled)
+    }
+    Add(IntToBits,13348686,273,217)
+    {
+     Data_0=Integer(0)
+     Data_1=Integer(1)
+     link(onBit1,11200755:doEnabled,[])
+     link(onBit2,12060631:doEnabled,[])
+     link(onBit3,13633327:doEnabled,[])
+     link(onBit4,10325086:doEnabled,[])
+     link(onBit5,4759690:doEnabled,[])
+     link(onBit6,1079483:doEnabled,[])
+     link(onBit7,4276820:doEnabled,[])
+     link(onBit8,5870982:doEnabled,[])
+    }
+    Add(DoData,331736,70,63)
+    {
+     link(onEventData,10045857:doSplit,[])
+     link(Data,7382919:Data1,[(76,19)(9,19)])
+    }
+    Add(Math,6194835,203,217)
+    {
+     OpType=1
+     Op2=1
+     link(onResult,13348686:doBits,[])
+    }
+    Add(Math,1435530,161,217)
+    {
+     OpType=11
+     Op1=2
+     ResultType=0
+     link(onResult,6194835:doOperation,[])
+     link(Op2,15496312:Var,[])
+    }
+    Add(IntToBits,8804249,273,287)
+    {
+     Data_0=Integer(0)
+     Data_1=Integer(1)
+     link(onBit1,11200755:doCheck,[(314,293)(314,216)])
+     link(onBit2,12060631:doCheck,[(318,300)(318,223)])
+     link(onBit3,13633327:doCheck,[(321,307)(321,230)])
+     link(onBit4,10325086:doCheck,[(325,314)(325,237)])
+     link(onBit5,4759690:doCheck,[(328,321)(328,244)])
+     link(onBit6,1079483:doCheck,[(332,328)(332,251)])
+     link(onBit7,4276820:doCheck,[(335,335)(335,258)])
+     link(onBit8,5870982:doCheck,[(339,342)(339,265)])
+    }
+    Add(StrPart,10045857,119,63)
+    {
+     Char=";"
+     link(onSplit,10064437:doSplit,[])
+     link(onPart,7070709:doValue,[(159,76)(159,118)])
+    }
+    Add(StrPart,10064437,168,63)
+    {
+     Char=";"
+     link(onSplit,3136989:doSplit,[])
+    }
+    Add(StrPart,3136989,217,63)
+    {
+     Char=";"
+     link(onSplit,5899699:doSplit,[])
+     link(onPart,7382919:onEvent1,[(398,76)(398,9)])
+    }
+    Add(StrPart,5899699,273,63)
+    {
+     Char=";"
+     link(onSplit,10353765:doSplit,[])
+     link(onPart,11834513:In,[(313,76)(313,111)])
+    }
+    Add(Convertor,11537044,203,287)
+    {
+     Mode=7
+     link(onResult,8804249:doBits,[])
+    }
+    Add(Hub,990490,21,56)
+    {
+     link(onEvent1,2802957:In,[(86,62)(86,48)])
+     link(onEvent2,331736:doData,[])
+    }
+    Add(BitsToInt,5904571,350,315)
+    {
+     Count=8
+     link(Bit1,11200755:Checked,[])
+     link(Bit2,12060631:Checked,[])
+     link(Bit3,13633327:Checked,[])
+     link(Bit4,10325086:Checked,[])
+     link(Bit5,4759690:Checked,[])
+     link(Bit6,1079483:Checked,[])
+     link(Bit7,4276820:Checked,[])
+     link(Bit8,5870982:Checked,[])
+    }
+    Add(FilePart,14079747,217,112)
+    {
+     link(onName,7382919:onEvent2,[(427,125)(427,16)])
+    }
+    Add(Memory,7070709,168,112)
+    {
+     link(onData,14079747:doPart,[])
+    }
+    Add(StrPart,10353765,322,63)
+    {
+     Char=";"
+     link(onPart,7382919:onEvent3,[(413,76)(413,23)])
+    }
+    Add(LineBreak,13585830,14,28)
+    {
+     Caption="CPUCount"
+     Type=1
+     link(Data,7382919:Data2,[(20,19)(16,19)])
+     Primary=[15496312,154,154]
+    }
+    Add(LineBreak,8787488,70,217)
+    {
+     Caption="doStdMask"
+     link(Out,1435530:doOperation,[])
+     Primary=[2802957,49,-175]
+    }
+    Add(LineBreak,5103749,70,287)
+    {
+     Caption="doCurMask"
+     link(Out,11537044:doConvert,[])
+     Primary=[11834513,252,-182]
+    }
+    Add(LineBreak,14959764,350,364)
+    {
+     Caption="CurMask"
+     Type=1
+     link(Data,5904571:Number,[])
+     Primary=[10812330,-343,-49]
+    }
+    Add(LineBreak,11254083,203,266)
+    {
+     Caption="StdMask"
+     Type=1
+     link(Data,6194835:Result,[])
+     Primary=[11447292,-182,77]
+    }
+    Add(LineBreak,1708705,168,161)
+    {
+     Caption="CurName"
+     Type=1
+     link(Data,7070709:Value,[])
+     Primary=[15041094,-154,168]
+    }
+  END_SDK
+  Add(Hub,11378920,98,119)
+  {
+   link(onEvent1,12729486:doWork1,[])
+   link(onEvent2,11326919:doVisible,[])
+  }
+  Add(Label,6622249,273,126)
+  {
+   Left=5
+   Top=5
+   Width=240
+   Height=17
+   Font=[Courier New,14,1,128,204]
+   Caption=""
+   AutoSize=1
+   Alignment=2
+  }
+  Add(ChildGroupBox,14480971,231,133)
+  {
+  }
+  BEGIN_SDK
+    Add(EditMulti,13944754,3,3)
+    {
+     WorkCount=1
+     VarCount=1
+     Width=111
+     Height=95
+     link(doWork1,13322609:doSelectString,[(29,9)(29,62)])
+     link(Var1,13322609:Index,[(9,82)(83,82)])
+    }
+    Add(GroupBox,895339,7,21)
+    {
+     Left=5
+     Top=175
+     Width=163
+     Height=42
+     Font=[MS Sans Serif,8,1,8388608,1]
+     Caption="Форсаж приоритета"
+     Point(doVisible)
+    }
+    Add(ComboBox,13322609,56,14)
+    {
+     Left=5
+     Top=15
+     Width=153
+     Height=21
+     Strings=#3:Нет|4:Есть|
+     Text="Есть"
+     Point(Index)
+     Point(doSelectString)
+    }
+  END_SDK
+  Add(MultiElementEx,3826664,511,322)
+  {
+   link(onEvent2,4125038:In,[(565,328)(565,321)])
+   link(onEvent21,3334552:In,[])
+   link(onEventData,11456352:In,[(565,342)(565,349)])
+   link(Matrix,16413071:Var,[])
+   link(Y,3486130:Var,[])
+  }
+  BEGIN_SDK
+    Add(EditMultiEx,15552677,3,3)
+    {
+     WorkCount=#6:doProc|7:doBoost|10:doPriority|
+     EventCount=#8:onEvent2|9:onEvent21|11:onEventData|7:onCheck|
+     VarCount=#5:Check|
+     DataCount=#6:Matrix|1:Y|
+     Width=559
+     Height=270
+     link(doProc,16046962:doConvert,[(73,9)(73,27)])
+     link(doBoost,3514697:doEvent,[(64,16)(64,174)])
+     link(doPriority,4939693:doRead,[(54,23)(54,132)])
+     link(Check,1331896:Value,[(9,244)(503,244)])
+    }
+    Add(StrList,1895217,91,63)
+    {
+     Strings=#7:средний|6:низкий|7:высокий|8:реальный|13:ниже среднего|13:выше среднего|
+    }
+    Add(Memory,1331896,497,112)
+    {
+     Default=Integer(1)
+     link(onData,15552677:onCheck,[(541,118)(541,30)])
+    }
+    Add(LineBreak,15227048,7,56)
+    {
+     Caption="Matrix"
+     Type=1
+     link(Data,15552677:Matrix,[(13,30)(9,30)])
+     Primary=[12891335,245,105]
+    }
+    Add(Memory,12644486,140,168)
+    {
+     Default=String(Есть)
+     link(onData,2123926:doWork5,[(189,174)(189,118)])
+    }
+    Add(Hub,13766371,343,84)
+    {
+     link(onEvent1,4227810:In,[])
+     link(onEvent2,766998:doEvent,[])
+    }
+    Add(IndexToChanel,3514697,91,168)
+    {
+     Data=String(Нет)
+     Point(Index)
+     link(onEvent1,12644486:doValue,[])
+     link(onEvent2,12644486:doClear,[])
+    }
+    Add(MatrixRW,11863370,252,189)
+    {
+     link(Matrix,12891335:Var,[])
+     link(Value,2123926:Data,[])
+     link(X,306634:Value,[(272,153)(307,153)])
+     link(Y,14387899:Var,[])
+    }
+    Add(LineBreak,9058959,14,35)
+    {
+     Caption="Y"
+     Type=1
+     link(Data,15552677:Y,[(20,26)(16,26)])
+     Primary=[14387899,259,105]
+    }
+    Add(ChanelToIndex,2123926,259,84)
+    {
+     Count=5
+     Point(Data)
+     link(onIndex,306634:doValue,[])
+    }
+    Add(IndexToChanel,766998,385,91)
+    {
+     Count=6
+     Data=Integer(0)
+     link(onEvent3,15552677:onEvent2,[(479,111)(479,9)])
+     link(onEvent4,15552677:onEvent21,[(479,118)(479,16)])
+     link(onEvent5,1331896:doClear,[])
+     link(onEvent6,15552677:onEventData,[(479,132)(479,23)])
+    }
+    Add(ArrayRW,4939693,105,126)
+    {
+     link(onRead,2123926:doWork3,[(163,132)(163,104)])
+     link(Array,1895217:Array,[])
+    }
+    Add(Memory,306634,301,84)
+    {
+     link(onData,13766371:doEvent1,[])
+    }
+    Add(LineBreak,9226661,182,196)
+    {
+     Caption="doWrite"
+     link(Out,11863370:doWrite,[])
+     Primary=[4227810,252,-112]
+    }
+    Add(Convertor,16046962,91,21)
+    {
+     Mode=8
+     Digits=8
+     link(onResult,2123926:doWork4,[(190,27)(190,111)])
+    }
+  END_SDK
+  Add(Hub,8854112,266,336)
+  {
+   link(onEvent1,1462895:doSetPriority,[])
+   link(onEvent2,1462895:doGetPriority,[])
+  }
+  Add(ArrayRW,13889358,182,336)
+  {
+   link(onRead,8854112:doEvent1,[])
+   link(Array,2869290:Array,[])
+   link(Index,3369605:Var,[])
+  }
+  Add(IntegerArray,2869290,182,266)
+  {
+   IntArray=['средний'=0,'низкий'=1,'высокий'=2,'реальный'=3,'ниже среднего'=4,'выше среднего'=5]
+   UseName=0
+  }
+  Add(LineBreak,14131446,42,371)
+  {
+   Caption="doBoost"
+   link(Out,948395:doData,[])
+   Primary=[3334552,546,-42]
+  }
+  Add(EventFromData,58884,336,49)
+  {
+   link(onEvent,16648963:In,[])
+  }
+  Add(DoData,948395,119,371)
+  {
+   link(onEventData,12265496:doEvent1,[])
+   link(Data,16607475:Var,[])
+  }
+  Add(LineBreak,12951808,98,77)
+  {
+   Caption="Y"
+   Type=1
+   link(Data,10005682:NumberStr,[(104,51)(44,51)])
+   Primary=[3486130,420,210]
+  }
+  Add(LineBreak,4876919,231,182)
+  {
+   Caption="Booster"
+   Type=1
+   link(Data,14480971:Var1,[])
+   Primary=[16607475,-112,126]
+  }
+  Add(LineBreak,2316318,161,210)
+  {
+   Caption="StdCPUMask"
+   Type=1
+   link(Data,12729486:Var3,[])
+   Primary=[15937270,105,196]
+  }
+  Add(LineBreak,6833156,42,448)
+  {
+   Caption="doProc"
+   link(Out,8324708:doCompare,[])
+   Primary=[4125038,546,-133]
+  }
+  Add(EnumProcess,1462895,462,308)
+  {
+   DebugPrivilege=0
+   Point(doFindName)
+   Point(onFind)
+   Point(doSetPriority)
+   Point(doGetPriority)
+   Point(doSetProcBoost)
+   Point(doGetProcBoost)
+   Point(onGetProc)
+   Point(onGetProcBoost)
+   Point(onGetPriority)
+   Point(doSetProc)
+   Point(doGetProc)
+   link(onFind,3065187:In,[(541,321)(541,307)])
+   link(onGetProc,3826664:doProc,[])
+   link(onGetProcBoost,3826664:doBoost,[])
+   link(onGetPriority,3826664:doPriority,[])
+  }
+  Add(DoData,1513116,371,308)
+  {
+   link(onEventData,1462895:doFindName,[(433,314)(433,335)])
+   link(Data,14470736:Var,[])
+  }
+  Add(Hub,8495841,329,448)
+  {
+   InCount=2
+   link(onEvent1,1462895:doSetProc,[(380,454)(380,370)])
+   link(onEvent2,1462895:doGetProc,[(387,461)(387,377)])
+  }
+  Add(Hub,12265496,266,371)
+  {
+   link(onEvent1,1462895:doSetProcBoost,[(363,377)(363,356)])
+   link(onEvent2,1462895:doGetProcBoost,[(363,384)(363,363)])
+  }
+  Add(LineBreak,16438710,49,77)
+  {
+   Caption="Matrix"
+   Type=1
+   link(Data,10005682:MatrixStr,[(55,51)(51,51)])
+   Primary=[16413071,462,189]
+  }
+  Add(LineBreak,9194802,189,196)
+  {
+   Caption="NamePriority"
+   Type=1
+   link(Data,10281510:Var1,[])
+   Primary=[3369605,0,112]
+  }
+  Add(LineBreak,576946,140,56)
+  {
+   Caption="CPUCount"
+   Type=1
+   link(Data,10005682:CPUCount,[(146,47)(37,47)])
+   Primary=[835279,14,35]
+  }
+  Add(LineBreak,8877978,77,56)
+  {
+   Caption="SelectStr"
+   Type=1
+   link(Data,10005682:SelectStr,[(83,43)(30,43)])
+   Primary=[10783576,70,21]
+  }
+  Add(DoData,6993016,266,455)
+  {
+   link(onEventData,8495841:doEvent2,[])
+   link(Data,15937270:Var,[])
+  }
+  Add(If_else,8324708,119,448)
+  {
+   Type=5
+   Op2=Integer(0)
+   link(onTrue,8414794:doData,[])
+   link(onFalse,6993016:doData,[])
+   link(Op1,10868159:Var2,[])
+  }
+  Add(LineBreak,12656148,42,336)
+  {
+   Caption="doPriority"
+   link(Out,13889358:doRead,[])
+   Primary=[3065187,546,-35]
+  }
+  Add(LineBreak,1103674,238,49)
+  {
+   Caption="Exit"
+   link(Out,2543852:doEvent1,[])
+   Primary=[11456352,350,294]
+  }
+  Add(LineBreak,15851726,266,308)
+  {
+   Caption="doFindeName"
+   link(Out,1513116:doData,[])
+   Primary=[16648963,126,-259]
+  }
+  Add(LineBreak,2915284,154,224)
+  {
+   Caption="CurName"
+   Type=1
+   link(Data,12729486:Var2,[])
+   Primary=[14470736,217,42]
+  }
+  Add(LineBreak,14363304,147,238)
+  {
+   Caption="CurCPUMask"
+   Type=1
+   link(Data,12729486:Var1,[])
+   Primary=[11525074,-28,168]
+  }
+  Add(Hub,2543852,287,49)
+  {
+   link(onEvent1,58884:doData,[])
+   link(onEvent2,16534002:In,[(355,62)(355,69)])
+  }
+  Add(LineBreak,895821,567,49)
+  {
+   Caption="doCheck"
+   link(Out,10005682:onCheck,[(640,55)(640,37)])
+   Primary=[12279190,21,308]
+  }
+  Add(LineBreak,11775773,567,35)
+  {
+   Caption="Restore"
+   link(Out,10005682:Restore,[(638,41)(638,30)])
+   Primary=[16534002,-175,28]
+  }
+  Add(LineBreak,2987279,511,371)
+  {
+   Caption="Check"
+   Type=1
+   Primary=[10577893,-469,98]
+  }
+  Add(DoData,8414794,196,448)
+  {
+   link(onEventData,8495841:doEvent1,[])
+   link(Data,10868159:Var3,[(202,436)])
+  }
+  Add(GetDataEx,10868159,112,427)
+  {
+   link(Data,11525074:Var,[])
+  }
+END_SDK
+Add(Message,13139753,981,476)
+{
+ Message="Список будет полностью очищен.\n\rПродолжить?"
+ Caption="-= EnumProcess =-   Внимание!"
+ Type=2
+ Icon=3
+ Point(onYES)
+ link(onYES,6969609:In,[])
+}
+Add(Hub,7992374,162,371)
+{
+ InCount=2
+ OutCount=3
+ link(onEvent1,1330522:In,[(205,377)(205,363)])
+ link(onEvent2,7721267:In,[(211,384)(211,377)])
+ link(onEvent3,13068648:In,[])
+}
+Add(LineBreak,9945405,617,70)
+{
+ Caption="doDelete"
+ link(Out,2370435:doDelete,[(717,76)(717,69)])
+ Primary=[11719196,420,399]
+}
+Add(Hub,16633208,204,119)
+{
+ link(onEvent1,2514674:In,[])
+ link(onEvent2,8561672:doAddTrayIcon,[(314,132)(314,188)])
+}
+Add(Math,1435530,169,623)
+{
+ OpType=11
+ Op1=2
+ ResultType=0
+ link(onResult,6194835:doOperation,[])
+ link(Op2,3130091:Var2,[])
+}
+Add(Math,6194835,218,623)
+{
+ OpType=1
+ Op2=1
+ link(onResult,1707381:doConvert,[])
+}
+Add(EnumProcess,5614850,169,427)
+{
+ DebugPrivilege=0
+ Point(onFind)
+ Point(doGetPriority)
+ Point(onGetPriority)
+ Point(doGetProc)
+ Point(onGetProc)
+ Point(doGetProcBoost)
+ Point(onGetProcBoost)
+ Point(CPUCount)
+ Point(doGetProcessAccount)
+ Point(onGetProcessAccount)
+ Point(onEndEnum)
+ Point(doGetMemoryInfo)
+ Point(onGetMemoryInfo)
+ link(onProcess,5712170:doCompare,[])
+ link(onGetPriority,4939693:doRead,[(266,447)(266,412)])
+ link(onGetProc,13048792:doConvert,[(221,454)(221,496)])
+ link(onGetProcBoost,3514697:doEvent,[])
+ link(onGetProcessAccount,14376800:doValue,[(298,468)(298,510)])
+ link(onEndEnum,10353492:In,[])
+ link(onGetMemoryInfo,11808362:doOperation,[(210,482)(210,587)])
+}
+Add(LineBreak,6936167,-13,476)
+{
+ Caption="doGetAccount"
+ link(Out,5614850:doGetProcessAccount,[(135,482)(135,475)])
+ Primary=[12407093,455,14]
+}
+Add(LineBreak,6515083,617,56)
+{
+ Caption="doClear"
+ link(Out,2370435:doClear,[])
+ Primary=[1330522,-392,301]
+}
+Add(Memory,7675205,379,490)
+{
+ link(onData,12407093:In,[])
+}
+Add(LineBreak,9332710,617,140)
+{
+ Caption="doAdd"
+ link(Out,2370435:doAddStrLst,[(713,146)(713,132)])
+ Primary=[14184348,-175,441]
+}
+Add(HubEx,13986866,358,147)
+{
+ link(onEvent,8561672:doShow,[])
+}
+Add(HubEx,10837804,267,147)
+{
+ link(onEvent,13986866:doWork2,[])
+}
+Add(LineBreak,13207775,-13,448)
+{
+ Caption="doGetProc"
+ link(Out,5614850:doGetProc,[(108,454)(108,461)])
+ Primary=[12331471,455,-42]
+}
+Add(Version,14508978,57,63)
+{
+ Version="3.00"
+ Description="EnumProcess"
+ InternalName="EnumProcess"
+ E-mail="nesco_sochi@mail.ru"
+}
+Add(LineBreak,12897218,617,126)
+{
+ Caption="doExtIcon"
+ link(Out,2370435:doMT_LoadExtIcon,[(699,132)(699,125)])
+ Primary=[5447307,413,245]
+}
+Add(LineBreak,6897733,617,98)
+{
+ Caption="doClearIcons"
+ link(Out,2370435:doClearIcons,[(713,104)(713,111)])
+ Primary=[7721267,-392,273]
+}
+Add(LineBreak,9344309,99,189)
+{
+ Caption="onClickTray"
+ link(Out,8686127:doEvent,[])
+ Primary=[1449790,343,-35]
+}
+Add(LineBreak,8394203,-13,133)
+{
+ Caption="Visible"
+ link(Out,16213434:doVisible,[])
+ Primary=[2514674,273,-14]
+}
+Add(LineBreak,4432092,-13,434)
+{
+ Caption="doGetPrior"
+ link(Out,5614850:doGetPriority,[(119,440)(119,454)])
+ Primary=[11723648,455,21]
+}
+Add(HubEx,1196250,358,196)
+{
+ link(onEvent,4378313:doMessage,[])
+}
+Add(LineBreak,7507637,190,532)
+{
+ Caption="CPUCount_01"
+ Type=1
+ link(Data,3130091:Var3,[(196,506)])
+ Primary=[997017,700,-14]
+}
+Add(LineBreak,1349144,960,385)
+{
+ Caption="NameProc"
+ Type=1
+ link(Data,8847110:Value1,[])
+ Primary=[5776471,-651,126]
+}
+Add(LineBreak,9319868,99,154)
+{
+ Caption="onDblClickTray"
+ link(Out,15156857:doEvent,[])
+ Primary=[13152497,343,14]
+}
+Add(IndexToChanel,15313247,806,574)
+{
+ link(onEvent1,4657512:doWork2,[])
+}
+Add(LineBreak,6326640,617,42)
+{
+ Caption="doAddTab"
+ link(Out,2370435:doAdd,[(703,48)(703,55)])
+ Primary=[16021985,-175,581]
+}
+Add(LineBreak,7292809,-13,392)
+{
+ Caption="ReadProc"
+ link(Out,9935783:doEvent1,[])
+ Primary=[9991424,882,91]
+}
+Add(DropFile,13383916,596,364)
+{
+ link(onDropFile,14706551:doValue,[])
+}
+Add(Memory,14706551,638,364)
+{
+ link(onData,8595485:doPart,[])
+}
+Add(FilePart,8595485,680,364)
+{
+ link(onExt,7427749:doModify,[])
+}
+Add(Case,596963,764,378)
+{
+ Value=String(exe)
+ link(onTrue,12930904:doData,[])
+}
+Add(StrCase,7427749,722,378)
+{
+ link(onModify,596963:doCase,[])
+}

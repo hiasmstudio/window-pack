@@ -1,0 +1,34 @@
+func Init()
+  if(linked(doModify) and linked(Result))
+    lng.decl_loc_var(scs, 'string')
+  end
+end
+
+func _create(Data)
+  switch(Type)
+    case 0:
+      return('AnsiLowerCase(' && SrcStr && ')')
+    case 1:
+      return('AnsiUpperCase(' && SrcStr && ')')
+    case 2:
+      return('ProperCase(' && SrcStr && ')')
+  end
+end
+
+func doModify(Data)
+  if(linked(Result))
+    println(scs, ' := ', _create(Data), ';')
+    event(onModify, scs)
+  else
+    event(onModify, _create(Data))
+  end  
+end
+
+func Result(Data)
+  if(linked(doModify))
+    return(scs)
+  else
+    return(_create(Data))
+  end
+end
+

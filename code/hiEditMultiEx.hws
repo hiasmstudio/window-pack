@@ -1,0 +1,253 @@
+func doStart()
+  gvar(BLK_PRIV_VAR, BLK_PRIV_MTD, BLK_PUB_VAR, BLK_PUB_MTD, BLK_MTD_BODY, BLK_BODY, BLK_UNITS, BLK_CREATE, BLK_CONSTS)
+  gvar(CUR_CLASS, LOC_VARS, LOC_HEAD)
+  fvar(program, e, i, unit_body, s, t)
+
+  e = code(cgt.el_get_code_name(cgt.el_get_parent_id()))
+
+  BLK_PRIV_VAR = "priv_vars"
+  BLK_PRIV_MTD = "priv_mtd"
+  BLK_PUB_VAR  = "pub_var"
+  BLK_PUB_MTD  = "pub_mtd"
+  BLK_MTD_BODY = "mtd_body"
+  BLK_BODY     = "body"
+  BLK_UNITS    = "units"
+  LOC_VARS     = "locvars"
+  BLK_CREATE   = "create"
+  LOC_HEAD     = "loc_head"
+  BLK_CONSTS   = "consts"
+
+  block.reg(BLK_PRIV_VAR)
+  block.reg(BLK_PRIV_MTD)
+  block.reg(BLK_PUB_VAR)
+  block.reg(BLK_PUB_MTD)
+  block.reg(BLK_MTD_BODY)
+//  block.reg(BLK_BODY)
+  block.reg(BLK_UNITS)
+  block.reg(BLK_CREATE)
+  block.reg(BLK_CONSTS)
+//  block.reg(LOC_VARS)
+ 
+  block.select(BLK_UNITS)
+  print('uses windows,kol,Share,hiFTCG_Tools_EM,ftcg_share')
+  
+  block.select(LOC_VARS)
+  block.inclvl()
+  
+  CUR_CLASS = 'TClass' + e
+  
+  // формируем вызовы методов
+  unit_body = block.reggen() 
+  for(i = 0; i < _event_count_; i++)
+    block.reg(LOC_VARS)
+    block.reg(BLK_BODY)
+    block.reg(LOC_HEAD)
+    
+    block.select(BLK_BODY)
+    s = cgt.pt_get_name_byid(cgt.pt_arr_event(i))
+    event(s, 'Data'@TData)
+    
+    block.select(unit_body)
+    println('')
+    println('procedure ' + CUR_CLASS + '.event_' + code(s) + '(var Data:TData; index:word);')
+    if(not block.isempty(LOC_VARS))
+      println('var')
+      block.inclvl()
+        block.copyhere(LOC_VARS)
+      block.declvl()
+    end
+    lng.begin()
+      block.copyhere(LOC_HEAD)
+      println('')
+      block.copyhere(BLK_BODY)
+    lng.end()
+    // оригинальная очистка
+    block.delete(LOC_VARS)
+    block.delete(BLK_BODY)
+    block.delete(LOC_HEAD)
+  end  
+  for(i = 0; i < _data_count_; i++)
+    block.reg(LOC_VARS)
+    block.reg(BLK_BODY)
+    block.reg(LOC_HEAD)
+    
+    block.select(BLK_BODY)
+    s = cgt.pt_get_name_byid(cgt.pt_arr_data(i))
+    t = point(s)  
+    println('Data := _DoData(', t,');')
+    //event(s, e_str('ToString(Data)'))
+    
+    block.select(unit_body)
+    println('')
+    println('procedure ' + CUR_CLASS + '.data_' + code(s) + '(var Data:TData; index:word);')
+    if(not block.isempty(LOC_VARS))
+      println('var')
+      block.inclvl()
+        block.copyhere(LOC_VARS)
+      block.declvl()
+    end
+    lng.begin()
+      block.copyhere(LOC_HEAD)
+      println('')
+      block.copyhere(BLK_BODY)
+    lng.end()
+    // оригинальная очистка
+    block.delete(LOC_VARS)
+    block.delete(BLK_BODY)
+    block.delete(LOC_HEAD)
+  end 
+    
+  program = block.reggen()
+  block.select(program)
+  println('unit hi' + e + ';')
+  println('')
+  println('interface')
+  println('')
+  
+  block.copyhere(BLK_UNITS)
+  block.delete(BLK_UNITS)
+  println(';')
+  println('')
+  
+  println('type')
+  block.inclvl()
+    println(CUR_CLASS, ' = class(TFTCG_Tools_EM)')
+    block.inclvl()
+      println('private')
+      block.inclvl()
+        block.copyhere(BLK_PRIV_VAR)
+        block.delete(BLK_PRIV_VAR)
+        println('')
+        block.copyhere(BLK_PRIV_MTD)
+        block.delete(BLK_PRIV_MTD)
+        println('function readData(index:word):TData;')
+        println('function readDataInt(index:word):integer;')
+        println('function readDataStr(index:word):string;')
+        println('function readDataReal(index:word):real;')
+      block.declvl()
+      println('public')
+      block.inclvl()
+        block.copyhere(BLK_PUB_VAR)
+        block.delete(BLK_PUB_VAR)
+        println('')
+        block.copyhere(BLK_PUB_MTD)
+        block.delete(BLK_PUB_MTD)
+        println('constructor Create(_Control:PControl);')
+        println('destructor Destroy; override;')
+        for(i = 0; i < _event_count_; i++)
+          println('procedure event_' + code(cgt.pt_get_name_byid(cgt.pt_arr_event(i))) + '(var Data:TData; index:word);')
+        end
+        for(i = 0; i < _data_count_; i++)
+          println('procedure data_' + code(cgt.pt_get_name_byid(cgt.pt_arr_data(i))) + '(var Data:TData; index:word);')
+        end
+      block.declvl()
+    block.declvl()
+    println('end;')
+    println('')
+    println('function Create_hi' + e + '(Control:PControl):TFTCG_Tools_EM;')
+  block.declvl()
+  println('')
+  println('implementation')
+  println('')
+  println('uses hiFTCG_Tools;')
+  println('')
+  
+  if(not block.isempty(BLK_CONSTS))
+    println('const')
+    block.inclvl()
+    block.copyhere(BLK_CONSTS)
+    block.declvl()
+    println('')
+  end
+  block.delete(BLK_CONSTS)
+  
+  println('function Create_hi' + e + ';')
+  println('begin')
+  println('  Result := ' + CUR_CLASS + '.Create(Control);')
+  println('end;')
+  block.copyhere(BLK_MTD_BODY)
+  block.delete(BLK_MTD_BODY)
+  
+  println('')
+  println('constructor ', CUR_CLASS, '.Create;')
+  lng.begin()
+    println('inherited Create(_Control);')
+    println('SetLength(doWork, ' + _event_count_ + ');')
+    println('SetLength(getVar, ' + _data_count_ + ');')
+    for(i = 0; i < _event_count_; i++)
+      println('doWork[' + i + '] := event_' + code(cgt.pt_get_name_byid(cgt.pt_arr_event(i))) + ';')
+    end
+    for(i = 0; i < _data_count_; i++)
+      println('getVar[' + i + '] := data_' + code(cgt.pt_get_name_byid(cgt.pt_arr_data(i))) + ';')
+    end
+    block.copyhere(BLK_CREATE)
+    block.delete(BLK_CREATE)
+  lng.end()
+  println('')
+  println('destructor ', CUR_CLASS, '.Destroy;')
+  lng.begin()
+    println('inherited Destroy;')
+  lng.end()
+  
+  println('')
+  println('function ' + CUR_CLASS + '.readData;')
+  lng.begin()
+    println('dtNull(Result);')
+    println('_ReadData(Result, THIFTCG_Tools(FParent).Datas[index]);')
+  lng.end()
+  println('')
+  println('function ' + CUR_CLASS + '.readDataInt;')
+  println('var dt:TData;')
+  lng.begin()
+    println('dtNull(dt);')
+    println('_ReadData(dt, THIFTCG_Tools(FParent).Datas[index]);')
+    println('Result := ToInteger(dt);')
+  lng.end()
+  println('')
+  println('function ' + CUR_CLASS + '.readDataStr;')
+  println('var dt:TData;')
+  lng.begin()
+    println('dtNull(dt);')
+    println('_ReadData(dt, THIFTCG_Tools(FParent).Datas[index]);')
+    println('Result := ToString(dt);')
+  lng.end()
+  println('')
+  println('function ' + CUR_CLASS + '.readDataReal;')
+  println('var dt:TData;')
+  lng.begin()
+    println('dtNull(dt);')
+    println('_ReadData(dt, THIFTCG_Tools(FParent).Datas[index]);')
+    println('Result := ToReal(dt);')
+  lng.end()
+
+  
+  block.copyhere(unit_body)
+  block.delete(unit_body)
+ 
+  println('')
+  println('end.')  
+end
+
+func doWork(_data, index)
+  if(lng.get_type(_data) == 0)
+    println('_hi_onEvent(THIFTCG_Tools(FParent).Events[', Index, ']);')
+  else
+    println('_hi_onEvent(THIFTCG_Tools(FParent).Events[', Index, '], ', _data, ');')
+  end
+end
+
+func getVar(_data, index)
+  fvar(t)
+  t = cgt.pt_get_data_type(cgt.pt_get_rlink_point(cgt.pt_arr_var(index)))
+  switch(t)
+    case 1:
+      return(('readDataInt(' && index && ')')@int)
+    case 2:
+      return(('readDataStr(' && index && ')')@str)
+    case 7:
+      return(('readDataReal(' && index && ')')@real)
+  end
+  if(t == 0)
+    return(('readData(' && index && ')')@TData)
+  end
+end

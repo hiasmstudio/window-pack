@@ -1,0 +1,30 @@
+func Init()
+  if(linked(Result) and linked(doCopy))
+//    if(isdef(Extern))
+//      lng.decl_priv_var(s, 'string')
+//    else
+      lng.decl_loc_var(sc, 'string')
+//    end
+  end
+end
+
+func _create(data)
+  return('Copy(' && SrcStr && ',' && Position && ',' && CharCount && ')')
+end
+
+func doCopy(Data)
+  if(linked(Result))
+    println(sc, ' := ', _create(Data), ';')
+    event(onCopy, sc)
+  else
+    event(onCopy, _create(Data))
+  end
+end
+
+func Result(Data)
+  if(linked(doCopy))
+    return(sc)
+  else
+    return(_create(Data))
+  end
+end

@@ -1,0 +1,38 @@
+func Init()
+  fvar(old)
+  if(linked(Result) and linked(doStrCat))
+    if(isdef(Extern))
+      lng.decl_priv_var(s, 'string')
+      if(isndef(Default))
+        old = BLK_CREATE
+      end 
+    else
+      lng.decl_loc_var(s, 'string')
+      if(isndef(Default))
+        old = LOC_HEAD
+      end
+    end
+  end
+  if(old)
+    old = block.select(old)
+    println(s, ' := ', Default, ';')
+    block.select(old)
+  end
+end
+
+func doStrCat
+  if(linked(Result))
+    println(s, ' := ', Str1 & Str2, ';')
+    event(onStrCat, s)
+  else
+    event(onStrCat, Str1 & Str2)
+  end
+end
+
+func Result
+  if(linked(doStrCat))
+    return(s)
+  else
+    return(Str1 & Str2)
+  end
+end

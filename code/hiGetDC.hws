@@ -1,0 +1,23 @@
+func Init()
+//  if(linked(onResult) and linked(HDC))
+    lng.decl_priv_var(dc, 'HDC') 
+//  end
+end
+
+func doGetDC()
+//  if(linked(HDC))
+    println(dc, ' := GetDC(', Handle, ');') 
+    event(onResult, dc)
+//  else
+//    trace('ok')
+//    event(onResult, 'GetDC(' && Handle && ')')
+//  end
+end
+
+func HDC()
+//  if(linked(onResult))
+    return(dc)
+//  else
+//    return('GetDC(' && Handle && ')')
+//  end
+end

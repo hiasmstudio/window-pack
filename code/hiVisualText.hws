@@ -1,0 +1,7 @@
+func doPrint
+  event(onPrint, Lines)
+end
+
+func Text
+  return(Lines)
+end

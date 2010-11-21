@@ -1,0 +1,17 @@
+func Init()
+  lng.decl_loc_var(ds, 'string')
+end
+
+func doDelete()
+  println(ds, ' := ', SrcStr, ';') 
+  println('Delete(', ds, ',', Position, ',', CharCount, ');')
+  event(onDelete, ds)
+end
+
+func Result()
+  if(not linked(doDelete))
+    println(ds, ' := ', SrcStr, ';') 
+    println('Delete(', ds, ',', Position, ',', CharCount, ');')
+  end
+  return(ds)
+end

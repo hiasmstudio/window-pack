@@ -1,0 +1,19 @@
+func doWrite(_data)
+  fvar(i, a, sb, s)
+  a = Array  
+  if(expof(a) != 13)
+    error('ќжидаетс€ массив')
+    return(0)
+  end
+  sb = sub(a)[1]
+  i = Index
+  switch(sb)
+    case 1: s = e_int(Value)
+    case 2: s = e_str(Value)
+    case 7: s = e_real(Value)
+  end  
+  println(Array, '[', i, '] := ', s, ';')
+  s = Array && '[' && i && ']'
+  sub(s, sb) 
+  event(onWrite, s)
+end

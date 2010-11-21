@@ -1,0 +1,4 @@
+func doVertex()
+  println('glVertex3f(', X, ',', Y, ',', Z, ');')
+  event(onVertex)
+end

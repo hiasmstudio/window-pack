@@ -1,0 +1,12 @@
+func Init()
+  var(_mdata)
+end
+
+func doData()
+  _mdata = Data
+end
+
+func GetData()
+  event(onEvent) 
+  return(_mdata)
+end

@@ -1,0 +1,13 @@
+func doPrint:any
+  fvar(old)
+  old = block.select(BLK_PRIV_MTD)  
+  println('function printCode(var data:TData):TData;')
+  block.select(BLK_MTD_BODY)
+  println('function ' + CUR_CLASS + '.printCode;')
+  println(code(_arr.join(Lines, "\r\n")))
+  block.select(BLK_UNITS)
+  print(',messages')
+  block.select(old)
+  println('printCode(data);')
+  event(onPrint)
+end

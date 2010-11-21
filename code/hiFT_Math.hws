@@ -1,0 +1,155 @@
+func Init()
+  if(linked(Result) and linked(doOperation))
+    if(isdef(ResultType))
+      lang(res:real)
+      lng.decl_priv_var(res, 'real')
+    else
+      lang(res:int)
+      lng.decl_priv_var(res, 'integer')
+    end
+  end
+end
+
+func typed(r, o1, o2)
+  fvar(rt)
+  rt = r
+  if(lng.get_type(o1) = 7 or lng.get_type(o2) = 7)
+    sub(rt, 7)
+  else
+    sub(rt, 1)
+  end
+  return(rt)
+end
+
+func angle(v)
+  if(isdef(AngleMode))
+    return(v)
+  else
+    return(v && '*pi/180')
+  end
+end
+
+func _create(_data)  
+  fvar(o1, o2, r)
+  o1 = Op1 
+  o2 = Op2
+  switch(OpType)
+    case 0:
+      r = typed('(' && o1 && ' + ' && o2 && ')', o1, o2)
+    case 1:
+      r = typed('(' && o1 && ' - ' && o2 && ')', o1, o2)
+    case 2:
+      r = typed(o1 && ' * ' && o2, o1, o2)
+    case 3:
+      r = o1 && ' / ' && o2
+      sub(r, 7)
+    case 4:
+      r = '(' && e_int(o1) && ' and ' && e_int(o2) && ')'
+      sub(r, 1)
+    case 5:
+      r = '(' && e_int(o1) && ' or ' && e_int(o2) && ')'
+      sub(r, 1)
+    case 6:
+      r = '(' && e_int(o1) && ' xor ' && e_int(o2) && ')'
+      sub(r, 1)
+    case 7:
+      r = '(' && e_int(o1) && ' div ' && e_int(o2) && ')'
+      sub(r, 1)
+    case 8:
+      r = '(' && e_int(o1) && ' mod ' && e_int(o2) && ')'
+      sub(r, 1)
+    case 9:
+      r = '(' && e_int(o1) && ' shl ' && e_int(o2) && ')'
+      sub(r, 1)
+    case 10:
+      r = '(' && e_int(o1) && ' shr ' && e_int(o2) && ')'
+      sub(r, 1)
+    case 11:
+      r = 'Power(' && o1 && ', ' && o2 && ')'
+      sub(r, 7)
+    case 12:
+      r = 'cos(' && angle(o1) && ')'
+      sub(r, 7)      
+    case 13:
+      r = 'sin(' && angle(o1) && ')'
+      sub(r, 7)
+    case 14:
+      if(isdef(AngleMode))
+        fvar(res)
+        res = o1
+      else
+        lng.decl_loc_var(res, 'real')
+        println(res, ' := ', angle(o1), ';')
+      end 
+      r = 'sin(' && res && ')/cos(' && res && ')'
+      sub(r, 7)
+    case 15:
+      if(isdef(AngleMode))
+        fvar(res)
+        res = o1
+      else
+        lng.decl_loc_var(res, 'real')
+        println(res, ' := ', angle(o1), ';')
+      end 
+      r = 'cos(' && res && ')/sin(' && res && ')'
+      sub(r, 7)
+    // for future ...
+    case 27:
+      r = 'LogN(' && o1 && ',' && op2 && ')'
+      sub(r, 7)
+    case 28:
+      r = 'LogN(10,' && o1 && ')'
+      sub(r, 7)      
+    case 29:
+      r = 'LogN(2.718281828459045,' && o1 && ')'
+      sub(r, 7)
+    case 30:
+      r = 'exp(' && o1 && ')'
+      sub(r, 7)
+    case 31:
+      r = 'sqr(' && o1 && ')'
+      sub(r, 7)
+    case 32:
+      r = 'sqrt(' && o1 && ')'
+      sub(r, 7)
+    case 33:
+      lng.decl_loc_var(res, 'real')
+      println(res, ' := ', op1, ';')
+      println('if ', res, ' < 0 then ', res, ' := -', res, ';')
+      r = res
+      sub(r, 1)    
+    case 34:
+      r = 'sign(' && o1 && ')'
+      sub(r, 1)      
+    case 35:
+      r = 'round(' && o1 && ')'
+      sub(r, 1)
+  end
+
+  if(isdef(ResultType))
+    //r = e_real(r)
+  else
+    r = e_int(r)
+  end
+
+  return(r)
+end
+
+func doOperation(_data)
+  fvar(m)
+  m = _create(_data)
+  if(linked(Result))
+    println(res, ' := ', m, ';')
+    event(onResult, res)
+  else
+    event(onResult, m)
+  end
+end
+
+func Result(_data)
+  if(linked(doOperation))
+    return(res)
+  else
+    return(_create(_data))
+  end
+end

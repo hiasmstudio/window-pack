@@ -1,0 +1,82 @@
+Make(delphi)
+Add(MainForm,2953706,21,42)
+{
+ Width=200
+ Height=168
+ Caption="Run program"
+ BorderStyle=3
+}
+Add(CeInit,9431712,252,182)
+{
+ link(onInit,16175709:doEvent,[])
+}
+Add(Button,2947817,119,182)
+{
+ Left=40
+ Top=10
+ Width=50
+ Caption="Init"
+ link(onClick,12211654:doStart,[])
+}
+Add(Button,16332679,119,224)
+{
+ Left=100
+ Top=10
+ Width=50
+ Caption="UnInit"
+ link(onClick,9431712:doUnInit,[(234,230)(234,195)])
+}
+Add(Thread,12211654,182,182)
+{
+ Delay=0
+ FastStop=0
+ link(onExec,9431712:doInit,[])
+}
+Add(Message,12638918,357,182)
+{
+ Message="I`m connected"
+ Caption="Hello"
+}
+Add(IndexToChanel,16175709,308,182)
+{
+ link(onEvent1,12638918:doMessage,[])
+}
+Add(CeWinExec,12752960,182,42)
+{
+}
+Add(Button,10108328,119,42)
+{
+ Left=40
+ Top=45
+ Width=110
+ Caption="File explorer"
+ Data=String(fexplore.exe)
+ link(onClick,5244926:doWork2,[])
+}
+Add(Button,15656520,119,84)
+{
+ Left=40
+ Top=75
+ Width=110
+ Caption="Solitare"
+ Data=String(solitare.exe)
+ link(onClick,15417969:doWork2,[])
+}
+Add(HubEx,5244926,161,35)
+{
+ link(onEvent,12752960:doExec,[])
+}
+Add(Button,15743841,119,126)
+{
+ Left=40
+ Top=105
+ Width=110
+ Caption="Calc"
+ Data=String(calc.exe)
+ link(onClick,15417969:doWork3,[(165,132)])
+}
+Add(HubEx,15417969,161,77)
+{
+ Angle=3
+ link(onEvent,5244926:doWork3,[])
+}

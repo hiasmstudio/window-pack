@@ -1,0 +1,30 @@
+func doDraw(Data)
+  fvar(b,x,y,obj)
+  b = Bitmap
+  x = Point1
+  y = Point2
+  if(count(x) != 2 or count(y) != 2)
+    error("Incorrect point format!")
+  else
+    switch(DrawSource)
+      case 0:
+        obj = b + '.'
+        b = ''
+      case 1:
+        obj = ''
+        lng.decl_loc_var(dc, 'HDC') 
+        println(dc, ' := GetDC(', e_int(b), ');')
+        b = dc && ', '
+      case 2:
+        obj = ''
+        b = e_int(b) && ', '
+    end
+    println(obj, 'MoveToEx(', b, x[0], ', ', x[1], ', nil);')
+    if(isdef(Point2AsOffset))
+      println(obj, 'LineTo(', b, y[0], ', ', y[1], ');')
+    else
+      println(obj, 'LineTo(', b, x[0], ' + ', y[0], ', ', x[1],' + ', y[1], ');')
+    end
+    event(onDraw, _data_)
+  end
+end

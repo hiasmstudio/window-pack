@@ -1,0 +1,27 @@
+func Init()
+  if(linked(doReplace) and linked(Result))
+    lng.decl_loc_var(sr, 'string')
+  end
+end
+
+func _create(Data)
+  return('str_replace(' && SrcStr && ',' && SubStr && ',' && DestStr && ')')
+end
+
+func doReplace(Data)
+  if(linked(Result))
+    println(sr, ' := ', _create(Data), ';')
+    event(onReplace, sr)
+  else
+    event(onReplace, _create(Data))
+  end  
+end
+
+func Result(Data)
+  if(linked(doReplace))
+    return(sr)
+  else
+    return(_create(Data))
+  end
+end
+

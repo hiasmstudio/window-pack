@@ -1,0 +1,66 @@
+func Init()
+  fvar(old)
+  old = block.select(BLK_UNITS)
+  if(not block.intext('OpenGL'))
+    print(',', 'OpenGL')
+  end
+  block.select(old)
+end
+
+func doDraw(_data)
+  fvar(p1, p2)
+  p1 = Point1
+  p2 = Point2
+  if(count(p1) != 3 or count(p2) != 3)
+    error("Неверный формат точек")
+  else
+    println('glBegin (GL_QUADS);')
+    println(' glNormal3f(0.0,0.0,-1.0);')
+    println(' glVertex3f(', p1[0], ',', p1[1], ',', p1[2], ');')
+    println(' glVertex3f(', p2[0], ',', p1[1], ',', p1[2], ');')
+    println(' glVertex3f(', p2[0], ',', p2[1], ',', p1[2], ');')
+    println(' glVertex3f(', p1[0], ',', p2[1], ',', p1[2], ');')
+    println('glEnd;')
+
+    println('glBegin (GL_QUADS);')
+    println(' glNormal3f(0.0,0.0,1.0);')
+    println(' glVertex3f(', p1[0], ',', p1[1], ',', p2[2], ');')
+    println(' glVertex3f(', p2[0], ',', p1[1], ',', p2[2], ');')
+    println(' glVertex3f(', p2[0], ',', p2[1], ',', p2[2], ');')
+    println(' glVertex3f(', p1[0], ',', p2[1], ',', p2[2], ');')
+    println('glEnd;')
+   
+    println('glBegin (GL_QUADS);')
+    println(' glNormal3f(-1.0,0.0,0.0);')
+    println(' glVertex3f(', p1[0], ',', p1[1], ',', p1[2], ');')
+    println(' glVertex3f(', p1[0], ',', p2[1], ',', p1[2], ');')
+    println(' glVertex3f(', p1[0], ',', p2[1], ',', p2[2], ');')
+    println(' glVertex3f(', p1[0], ',', p1[1], ',', p2[2], ');')
+    println('glEnd;')
+
+    println('glBegin (GL_QUADS);')
+    println(' glNormal3f(1.0,0.0,0.0);')
+    println(' glVertex3f(', p2[0], ',', p1[1], ',', p1[2], ');')
+    println(' glVertex3f(', p2[0], ',', p2[1], ',', p1[2], ');')
+    println(' glVertex3f(', p2[0], ',', p2[1], ',', p2[2], ');')
+    println(' glVertex3f(', p2[0], ',', p1[1], ',', p2[2], ');')
+    println('glEnd;')
+
+    println('glBegin (GL_QUADS);')
+    println(' glNormal3f(0.0,-1.0,0.0);')
+    println(' glVertex3f(', p1[0], ',', p1[1], ',', p1[2], ');')
+    println(' glVertex3f(', p2[0], ',', p1[1], ',', p1[2], ');')
+    println(' glVertex3f(', p2[0], ',', p1[1], ',', p2[2], ');')
+    println(' glVertex3f(', p1[0], ',', p1[1], ',', p2[2], ');')
+    println('glEnd;')
+
+    println('glBegin (GL_QUADS);')
+    println(' glNormal3f(0.0,1.0,0.0);')
+    println(' glVertex3f(', p1[0], ',', p2[1], ',', p1[2], ');')
+    println(' glVertex3f(', p2[0], ',', p2[1], ',', p1[2], ');')
+    println(' glVertex3f(', p2[0], ',', p2[1], ',', p2[2], ');')
+    println(' glVertex3f(', p1[0], ',', p2[1], ',', p2[2], ');')
+    println('glEnd;')
+    event(onDraw, _data_)
+  end
+end

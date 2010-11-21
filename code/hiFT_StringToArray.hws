@@ -1,0 +1,19 @@
+func init()
+  lang(arr:array)
+  lng.decl_loc_var(orig, 'string')
+end
+
+func doLoad(_data)
+  println(orig, ' := ', Data, ';')
+  arr = orig 
+  sub(arr, 13 & 2)  
+  event(onload, arr)
+end
+
+func Array()
+  return(arr)
+end
+
+func Str()
+  return(orig)
+end

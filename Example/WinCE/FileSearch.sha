@@ -1,0 +1,223 @@
+Make(delphi)
+Add(MainForm,14489239,49,77)
+{
+ Left=20
+ Top=105
+ Width=444
+ Height=352
+ Caption="File explorer"
+}
+Add(ChildPanelEx,1003686,203,112)
+{
+ link(onInit,12897100:doEvent1,[(242,118)(242,105)(130,105)(130,167)])
+}
+BEGIN_SDK
+  Add(EditMultiEx,10211359,14,14)
+  {
+   WorkCount=#8:doStrCat|
+   EventCount=#6:onInit|
+   VarCount=#4:Text|
+   Width=664
+   Height=291
+   link(Text,1684982:Var2,[(20,253)(216,253)])
+   link(doStrCat,1368790:doStrCat,[(29,20)(29,153)])
+  }
+  Add(Panel,10688389,49,161)
+  {
+   Width=436
+   Height=29
+   Align=2
+   BevelInner=0
+  }
+  Add(CeInit,9431712,182,49)
+  {
+   link(onInit,16175709:doEvent,[])
+  }
+  Add(Button,2947817,49,49)
+  {
+   Left=5
+   Top=5
+   Width=50
+   Caption="Init"
+   link(onClick,12211654:doStart,[])
+  }
+  Add(Button,16332679,49,91)
+  {
+   Left=60
+   Top=5
+   Width=50
+   Caption="UnInit"
+   link(onClick,9431712:doUnInit,[(160,97)(160,62)])
+  }
+  Add(Thread,12211654,112,49)
+  {
+   Delay=0
+   FastStop=0
+   link(onExec,9431712:doInit,[])
+  }
+  Add(IndexToChanel,16175709,238,49)
+  {
+   link(onEvent1,10667536:doWork2,[(464,55)(464,20)])
+  }
+  Add(Edit,1450754,210,147)
+  {
+   Left=120
+   Top=5
+   Width=290
+   Text="\"
+  }
+  Add(StrCat,1368790,161,147)
+  {
+   link(onStrCat,12940522:doWork2,[])
+   link(Str1,1684982:Var1,[(167,135)(149,135)(149,212)])
+  }
+  Add(GetDataEx,1684982,203,203)
+  {
+   link(Data,1450754:Text,[])
+  }
+  Add(Button,12142135,273,147)
+  {
+   Left=410
+   Top=5
+   Width=20
+   Caption="<-"
+   link(onClick,9892453:doData,[])
+  }
+  Add(StrPart,2908862,448,147)
+  {
+   Char="\"
+   link(onSplit,255128:doWork1,[(487,153)(487,139)(438,139)])
+   link(onPart,3212409:doValue,[])
+  }
+  Add(Hub,364892,371,147)
+  {
+   link(onEvent1,255128:doWork2,[])
+   link(onEvent2,16167514:doLength,[(423,160)(423,237)])
+  }
+  Add(HubEx,255128,434,140)
+  {
+   link(onEvent,2908862:doSplit,[])
+  }
+  Add(Memory,3212409,497,154)
+  {
+   link(onData,3567977:doLength,[])
+  }
+  Add(DoData,9892453,322,147)
+  {
+   link(onEventData,364892:doEvent1,[])
+   link(Data,16531894:Var1,[(328,135)(258,135)])
+  }
+  Add(Delete,12988562,553,231)
+  {
+   Position=0
+   Count=50
+   link(onDelete,223617:doEvent1,[])
+   link(Str,14740490:Var3,[(559,212)])
+  }
+  Add(Length,16167514,441,231)
+  {
+   link(onLength,7012038:doOperation,[])
+   link(Str,14740490:Var2,[])
+  }
+  Add(GetDataEx,16531894,245,203)
+  {
+   Angle=3
+   link(Data,1684982:Var3,[])
+  }
+  Add(Math,7012038,497,231)
+  {
+   OpType=1
+   link(onResult,12988562:doDelete,[])
+   link(Op2,3567977:Result,[(510,205)(559,205)])
+  }
+  Add(Length,3567977,553,154)
+  {
+  }
+  Add(Hub,223617,609,231)
+  {
+   link(onEvent1,12940522:doWork1,[(653,237)(653,123)(200,123)])
+   link(onEvent2,10667536:doWork3,[(662,244)])
+  }
+  Add(HubEx,12940522,196,140)
+  {
+   link(onEvent,1450754:doText,[])
+  }
+  Add(GetDataEx,14740490,434,203)
+  {
+   Angle=3
+   link(Data,16531894:Var3,[])
+  }
+  Add(HubEx,10667536,658,7)
+  {
+   link(onEvent,10211359:onInit,[])
+  }
+END_SDK
+Add(StringTable,9803345,357,168)
+{
+ Top=29
+ Width=436
+ Height=298
+ Align=5
+ Columns=#8:Name=100|8:Size=320|
+ Redaction=1
+ Point(onDblClick)
+ link(onDblClick,481022:doData,[])
+}
+Add(CeFileSearch,16753468,196,168)
+{
+ Dir=""
+ SubDir=1
+ FullName=1
+ Include=2
+ link(onSearch,14182235:doAdd,[])
+ link(Dir,1003686:Text,[])
+}
+Add(Hub,12897100,140,161)
+{
+ InCount=2
+ link(onEvent1,9803345:doClear,[(341,167)(341,181)])
+ link(onEvent2,16753468:doSearch,[])
+}
+Add(DoData,481022,413,175)
+{
+ link(onEventData,8913540:doMT,[(461,181)(461,188)])
+ link(Data,9803345:Select,[(419,164)(398,164)(398,213)(370,213)])
+}
+Add(MT_String,8913540,476,175)
+{
+ link(onResult,11325402:doValue,[])
+}
+Add(Hub,3153190,672,175)
+{
+ link(onEvent1,5595426:doData,[])
+ link(onEvent2,12897100:doEvent2,[(718,188)(718,225)(129,225)(129,174)])
+}
+Add(Position,11721836,574,175)
+{
+ Target="\"
+ link(onSearch,6829786:doCompare,[])
+}
+Add(If_else,6829786,623,175)
+{
+ Type=2
+ Op2=Integer(0)
+ link(onTrue,3153190:doEvent1,[])
+}
+Add(DoData,5595426,728,175)
+{
+ link(onEventData,1003686:doStrCat,[(769,181)(769,149)(191,149)(191,118)])
+ link(Data,11325402:Value,[(734,163)(661,163)(661,219)(531,219)])
+}
+Add(Memory,11325402,525,175)
+{
+ link(onData,11721836:doSearch,[])
+}
+Add(MT_String,12745399,294,168)
+{
+ link(onResult,9803345:doAdd,[])
+}
+Add(MT_Add,14182235,245,168)
+{
+ link(onAdd,12745399:doStr,[])
+ link(Data,16753468:Size,[(251,156)(235,156)(235,212)(209,212)])
+}

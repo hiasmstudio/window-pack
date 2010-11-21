@@ -1,0 +1,55 @@
+func Init()
+  fvar(old, _type)
+  switch(typeof(Default))
+    case 1:
+      _type = 'integer'
+      lang(val:int)
+    case 7:
+      _type = 'real'
+      lang(val:real)
+    else 
+      _type = 'string'
+      lang(val:str)
+  end
+  if(linked(doValue))
+    if(isdef(Extern))
+      lng.decl_priv_var(val, _type)
+      if(isndef(Default))
+        old = BLK_CREATE
+      end 
+    else
+      lng.decl_loc_var(val, _type)
+      if(isndef(Default))
+        old = LOC_HEAD
+      end
+    end
+  end
+  if(old)
+    old = block.select(old)
+    println(val, ' := ', Default, ';')
+    sub(val, typeof(Default)) 
+    block.select(old)
+  end
+end
+
+func doValue(_data)
+  fvar(dt)
+  dt = Data 
+  switch(typeof(Default))
+    case 1:
+      println(val, ' := ', e_int(dt), ';')
+    case 7:
+      println(val, ' := ', e_real(dt), ';')
+    else
+      println(val, ' := ', e_str(dt), ';')
+  end
+  event(onData, val)
+end
+
+func Value()
+  if(linked(doValue))
+    return(val)
+  else
+    return(Default)
+  end
+end

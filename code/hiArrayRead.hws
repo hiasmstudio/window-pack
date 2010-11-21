@@ -1,0 +1,48 @@
+func init()
+  var(val)
+end
+
+func create(_data, buf)
+  fvar(s, a, sb)
+  a = Array  
+  if(expof(a) != 13)
+    error('ќжидаетс€ массив')
+    return(0)
+  end
+  sb = sub(a)[1]
+  s = a && '[' && Index && ']'
+  if(buf)
+    if(not val)
+      lang(arr_val)
+      switch(sb)
+        case 1: a = 'integer'
+        case 2: a = 'string'
+        case 7: a = 'real'
+      end
+      lng.decl_priv_var(arr_val, a)
+      val = 1
+    end
+    sub(arr_val, sb)
+    println(arr_val, ' := ', s, ';')
+    return(arr_val)
+  else
+    sub(s, sb)
+    return(s)
+  end
+end
+
+func doRead(_data)
+  if(linked(Item))    
+    event(onRead, create(_data, 1))
+  else
+    event(onRead, create(_data, 0))
+  end
+end
+
+func Item
+  if(linked(doRead))
+    return(arr_val)
+  else
+    return(create(_data, 0))
+  end
+end

@@ -1,0 +1,4 @@
+func doBegin()
+   println('glBegin(', BlockType, ');')
+   event(onBegin)
+end
