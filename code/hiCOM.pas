@@ -29,6 +29,8 @@ type
     procedure _work_doRXClear(var _Data:TData; Index:word);
     procedure _work_doWrite(var _Data:TData; Index:word);
     procedure _work_doRead(var _Data:TData; Index:word);
+    procedure _work_doDTR(var _Data:TData; Index:word);
+    procedure _work_doRTS(var _Data:TData; Index:word);
   end;
 
 implementation
@@ -138,6 +140,24 @@ begin
       _hi_OnEvent(_event_onRead,Buffer)
     end
    else _hi_OnEvent(_event_onRead,string(''));
+end;
+
+procedure THICOM._work_doDTR;
+begin
+  if hFile = INVALID_HANDLE_VALUE then exit;
+  if ReadBool(_Data) then
+    EscapeCommFunction(hFile, SETDTR)
+  else
+    EscapeCommFunction(hFile, CLRDTR);
+end;
+
+procedure THICOM._work_doRTS;
+begin
+  if hFile = INVALID_HANDLE_VALUE then exit;
+  if ReadBool(_Data) then
+    EscapeCommFunction(hFile, SETRTS)
+  else
+    EscapeCommFunction(hFile, CLRRTS);
 end;
 
 end.
