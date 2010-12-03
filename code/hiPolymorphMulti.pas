@@ -219,7 +219,7 @@ end;
 
 procedure THIPolymorphMulti.HSelect;
 begin
-  FChild := THiEditPolyMulti(FChilds.Objects[ToInteger(Data)]);
+  FChild := THiEditPolyMulti(ToInteger(Data));
   if FChilds.IndexOfObj(FChild) = -1 then
     FChild := nil
   else
