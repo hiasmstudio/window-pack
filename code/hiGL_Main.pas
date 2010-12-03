@@ -26,6 +26,10 @@ const
     GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT = $84FF;
     VSyncOn  = 1;
     VSyncOff = 0;
+    
+    GL_MODULATE = OpenGL.GL_MODULATE;
+    GL_DECAL = OpenGL.GL_DECAL;
+    GL_BLEND = OpenGL.GL_BLEND;
 
 type
   THIGL_Main = class(TDebug)
@@ -42,6 +46,8 @@ type
    public
     _data_Handle:THI_Event;
     _data_AALevel:THI_Event;
+    
+    _prop_EnvironmentMode:cardinal;
     
     _prop_Color:TColor;
     _prop_TwoSide:boolean;
@@ -317,7 +323,7 @@ begin
    with TRGB(_prop_Color) do
      glClearColor (r/255, g/255, b/255, 0.0);
 
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, _prop_EnvironmentMode);
 //    glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB_ARB, GL_TEXTURE0); 
 //    glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB_ARB, GL_SRC_COLOR);
     
