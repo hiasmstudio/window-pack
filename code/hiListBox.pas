@@ -27,7 +27,6 @@ type
       function  _arr_count:integer;
       procedure _val_arr_set(var Item:TData; var Val:TData);
       function  _val_arr_get(Var Item:TData; var Val:TData):boolean;
-      function  _val_arr_count:integer;               
     
       procedure SetIndexManager(value:IIndexManager);
       procedure SetInitBoxDrawManager(value:IBoxDrawManager);
@@ -182,12 +181,8 @@ begin
 end;
 
 function THIListBox._arr_count;
-var  i:smallint;
 begin
-  Result := 0;
-  for i := 0 to Control.Count-1 do
-    if Control.ItemSelected[i] then
-      inc(Result);
+  Result := Control.Count;
 end;
 
 procedure THIListBox._val_arr_set;
@@ -207,11 +202,6 @@ begin
     dtInteger(Val,Control.ItemData[ind]);
 end;
 
-function THIListBox._val_arr_count;
-begin
-  Result := Control.Count;
-end;
-
 procedure THIListBox._var_SelectArray;
 begin
   if Arr = nil then
@@ -222,7 +212,7 @@ end;
 procedure THIListBox._var_ValueArray;
 begin
   if ValArr = nil then
-    ValArr := CreateArray(_val_arr_set,_val_arr_get,_val_arr_count,nil);
+    ValArr := CreateArray(_val_arr_set,_val_arr_get,_arr_count,nil);
   dtArray(_Data,ValArr);
 end;
 
