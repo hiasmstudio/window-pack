@@ -42,6 +42,7 @@ type
     procedure _work_doDelete(var _Data:TData; Index:word);
     procedure _work_doFindFile(var _Data:TData; Index:word);
     procedure _work_doCreateDirectory(var _Data:TData; Index:word);
+    procedure _work_doRemoveDirectory(var _Data:TData; Index:word);
 
     procedure _var_FoundIsDirectory(var _Data:TData; Index:word);
     procedure _var_FoundFileName(var _Data:TData; Index:word);
@@ -204,6 +205,12 @@ procedure THIWinFTP._work_doCreateDirectory;
 begin
   if not FtpCreateDirectory(hFTP, PChar(ToString(_Data))) then
     _hi_onEvent(_event_onError,6);
+end;
+
+procedure THIWinFTP._work_doRemoveDirectory;
+begin
+  if not FtpRemoveDirectory(hFTP, PChar(ToString(_Data))) then
+    _hi_onEvent(_event_onError,7);
 end;
 
 procedure THIWinFTP._var_FoundIsDirectory;
