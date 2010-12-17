@@ -164,10 +164,14 @@ var st:PStream;
     dt:TData;
 begin
   FObjs.Clear;
-  fn := ReadString(_Data,_data_FileName,_prop_FileName);
+  dt := ReadData(_Data,_data_FileName);
+  if ToString(dt) <> '' then fn := ToString(dt)
+  else if _prop_FileName <> '' then fn := _prop_FileName;
+  if Assigned(_data_ScrStream.event) then st := ReadStream(_data,_data_ScrStream)
+  else if ToStream(dt) <> nil then st := ToStream(dt)
+  else if ToStream(_Data) <> nil then st := ToStream(_data);
   if _prop_StreamFormat = 0 then begin
     if fn = '' then begin
-      st := ReadStream(_Data,_data_ScrStream);
       Stream2Type(FType,st);
     end else begin
       if FileExists(fn) then begin
@@ -177,18 +181,17 @@ begin
       end else CallTypeError('',_event_onError,TYPE_ERR_INVALID_TYPE);
     end;
   end else begin
-    st := nil;
     FType.Clear;
     FType.name := #0;
     list := NewStrList;
-    if fn = '' then st := ReadStream(_Data,_data_ScrStream)
-    else list.LoadFromFile(fn);
-    if st <> nil then begin
+    if fn <> '' then begin
+      list.LoadFromFile(fn);
+    end else if st <> nil then begin
       st.position := 0;
       SetLength(fn,st.size);
       st.read(fn[1],st.size);
       list.text := fn;
-    end;
+    end; 
     if list.text <> '' then begin
       nm := LowerCase(list.Items[0]);
       FType.name := Copy(nm,2,length(nm)-2);
