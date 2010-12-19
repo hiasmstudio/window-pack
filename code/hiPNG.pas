@@ -57,9 +57,9 @@ begin
    fn := ReadString(_data,_data_FileName,_prop_FileName);
    if fn = '' then exit;
    fn := ReadFileName( fn );
-   if FileExists(fn) then
-     fImage.LoadFromFile(fn);
-   AlphaMask;     
+   if not FileExists(fn) then exit;
+   fImage.LoadFromFile(fn);
+  AlphaMask;     
 end;
 
 procedure THIPNG._work_doSave;
@@ -84,8 +84,8 @@ procedure THIPNG._work_doSaveToStream;
 var st:PStream;
 begin
    st := ReadStream(_data,_data_Stream,nil);
-   if st <> nil then
-    fImage.SaveToStream(st);
+   if st = nil then exit;
+   fImage.SaveToStream(st);
 end;
 
 procedure THIPNG._work_doLoadFromBitmap;
@@ -95,7 +95,8 @@ var
   MS: PColor;
   S: pByteArray;
 begin
-   b := ReadBitmap(_Data,NULL,nil);
+   b := ReadBitmap(_Data, NULL, nil);
+   if (b = nil) or b.Empty then exit; 
    fImage.AssignHandle(b.Handle, _prop_Transparent, ReadInteger(_Data, _data_TransparentColor, _prop_TransparentColor));
    if (b.PixelFormat = pf32bit) and _prop_Transparent then
    begin
