@@ -119,8 +119,8 @@ if Msg.message = WM_NOTIFY then begin
     NMDC := PNMDateTimeChange( Msg.lParam );
     case  NMDC.nmhdr.code of
        DTN_DATETIMECHANGE: begin
-          if NMDC.dwFlags = GDT_VALID then begin
-               if not fControl.dropdown then
+             if NMDC.dwFlags = GDT_VALID then begin
+               if fControl.dropdown then
                  _hi_OnEvent(fControl._event_onChange);
                fControl.dropdown := false;  
              Result := True;
