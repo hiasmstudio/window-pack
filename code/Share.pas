@@ -56,6 +56,7 @@ const
  data_rect = 101;
 
 const
+(*
   crDefault   = 0;
   crArrow     = 1;
   crIBeam     = 19;
@@ -74,9 +75,36 @@ const
   crHandPoint = 45;
   crCube      = 47;
   crCD        = 49;
+*)
+  OCR_PEN     = 32631;
+  OCR_HELP    = 32651;
+  OCR_WAITCD =  32663;
 
-  crSize = crSizeAll;
-  crWait = crHourGlass;
+  crArrow       = OCR_NORMAL;
+  crIBeam       = OCR_IBEAM;
+  crWait        = OCR_WAIT;
+  crCross       = OCR_CROSS;
+  crUpArrow     = OCR_UP;
+  crSizeNWSE    = OCR_SIZENWSE;
+  crSizeNESW    = OCR_SIZENESW;
+  crSizeWE      = OCR_SIZEWE;
+  crSizeNS      = OCR_SIZENS;
+  crSizeAll     = OCR_SIZEALL;
+  crNo          = OCR_NO;
+  crAppStarting = OCR_APPSTARTING;
+  crHelp        = OCR_HELP;
+  crPen         = OCR_PEN;
+  crHand        = OCR_HAND;
+//  crCube      = 47;
+  crWaitCD      = OCR_WAITCD;
+
+  crSize      = crSizeAll;
+  crHourGlass = crWait;
+  crDefault   = crArrow;
+  crCD        = crWaitCD;
+  crHandPoint = crHand;
+  crBusy      = crAppStarting;
+
 //!!! используется в элементе Debug и отладочных _Debug
   DataNames:array[0..22]of string[7] =
    (

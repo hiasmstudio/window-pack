@@ -188,7 +188,8 @@ begin
       SetSize(_prop_Width,_prop_Height);
       if _prop_Ctl3D<2 then Ctl3D := _prop_Ctl3D=0;
       Enabled := _prop_Enabled;
-      Cursor := _prop_Cursor;
+//      Cursor := _prop_Cursor;
+      CursorLoad(0, MakeIntResource(_prop_Cursor));
       {
       if _prop_ParentFont then
          Font.Assign(Parent.Font)
@@ -237,7 +238,8 @@ end;
 
 procedure THISimpleWin._work_doCursor;
 begin
-   Control.Cursor := ToInteger(Data);
+   Control.CursorLoad(0, MakeIntResource(ToInteger(Data)));
+//   Control.Cursor := ToInteger(Data);
 end;
 
 procedure THISimpleWin._work_doVisible;

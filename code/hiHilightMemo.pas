@@ -630,7 +630,7 @@ begin
   HE := PCtrlEx(Control); 
   Control.ExStyle := Control.ExStyle or WS_EX_CLIENTEDGE; 
   Control.ClsStyle := (Control.ClsStyle or CS_DBLCLKS) and not (CS_HREDRAW or CS_VREDRAW); 
-  Control.Cursor := LoadCursor(0, IDC_IBEAM); 
+  Control.CursorLoad(0, MakeIntResource(crIBeam));
   { Присоединим обработчик сообщений }
   Control.Tag := LongInt(Self); 
   Control.AttachProc(HilightWndFunc); 

@@ -108,8 +108,8 @@ begin
    dtString(dt, s);
    _ReadData(dt, _data_MoveCursor);
    if ToInteger(dt) <> 0 then
-     Control.Cursor := crHandPoint
-   else Control.Cursor := crDefault;
+     Control.CursorLoad(0, MakeIntResource(crHandPoint))
+   else Control.CursorLoad(0, MakeIntResource(crDefault));
    
 end;
 

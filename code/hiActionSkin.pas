@@ -170,7 +170,7 @@ begin
       begin
         if (FDown = -1)or(FDown = i) then _hi_OnEvent(_event_onRMouseEnter,RList.Items[i]);
         if _prop_HandPoint then
-         Control.Cursor := crHandPoint
+         Control.CursorLoad(0, MakeIntResource(crHandPoint))
         else Control.Cursor := PRectParam(RList.Objects[i]).Cursor;
 
         if (FDown = -1)or((FDown = i)and(DBmp = nil)) then
@@ -188,7 +188,7 @@ begin
      else
       begin
         _hi_OnEvent(_event_onRMouseLeave,RList.Items[OldIndex]);
-        Control.Cursor := crDefault;
+        Control.CursorLoad(0, MakeIntResource(crDefault));
       end;
     end;
    OldIndex := i;

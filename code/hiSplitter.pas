@@ -27,8 +27,9 @@ begin
    //else Control.Style := Control.Style or SS_SUNKEN;
 
    if _prop_Align in [caTop,caBottom] then
-     Control.Cursor :=  crSizeNS
-   else Control.Cursor :=  crSizeWE;
+     Control.CursorLoad(0, MakeIntResource(crSizeNS))
+   else
+     Control.CursorLoad(0, MakeIntResource(crSizeWE));
 end;
 
 end.

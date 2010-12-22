@@ -101,7 +101,6 @@ begin
 end;
 
 function THISimpleForm._onClose;
-var i:integer;
 begin
    Result := true;
    if Accept and(ToIntegerEvent(_data_Close)<>0) then exit;

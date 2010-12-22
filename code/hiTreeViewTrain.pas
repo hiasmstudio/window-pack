@@ -546,7 +546,7 @@ end;
 procedure THITreeViewTrain._OnBeginDrag( Sender: PControl; Item: THandle );
 begin
   FDrag := true;
-  Control.Cursor := crHandPoint;
+  Control.CursorLoad(0, MakeIntResource(crHandPoint));
   Control.TVSelected := Item;
   FLastSelect := 0; 
 end;
@@ -564,12 +564,12 @@ begin
   if ToInteger(dt) <> 0 then
    begin
      Control.TVItemDropHighlighted[c] := true;
-     Control.Cursor := crHandPoint;
+     Control.CursorLoad(0, MakeIntResource(crHandPoint));
      FLastSelect := c;
    end
   else 
    begin
-     Control.Cursor := crNo;
+     Control.CursorLoad(0, MakeIntResource(crNo));
      FLastSelect := 0;
    end;
 end;
@@ -659,7 +659,7 @@ begin
   Control.TVItemDropHighlighted[FLastSelect] := false;
   FLastSelect := 0;
   FDrag := false;
-  Control.Cursor := crDefault;
+  Control.CursorLoad(0, MakeIntResource(crDefault));
 end;
 
 end.
