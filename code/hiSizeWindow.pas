@@ -8,7 +8,7 @@ type
   THISizeWindow = class(TDebug)
    private
    public
-    _prop_Width:integer;
+     _prop_Width:integer;
      _prop_Height:integer;
 
      _data_Height:THI_Event;
@@ -30,7 +30,7 @@ var
 begin
   h := ReadInteger(_Data,_data_Handle,0);
   GetWindowRect(h,r);
-  SetWindowPos(h,0,0,0,ReadInteger(_Data,_data_Width,0),r.Bottom-r.Top,SWP_NOMOVE or SWP_NOZORDER);
+  SetWindowPos(h,0,0,0,ReadInteger(_Data,_data_Width,_prop_Width),r.Bottom-r.Top,SWP_NOMOVE or SWP_NOZORDER);
 end; 
 
 procedure THISizeWindow._work_doHeight; 
@@ -40,7 +40,7 @@ var
 begin 
   h := ReadInteger(_Data,_data_Handle,0);
   GetWindowRect(h,r);
-  SetWindowPos(h,0,0,0,r.Right-r.Left,ReadInteger(_Data,_data_Height,0),SWP_NOMOVE or SWP_NOZORDER);
+  SetWindowPos(h,0,0,0,r.Right-r.Left,ReadInteger(_Data,_data_Height,_prop_Height),SWP_NOMOVE or SWP_NOZORDER);
 end; 
 
 procedure THISizeWindow._var_CurrentWidth; 
