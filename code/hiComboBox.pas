@@ -22,6 +22,7 @@ type
       procedure SetIndexManager(value:IIndexManager);
       procedure SetInitBoxDrawManager(value:IBoxDrawManager);
       procedure SetIconsManager(value:IIconsManager);        
+      procedure _OnChange(Obj:PObj);
     protected
       function  Add(const Text:string):integer; override;
       procedure SetStringsBefore(len:cardinal); override;
@@ -32,6 +33,7 @@ type
       _prop_Sort:boolean;
       _prop_ItemHeight:integer;
     
+      _event_onChangeText: THI_Event;
       procedure Init; override;
       destructor Destroy; override;
       procedure _work_doEditText(var _Data:TData; Index:word);
@@ -58,11 +60,17 @@ begin
   SetStrings(_prop_Strings);
   with Control{$ifndef F_P}^{$endif} do
   begin
+    if (_prop_ReadOnly <> 0) then OnChange := _OnChange;
     Text := _prop_Text;
     OnSelChange := _OnClick;
     if ManFlags and $8 > 0 then OnDrawItem  := _OnDrawItem;
     if (Count > 0) and (_prop_ReadOnly = 0) then CurIndex := 0; 
   end;
+end;
+
+procedure THIComboBox._OnChange;
+begin
+  _hi_onEvent(_event_onChangeText, Control.Caption);
 end;
 
 destructor THIComboBox.Destroy;
@@ -95,6 +103,7 @@ end;
 procedure THIComboBox._work_doEditText;
 begin
   Control.Caption := ToString(_Data);
+  _hi_onEvent(_event_onChangeText, Control.Caption);  
 end;
 
 procedure THIComboBox._var_EditText;
