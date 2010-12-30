@@ -174,8 +174,8 @@ begin
         if WaitForSingleObject(ProcessHandle, Timeout) = WAIT_OBJECT_0 then
           Result := 0
         else
-        if TerminateProcess(ProcessHandle, 0) then
-          Result := 1;
+          if TerminateProcess(ProcessHandle, 1) then
+            Result := 1;
       end;
     finally
       CloseHandle(ProcessHandle);
@@ -189,7 +189,7 @@ var
 begin
   SetDebugPrivilege(DebugPrivilege);
   proc := OpenProcess(PROCESS_TERMINATE,true,procEntry.th32ProcessID);
-  TerminateProcess(proc,0);
+  TerminateProcess(proc, 1);
   CloseHandle(proc);
 end;
 
