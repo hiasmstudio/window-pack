@@ -18,6 +18,7 @@ type
    public
     _prop_DataType:function(var dt:Tdata):boolean of object;
     _prop_Password:boolean;
+    _prop_ClearAfterEnter: boolean;
     _prop_Text:string;
     _prop_ReadOnly:boolean;
     _prop_Alignment:byte;
@@ -261,7 +262,7 @@ begin
   if Assigned(_event_onEnter.Event) and( Key = 13) then
    begin
      if _prop_DataType(dt) then begin
-       Fchange := true;
+       if _prop_ClearAfterEnter then Fchange := true;
        _hi_onEvent(_event_onEnter,dt);
        if Fchange then begin
          ChangeEvent := false; // Установка Control.Text вызывает _OnChange !!!
