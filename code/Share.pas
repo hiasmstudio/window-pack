@@ -80,6 +80,7 @@ const
   OCR_HELP    = 32651;
   OCR_WAITCD =  32663;
 
+  crDefault     = 0;
   crArrow       = OCR_NORMAL;
   crIBeam       = OCR_IBEAM;
   crWait        = OCR_WAIT;
@@ -100,7 +101,6 @@ const
 
   crSize      = crSizeAll;
   crHourGlass = crWait;
-  crDefault   = crArrow;
   crCD        = crWaitCD;
   crHandPoint = crHand;
   crBusy      = crAppStarting;
