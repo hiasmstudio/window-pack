@@ -23,6 +23,8 @@ type
     procedure _work_doActive(var _Data:TData; Index:word);
     procedure _work_doForeground(var _Data:TData; Index:word);
     procedure _work_doEnable(var _Data:TData; Index:word);
+    procedure _work_doShadow(var _Data:TData; Index:word);
+    procedure _work_doAeroGlass(var _Data:TData; Index:word);
 
     procedure _work_doMinimize(var _Data:TData; Index:word);
     procedure _work_doNormal(var _Data:TData; Index:word);
@@ -215,6 +217,66 @@ end;
 procedure THIWinTools._work_doRedraw;
 begin
  InvalidateRect(ReadInteger(_Data,_data_Handle,0),nil,true);
+end;
+
+procedure THIWinTools._work_doShadow;
+const
+  CS_DROPSHADOW = $00020000;
+var
+  en: boolean;
+  wnd: HWnd;
+begin
+  en := ReadBool(_Data);
+  Wnd := ReadInteger(_Data,_data_Handle,0);
+  if en then
+    SetClassLong(Wnd, GCL_STYLE, GetWindowLong(Wnd, GCL_STYLE) or CS_DROPSHADOW)
+  else
+    SetClassLong(Wnd, GCL_STYLE, GetWindowLong(Wnd, GCL_STYLE) and not CS_DROPSHADOW)    
+end;
+
+procedure THIWinTools._work_doAeroGlass;
+const
+  DWM_BB_ENABLE = $00000001; 
+type
+  DWM_BLURBEHIND = record
+    dwFlags                 : Cardinal;
+    fEnable                 : boolean;
+    hRgnBlur                : HRGN;
+    fTransitionOnMaximized  : boolean;
+  end;
+  IDWM_BLURBEHIND = ^DWM_BLURBEHIND;  
+type
+  TDwmEnableBlurBehindWindow = function(hWnd : HWND; const pBlurBehind : IDWM_BLURBEHIND): HRESULT; stdcall;
+  TDwmIsCompositionEnabled   = function(var bool : boolean): HRESULT; stdcall;
+var
+  pBlurBehind : IDWM_BLURBEHIND;
+  osVInfo : TOSVersionInfo;
+  Hdwmapi : THandle;
+  DwmIsCompositionEnabled : TDwmIsCompositionEnabled;
+  DwmEnableBlurBehindWindow : TDwmEnableBlurBehindWindow;
+  IsCompositionEnabled : boolean;     
+begin
+  ZeroMemory(@osVinfo, SizeOf(osVinfo));
+  OsVinfo.dwOSVersionInfoSize := SizeOf(TOSVersionInfo);
+  if not (GetVersionEx(osVInfo) and (osVinfo.dwPlatformId = VER_PLATFORM_WIN32_NT) and (osVinfo.dwMajorVersion >= 6)) then exit;
+  Hdwmapi := LoadLibrary('dwmapi.dll');
+  if Hdwmapi = 0 then exit; 
+
+  @DwmIsCompositionEnabled := GetProcAddress(Hdwmapi, 'DwmIsCompositionEnabled');  
+  DwmIsCompositionEnabled(IsCompositionEnabled);
+  if not IsCompositionEnabled then exit; 
+
+  new(pBlurBehind);
+  pBlurBehind.dwFlags := DWM_BB_ENABLE;
+  pBlurBehind.fEnable := ReadBool(_Data);
+  pBlurBehind.hRgnBlur := 0;
+  pBlurBehind.fTransitionOnMaximized := true;
+
+  @DwmEnableBlurBehindWindow := GetProcAddress(Hdwmapi, 'DwmEnableBlurBehindWindow');
+  DwmEnableBlurBehindWindow(ReadInteger(_Data,_data_Handle,0), pBlurBehind);
+
+  dispose(pBlurBehind);
+  FreeLibrary(Hdwmapi);
 end;
 
 end.
