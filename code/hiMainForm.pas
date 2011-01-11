@@ -80,7 +80,8 @@ type
      procedure _work_doFlashWindow(var _Data:TData; Index:word);
      procedure _work_doIcon(var _Data:TData; Index:word);
      procedure _work_doShiftLeft(var _Data:TData; Index:word);     
-     procedure _work_doShiftTop(var _Data:TData; Index:word);     
+     procedure _work_doShiftTop(var _Data:TData; Index:word);
+     procedure _work_doShadow(var _Data:TData; Index:word);           
 
      procedure _work_doBorderStyle(var _Data:TData; Index:word);
      procedure _work_doShowModal(var _Data:TData; Index:word);
@@ -116,8 +117,9 @@ function UpdateLayeredWindow( hwnd: HWND; hdcDst: HDC; pptDst: PPoint; psize: PS
 procedure THIMainForm.SetCustomTransparent;
 begin
   sTransparentManager := Value;
-  if Assigned(Control) and (sTransparentManager <> nil) then
-    sTransparentManager.settransparent(Control);
+  if not (Assigned(Control) and (sTransparentManager <> nil)) then exit;
+  sTransparentManager.settransparent(Control);
+  sTransparentManager.setaeromode(Control);  
 end;
 
 constructor THIMainForm.Create;
@@ -566,6 +568,21 @@ end;
 procedure THIMainForm._work_doShiftTop;
 begin
   _prop_ShiftTop := ToInteger(_Data)
+end;
+
+procedure THIMainForm._work_doShadow;
+const
+  CS_DROPSHADOW = $00020000;
+var
+  en: boolean;
+  wnd: HWnd;
+begin
+  en := ReadBool(_Data);
+  Wnd := Control.GetWindowHandle;
+  if en then
+    SetClassLong(Wnd, GCL_STYLE, GetWindowLong(Wnd, GCL_STYLE) or CS_DROPSHADOW)
+  else
+    SetClassLong(Wnd, GCL_STYLE, GetWindowLong(Wnd, GCL_STYLE) and not CS_DROPSHADOW)    
 end;
 
 initialization

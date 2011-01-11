@@ -16,6 +16,7 @@ type
   TITransparentManager = record
     settransparent: procedure(Control: PControl) of object;
     getbitmap: function: PBitmap of object;
+    setaeromode: procedure(Control: PControl) of object;
   end;
   ITransparentManager = ^TITransparentManager;
 
@@ -27,8 +28,9 @@ type
      sControl: PControl;
      hRegion: HRGN;     
      procedure settransparent(Control: PControl);
+     procedure setaeromode(Control: PControl);     
      function getbitmap: PBitmap;     
-     procedure SetPicture(Value:HBITMAP);     
+     procedure SetPicture(Value:HBITMAP);
    public
      _prop_Name:string;
      _prop_ControlManager:IControlManager;
@@ -37,6 +39,11 @@ type
      _prop_TransparentColor:TColor;
      _prop_FormTranspColor:TColor;
      _prop_AlphaBlendValue:byte;
+     _prop_AeroMode:byte;
+     _prop_LeftWidth:integer;
+     _prop_RightWidth:integer;
+     _prop_TopHeight:integer;
+     _prop_BottomHeight:integer;          
      
      function getInterfaceTransparentManager:ITransparentManager;
 
@@ -184,6 +191,7 @@ begin
   inherited;
   tm.settransparent := settransparent;
   tm.getbitmap := getbitmap;
+  tm.setaeromode := setaeromode;
   BitMap := NewBitmap(0,0);  
 end;
 
@@ -220,6 +228,83 @@ begin
   end  
   else
     SetAlphaTransparent(sControl, _prop_FormTranspColor, _prop_AlphaBlendValue);    
+end;
+
+procedure THITransparentManager.setaeromode;
+const
+  DWM_BB_ENABLE = $00000001; 
+
+type
+  DWM_BLURBEHIND = record
+    dwFlags                : Cardinal;
+    fEnable                : boolean;
+    hRgnBlur               : HRGN;
+    fTransitionOnMaximized : boolean;
+  end;
+  IDWM_BLURBEHIND = ^DWM_BLURBEHIND;
+
+  MARGINS = record
+    cxLeftWidth    : Integer;
+    cxRightWidth   : Integer;
+    cyTopHeight    : Integer;
+    cyBottomHeight : Integer;
+  end;
+  IMARGINS = ^MARGINS;
+  
+type
+  TDwmEnableBlurBehindWindow    = function(hWnd : HWND; const pBlurBehind : IDWM_BLURBEHIND): HRESULT; stdcall;
+  TDwmExtendFrameIntoClientArea = function(hWnd : HWND; const pMargins : IMARGINS): HRESULT; stdcall;  
+  TDwmIsCompositionEnabled      = function(var bool : boolean): HRESULT; stdcall;
+
+var
+  pBlurBehind : IDWM_BLURBEHIND;
+  pMargins : IMARGINS;
+  osVInfo : TOSVersionInfo;
+  Hdwmapi : THandle;
+  Wnd : HWND;  
+  DwmIsCompositionEnabled : TDwmIsCompositionEnabled;
+  DwmEnableBlurBehindWindow : TDwmEnableBlurBehindWindow;
+  DwmExtendFrameIntoClientArea : TDwmExtendFrameIntoClientArea;  
+  IsCompositionEnabled : boolean;
+begin
+  if _prop_AeroMode = 0 then exit;
+  sControl := Control;
+  Wnd := sControl.GetWindowHandle;   
+  ZeroMemory(@osVinfo, SizeOf(osVinfo));
+  OsVinfo.dwOSVersionInfoSize := SizeOf(TOSVersionInfo);
+  if not (GetVersionEx(osVInfo) and (osVinfo.dwPlatformId = VER_PLATFORM_WIN32_NT) and (osVinfo.dwMajorVersion >= 6)) then exit;
+  Hdwmapi := LoadLibrary('dwmapi.dll');
+  if Hdwmapi = 0 then exit; 
+
+  @DwmIsCompositionEnabled := GetProcAddress(Hdwmapi, 'DwmIsCompositionEnabled');  
+  DwmIsCompositionEnabled(IsCompositionEnabled);
+
+  if IsCompositionEnabled then
+  begin 
+    case _prop_AeroMode of
+      1: begin
+           new(pBlurBehind);
+           pBlurBehind.dwFlags := DWM_BB_ENABLE;
+           pBlurBehind.fEnable := true;
+           pBlurBehind.hRgnBlur := 0;
+           pBlurBehind.fTransitionOnMaximized := true;
+           @DwmEnableBlurBehindWindow := GetProcAddress(Hdwmapi, 'DwmEnableBlurBehindWindow');
+           DwmEnableBlurBehindWindow(Wnd, pBlurBehind);
+           dispose(pBlurBehind);
+         end;
+      2: begin
+           new(pMargins);
+           pMargins.cxLeftWidth    := _prop_LeftWidth;
+           pMargins.cxRightWidth   := _prop_RightWidth;
+           pMargins.cyTopHeight    := _prop_TopHeight;
+           pMargins.cyBottomHeight := _prop_BottomHeight;
+           @DwmExtendFrameIntoClientArea := GetProcAddress(Hdwmapi, 'DwmExtendFrameIntoClientArea');
+           DwmExtendFrameIntoClientArea(Wnd, pMargins);
+           dispose(pMargins);
+         end;
+    end;
+  end;
+  FreeLibrary(Hdwmapi);
 end;
 
 end.
