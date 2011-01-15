@@ -26,7 +26,9 @@ begin
    if (Data.Data_type = data_stream) then
      begin
        Strm := NewMemoryStream;
-       Strm.Write((PStream(data.idata).Memory)^,PStream(data.idata).Size);
+       Strm.Size := PStream(data.idata).Size; 
+       Stream2Stream(Strm, PStream(data.idata), Strm.Size);
+//       Strm.Write((PStream(data.idata).Memory)^,PStream(data.idata).Size);
        Result := cardinal(Strm);
      end;
 end;
