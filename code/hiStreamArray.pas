@@ -27,6 +27,7 @@ begin
      begin
        Strm := NewMemoryStream;
        Strm.Size := PStream(data.idata).Size; 
+       PStream(data.idata).Position := 0;
        Stream2Stream(Strm, PStream(data.idata), Strm.Size);
 //       Strm.Write((PStream(data.idata).Memory)^,PStream(data.idata).Size);
        Result := cardinal(Strm);
