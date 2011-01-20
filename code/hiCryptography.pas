@@ -10,6 +10,7 @@ type
    ss:cardinal;
    size:cardinal;     
    key:PChar;
+   key_len:integer;
  end;
  PThreadRec = ^TThreadRec;
  
@@ -39,7 +40,7 @@ begin
   mx := PThreadRec(l).size shr 2; 
   str := PThreadRec(l).ss;
   ps := cardinal(PThreadRec(l).key);
-  len := length(PThreadRec(l).key);
+  len := PThreadRec(l).key_len;
   asm
     push ecx
     push edx
@@ -103,6 +104,7 @@ begin
        rc.ss := cardinal(@FResult[1 + (i - 1)*(length(FResult) div c)]);
        rc.size := length(FResult) div c;
        rc.key := @key[1];
+       rc.key_len := length(key);
        //rc.handle := BeginThread(nil, 0, xor_proc, rc, 0, id);
        rc.handle := CreateThread(0, 0, @xor_proc, rc, 0, id);
        FEvents[i-1] := rc.handle;
