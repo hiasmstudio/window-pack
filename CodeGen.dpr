@@ -1622,7 +1622,7 @@ begin
           cardinal(pointer(@cmp[0])^) := cgt.sdkGetElement(sdk, 0);
           cgt.GetParam(PARAM_CODE_PATH, @cmp[0]);
           c := cmp;
-          Result := FileExists(c + 'hi' + rfd.name + '.hws');     
+          Result := FileExists(c + 'hi' + rfd.name + '.hws') or FileExists(c + 'hi' + rfd.name + '.hes');     
         end;
     end;
     
