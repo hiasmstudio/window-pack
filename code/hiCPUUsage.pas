@@ -16,6 +16,7 @@ type
   destructor Destroy; override;
   procedure _work_doCollectCPUData(var _Data:TData; Index:word);
   procedure _work_doReleaseCPUData(var _Data:TData; Index:word);
+  procedure _work_doNumberCPU(var _Data:TData; Index:word);  
   procedure _var_CPUCount(var _Data:TData; Index:word);
  end;
 
@@ -54,6 +55,11 @@ end;
 procedure THICPUUsage._work_doReleaseCPUData;
 begin
     ReleaseCPUData;
+end;
+
+procedure THICPUUsage._work_doNumberCPU;
+begin
+  _prop_NumberCPU := ToInteger(_Data);
 end;
 
 end.
