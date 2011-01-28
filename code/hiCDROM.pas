@@ -133,7 +133,7 @@ begin
    SetLength(s, 64);
    GetVolumeInformation(PChar(FCDROM + ':'),PChar(s),
      Length(s),nil,MaximumComponentLength,FileSystemFlags,nil,0);
-   SetLength(s, pos(#0,s));
+   SetLength(s, pos(#0,s)-1);
    dtString(_Data,s);
 end;
 
