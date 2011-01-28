@@ -45,6 +45,9 @@ type
     property _prop_Strings:string write SetText;
     property _prop_CFont:TFontRec write SetNewCFont;
     property _prop_SelectedFont:TFontRec write SetNewSelectedFont;
+
+    procedure _work_doCaption(var _Data:TData; Index:word);
+    procedure _work_doStrings(var _Data:TData; Index:word);
   end;
 
 implementation
@@ -259,6 +262,20 @@ begin
    FSelectedFont.FontName:= Value.Name;
    FSelectedFont.FontHeight:= _hi_SizeFnt(Value.Size);
    FSelectedFont.FontCharset:= Value.CharSet;
+end;
+
+procedure THICtrlPalette._work_doCaption;
+begin
+  _prop_Caption := ToString(_Data);
+  InvalidateRect(Control.Handle, nil, false);
+end;
+
+procedure THICtrlPalette._work_doStrings;
+begin
+  _prop_Strings := ToString(_Data);
+  if Control.height > FCaptionH + 1 then
+    Control.Height := FCaptionH + FList.Count * _prop_ItemHeight + _prop_Padding*2 + 2;
+  InvalidateRect(Control.Handle, nil, false);
 end;
 
 end.
