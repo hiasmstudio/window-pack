@@ -72,7 +72,7 @@ begin
   fn := readString(_Data,_data_FileName,_prop_FileName);
   if not GetFileAttributesEx(PChar(fn),GetFileExInfoStandard,@sys) then begin
     fn := '';
-    _hi_CreateEvent(_Data,@_event_onError,getlasterror);
+    _hi_CreateEvent(_Data,@_event_onError,integer(getlasterror));
     exit;
   end;
   i := 0;
