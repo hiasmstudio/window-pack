@@ -58,36 +58,28 @@ end;
 
 procedure THIImg_Text._var_TextWidth;
 var   SizeFont: TSize;
+      DC: HDC;
       s: string;
-      hOldFont: HFONT;
 begin
-TRY
-   if not ImgGetDC(_Data) then exit;
    s := ReadString(_Data,_data_Text,_prop_Text);
-   hOldFont := SelectObject(pDC, GFont.Handle);
-   GetTextExtentPoint32(pDC, PChar(s), Length(s), SizeFont);
-   SelectObject(pDC, hOldFont);
+   DC := CreateCompatibleDC(0);
+   SelectObject(DC, GFont.Handle);
+   GetTextExtentPoint32(DC, PChar(s), Length(s), SizeFont);
+   DeleteDC(DC);
    dtInteger(_Data, SizeFont.cx);
-FINALLY
-   ImgReleaseDC;
-END;
 end;
 
 procedure THIImg_Text._var_TextHeight;
 var   SizeFont: TSize;
+      DC: HDC;
       s: string;
-      hOldFont: HFONT;
 begin
-TRY
-   if not ImgGetDC(_Data) then exit;
    s := ReadString(_Data,_data_Text,_prop_Text);
-   hOldFont := SelectObject(pDC, GFont.Handle);
-   GetTextExtentPoint32(pDC, PChar(s), Length(s), SizeFont);
-   SelectObject(pDC, hOldFont);
+   DC := CreateCompatibleDC(0);
+   SelectObject(DC, GFont.Handle);
+   GetTextExtentPoint32(DC, PChar(s), Length(s), SizeFont);
+   DeleteDC(DC);
    dtInteger(_Data, SizeFont.cy);
-FINALLY
-   ImgReleaseDC;
-END;
 end;
 
 procedure THIImg_Text._work_doFont;
