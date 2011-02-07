@@ -32,21 +32,24 @@ function DecompressBuf(const InBuf: Pointer; InBytes: Integer; OutEstimate: Inte
 
 procedure THIZLIB._work_doCompress;
 var
-  st,dest:PStream;
-  s:integer;
-  out_buf:pointer;
+  st, dest, new_st: PStream;
+  s: integer;
+  out_buf: pointer;
 begin
    st := ReadStream(_data,_data_Stream,nil);
    if st <> nil then
     begin
      dest := NewMemoryStream;
-     s := st.Size;
-     dest.Write(s,4);
-     CompressBuf(st.Memory,st.Size,out_buf,s);
-     dest.Write(out_buf^,s);
+     new_st:= NewMemoryStream;     
+     stream2stream(new_st, st, st.Size);
+     s := new_st.Size; 
+     dest.Write(s, 4);
+     CompressBuf(new_st.Memory, new_st.Size, out_buf, s);
+     dest.Write(out_buf^, s);
      dest.Position := 0;
-     _hi_OnEvent(_event_onStream,dest);
+     _hi_OnEvent(_event_onStream, dest);
      dest.Free;
+     new_st.free;     
     end;
 end;
 
