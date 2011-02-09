@@ -66,7 +66,7 @@ INSERT INTO "elements" VALUES(32,'Image','Изображение',1,32,'FE9BEDCFBB2732A89B8
 INSERT INTO "elements" VALUES(33,'AlphaImage','Отображение Alpha-картинок',1,33,NULL);
 INSERT INTO "elements" VALUES(34,'PaintBox','Рисование',1,34,'');
 INSERT INTO "elements" VALUES(35,'CtrlPalette','Палитра ссылок',1,35,'');
-INSERT INTO "elements" VALUES(36,'HilightMemo','Редактор с подцветкой',1,36,'');
+INSERT INTO "elements" VALUES(36,'HilightMemo','Редактор с подсветкой синтаксиса',1,36,'');
 INSERT INTO "elements" VALUES(37,'*WinControls_Rush-Контролы','Rush-Контролы',1,37,'');
 INSERT INTO "elements" VALUES(38,'CheckBoxRush','Флажок',1,38,'');
 INSERT INTO "elements" VALUES(39,'RadioButtonRush','Пepeключaтeль',1,39,'');
