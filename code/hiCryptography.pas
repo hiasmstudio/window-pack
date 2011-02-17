@@ -4,6 +4,10 @@ interface
 
 uses Windows,Kol,Share,Debug;
 
+const
+  CRYPT_MODE   = 0;
+  DECRYPT_MODE = 1;
+  
 type
   HCRYPTPROV  = Cardinal;
   HCRYPTKEY   = Cardinal;
@@ -29,8 +33,8 @@ type
     FResult: string;
     FEvents: array of cardinal;
     procedure InitPass(var hProv: HCRYPTPROV; var hSKey: HCRYPTKEY; pass: string; alg: LongWord);
-    procedure Crypt_Block_MS_Enhanced_Prov(var _Data:TData; alg: LongWord);     
-    procedure DeCrypt_Block_MS_Enhanced_Prov(var _Data:TData; alg: LongWord);
+    procedure CryptXOR(var _Data:TData; Mode: Byte);
+    procedure Crypt_Decrypt_Block_MS_Enhanced_Prov(var _Data:TData; alg: LongWord; Mode: Byte);     
    public
     _prop_Mode:byte;
     _prop_HashMode:byte;
@@ -101,7 +105,7 @@ begin
   ExitThread(0);
 end;
 
-procedure THICryptography._work_doCrypt0;
+procedure THICryptography.CryptXOR;
 var rc:PThreadRec;
     i,c,a:integer;
     id:LongWord;
@@ -109,7 +113,11 @@ var rc:PThreadRec;
     lpSystemInfo:_SYSTEM_INFO;
     lst:PList;
 begin
-   FResult := ReadString(_Data, _data_Data);
+   Case Mode of
+     0: FResult := ReadString(_Data, _data_Data);
+     1: FResult := ReadString(_Data, _data_DataCrypt);
+   end;       
+
    key := ReadString(_Data, _data_Key, _prop_Key);
    while length(key) mod 4 > 0 do
      key := key + ' ';
@@ -143,19 +151,28 @@ begin
    WaitForMultipleObjects(c, PWOHandleArray(@FEvents[0]), true, cardinal(-1));
    if a > 0 then
      delete(FResult, Length(FResult) - a + 1, a);
-   
-   _hi_onEvent(_event_onCrypt, FResult);
-   
+
    for i := 0 to c-1 do
      begin
        CloseHandle(FEvents[i]);
        dispose(PThreadRec(lst.Items[i]));
      end;
    lst.Free;   
+
+   Case Mode of
+     0: _hi_CreateEvent(_Data, @_event_onCrypt, FResult);
+     1: _hi_CreateEvent(_Data, @_event_onDeCrypt, FResult);
+   end;
+end;
+
+procedure THICryptography._work_doCrypt0;
+begin
+  CryptXOR(_Data, CRYPT_MODE);
 end;
 
 procedure THICryptography._work_doDeCrypt0;
 begin
+  CryptXOR(_Data, DECRYPT_MODE);
 end;
 
 // -------------------------------- MS CryptoAPI -------------------------------
@@ -218,14 +235,17 @@ begin
   CryptDestroyHash(hash);
 end;
 
-procedure THICryptography.Crypt_Block_MS_Enhanced_Prov; // Block Algorithm
+procedure THICryptography.Crypt_Decrypt_Block_MS_Enhanced_Prov; // Block Algorithm
 var
   CountBlock, i, l, sz: LongWord;
   s, pass: string; 
   hProv: HCRYPTPROV;
   hSKey: HCRYPTKEY;
 begin
-  s := ReadString(_Data, _data_Data) + #0;
+  Case Mode of
+    0: s := ReadString(_Data, _data_Data) + #0;
+    1: s := ReadString(_Data, _data_DataCrypt) + #0;
+  end;  
   SetLength(s, Length(s) - 1);
   pass := ReadString(_Data, _data_Key, _prop_Key);
   
@@ -239,55 +259,31 @@ begin
   SetLength(FResult, CountBlock * BufferLength);
   l := BufferLength;
 
-  for i := 1 to CountBlock do
-  begin
-    CryptEncrypt(hSKey, 0, false, 0, @s[(i - 1) * BufferLength + 1], @l, BufferLength);
-    move(s[(i - 1) * BufferLength + 1], FResult[(i - 1) * BufferLength + 1], BufferLength);
-  end;  
+  Case Mode of
+    0: for i := 1 to CountBlock do
+       begin
+         CryptEncrypt(hSKey, 0, false, 0, @s[(i - 1) * BufferLength + 1], @l, BufferLength);
+         move(s[(i - 1) * BufferLength + 1], FResult[(i - 1) * BufferLength + 1], BufferLength);
+       end;
+    1: for i := 1 to CountBlock do
+       begin
+         CryptDecrypt(hSKey, 0, false, 0, @s[(i - 1) * BufferLength + 1], @l);
+         move(s[(i - 1) * BufferLength + 1], FResult[(i - 1) * BufferLength + 1], BufferLength);
+       end;  
+  end;    
   CryptDestroyKey(hSKey);
   CryptReleaseContext(hProv, 0);
   
   SetLength(FResult, (sz + 8));
-  _hi_CreateEvent(_Data, @_event_onCrypt, FResult);
-end;
-
-procedure THICryptography.DeCrypt_Block_MS_Enhanced_Prov; // Block Algorithm
-var
-  CountBlock, i, l, sz: LongWord;
-  s, pass: string; 
-  hProv: HCRYPTPROV;
-  hSKey: HCRYPTKEY;
-begin
-  s := ReadString(_Data, _data_DataCrypt) + #0;
-  SetLength(s, Length(s) - 1);
-  pass := ReadString(_Data, _data_Key, _prop_Key);
-
-  InitPass(hProv, hSKey, pass, alg);
-
-  sz := Length(s);
-  CountBlock := sz div BufferLength;
-  if sz mod BufferLength > 0 then CountBlock := CountBlock + 1;
-
-  SetLength(s, CountBlock * BufferLength);
-  SetLength(FResult, CountBlock * BufferLength);
-  l := BufferLength;
-
-  for i := 1 to CountBlock do
-  begin
-    CryptDecrypt(hSKey, 0, false, 0, @s[(i - 1) * BufferLength + 1], @l);
-    move(s[(i - 1) * BufferLength + 1], FResult[(i - 1) * BufferLength + 1], BufferLength);
+  Case Mode of
+    0: _hi_CreateEvent(_Data, @_event_onCrypt, FResult);
+    1: _hi_CreateEvent(_Data, @_event_onDeCrypt, FResult);
   end;  
-  CryptDestroyKey(hSKey);
-  CryptReleaseContext(hProv, 0);
-  
-  SetLength(FResult, sz);
-  _hi_CreateEvent(_Data, @_event_onDeCrypt, FResult);
-
 end;
 
 procedure THICryptography._work_doCrypt1; // RC2
 begin
-  Crypt_Block_MS_Enhanced_Prov(_Data, CALG_RC2);
+  Crypt_Decrypt_Block_MS_Enhanced_Prov(_Data, CALG_RC2, CRYPT_MODE);
 end;
 
 procedure THICryptography._work_doCrypt2; // RC4 (Stream Algorithm)
@@ -316,22 +312,22 @@ end;
 
 procedure THICryptography._work_doCrypt3; // DES_56
 begin
-  Crypt_Block_MS_Enhanced_Prov(_Data, CALG_DES);
+  Crypt_Decrypt_Block_MS_Enhanced_Prov(_Data, CALG_DES, CRYPT_MODE);
 end;
 
 procedure THICryptography._work_doCrypt4; // 3DES_112
 begin
-  Crypt_Block_MS_Enhanced_Prov(_Data, CALG_3DES_112);
+  Crypt_Decrypt_Block_MS_Enhanced_Prov(_Data, CALG_3DES_112, CRYPT_MODE);
 end;
 
 procedure THICryptography._work_doCrypt5; // 3DES_168
 begin
-  Crypt_Block_MS_Enhanced_Prov(_Data, CALG_3DES);
+  Crypt_Decrypt_Block_MS_Enhanced_Prov(_Data, CALG_3DES, CRYPT_MODE);
 end;
 
 procedure THICryptography._work_doDeCrypt1; // RC2
 begin
-  DeCrypt_Block_MS_Enhanced_Prov(_Data, CALG_RC2);
+  Crypt_Decrypt_Block_MS_Enhanced_Prov(_Data, CALG_RC2, DECRYPT_MODE);
 end;
 
 procedure THICryptography._work_doDeCrypt2; // RC4 (Stream Algorithm)
@@ -360,17 +356,17 @@ end;
 
 procedure THICryptography._work_doDeCrypt3; // DES_56
 begin
-  DeCrypt_Block_MS_Enhanced_Prov(_Data, CALG_DES);
+  Crypt_Decrypt_Block_MS_Enhanced_Prov(_Data, CALG_DES, DECRYPT_MODE);
 end;
 
 procedure THICryptography._work_doDeCrypt4;
 begin
-  DeCrypt_Block_MS_Enhanced_Prov(_Data, CALG_3DES_112); // 3DES_112
+  Crypt_Decrypt_Block_MS_Enhanced_Prov(_Data, CALG_3DES_112, DECRYPT_MODE); // 3DES_112
 end;
 
 procedure THICryptography._work_doDeCrypt5;
 begin
-  DeCrypt_Block_MS_Enhanced_Prov(_Data, CALG_3DES); // 3DES_168
+  Crypt_Decrypt_Block_MS_Enhanced_Prov(_Data, CALG_3DES, DECRYPT_MODE); // 3DES_168
 end;
 
 procedure THICryptography._var_Result;
