@@ -152,6 +152,11 @@ begin
    if a > 0 then
      delete(FResult, Length(FResult) - a + 1, a);
 
+   Case Mode of
+     0: _hi_onEvent(_event_onCrypt, FResult);
+     1: _hi_onEvent(_event_onDeCrypt, FResult);
+   end;
+
    for i := 0 to c-1 do
      begin
        CloseHandle(FEvents[i]);
@@ -159,10 +164,6 @@ begin
      end;
    lst.Free;   
 
-   Case Mode of
-     0: _hi_CreateEvent(_Data, @_event_onCrypt, FResult);
-     1: _hi_CreateEvent(_Data, @_event_onDeCrypt, FResult);
-   end;
 end;
 
 procedure THICryptography._work_doCrypt0;
@@ -205,7 +206,7 @@ const
   MS_SCARD_PROV             = 'Microsoft Base Smart Card Crypto Provider'; 
   MS_STRONG_PROV            = 'Microsoft Strong Cryptographic Provider';
  
-  BufferLength        = 64;
+  BufferLength              = 8;
  
 function CryptReleaseContext(hProv: HCRYPTPROV; dwFlags: LongWord): LongBool; stdcall; external ADVAPI32 name 'CryptReleaseContext';
 function CryptAcquireContext(Prov: PHCRYPTPROV; Container: PChar; Provider: PChar; ProvType: LongWord; Flags: LongWord): LongBool; stdcall; external ADVAPI32 name 'CryptAcquireContextA';
@@ -226,7 +227,9 @@ begin
     0: hashalg := CALG_MD2;
     1: hashalg := CALG_MD4;
     2: hashalg := CALG_MD5;
-    3: hashalg := CALG_SHA;        
+    3: hashalg := CALG_SHA;
+    else
+       hashalg := CALG_SHA;            
   end;
   CryptAcquireContext(@hProv, nil, MS_ENHANCED_PROV, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT);
   CryptCreateHash(hProv, hashalg, 0, 0, @hash);
@@ -237,44 +240,39 @@ end;
 
 procedure THICryptography.Crypt_Decrypt_Block_MS_Enhanced_Prov; // Block Algorithm
 var
-  CountBlock, i, l, sz: LongWord;
-  s, pass: string; 
+  CountBlock, ln, sz: LongWord;
+  pass: string; 
   hProv: HCRYPTPROV;
   hSKey: HCRYPTKEY;
 begin
   Case Mode of
-    0: s := ReadString(_Data, _data_Data) + #0;
-    1: s := ReadString(_Data, _data_DataCrypt) + #0;
+    0: FResult := ReadString(_Data, _data_Data) + #0;
+    1: FResult := ReadString(_Data, _data_DataCrypt) + #0;
   end;  
-  SetLength(s, Length(s) - 1);
+
+  SetLength(FResult, Length(FResult) - 1); 
+  sz := Length(FResult);
   pass := ReadString(_Data, _data_Key, _prop_Key);
-  
   InitPass(hProv, hSKey, pass, alg);
-    
-  sz := Length(s);
-  CountBlock := (sz + 8) div BufferLength;
-  if (sz + 8) mod BufferLength > 0 then CountBlock := CountBlock + 1;
-  
-  SetLength(s, CountBlock * BufferLength);
-  SetLength(FResult, CountBlock * BufferLength);
-  l := BufferLength;
 
   Case Mode of
-    0: for i := 1 to CountBlock do
-       begin
-         CryptEncrypt(hSKey, 0, false, 0, @s[(i - 1) * BufferLength + 1], @l, BufferLength);
-         move(s[(i - 1) * BufferLength + 1], FResult[(i - 1) * BufferLength + 1], BufferLength);
+    0: begin
+         CountBlock := sz div BufferLength;
+         if sz mod BufferLength > 0 then CountBlock := CountBlock + 1;
+         ln := CountBlock * BufferLength;
+         SetLength(FResult, ln);
+         FillChar(FResult[sz + 1], ln - sz, #0);
+         CryptEncrypt(hSKey, 0, false, 0, @FResult[1], @ln, ln);
        end;
-    1: for i := 1 to CountBlock do
-       begin
-         CryptDecrypt(hSKey, 0, false, 0, @s[(i - 1) * BufferLength + 1], @l);
-         move(s[(i - 1) * BufferLength + 1], FResult[(i - 1) * BufferLength + 1], BufferLength);
-       end;  
-  end;    
+    1: begin
+         CryptDecrypt(hSKey, 0, true, 0, @FResult[1], @sz);
+         while (sz > 0) and (FResult[sz] = #0) do dec(sz);
+         SetLength(FResult, sz);
+       end;
+  end;     
   CryptDestroyKey(hSKey);
   CryptReleaseContext(hProv, 0);
-  
-  SetLength(FResult, (sz + 8));
+
   Case Mode of
     0: _hi_CreateEvent(_Data, @_event_onCrypt, FResult);
     1: _hi_CreateEvent(_Data, @_event_onDeCrypt, FResult);
@@ -289,20 +287,17 @@ end;
 procedure THICryptography._work_doCrypt2; // RC4 (Stream Algorithm)
 var
   sz: LongWord;
-  s, pass: string; 
+  pass: string; 
   hProv: HCRYPTPROV;
   hSKey: HCRYPTKEY;
 begin
-  s := ReadString(_Data, _data_Data) + #0;
-  SetLength(s, Length(s) - 1);
+  FResult := ReadString(_Data, _data_Data) + #0;
+  SetLength(FResult, Length(FResult) - 1);
   pass := ReadString(_Data, _data_Key, _prop_Key);
-
   InitPass(hProv, hSKey, pass, CALG_RC4);
+  sz := Length(FResult);
 
-  sz := Length(s);
-  SetLength(FResult, sz);
-  CryptEncrypt(hSKey, 0, true, 0, @s[1], @sz, sz);
-  move(s[1], FResult[1], sz);
+  CryptEncrypt(hSKey, 0, true, 0, @FResult[1], @sz, sz);
 
   CryptDestroyKey(hSKey);
   CryptReleaseContext(hProv, 0);
@@ -333,20 +328,17 @@ end;
 procedure THICryptography._work_doDeCrypt2; // RC4 (Stream Algorithm)
 var
   sz: LongWord;
-  s, pass: string; 
+  pass: string; 
   hProv: HCRYPTPROV;
   hSKey: HCRYPTKEY;
 begin
-  s := ReadString(_Data, _data_DataCrypt) + #0;
-  SetLength(s, Length(s) - 1);
+  FResult := ReadString(_Data, _data_DataCrypt) + #0;
+  SetLength(FResult, Length(FResult) - 1);
   pass := ReadString(_Data, _data_Key, _prop_Key);
-
   InitPass(hProv, hSKey, pass, CALG_RC4);
+  sz := Length(FResult);
 
-  sz := Length(s);
-  SetLength(FResult, sz);
-  CryptDecrypt(hSKey, 0, true, 0, @s[1], @sz);
-  move(s[1], FResult[1], sz);
+  CryptDecrypt(hSKey, 0, true, 0, @FResult[1], @sz);
 
   CryptDestroyKey(hSKey);
   CryptReleaseContext(hProv, 0);
