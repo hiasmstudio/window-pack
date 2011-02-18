@@ -250,7 +250,7 @@ end;
 
 procedure THICryptography.Crypt_Decrypt_MS_Prov; // Universal Algorithm
 var
-  CountBlock, ln, sz: LongWord;
+  ln, sz: LongWord;
   pass: string; 
   hProv: HCRYPTPROV;
   hSKey: HCRYPTKEY;
