@@ -46,25 +46,28 @@ type
     _event_onCrypt:THI_Event;
     _event_onDeCrypt:THI_Event;    
 
-    procedure _work_doCrypt0(var _Data:TData; Index:word); // XOR
-    procedure _work_doCrypt1(var _Data:TData; Index:word); // RC2
-    procedure _work_doCrypt2(var _Data:TData; Index:word); // RC4
-    procedure _work_doCrypt3(var _Data:TData; Index:word); // DES_56
-    procedure _work_doCrypt4(var _Data:TData; Index:word); // 3DES_112
-    procedure _work_doCrypt5(var _Data:TData; Index:word); // 2DES_168                    
-    procedure _work_doCrypt6(var _Data:TData; Index:word); // AES_128    
-    procedure _work_doCrypt7(var _Data:TData; Index:word); // AES_192
-    procedure _work_doCrypt8(var _Data:TData; Index:word); // AES_256        
+    procedure _work_doCrypt0(var _Data:TData; Index:word);  // XOR
+    procedure _work_doCrypt1(var _Data:TData; Index:word);  // RC2
+    procedure _work_doCrypt2(var _Data:TData; Index:word);  // RC4
+    procedure _work_doCrypt3(var _Data:TData; Index:word);  // DES_56
+    procedure _work_doCrypt4(var _Data:TData; Index:word);  // 3DES_112
+    procedure _work_doCrypt5(var _Data:TData; Index:word);  // 3DES_168                    
+    procedure _work_doCrypt6(var _Data:TData; Index:word);  // AES_128    
+    procedure _work_doCrypt7(var _Data:TData; Index:word);  // AES_192
+    procedure _work_doCrypt8(var _Data:TData; Index:word);  // AES_256        
+    procedure _work_doCrypt9(var _Data:TData; Index:word);  // CYLINK_MEK        
 
-    procedure _work_doDeCrypt0(var _Data:TData; Index:word); // XOR
-    procedure _work_doDeCrypt1(var _Data:TData; Index:word); // RC2
-    procedure _work_doDeCrypt2(var _Data:TData; Index:word); // RC4
-    procedure _work_doDeCrypt3(var _Data:TData; Index:word); // DES_56
-    procedure _work_doDeCrypt4(var _Data:TData; Index:word); // 3DES_112
-    procedure _work_doDeCrypt5(var _Data:TData; Index:word); // 2DES_168                    
-    procedure _work_doDeCrypt6(var _Data:TData; Index:word); // AES_128    
-    procedure _work_doDeCrypt7(var _Data:TData; Index:word); // AES_192
-    procedure _work_doDeCrypt8(var _Data:TData; Index:word); // AES_256        
+    procedure _work_doDeCrypt0(var _Data:TData; Index:word);  // XOR
+    procedure _work_doDeCrypt1(var _Data:TData; Index:word);  // RC2
+    procedure _work_doDeCrypt2(var _Data:TData; Index:word);  // RC4
+    procedure _work_doDeCrypt3(var _Data:TData; Index:word);  // DES_56
+    procedure _work_doDeCrypt4(var _Data:TData; Index:word);  // 3DES_112
+    procedure _work_doDeCrypt5(var _Data:TData; Index:word);  // 3DES_168                    
+    procedure _work_doDeCrypt6(var _Data:TData; Index:word);  // AES_128    
+    procedure _work_doDeCrypt7(var _Data:TData; Index:word);  // AES_192
+    procedure _work_doDeCrypt8(var _Data:TData; Index:word);  // AES_256        
+    procedure _work_doDeCrypt9(var _Data:TData; Index:word);  // CYLINK_MEK        
+
 
     procedure _var_Result(var _Data:TData; Index:word);
   end;
@@ -186,8 +189,6 @@ end;
 
 const
   ADVAPI32            = 'advapi32.dll';
-  PROV_RSA_FULL       = 1;
-  PROV_RSA_AES        = 24;  
   CRYPT_VERIFYCONTEXT = $F0000000;
   CALG_MD2            = 32769;
   CALG_MD4            = 32770;
@@ -200,11 +201,30 @@ const
   CALG_3DES_112       = 26121;
   CALG_3DES           = 26115;
   CALG_DESX           = 26116;
+  CALG_AES            = 26129;
   CALG_AES_128        = 26126;
   CALG_AES_192        = 26127;
   CALG_AES_256        = 26128;  
-  CALG_RSA_KEYX       = 41984;
-  CALG_RSA_SIGN       = 9216;
+  CALG_CYLINK_MEK     = 26124;
+
+  PROV_RSA_FULL         = 1;
+  PROV_RSA_SIG          = 2;
+  PROV_DSS              = 3;
+  PROV_FORTEZZA         = 4;
+  PROV_MS_EXCHANGE      = 5;
+  PROV_SSL              = 6;
+  PROV_RSA_SCHANNEL     = 12;
+  PROV_DSS_DH           = 13;
+  PROV_EC_ECDSA_SIG     = 14;
+  PROV_EC_ECNRA_SIG     = 15;
+  PROV_EC_ECDSA_FULL    = 16;
+  PROV_EC_ECNRA_FULL    = 17;
+  PROV_DH_SCHANNEL      = 18;
+  PROV_SPYRUS_LYNKS     = 20;
+  PROV_RNG              = 21;
+  PROV_INTEL_SEC        = 22;
+  PROV_REPLACE_OWF      = 23;
+  PROV_RSA_AES          = 24;
 
   MS_DEF_DH_SCHANNEL_PROV   = 'Microsoft DH Schannel Cryptographic Provider'; 
   MS_DEF_DSS_DH_PROV        = 'Microsoft Base DSS and Diffie-Hellman Cryptographic Provider'; 
@@ -217,8 +237,6 @@ const
   MS_ENHANCED_PROV          = 'Microsoft Enhanced Cryptographic Provider v1.0'; 
   MS_SCARD_PROV             = 'Microsoft Base Smart Card Crypto Provider'; 
   MS_STRONG_PROV            = 'Microsoft Strong Cryptographic Provider';
- 
-  BufferLength              = 8;
  
 function CryptReleaseContext(hProv: HCRYPTPROV; dwFlags: LongWord): LongBool; stdcall; external ADVAPI32 name 'CryptReleaseContext';
 function CryptAcquireContext(Prov: PHCRYPTPROV; Container: PChar; Provider: PChar; ProvType: LongWord; Flags: LongWord): LongBool; stdcall; external ADVAPI32 name 'CryptAcquireContextA';
@@ -333,6 +351,11 @@ begin
   Crypt_Decrypt_MS_Prov(_Data, CALG_AES_256, CRYPT_MODE, MS_ENH_RSA_AES_PROV, PROV_RSA_AES);
 end;
 
+procedure THICryptography._work_doCrypt9; // CYLINK_MEK
+begin
+  Crypt_Decrypt_MS_Prov(_Data, CALG_CYLINK_MEK, CRYPT_MODE, MS_DEF_DH_SCHANNEL_PROV, PROV_DH_SCHANNEL);
+end;
+
 //-------------------------------------------- DeCrypt ---------------------------------------------------
 
 procedure THICryptography._work_doDeCrypt1; // RC2
@@ -373,6 +396,11 @@ end;
 procedure THICryptography._work_doDeCrypt8; // AES_256
 begin
   Crypt_Decrypt_MS_Prov(_Data, CALG_AES_256, DECRYPT_MODE, MS_ENH_RSA_AES_PROV, PROV_RSA_AES);
+end;
+
+procedure THICryptography._work_doDeCrypt9; // CYLINK_MEK
+begin
+  Crypt_Decrypt_MS_Prov(_Data, CALG_CYLINK_MEK, DECRYPT_MODE, MS_DEF_DH_SCHANNEL_PROV, PROV_DH_SCHANNEL);
 end;
 
 procedure THICryptography._var_Result;
