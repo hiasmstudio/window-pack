@@ -32,9 +32,9 @@ type
    private
     FResult: string;
     FEvents: array of cardinal;
-    procedure InitPass(var hProv: HCRYPTPROV; var hSKey: HCRYPTKEY; pass: string; alg: LongWord);
+    procedure InitPass(var hProv: HCRYPTPROV; var hSKey: HCRYPTKEY; pass: string; alg: LongWord; Provider: PChar; ProvType: LongWord);
     procedure CryptXOR(var _Data:TData; Mode: Byte);
-    procedure Crypt_Decrypt_Block_MS_Enhanced_Prov(var _Data:TData; alg: LongWord; Mode: Byte);     
+    procedure Crypt_Decrypt_MS_Prov(var _Data:TData; alg: LongWord; Mode: Byte; Provider: PChar; ProvType: LongWord);     
    public
     _prop_Mode:byte;
     _prop_HashMode:byte;
@@ -46,19 +46,25 @@ type
     _event_onCrypt:THI_Event;
     _event_onDeCrypt:THI_Event;    
 
-    procedure _work_doCrypt0(var _Data:TData; Index:word);
-    procedure _work_doCrypt1(var _Data:TData; Index:word);
-    procedure _work_doCrypt2(var _Data:TData; Index:word);
-    procedure _work_doCrypt3(var _Data:TData; Index:word);
-    procedure _work_doCrypt4(var _Data:TData; Index:word);
-    procedure _work_doCrypt5(var _Data:TData; Index:word);                    
+    procedure _work_doCrypt0(var _Data:TData; Index:word); // XOR
+    procedure _work_doCrypt1(var _Data:TData; Index:word); // RC2
+    procedure _work_doCrypt2(var _Data:TData; Index:word); // RC4
+    procedure _work_doCrypt3(var _Data:TData; Index:word); // DES_56
+    procedure _work_doCrypt4(var _Data:TData; Index:word); // 3DES_112
+    procedure _work_doCrypt5(var _Data:TData; Index:word); // 2DES_168                    
+    procedure _work_doCrypt6(var _Data:TData; Index:word); // AES_128    
+    procedure _work_doCrypt7(var _Data:TData; Index:word); // AES_192
+    procedure _work_doCrypt8(var _Data:TData; Index:word); // AES_256        
 
-    procedure _work_doDeCrypt0(var _Data:TData; Index:word);
-    procedure _work_doDeCrypt1(var _Data:TData; Index:word);
-    procedure _work_doDeCrypt2(var _Data:TData; Index:word);
-    procedure _work_doDeCrypt3(var _Data:TData; Index:word);
-    procedure _work_doDeCrypt4(var _Data:TData; Index:word);
-    procedure _work_doDeCrypt5(var _Data:TData; Index:word);                    
+    procedure _work_doDeCrypt0(var _Data:TData; Index:word); // XOR
+    procedure _work_doDeCrypt1(var _Data:TData; Index:word); // RC2
+    procedure _work_doDeCrypt2(var _Data:TData; Index:word); // RC4
+    procedure _work_doDeCrypt3(var _Data:TData; Index:word); // DES_56
+    procedure _work_doDeCrypt4(var _Data:TData; Index:word); // 3DES_112
+    procedure _work_doDeCrypt5(var _Data:TData; Index:word); // 2DES_168                    
+    procedure _work_doDeCrypt6(var _Data:TData; Index:word); // AES_128    
+    procedure _work_doDeCrypt7(var _Data:TData; Index:word); // AES_192
+    procedure _work_doDeCrypt8(var _Data:TData; Index:word); // AES_256        
 
     procedure _var_Result(var _Data:TData; Index:word);
   end;
@@ -176,11 +182,12 @@ begin
   CryptXOR(_Data, DECRYPT_MODE);
 end;
 
-// -------------------------------- MS CryptoAPI -------------------------------
+// ============================================ MS CryptoAPI ==========================================
 
 const
   ADVAPI32            = 'advapi32.dll';
   PROV_RSA_FULL       = 1;
+  PROV_RSA_AES        = 24;  
   CRYPT_VERIFYCONTEXT = $F0000000;
   CALG_MD2            = 32769;
   CALG_MD4            = 32770;
@@ -193,6 +200,11 @@ const
   CALG_3DES_112       = 26121;
   CALG_3DES           = 26115;
   CALG_DESX           = 26116;
+  CALG_AES_128        = 26126;
+  CALG_AES_192        = 26127;
+  CALG_AES_256        = 26128;  
+  CALG_RSA_KEYX       = 41984;
+  CALG_RSA_SIGN       = 9216;
 
   MS_DEF_DH_SCHANNEL_PROV   = 'Microsoft DH Schannel Cryptographic Provider'; 
   MS_DEF_DSS_DH_PROV        = 'Microsoft Base DSS and Diffie-Hellman Cryptographic Provider'; 
@@ -224,21 +236,19 @@ var
   hashalg: LongWord;  
 begin
   Case _prop_HashMode of
-    0: hashalg := CALG_MD2;
-    1: hashalg := CALG_MD4;
-    2: hashalg := CALG_MD5;
-    3: hashalg := CALG_SHA;
+    0: hashalg := CALG_MD5;
+    1: hashalg := CALG_SHA;
     else
        hashalg := CALG_SHA;            
   end;
-  CryptAcquireContext(@hProv, nil, MS_ENHANCED_PROV, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT);
+  CryptAcquireContext(@hProv, nil, Provider, ProvType, CRYPT_VERIFYCONTEXT);
   CryptCreateHash(hProv, hashalg, 0, 0, @hash);
   CryptHashData(hash, @pass[1], length(pass), 0);
   CryptDeriveKey(hProv, alg, hash, 0, @hSKey);
   CryptDestroyHash(hash);
 end;
 
-procedure THICryptography.Crypt_Decrypt_Block_MS_Enhanced_Prov; // Block Algorithm
+procedure THICryptography.Crypt_Decrypt_MS_Prov; // Universal Algorithm
 var
   CountBlock, ln, sz: LongWord;
   pass: string; 
@@ -253,20 +263,22 @@ begin
   SetLength(FResult, Length(FResult) - 1); 
   sz := Length(FResult);
   pass := ReadString(_Data, _data_Key, _prop_Key);
-  InitPass(hProv, hSKey, pass, alg);
+  InitPass(hProv, hSKey, pass, alg, Provider, ProvType);
 
   Case Mode of
     0: begin
-         CountBlock := sz div BufferLength;
-         if sz mod BufferLength > 0 then CountBlock := CountBlock + 1;
-         ln := CountBlock * BufferLength;
+         ln := sz;
+         CryptEncrypt(hSKey, 0, true, 0, @FResult[1], @ln, sz);
          SetLength(FResult, ln);
-         FillChar(FResult[sz + 1], ln - sz, #0);
-         CryptEncrypt(hSKey, 0, false, 0, @FResult[1], @ln, ln);
+         if GetLastError = ERROR_MORE_DATA then
+         begin
+           ln := sz;
+           CryptEncrypt(hSKey, 0, true, 0, @FResult[1], @ln, Length(FResult));
+           SetLength(FResult, ln);
+         end;
        end;
     1: begin
          CryptDecrypt(hSKey, 0, true, 0, @FResult[1], @sz);
-         while (sz > 0) and (FResult[sz] = #0) do dec(sz);
          SetLength(FResult, sz);
        end;
   end;     
@@ -279,86 +291,88 @@ begin
   end;  
 end;
 
+//-------------------------------------------- Crypt ---------------------------------------------------
+
 procedure THICryptography._work_doCrypt1; // RC2
 begin
-  Crypt_Decrypt_Block_MS_Enhanced_Prov(_Data, CALG_RC2, CRYPT_MODE);
+  Crypt_Decrypt_MS_Prov(_Data, CALG_RC2, CRYPT_MODE, MS_ENHANCED_PROV, PROV_RSA_FULL);
 end;
 
-procedure THICryptography._work_doCrypt2; // RC4 (Stream Algorithm)
-var
-  sz: LongWord;
-  pass: string; 
-  hProv: HCRYPTPROV;
-  hSKey: HCRYPTKEY;
+procedure THICryptography._work_doCrypt2; // RC4
 begin
-  FResult := ReadString(_Data, _data_Data) + #0;
-  SetLength(FResult, Length(FResult) - 1);
-  pass := ReadString(_Data, _data_Key, _prop_Key);
-  InitPass(hProv, hSKey, pass, CALG_RC4);
-  sz := Length(FResult);
-
-  CryptEncrypt(hSKey, 0, true, 0, @FResult[1], @sz, sz);
-
-  CryptDestroyKey(hSKey);
-  CryptReleaseContext(hProv, 0);
-
-  _hi_CreateEvent(_Data, @_event_onCrypt, FResult);
+  Crypt_Decrypt_MS_Prov(_Data, CALG_RC4, CRYPT_MODE, MS_ENHANCED_PROV, PROV_RSA_FULL);  
 end;
 
 procedure THICryptography._work_doCrypt3; // DES_56
 begin
-  Crypt_Decrypt_Block_MS_Enhanced_Prov(_Data, CALG_DES, CRYPT_MODE);
+  Crypt_Decrypt_MS_Prov(_Data, CALG_DES, CRYPT_MODE, MS_ENHANCED_PROV, PROV_RSA_FULL);
 end;
 
 procedure THICryptography._work_doCrypt4; // 3DES_112
 begin
-  Crypt_Decrypt_Block_MS_Enhanced_Prov(_Data, CALG_3DES_112, CRYPT_MODE);
+  Crypt_Decrypt_MS_Prov(_Data, CALG_3DES_112, CRYPT_MODE, MS_ENHANCED_PROV, PROV_RSA_FULL);
 end;
 
 procedure THICryptography._work_doCrypt5; // 3DES_168
 begin
-  Crypt_Decrypt_Block_MS_Enhanced_Prov(_Data, CALG_3DES, CRYPT_MODE);
+  Crypt_Decrypt_MS_Prov(_Data, CALG_3DES, CRYPT_MODE, MS_ENHANCED_PROV, PROV_RSA_FULL);
 end;
+
+procedure THICryptography._work_doCrypt6; // AES_128
+begin
+  Crypt_Decrypt_MS_Prov(_Data, CALG_AES_128, CRYPT_MODE, MS_ENH_RSA_AES_PROV, PROV_RSA_AES);
+end;
+
+procedure THICryptography._work_doCrypt7; // AES_192
+begin
+  Crypt_Decrypt_MS_Prov(_Data, CALG_AES_192, CRYPT_MODE, MS_ENH_RSA_AES_PROV, PROV_RSA_AES);
+end;
+
+procedure THICryptography._work_doCrypt8; // AES_256
+begin
+  Crypt_Decrypt_MS_Prov(_Data, CALG_AES_256, CRYPT_MODE, MS_ENH_RSA_AES_PROV, PROV_RSA_AES);
+end;
+
+//-------------------------------------------- DeCrypt ---------------------------------------------------
 
 procedure THICryptography._work_doDeCrypt1; // RC2
 begin
-  Crypt_Decrypt_Block_MS_Enhanced_Prov(_Data, CALG_RC2, DECRYPT_MODE);
+  Crypt_Decrypt_MS_Prov(_Data, CALG_RC2, DECRYPT_MODE, MS_ENHANCED_PROV, PROV_RSA_FULL);
 end;
 
-procedure THICryptography._work_doDeCrypt2; // RC4 (Stream Algorithm)
-var
-  sz: LongWord;
-  pass: string; 
-  hProv: HCRYPTPROV;
-  hSKey: HCRYPTKEY;
+procedure THICryptography._work_doDeCrypt2; // RC4
 begin
-  FResult := ReadString(_Data, _data_DataCrypt) + #0;
-  SetLength(FResult, Length(FResult) - 1);
-  pass := ReadString(_Data, _data_Key, _prop_Key);
-  InitPass(hProv, hSKey, pass, CALG_RC4);
-  sz := Length(FResult);
-
-  CryptDecrypt(hSKey, 0, true, 0, @FResult[1], @sz);
-
-  CryptDestroyKey(hSKey);
-  CryptReleaseContext(hProv, 0);
-
-  _hi_CreateEvent(_Data, @_event_onDeCrypt, FResult);
+  Crypt_Decrypt_MS_Prov(_Data, CALG_RC4, DECRYPT_MODE, MS_ENHANCED_PROV, PROV_RSA_FULL);  
 end;
 
 procedure THICryptography._work_doDeCrypt3; // DES_56
 begin
-  Crypt_Decrypt_Block_MS_Enhanced_Prov(_Data, CALG_DES, DECRYPT_MODE);
+  Crypt_Decrypt_MS_Prov(_Data, CALG_DES, DECRYPT_MODE, MS_ENHANCED_PROV, PROV_RSA_FULL);
 end;
 
 procedure THICryptography._work_doDeCrypt4;
 begin
-  Crypt_Decrypt_Block_MS_Enhanced_Prov(_Data, CALG_3DES_112, DECRYPT_MODE); // 3DES_112
+  Crypt_Decrypt_MS_Prov(_Data, CALG_3DES_112, DECRYPT_MODE, MS_ENHANCED_PROV, PROV_RSA_FULL); // 3DES_112
 end;
 
 procedure THICryptography._work_doDeCrypt5;
 begin
-  Crypt_Decrypt_Block_MS_Enhanced_Prov(_Data, CALG_3DES, DECRYPT_MODE); // 3DES_168
+  Crypt_Decrypt_MS_Prov(_Data, CALG_3DES, DECRYPT_MODE, MS_ENHANCED_PROV, PROV_RSA_FULL); // 3DES_168
+end;
+
+procedure THICryptography._work_doDeCrypt6; // AES_128
+begin
+  Crypt_Decrypt_MS_Prov(_Data, CALG_AES_128, DECRYPT_MODE, MS_ENH_RSA_AES_PROV, PROV_RSA_AES);
+end;
+
+procedure THICryptography._work_doDeCrypt7; // AES_192
+begin
+  Crypt_Decrypt_MS_Prov(_Data, CALG_AES_192, DECRYPT_MODE, MS_ENH_RSA_AES_PROV, PROV_RSA_AES);
+end;
+
+procedure THICryptography._work_doDeCrypt8; // AES_256
+begin
+  Crypt_Decrypt_MS_Prov(_Data, CALG_AES_256, DECRYPT_MODE, MS_ENH_RSA_AES_PROV, PROV_RSA_AES);
 end;
 
 procedure THICryptography._var_Result;
