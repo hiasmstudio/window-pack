@@ -287,19 +287,16 @@ begin
     0: begin
          ln := sz;
          CryptEncrypt(hSKey, 0, true, 0, @FResult[1], @ln, sz);
-         SetLength(FResult, ln);
          if GetLastError = ERROR_MORE_DATA then
          begin
-           ln := sz;
-           CryptEncrypt(hSKey, 0, true, 0, @FResult[1], @ln, Length(FResult));
            SetLength(FResult, ln);
+           CryptEncrypt(hSKey, 0, true, 0, @FResult[1], @sz, ln);
          end;
        end;
-    1: begin
-         CryptDecrypt(hSKey, 0, true, 0, @FResult[1], @sz);
-         SetLength(FResult, sz);
-       end;
+    1: CryptDecrypt(hSKey, 0, true, 0, @FResult[1], @sz);
   end;     
+  SetLength(FResult, sz);
+
   CryptDestroyKey(hSKey);
   CryptReleaseContext(hProv, 0);
 
