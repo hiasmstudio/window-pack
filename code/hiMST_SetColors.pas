@@ -14,6 +14,7 @@ type
      procedure SetMSTControl(Value: IMSTControl); 
    public
      _prop_ColorItems: boolean;
+     _event_onChangeProperty :THI_Event;     
 
      property _prop_MSTControl: IMSTControl read FMSTControl write SetMSTControl;
      destructor Destroy; override;
@@ -56,6 +57,7 @@ begin
   FTextColor := ToInteger(_Data);
   if not Assigned(_prop_MSTControl) then exit;
   _prop_MSTControl.stextcolor(FTextColor);
+  _hi_onEvent(_event_onChangeProperty);
 end;
 
 procedure THIMST_SetColors._work_doTextBkColor;
@@ -63,6 +65,7 @@ begin
   FTextBkColor := ToInteger(_Data);
   if not Assigned(_prop_MSTControl) then exit;
   _prop_MSTControl.stextbkcolor(FTextBkColor);
+  _hi_onEvent(_event_onChangeProperty);
 end;
 
 procedure THIMST_SetColors._work_doBkColor;
@@ -70,6 +73,7 @@ begin
   FBkColor := ToInteger(_Data);
   if not Assigned(_prop_MSTControl) then exit;
   _prop_MSTControl.sbkcolor(FBkColor);
+  _hi_onEvent(_event_onChangeProperty);
 end;
 
 procedure THIMST_SetColors._work_doIconColColor;
@@ -77,6 +81,7 @@ begin
   FIconColColor := ToInteger(_Data);
   if not Assigned(_prop_MSTControl) then exit;
   _prop_MSTControl.siconcolcolor(FIconColColor);
+  _hi_onEvent(_event_onChangeProperty);  
 end;
 
 //-----------------------   MT-переменные   ---------------------------
