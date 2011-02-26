@@ -18,6 +18,7 @@ type
      _event_onResult: THI_Event;
      
      procedure _work_doCreateSignature(var _Data:TData; Index:word);
+     procedure _work_doHashMode(var _Data:TData; Index:word);
      procedure _var_Signature(var _Data:TData; Index:word);
  end;
 
@@ -95,6 +96,11 @@ begin
     _hi_CreateEvent(_Data, @_event_onError, Err)
   else
     _hi_CreateEvent(_Data, @_event_onResult, FSignature);
+end;
+
+procedure THiCreateSignature._work_doHashMode;
+begin
+  _prop_HashMode := ToInteger(_Data);
 end;
 
 procedure THiCreateSignature._var_Signature;

@@ -19,6 +19,7 @@ type
      _event_onResult: THI_Event;
      
      procedure _work_doVerifySignature(var _Data:TData; Index:word);
+     procedure _work_doHashMode(var _Data:TData; Index:word);
  end;
 
 implementation
@@ -95,6 +96,11 @@ begin
     _hi_CreateEvent(_Data, @_event_onError, Err)
   else
     _hi_CreateEvent(_Data, @_event_onResult, integer(Valid));
+end;
+
+procedure THiVerifySignature._work_doHashMode;
+begin
+  _prop_HashMode := ToInteger(_Data);
 end;
 
 end.

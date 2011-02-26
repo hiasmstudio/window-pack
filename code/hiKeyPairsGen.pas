@@ -17,6 +17,8 @@ type
      _event_onResult: THI_Event;
      
      procedure _work_doKeyPair(var _Data:TData; Index:word);
+     procedure _work_doGenerateMode(var _Data:TData; Index:word);
+     procedure _work_doLengthKey(var _Data:TData; Index:word);          
 
      procedure _var_KeyPair(var _Data:TData; Index:word);
      procedure _var_PublicKey(var _Data:TData; Index:word);
@@ -95,6 +97,16 @@ begin
     dtkp.ldata := @dtpk;
     _hi_onEvent_(_event_onResult, dtkp);
   end;  
+end;
+
+procedure THiKeyPairsGen._work_doGenerateMode;
+begin
+  _prop_GenerateMode := ToInteger(_Data);
+end;
+
+procedure THiKeyPairsGen._work_doLengthKey;          
+begin
+  _prop_LengthKey := ToInteger(_Data);
 end;
 
 procedure THiKeyPairsGen._var_KeyPair;
