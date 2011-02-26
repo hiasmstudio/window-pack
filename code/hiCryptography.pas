@@ -182,6 +182,7 @@ var
   hash: HCRYPTHASH;
   hashalg: LongWord;  
 begin
+  hash := 0;
   Case _prop_HashMode of
     0: hashalg := CALG_MD5;
     1: hashalg := CALG_SHA;
@@ -192,7 +193,7 @@ begin
   CryptCreateHash(hProv, hashalg, 0, 0, @hash);
   CryptHashData(hash, @pass[1], length(pass), 0);
   CryptDeriveKey(hProv, alg, hash, 0, @hSKey);
-  CryptDestroyHash(hash);
+  if hash <> 0 then CryptDestroyHash(hash);
 end;
 
 procedure THICryptography.Crypt_Decrypt_MS_Prov; // Universal Algorithm
@@ -202,6 +203,9 @@ var
   hProv: HCRYPTPROV;
   hSKey: HCRYPTKEY;
 begin
+  hSKey := 0;
+  hProv := 0;
+
   Case Mode of
     0: FResult := ReadString(_Data, _data_Data) + #0;
     1: FResult := ReadString(_Data, _data_DataCrypt) + #0;
@@ -226,8 +230,8 @@ begin
   end;     
   SetLength(FResult, sz);
 
-  CryptDestroyKey(hSKey);
-  CryptReleaseContext(hProv, 0);
+  if hSKey <> 0 then CryptDestroyKey(hSKey);
+  if hProv <> 0 then CryptReleaseContext(hProv, 0);
 
   Case Mode of
     0: _hi_CreateEvent(_Data, @_event_onCrypt, FResult);

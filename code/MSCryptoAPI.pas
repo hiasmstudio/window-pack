@@ -5,6 +5,28 @@ interface
 uses
   Windows;
 
+//  Constants for HiAsm Componets
+const
+  NO_ERROR                  =   0;
+  ERROR_INVALID_PARAMETER   =   1;
+  ERROR_ACQUIRE_CONTEXT     =   2;
+  ERROR_GENERATION_KEY      =   3;
+  ERROR_GET_USER_KEY        =   4;
+  ERROR_DERIVE_KEY          =   5;
+  ERROR_ENCRYPT             =   6;
+  ERROR_DECRYPT             =   7;
+  ERROR_CREATE_HASH         =   8;
+  ERROR_HASH_DATA           =   9;
+  ERROR_GET_HASH_PARAM      =  10;
+  ERROR_SIGNED_HASH         =  11;
+  ERROR_EXPORT_KEYPAIR      =  12;
+  ERROR_EXPORT_PUBLICKEY    =  13;
+  ERROR_EXPORT_SESSIONKEY   =  14;
+  ERROR_IMPORT_KEYPAIR      =  15;
+  ERROR_IMPORT_PUBLICKEY    =  16;
+  ERROR_IMPORT_SESSIONKEY   =  17;
+  ERROR_GENERATION_KEYPAIR  =  18;
+  
 type
   HCRYPTPROV  = Cardinal;
   HCRYPTKEY   = Cardinal;
