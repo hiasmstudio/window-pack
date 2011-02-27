@@ -26,7 +26,7 @@ var
   ln, dwDataLen, Flag: LongWord;
 begin
   hProv := 0;
-  if CryptAcquireContext(@hProv, nil, MS_ENHANCED_PROV, PROV_RSA_FULL, 0) then
+  if CryptAcquireContext(@hProv, nil, 0, PROV_RSA_FULL, 0) then
   begin
     Flag := CRYPT_FIRST;
     if CryptGetProvParam(hProv, PP_ENUMCONTAINERS, nil, @dwDataLen, Flag) then

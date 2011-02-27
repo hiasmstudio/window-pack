@@ -40,7 +40,7 @@ begin
   SignHash := 0;
   PublicKey := 0;
   
-  if CryptAcquireContext(@hProv, nil, MS_ENHANCED_PROV, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
+  if CryptAcquireContext(@hProv, nil, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
   begin
     DataForHash := ReadString(_Data, _data_Data);
     dwDataForHashLen := Length(DataForHash);

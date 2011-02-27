@@ -34,7 +34,7 @@ begin
   SessionKey := 0;
   PrivatKey := 0;
   hProv := 0;
-  if CryptAcquireContext(@hProv, nil, MS_ENHANCED_PROV, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
+  if CryptAcquireContext(@hProv, nil, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
   begin
     KeyBlob := ReadString(_Data, _data_KeyPair);
     dwKeyBlobLen := Length(KeyBlob);
@@ -66,6 +66,7 @@ begin
   end
   else
     Err := ERROR_ACQUIRE_CONTEXT; 
+
   if SessionKey <> 0 then CryptDestroyKey(SessionKey); 
   if PrivatKey <> 0 then CryptDestroyKey(PrivatKey);     
   if hProv <> 0 then CryptReleaseContext(hProv, 0);

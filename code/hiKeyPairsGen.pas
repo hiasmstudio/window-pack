@@ -13,10 +13,12 @@ type
      _prop_GenerateMode: Byte;
      _prop_LengthKey: Byte;
     
+     _data_ReexportKeyPair: THI_Event;
      _event_onError: THI_Event;
      _event_onResult: THI_Event;
      
      procedure _work_doKeyPair(var _Data:TData; Index:word);
+     procedure _work_doReexportKeyPair(var _Data:TData; Index:word);
      procedure _work_doGenerateMode(var _Data:TData; Index:word);
      procedure _work_doLengthKey(var _Data:TData; Index:word);          
 
@@ -38,7 +40,7 @@ begin
   hProv := 0;
   KeyPair := 0;
   
-  if CryptAcquireContext(@hProv, nil, MS_ENHANCED_PROV, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
+  if CryptAcquireContext(@hProv, nil, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
   begin
     Case _prop_LengthKey of
       0: flag :=  RSA384BIT_KEY OR CRYPT_EXPORTABLE;
@@ -97,6 +99,61 @@ begin
     dtkp.ldata := @dtpk;
     _hi_onEvent_(_event_onResult, dtkp);
   end;  
+end;
+
+procedure THiKeyPairsGen._work_doReexportKeyPair;
+var
+  hProv: HCRYPTPROV;
+  PrivatKey, SessionKey: HCRYPTKEY;
+  dwKeyBlobLen, dwPublicKeyBlobLen: LongWord;
+  dtkp, dtpk: TData; 
+  Err: Integer;
+begin
+  Err := 0;
+  SessionKey := 0;
+  PrivatKey := 0;
+  hProv := 0;
+  if CryptAcquireContext(@hProv, nil, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
+  begin
+    FKeyPair := ReadString(_Data, _data_ReexportKeyPair);
+    dwKeyBlobLen := Length(FKeyPair);
+
+    if dwKeyBlobLen <> 0 then
+    begin
+      if CryptImportKey(hProv, @FKeyPair[1], dwKeyBlobLen, 0, CRYPT_EXPORTABLE, @PrivatKey) then
+      begin
+        if CryptExportKey(PrivatKey, 0, PUBLICKEYBLOB, 0, nil, @dwPublicKeyBlobLen) then
+        begin
+          SetLength(FPublicKey, dwPublicKeyBlobLen);
+          if not CryptExportKey(PrivatKey, 0, PUBLICKEYBLOB, 0, @FPublicKey[1], @dwPublicKeyBlobLen) then
+            Err := ERROR_EXPORT_PUBLICKEY;
+        end
+        else
+          Err := ERROR_EXPORT_PUBLICKEY;
+      end
+      else
+        Err := ERROR_IMPORT_KEYPAIR;
+    end
+    else
+      Err := ERROR_INVALID_PARAMETER;
+  end
+  else
+    Err := ERROR_ACQUIRE_CONTEXT; 
+
+  if SessionKey <> 0 then CryptDestroyKey(SessionKey); 
+  if PrivatKey <> 0 then CryptDestroyKey(PrivatKey);     
+  if hProv <> 0 then CryptReleaseContext(hProv, 0);
+
+  if Err <> NO_ERROR then
+    _hi_CreateEvent(_Data, @_event_onError, Err)
+  else
+  begin
+    dtString(dtkp, FKeyPair);
+    dtString(dtpk, FPublicKey);
+    dtkp.ldata := @dtpk;
+    _hi_onEvent_(_event_onResult, dtkp);
+  end;  
+
 end;
 
 procedure THiKeyPairsGen._work_doGenerateMode;
