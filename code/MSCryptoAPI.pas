@@ -7,27 +7,34 @@ uses
 
 //  Constants for HiAsm Componets
 const
-  NO_ERROR                  =   0;
-  ERROR_INVALID_PARAMETER   =   1;
-  ERROR_ACQUIRE_CONTEXT     =   2;
-  ERROR_GENERATION_KEY      =   3;
-  ERROR_GENERATION_KEYPAIR  =   4;
-  ERROR_GET_USER_KEY        =   5;
-  ERROR_DERIVE_KEY          =   6;
-  ERROR_ENCRYPT             =   7;
-  ERROR_DECRYPT             =   8;
-  ERROR_CREATE_HASH         =   9;
-  ERROR_HASH_DATA           =  10;
-  ERROR_GET_HASH_PARAM      =  11;
-  ERROR_SIGNED_HASH         =  12;
-  ERROR_EXPORT_KEYPAIR      =  13;
-  ERROR_EXPORT_PUBLICKEY    =  14;
-  ERROR_EXPORT_SESSIONKEY   =  15;
-  ERROR_EXPORT_EXCHANGEKEY  =  16;
-  ERROR_IMPORT_KEYPAIR      =  17;
-  ERROR_IMPORT_PUBLICKEY    =  18;
-  ERROR_IMPORT_SESSIONKEY   =  19;
-  ERROR_IMPORT_EXCHANGEKEY  =  20;
+  NO_ERROR                          =   0;
+  ERROR_INVALID_PARAMETER           =   1;
+  ERROR_INCORRECT_KEY               =   2;
+  ERROR_ACQUIRE_CONTEXT             =   3;
+  ERROR_GENERATION_KEY              =   4;
+  ERROR_GENERATION_KEYPAIR          =   5;
+  ERROR_GET_USER_KEY                =   6;
+  ERROR_DERIVE_KEY                  =   7;
+  ERROR_ENCRYPT                     =   8;
+  ERROR_DECRYPT                     =   9;
+  ERROR_CREATE_HASH                 =  10;
+  ERROR_HASH_DATA                   =  11;
+  ERROR_GET_HASH_PARAM              =  12;
+  ERROR_SIGNED_HASH                 =  13;
+  ERROR_EXPORT_KEYPAIR              =  14;
+  ERROR_EXPORT_PUBLICKEY            =  15;
+  ERROR_EXPORT_SESSIONKEY           =  16;
+  ERROR_EXPORT_EXCHANGEKEY          =  17;
+  ERROR_IMPORT_KEYPAIR              =  18;
+  ERROR_IMPORT_PUBLICKEY            =  19;
+  ERROR_IMPORT_SESSIONKEY           =  20;
+  ERROR_IMPORT_EXCHANGEKEY          =  21;
+  ERROR_WRONG_CONTAINER_NAME        =  22;
+  ERROR_CREATE_CONTAINER            =  23;
+  ERROR_DELETE_CONTAINER            =  24;
+  ERROR_CONTAINER_NOT_EXISTS        =  25;
+  ERROR_CONTAINER_ALREADY_EXISTS    =  26;
+  ERROR_NO_CONTAINERS               =  27;
 
 type
   HCRYPTPROV  = Cardinal;
@@ -49,6 +56,31 @@ const
   RSA4096BIT_KEY      = $10000000;
 //  RSA8192BIT_KEY      = $20000000;
 //  RSA16384BIT_KEY     = $40000000;
+
+  // CryptGetProvParam
+  PP_ENUMALGS            = 1;
+  PP_ENUMCONTAINERS      = 2;
+  PP_IMPTYPE             = 3;
+  PP_NAME                = 4;
+  PP_VERSION             = 5;
+  PP_CONTAINER           = 6;
+  PP_CHANGE_PASSWORD     = 7;
+  PP_KEYSET_SEC_DESCR    = 8;  // get/set security descriptor of keyset
+  PP_CERTCHAIN           = 9;  // for retrieving certificates from tokens
+  PP_KEY_TYPE_SUBTYPE    = 10;
+  PP_PROVTYPE            = 16;
+  PP_KEYSTORAGE          = 17;
+  PP_APPLI_CERT          = 18;
+  PP_SYM_KEYSIZE         = 19;
+  PP_SESSION_KEYSIZE     = 20;
+  PP_UI_PROMPT           = 21;
+  PP_ENUMALGS_EX         = 22;
+  CRYPT_FIRST            = 1;
+  CRYPT_NEXT             = 2;
+  CRYPT_IMPL_HARDWARE    = 1;
+  CRYPT_IMPL_SOFTWARE    = 2;
+  CRYPT_IMPL_MIXED       = 3;
+  CRYPT_IMPL_UNKNOWN     = 4;
 
   // exported key blob definitions
   SIMPLEBLOB          = $1;
@@ -95,6 +127,7 @@ const
   CRYPT_NEWKEYSET      = $00000008;
   CRYPT_DELETEKEYSET   = $00000010;
   CRYPT_MACHINE_KEYSET = $00000020;
+  CRYPT_SILENT         = $00000040;
 
   // dwFlag definitions for CryptGenKey
   CRYPT_EXPORTABLE     = $00000001;
@@ -146,6 +179,7 @@ const
   MS_STRONG_PROV            = 'Microsoft Strong Cryptographic Provider';
 
 function CryptAcquireContext(Prov: PHCRYPTPROV; Container: PChar; Provider: PChar; ProvType: LongWord; Flags: LongWord): LongBool; stdcall; external ADVAPI32 name 'CryptAcquireContextA';
+function CryptGetProvParam(hProv: HCRYPTPROV; dwParam: LongWord; pbData: PChar; pdwDataLen: PLongWord; dwFlags: LongWord): LongBool; stdcall; external ADVAPI32 name 'CryptGetProvParam';
 function CryptGenKey(hProv: HCRYPTPROV; Algid: ALG_ID; dwFlags: LongWord; phKey: PHCRYPTKEY): LongBool; stdcall; external ADVAPI32 name 'CryptGenKey';
 function CryptGetUserKey(hProv: HCRYPTPROV; dwKeySpec: LongWord; phUserKey: PHCRYPTKEY): LongBool; stdcall; external ADVAPI32 name 'CryptGetUserKey';
 function CryptDeriveKey(Prov: HCRYPTPROV; Algid: ALG_ID; BaseData: HCRYPTHASH; Flags: LongWord; Key: PHCRYPTKEY): LongBool; stdcall; external ADVAPI32 name 'CryptDeriveKey';

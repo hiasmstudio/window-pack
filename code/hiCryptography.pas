@@ -22,7 +22,7 @@ type
    private
     FResult: string;
     FEvents: array of cardinal;
-    procedure InitPass(var hProv: HCRYPTPROV; var hSKey: HCRYPTKEY; pass: string; alg: LongWord; Provider: PChar; ProvType: LongWord);
+    function InitPass(var hProv: HCRYPTPROV; var hSKey: HCRYPTKEY; pass: string; alg: LongWord; Provider: PChar; ProvType: LongWord): Integer;
     procedure CryptXOR(var _Data:TData; Mode: Byte);
     procedure Crypt_Decrypt_MS_Prov(var _Data:TData; alg: LongWord; Mode: Byte; Provider: PChar; ProvType: LongWord);     
    public
@@ -34,7 +34,8 @@ type
     _data_Data:THI_Event;
     _data_DataCrypt:THI_Event;    
     _event_onCrypt:THI_Event;
-    _event_onDeCrypt:THI_Event;    
+    _event_onDeCrypt:THI_Event;
+    _event_onError:THI_Event;        
 
     procedure _work_doCrypt0(var _Data:TData; Index:word);  // XOR
     procedure _work_doCrypt1(var _Data:TData; Index:word);  // RC2
@@ -118,6 +119,11 @@ begin
    end;       
 
    key := ReadString(_Data, _data_Key, _prop_Key);
+   if length(key) = 0 then
+   begin
+     _hi_CreateEvent(_Data, @_event_onError, ERROR_INCORRECT_KEY);
+     exit;  
+   end;
    while length(key) mod 4 > 0 do
      key := key + ' ';
    a := 0;
@@ -177,7 +183,7 @@ end;
 
 // ============================================ MS CryptoAPI ==========================================
 
-procedure THICryptography.InitPass;
+function THICryptography.InitPass;
 var
   hash: HCRYPTHASH;
   hashalg: LongWord;  
@@ -189,10 +195,25 @@ begin
     else
        hashalg := CALG_SHA;            
   end;
-  CryptAcquireContext(@hProv, nil, Provider, ProvType, CRYPT_VERIFYCONTEXT);
-  CryptCreateHash(hProv, hashalg, 0, 0, @hash);
-  CryptHashData(hash, @pass[1], length(pass), 0);
-  CryptDeriveKey(hProv, alg, hash, 0, @hSKey);
+
+  Result := NO_ERROR;
+  if CryptAcquireContext(@hProv, nil, Provider, ProvType, CRYPT_VERIFYCONTEXT) then
+  begin
+    if CryptCreateHash(hProv, hashalg, 0, 0, @hash) then
+    begin
+      if CryptHashData(hash, @pass[1], length(pass), 0) then
+      begin
+        if not CryptDeriveKey(hProv, alg, hash, 0, @hSKey) then
+          Result := ERROR_DERIVE_KEY
+      end    
+      else
+        Result := ERROR_HASH_DATA
+    end      
+    else
+      Result := ERROR_CREATE_HASH
+  end    
+  else  
+    Result := ERROR_ACQUIRE_CONTEXT;
   if hash <> 0 then CryptDestroyHash(hash);
 end;
 
@@ -202,10 +223,12 @@ var
   pass: string; 
   hProv: HCRYPTPROV;
   hSKey: HCRYPTKEY;
+  Err: integer;
 begin
   hSKey := 0;
   hProv := 0;
-
+  Err := NO_ERROR;
+TRY
   Case Mode of
     0: FResult := ReadString(_Data, _data_Data) + #0;
     1: FResult := ReadString(_Data, _data_DataCrypt) + #0;
@@ -214,7 +237,13 @@ begin
   SetLength(FResult, Length(FResult) - 1); 
   sz := Length(FResult);
   pass := ReadString(_Data, _data_Key, _prop_Key);
-  InitPass(hProv, hSKey, pass, alg, Provider, ProvType);
+  if length(pass) = 0 then
+  begin
+    Err := ERROR_INCORRECT_KEY;
+    exit;  
+  end; 
+  Err := InitPass(hProv, hSKey, pass, alg, Provider, ProvType);
+  if Err <> NO_ERROR then exit;
 
   Case Mode of
     0: begin
@@ -224,19 +253,29 @@ begin
          begin
            SetLength(FResult, ln);
            CryptEncrypt(hSKey, 0, true, 0, @FResult[1], @sz, ln);
-         end;
+         end
+         else
+           Err := ERROR_ENCRYPT;
        end;
-    1: CryptDecrypt(hSKey, 0, true, 0, @FResult[1], @sz);
+    1: if not CryptDecrypt(hSKey, 0, true, 0, @FResult[1], @sz) then
+         Err := ERROR_DECRYPT;
   end;     
-  SetLength(FResult, sz);
 
+  SetLength(FResult, sz);
+  if Err <> NO_ERROR then exit;
+
+  Case Mode of
+    0: _hi_onEvent(_event_onCrypt, FResult);
+    1: _hi_onEvent(_event_onDeCrypt, FResult);
+  end;  
+
+FINALLY
   if hSKey <> 0 then CryptDestroyKey(hSKey);
   if hProv <> 0 then CryptReleaseContext(hProv, 0);
 
-  Case Mode of
-    0: _hi_CreateEvent(_Data, @_event_onCrypt, FResult);
-    1: _hi_CreateEvent(_Data, @_event_onDeCrypt, FResult);
-  end;  
+  if Err <> NO_ERROR then
+    _hi_CreateEvent(_Data, @_event_onError, Err);
+END;    
 end;
 
 //-------------------------------------------- Crypt ---------------------------------------------------

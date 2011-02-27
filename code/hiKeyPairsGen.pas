@@ -7,7 +7,7 @@ uses Windows, Kol, Share, Debug, MSCryptoAPI;
 type
  THiKeyPairsGen = class(TDebug)
    private
-     FKeyPairs,
+     FKeyPair,
      FPublicKey: string;
    public
      _prop_GenerateMode: Byte;
@@ -29,14 +29,14 @@ implementation
 procedure THiKeyPairsGen._work_doKeyPair;
 var
   hProv: HCRYPTPROV;
-  KeyPairs: HCRYPTKEY;
-  dwKeyPairsBlobLen, dwPublicKeyBlobLen, algid, flag: LongWord;
+  KeyPair: HCRYPTKEY;
+  dwKeyPairBlobLen, dwPublicKeyBlobLen, algid, flag: LongWord;
   dtkp, dtpk: TData;
   Err: Integer;  
 begin
   Err := NO_ERROR;
   hProv := 0;
-  KeyPairs := 0;
+  KeyPair := 0;
   
   if CryptAcquireContext(@hProv, nil, MS_ENHANCED_PROV, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
   begin
@@ -57,17 +57,17 @@ begin
       algid := AT_KEYEXCHANGE;
     end;
   
-    if CryptGenKey(hProv, algid, flag, @KeyPairs) then  
+    if CryptGenKey(hProv, algid, flag, @KeyPair) then  
     begin
-      if CryptExportKey(KeyPairs, 0, PRIVATEKEYBLOB, 0, nil, @dwKeyPairsBlobLen) then
+      if CryptExportKey(KeyPair, 0, PRIVATEKEYBLOB, 0, nil, @dwKeyPairBlobLen) then
       begin
-        SetLength(FKeyPairs, dwKeyPairsBlobLen);
-        if CryptExportKey(KeyPairs, 0, PRIVATEKEYBLOB, 0, @FKeyPairs[1], @dwKeyPairsBlobLen) then
+        SetLength(FKeyPair, dwKeyPairBlobLen);
+        if CryptExportKey(KeyPair, 0, PRIVATEKEYBLOB, 0, @FKeyPair[1], @dwKeyPairBlobLen) then
         begin
-          if CryptExportKey(KeyPairs, 0, PUBLICKEYBLOB, 0, nil, @dwPublicKeyBlobLen) then
+          if CryptExportKey(KeyPair, 0, PUBLICKEYBLOB, 0, nil, @dwPublicKeyBlobLen) then
           begin
             SetLength(FPublicKey, dwPublicKeyBlobLen);
-            if not CryptExportKey(KeyPairs, 0, PUBLICKEYBLOB, 0, @FPublicKey[1], @dwPublicKeyBlobLen) then
+            if not CryptExportKey(KeyPair, 0, PUBLICKEYBLOB, 0, @FPublicKey[1], @dwPublicKeyBlobLen) then
               Err := ERROR_EXPORT_PUBLICKEY; 
           end
           else
@@ -85,14 +85,14 @@ begin
   else
     Err := ERROR_ACQUIRE_CONTEXT;
       
-  if KeyPairs <> 0 then CryptDestroyKey(KeyPairs);   
+  if KeyPair <> 0 then CryptDestroyKey(KeyPair);   
   if hProv <> 0 then CryptReleaseContext(hProv, 0);
 
   if Err <> NO_ERROR then
     _hi_CreateEvent(_Data, @_event_onError, Err)
   else
   begin
-    dtString(dtkp, FKeyPairs);
+    dtString(dtkp, FKeyPair);
     dtString(dtpk, FPublicKey);
     dtkp.ldata := @dtpk;
     _hi_onEvent_(_event_onResult, dtkp);
@@ -111,7 +111,7 @@ end;
 
 procedure THiKeyPairsGen._var_KeyPair;
 begin
-   dtString(_Data, FKeyPairs);
+   dtString(_Data, FKeyPair);
 end;
 
 procedure THiKeyPairsGen._var_PublicKey;
