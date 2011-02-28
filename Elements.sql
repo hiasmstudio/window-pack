@@ -545,7 +545,7 @@ INSERT INTO "elements" VALUES(511,'Hashsum','Хэш сумма',15,45,'9CD5FB4C0C684BA23
 INSERT INTO "elements" VALUES(512,'Cryptography','Криптография',15,45,'');
 INSERT INTO "elements" VALUES(513,'EnumKeyContainers','Перечисление контейнеров ключей',15,49,NULL);
 INSERT INTO "elements" VALUES(514,'KeyContainer','Контейнер ключей',15,50,NULL);
-INSERT INTO "elements" VALUES(515,'KeyPairsGen','Генератор ключевых пар',15,51,NULL);
+INSERT INTO "elements" VALUES(515,'GenKeyPairs','Генератор ключевых пар',15,51,NULL);
 INSERT INTO "elements" VALUES(516,'ExportSessionKey','Экспорт сессионного ключа',15,52,NULL);
 INSERT INTO "elements" VALUES(517,'ImportSessionKey','Импорт сессионного ключа',15,53,NULL);
 INSERT INTO "elements" VALUES(518,'CreateSignature','Создание цифровой подписи',15,54,NULL);

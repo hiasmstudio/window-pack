@@ -1,11 +1,11 @@
-unit hiKeyPairsGen;
+unit hiGenKeyPairs;
 
 interface
 
 uses Windows, Kol, Share, Debug, MSCryptoAPI;
 
 type
- THiKeyPairsGen = class(TDebug)
+ THiGenKeyPairs = class(TDebug)
    private
      FKeyPair,
      FPublicKey: string;
@@ -13,12 +13,13 @@ type
      _prop_GenerateMode: Byte;
      _prop_LengthKey: Byte;
     
-     _data_ReexportKeyPair: THI_Event;
+     _data_OutKeyPair: THI_Event;
      _event_onError: THI_Event;
      _event_onResult: THI_Event;
+     _event_onGetPublicKey: THI_Event;
      
-     procedure _work_doKeyPair(var _Data:TData; Index:word);
-     procedure _work_doReexportKeyPair(var _Data:TData; Index:word);
+     procedure _work_doGenKeyPair(var _Data:TData; Index:word);
+     procedure _work_doGetPublicKey(var _Data:TData; Index:word);
      procedure _work_doGenerateMode(var _Data:TData; Index:word);
      procedure _work_doLengthKey(var _Data:TData; Index:word);          
 
@@ -28,7 +29,7 @@ type
 
 implementation
 
-procedure THiKeyPairsGen._work_doKeyPair;
+procedure THiGenKeyPairs._work_doGenKeyPair;
 var
   hProv: HCRYPTPROV;
   KeyPair: HCRYPTKEY;
@@ -101,12 +102,12 @@ begin
   end;  
 end;
 
-procedure THiKeyPairsGen._work_doReexportKeyPair;
+procedure THiGenKeyPairs._work_doGetPublicKey;
 var
   hProv: HCRYPTPROV;
   PrivatKey, SessionKey: HCRYPTKEY;
   dwKeyBlobLen, dwPublicKeyBlobLen: LongWord;
-  dtkp, dtpk: TData; 
+  KeyBlob: string;
   Err: Integer;
 begin
   Err := 0;
@@ -115,12 +116,12 @@ begin
   hProv := 0;
   if CryptAcquireContext(@hProv, nil, nil, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
   begin
-    FKeyPair := ReadString(_Data, _data_ReexportKeyPair);
-    dwKeyBlobLen := Length(FKeyPair);
+    KeyBlob := ReadString(_Data, _data_OutKeyPair);
+    dwKeyBlobLen := Length(KeyBlob);
 
     if dwKeyBlobLen <> 0 then
     begin
-      if CryptImportKey(hProv, @FKeyPair[1], dwKeyBlobLen, 0, CRYPT_EXPORTABLE, @PrivatKey) then
+      if CryptImportKey(hProv, @KeyBlob[1], dwKeyBlobLen, 0, CRYPT_EXPORTABLE, @PrivatKey) then
       begin
         if CryptExportKey(PrivatKey, 0, PUBLICKEYBLOB, 0, nil, @dwPublicKeyBlobLen) then
         begin
@@ -147,31 +148,26 @@ begin
   if Err <> NO_ERROR then
     _hi_CreateEvent(_Data, @_event_onError, Err)
   else
-  begin
-    dtString(dtkp, FKeyPair);
-    dtString(dtpk, FPublicKey);
-    dtkp.ldata := @dtpk;
-    _hi_onEvent_(_event_onResult, dtkp);
-  end;  
+    _hi_CreateEvent(_Data, @_event_onGetPublicKey, FPublicKey);
 
 end;
 
-procedure THiKeyPairsGen._work_doGenerateMode;
+procedure THiGenKeyPairs._work_doGenerateMode;
 begin
   _prop_GenerateMode := ToInteger(_Data);
 end;
 
-procedure THiKeyPairsGen._work_doLengthKey;          
+procedure THiGenKeyPairs._work_doLengthKey;          
 begin
   _prop_LengthKey := ToInteger(_Data);
 end;
 
-procedure THiKeyPairsGen._var_KeyPair;
+procedure THiGenKeyPairs._var_KeyPair;
 begin
    dtString(_Data, FKeyPair);
 end;
 
-procedure THiKeyPairsGen._var_PublicKey;
+procedure THiGenKeyPairs._var_PublicKey;
 begin
    dtString(_Data, FPublicKey);
 end;
