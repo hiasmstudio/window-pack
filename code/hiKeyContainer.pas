@@ -45,9 +45,9 @@ begin
   Name := ReadString(_Data, _data_Name, _prop_Name);
   if Name <> '' then
   begin
-    if not CryptAcquireContext(@hProv, @Name[1], 0, PROV_RSA_FULL, 0) then
+    if not CryptAcquireContext(@hProv, @Name[1], nil, PROV_RSA_FULL, 0) then
     begin
-      if CryptAcquireContext(@hProv, @Name[1], 0, PROV_RSA_FULL, CRYPT_NEWKEYSET) then
+      if CryptAcquireContext(@hProv, @Name[1], nil, PROV_RSA_FULL, CRYPT_NEWKEYSET) then
         _hi_CreateEvent(_Data, @_event_onCreateKeyContainer)
       else 
         Err := ERROR_CREATE_CONTAINER;
@@ -75,9 +75,9 @@ begin
   Name := ReadString(_Data, _data_Name, _prop_Name);
   if Name <> '' then
   begin
-    if CryptAcquireContext(@hProv, @Name[1], 0, PROV_RSA_FULL, 0) then
+    if CryptAcquireContext(@hProv, @Name[1], nil, PROV_RSA_FULL, 0) then
     begin
-      if CryptAcquireContext(@hProv, @Name[1], 0, PROV_RSA_FULL, CRYPT_DELETEKEYSET) then
+      if CryptAcquireContext(@hProv, @Name[1], nil, PROV_RSA_FULL, CRYPT_DELETEKEYSET) then
         _hi_CreateEvent(_Data, @_event_onDeleteKeyContainer)
       else 
         Err := ERROR_DELETE_CONTAINER;
@@ -112,7 +112,7 @@ begin
     dwKeyBlobLen := Length(KeyBlob);
     if dwKeyBlobLen <> 0 then
     begin 
-      if CryptAcquireContext(@hProv, @Name[1], 0, PROV_RSA_FULL, 0) then
+      if CryptAcquireContext(@hProv, @Name[1], nil, PROV_RSA_FULL, 0) then
       begin
         if CryptImportKey(hProv, @KeyBlob[1], dwKeyBlobLen, 0, CRYPT_EXPORTABLE, @PrivatKey) then
           _hi_CreateEvent(_Data, @_event_onImportKeyPair)
@@ -153,7 +153,7 @@ begin
   if Name <> '' then
   begin
        
-    if CryptAcquireContext(@hProv, @Name[1], 0, PROV_RSA_FULL, CRYPT_SILENT) then
+    if CryptAcquireContext(@hProv, @Name[1], nil, PROV_RSA_FULL, CRYPT_SILENT) then
     begin
       if CryptGetUserKey(hProv, AT_KEYEXCHANGE, @KeyPair) then
       begin

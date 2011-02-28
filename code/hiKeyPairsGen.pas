@@ -40,7 +40,7 @@ begin
   hProv := 0;
   KeyPair := 0;
   
-  if CryptAcquireContext(@hProv, nil, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
+  if CryptAcquireContext(@hProv, nil, nil, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
   begin
     Case _prop_LengthKey of
       0: flag :=  RSA384BIT_KEY OR CRYPT_EXPORTABLE;
@@ -113,7 +113,7 @@ begin
   SessionKey := 0;
   PrivatKey := 0;
   hProv := 0;
-  if CryptAcquireContext(@hProv, nil, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
+  if CryptAcquireContext(@hProv, nil, nil, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
   begin
     FKeyPair := ReadString(_Data, _data_ReexportKeyPair);
     dwKeyBlobLen := Length(FKeyPair);

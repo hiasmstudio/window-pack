@@ -34,7 +34,7 @@ begin
   SessionKey := 0;
   PrivatKey := 0;
   hProv := 0;
-  if CryptAcquireContext(@hProv, nil, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
+  if CryptAcquireContext(@hProv, nil, nil, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
   begin
     KeyBlob := ReadString(_Data, _data_KeyPair);
     dwKeyBlobLen := Length(KeyBlob);

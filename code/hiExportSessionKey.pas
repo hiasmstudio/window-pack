@@ -44,7 +44,7 @@ begin
   PublicKey := 0;
   hProv := 0;
 TRY
-  if CryptAcquireContext(@hProv, nil, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
+  if CryptAcquireContext(@hProv, nil, nil, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
   begin  
     KeyBlob := ReadString(_Data, _data_PublicKey);
     dwKeyBlobLen := Length(KeyBlob);
