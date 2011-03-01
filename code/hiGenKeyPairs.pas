@@ -11,7 +11,7 @@ type
      FPublicKey: string;
    public
      _prop_GenerateMode: Byte;
-     _prop_LengthKey: Byte;
+     _prop_KeyLength: Byte;
     
      _data_OutKeyPair: THI_Event;
      _event_onError: THI_Event;
@@ -21,7 +21,7 @@ type
      procedure _work_doGenKeyPair(var _Data:TData; Index:word);
      procedure _work_doGetPublicKey(var _Data:TData; Index:word);
      procedure _work_doGenerateMode(var _Data:TData; Index:word);
-     procedure _work_doLengthKey(var _Data:TData; Index:word);          
+     procedure _work_doKeyLength(var _Data:TData; Index:word);          
 
      procedure _var_KeyPair(var _Data:TData; Index:word);
      procedure _var_PublicKey(var _Data:TData; Index:word);
@@ -43,7 +43,7 @@ begin
   
   if CryptAcquireContext(@hProv, nil, nil, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
   begin
-    Case _prop_LengthKey of
+    Case _prop_KeyLength of
       0: flag :=  RSA384BIT_KEY OR CRYPT_EXPORTABLE;
       1: flag :=  RSA512BIT_KEY OR CRYPT_EXPORTABLE;
       2: flag :=  RSA1024BIT_KEY OR CRYPT_EXPORTABLE;
@@ -157,9 +157,9 @@ begin
   _prop_GenerateMode := ToInteger(_Data);
 end;
 
-procedure THiGenKeyPairs._work_doLengthKey;          
+procedure THiGenKeyPairs._work_doKeyLength;          
 begin
-  _prop_LengthKey := ToInteger(_Data);
+  _prop_KeyLength := ToInteger(_Data);
 end;
 
 procedure THiGenKeyPairs._var_KeyPair;
