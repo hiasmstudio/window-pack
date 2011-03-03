@@ -26,12 +26,11 @@ implementation
 constructor THIType_TypeMemory.Create;
 begin
   inherited Create;
-  TypeV := NewType;
 end;
 
 destructor THIType_TypeMemory.Destroy;
 begin
-  TypeV.Free;
+  if TypeV <> nil then TypeV.Free;
   inherited Destroy;
 end;
 
@@ -41,9 +40,10 @@ var typ:PType;
     tdt:TData;
 begin
   tdt := _Data;
-  TypeV.Clear;
-  TypeV.Name := #0;
+  if TypeV <> nil then TypeV.Free;
   typ := ReadType(_Data,_data_GType);
+  if typ^ is TStorageType then TypeV := NewStorageType else TypeV := NewType;
+  TypeV.Name := #0;
   if typ <> nil then begin
     TypeV.name := typ.name;
     for i := 0 to typ.count-1 do TypeV.Add(typ.NameOf[i],typ.data[i]);

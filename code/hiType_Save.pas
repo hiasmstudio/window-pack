@@ -139,8 +139,7 @@ end;
 
 {$ifdef TYPES_XML_ENABLED}
 procedure THIType_Save.Type2XML;
-var list:PStrList;
-    s:string;
+var list:string;
 
  function ReplaceSign(s:string):string;
  begin
@@ -185,7 +184,7 @@ begin
   if typ <> nil then begin
     list := NewStrList;
     s := ReplaceSign(typ.name);
-    list.add('<' + s + '>');
+    list.add('<' + s + ' ');
     WVar(typ,list,#9);
     list.add('</' + s + '>');
     s := list.Text;

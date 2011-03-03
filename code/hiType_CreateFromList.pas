@@ -11,6 +11,7 @@ type
     TypeV:PType;
     
     procedure SetName(val:string);
+    procedure SetType(s:boolean);
    public
     _prop_DefData:TData;
 
@@ -25,6 +26,7 @@ type
     procedure _var_FType(var _Data:TData; Index:word);
     
     property _prop_Name:string read fName write SetName;
+    property _prop_StorageType:boolean write SetType;
   end;
 
 implementation
@@ -32,13 +34,18 @@ implementation
 constructor THIType_CreateFromList.Create;
 begin
   inherited Create;
-  TypeV := NewType;
 end;
 
 destructor THIType_CreateFromList.Destroy;
 begin
   TypeV.Free;
   inherited Destroy;
+end;
+
+procedure THIType_CreateFromList.SetType;
+begin
+  if s then TypeV := NewStorageType else TypeV := NewType;
+  TypeV.name := #0;
 end;
 
 procedure THIType_CreateFromList.SetName;

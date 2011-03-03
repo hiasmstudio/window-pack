@@ -25,6 +25,7 @@ type
     procedure _work_doCombine(var _Data:TData; Index:word);
     procedure _work_doClear(var _Data:TData; Index:word);
     procedure _var_FType(var _Data:TData; Index:word);
+    
     property  _prop_Count:integer write SetCount;
   end;
 
@@ -33,12 +34,11 @@ implementation
 constructor THIType_Combine.Create;
 begin
   inherited Create;
-  TypeV := NewType;
 end;
 
 destructor THIType_Combine.Destroy;
 begin
-  TypeV.Free;
+  if TypeV <> nil then TypeV.Free;
   inherited Destroy;
 end;
 
@@ -52,10 +52,11 @@ procedure THIType_Combine._work_doCombine;
 var typ:PType;
     i,i2,idx,fidx:integer;
 begin
-  TypeV.Clear;
-  TypeV.name := #0;
+  if TypeV <> nil then TypeV.Free;
   fidx := 0;
   typ := ReadType(_Data,GType[fidx]);
+  if typ^ is TStorageType then TypeV := NewStorageType else TypeV := NewType;
+  TypeV.name := #0;
   while (typ = nil) and (fidx < FCount-1) do begin
     CallTypeError('GType' + int2str(fidx + 1),_event_onError,TYPE_ERR_INVALID_TYPE);
     inc(fidx);

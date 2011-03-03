@@ -2,12 +2,12 @@ unit Share;
 
 // ************************************************
 // Общие данные, ф-ции и классы для компонент HiAsm
-// Last modification: 02.11.2010
+// Last modification: 01.3.2011
 // ************************************************
 {
    Содержание:
     ##array
-    ##type
+    ##types
     ##ReadXXX
     ##ToXXX
     ##_hi_onEvent
@@ -276,27 +276,27 @@ var Null:THI_Event=(Event:nil;index:0); //!!! просто инициализация
 function _DoEvent(Event:TEvent; Index:word{$ifdef _DEBUG_}; Point:Cardinal{$endif}):THI_Event;
 function _hi_SizeFnt(Sz:integer):integer; // массштабирование шрифта под разрешение экрана
 
-//~~~~~~~~~~~~~~~ TYPE ~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~ TYPES ~~~~~~~~~~~~~~~~~
 
 type
   TType = class
-   private 
+   protected 
     fTypeDt : PStrListEx;
     fCount  : word;
     
-    function  Data_Get(idx:word):PData;
-    procedure Data_Set(idx:word; dt:PData);
+    function  Data_Get(idx:word):PData; virtual;
+    procedure Data_Set(idx:word; dt:PData); virtual;
     procedure SetName(idx:word; nn:string);
     function  GetName(idx:word):string;
    public
     name:string;
    
     constructor Create;
-    destructor  Destroy; override;
+    destructor  Destroy; virtual;
     
-    function  Add(nm:string; dt:PData):integer;
-    function  Delete(i:word):boolean;
-    procedure Clear;
+    function  Add(nm:string; dt:PData):integer; virtual;
+    function  Delete(i:word):boolean; virtual;
+    procedure Clear; virtual;
     function  IndexOf(nm:string):integer;
     
     property  Data[idx:word]:PData read Data_Get write Data_Set;
@@ -304,6 +304,24 @@ type
     property  Count:word read fCount;
   end;
   PType = ^TType;
+  
+  TStorageType = class(TType)
+   protected
+     fData : PList;
+     
+//     function  Data_Get(idx:word):PData; override;
+     procedure Data_Set(idx:word; dt:PData); override;
+     function  CreateCopy(dt:PData):PData;
+     procedure FreeCopy(dt:PData);
+   public
+     constructor Create;
+     destructor  Destroy; override;
+     
+     function  Add(nm:string; dt:PData):integer; override;
+     function  Delete(i:word):boolean; override;
+     procedure Clear; override;
+  end;
+  PStorageType = ^TStorageType;
 
 const
   TYPE_ERR_INVALID_TYPE = 0;
@@ -314,6 +332,7 @@ const
 
 procedure CallTypeError(elm:string; evt:THI_Event; err:byte);
 function  NewType:PType;
+function  NewStorageType:PType;
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -388,6 +407,7 @@ function _DoData(const Value:TData):TData; overload;
 function _DoData(Value:PStream):TData; overload;
 function _DoData(Value:PBitmap):TData; overload;
 function _DoData(Value:PMatrix):TData; overload;
+function _DoData(Value:PType):TData; overload;
 
 // ##CreateData
 procedure dtData(var Data:TData; const Value:TData);
@@ -1383,6 +1403,11 @@ begin
    dtMatrix(Result,Value);
 end;
 
+function _DoData(Value:PType):TData;
+begin
+  dtType(Result,Value);
+end;
+
 procedure dtData(var Data:TData; const Value:TData);
 begin
    Data := Value;
@@ -2043,7 +2068,7 @@ begin
      Result.Objects[i] := cardinal(Values[i]);
 end;
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TYPE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TYPES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 function TType.Data_Get;
 begin
@@ -2130,6 +2155,151 @@ begin
   Result := fTypeDt.Items[idx];
 end;
 
+//~~~~~~~ TStorageType ~~~~~~~~
+
+//function TStorageType.Data_Get;
+//begin
+//  Result := nil;
+//  if idx < fCount then Result := PData(fTypeDt.Objects[idx]);
+//end;
+
+function TStorageType.CreateCopy;
+var mt:PMT;
+    md:TData;
+    st,st1:PStream;
+    bmp:PBitmap;
+    typ,tp:PType;
+    i:integer;
+begin
+  Result := nil;
+  if dt = nil then Exit;
+  mt := mt_make(md);
+  while dt <> nil do begin
+    case dt.data_type of
+      data_stream:
+       begin
+         st := NewMemoryStream;
+         st1 := PStream(dt.idata);
+         st1.position := 0;
+         Stream2Stream(st,st1,st1.size);
+         st.position := 0;
+         fData.Add(st);
+         mt_data(mt,_DoData(st));
+       end;
+    
+      data_bitmap:
+       begin
+         bmp := NewBitmap(0,0);
+         bmp.Assign(PBitmap(dt.idata));
+         fData.Add(bmp);
+         mt_data(mt,_DoData(bmp));
+       end;
+    
+      data_types:
+       begin
+         tp := PType(dt.idata);
+         if tp^ is TStorageType then typ := NewStorageType else typ := NewType;
+         typ.name := tp.name;
+         for i := 0 to tp.count-1 do typ.Add(tp.NameOf[i],tp.Data[i]);
+         fData.Add(typ);
+         mt_data(mt,_DoData(typ));
+       end;
+    
+    else
+      mt_data(mt,dt^);
+    end;
+    dt := dt.ldata;
+  end;
+  dispose(mt);
+  Result := md.ldata;
+end;
+
+procedure TStorageType.FreeCopy;
+var temp:PData;
+    sl:pointer;
+begin
+  while dt <> nil do begin
+    temp := dt.ldata;
+    case dt.data_type of
+      data_stream, data_bitmap, data_types:
+       begin
+         sl := pointer(dt.idata);
+         PObj(sl).Free;
+         fData.Remove(sl);
+       end;
+       
+    else
+      dispose(dt);
+    end;
+    dt := temp;
+  end;
+end; 
+
+procedure TStorageType.Data_Set;
+var p:PData;
+begin
+  if idx < fCount then begin
+    p := PData(fTypeDt.Objects[idx]);
+    FreeCopy(p);
+    if dt = nil then begin 
+      new(p);
+      dtNull(p^); 
+    end else fTypeDt.Objects[idx] := Cardinal(CreateCopy(dt));
+  end;
+end;
+
+
+constructor TStorageType.Create;
+begin
+  inherited Create;
+  fData := NewList;
+end;
+
+destructor TStorageType.Destroy;
+var i:integer;
+begin
+  for i := 0 to fData.Count-1 do
+    PObj(fData.Items[i]).Free;
+  fData.Free;
+  inherited Destroy;
+end;
+
+function TStorageType.Add;
+var tdt:PData;
+begin
+  Result := -1;
+  if fTypeDt.IndexOf(nm) <> -1 then Exit;
+  tdt := CreateCopy(dt);
+  Result := fTypeDt.AddObject(nm,Cardinal(tdt));
+  inc(fCount);
+end;
+
+function TStorageType.Delete;
+begin
+  Result := false;
+  if i >= fCount then Exit;
+  FreeCopy(PData(fTypeDt.Objects[i]));
+  fTypeDt.Delete(i);
+  dec(fCount);
+  Result := true;
+end;
+
+procedure TStorageType.Clear;
+var i:integer;
+begin
+  for i := 0 to fCount-1 do begin
+    FreeData(PData(fTypeDt.Objects[i]));
+    dispose(PData(fTypeDt.Objects[i]));
+  end;
+  for i := 0 to fData.Count-1 do
+    PObj(fData.Items[i]).Free;
+  fTypeDt.Clear;
+  fData.Clear;
+  fCount := 0;
+end;
+
+//~~~~~~~ Other ~~~~~~~~
+
 procedure CallTypeError;
 var dt,tdt:TData;
 begin
@@ -2145,6 +2315,12 @@ function NewType;
 begin
   new(Result);
   Result^ := TType.Create;
+end;
+
+function NewStorageType;
+begin
+  new(Result);
+  Result^ := TStorageType.Create;
 end;
 
 //___________________

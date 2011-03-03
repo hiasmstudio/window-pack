@@ -11,6 +11,7 @@ type
     FObjs:PList;
     
     procedure Stream2Type(typ:PType; st:PStream);
+    procedure SetType(s:boolean);
    public
     _prop_FileName:string;
     _prop_StreamFormat:byte;
@@ -26,6 +27,8 @@ type
     procedure _work_doLoad(var _Data:TData; Index:word);
     procedure _work_doClear(var _Data:TData; Index:word);
     procedure _var_FType(var _Data:TData; Index:word);
+    
+    property _prop_StorageType:boolean write SetType;
   end;
 
 implementation
@@ -33,15 +36,23 @@ implementation
 constructor THIType_Load.Create;
 begin
   inherited Create;
-  FType := NewType;
   FObjs := NewList;
 end;
 
 destructor THIType_Load.Destroy;
+var i:integer;
 begin
+  for i := 0 to FObjs.Count-1 do
+    PObj(FObjs.Items[i]).Free;
   FType.Free;
   FObjs.Free;
   inherited Destroy;
+end;
+
+procedure THIType_Load.SetType;
+begin
+  if s then FType := NewStorageType else FType := NewType;
+  FType.name := #0;
 end;
 
 procedure Mem2Var(m:string; var v);
@@ -163,6 +174,8 @@ var st:PStream;
     i:integer;
     dt:TData;
 begin
+  for i := 0 to FObjs.Count-1 do
+    PObj(FObjs.Items[i]).Free;
   FObjs.Clear;
   dt := ReadData(_Data,_data_FileName);
   if ToString(dt) <> '' then fn := ToString(dt)

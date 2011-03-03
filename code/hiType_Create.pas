@@ -14,6 +14,7 @@ type
      
      procedure SetVars(Val:string);
      procedure SetName(val:string);
+     procedure SetType(s:boolean);
    public
     onCreate:THI_Event;
     
@@ -27,8 +28,10 @@ type
     procedure doName(var _Data:TData; Index:word);
     procedure doClear(var _Data:TData; Index:word);
     procedure FType(var _Data:TData; Index:word);
+    
     property  _prop_Vars:string write SetVars;
     property  _prop_Name:string read fName write SetName;
+    property  _prop_StorageType:boolean write SetType;
   end;
 
 implementation
@@ -37,7 +40,6 @@ constructor THIType_Create.Create;
 begin
   inherited Create;
   Varsl := NewStrList;
-  TypeV := NewType;
 end;
 
 destructor THIType_Create.Destroy;
@@ -47,6 +49,12 @@ begin
   inherited Destroy;
 end;
 
+procedure THIType_Create.SetType;
+begin
+  if s then TypeV := NewStorageType else TypeV := NewType;
+  TypeV.name := #0;
+end;
+
 procedure THIType_Create.SetVars;
 var i:integer;
     nm,itm:string;
@@ -54,7 +62,6 @@ begin
   Varsl.Text := Val;
   SetLength(_data_Vars,Varsl.count);
   SetLength(DfVar,Varsl.count);
-  TypeV.name := #0;
 //установка значений DfVar
   for i := 0 to high(DfVar) do begin
     itm := Varsl.Items[i];
@@ -92,8 +99,7 @@ begin
     dt := ReadMTData(_Data,_data_Vars[i],@ddt);
     TypeV.Add(Varsl.Items[i],@dt);
   end;  
-//  dtType(_Data,TypeV);
-  _hi_OnEvent(onCreate,{_Data}TypeV);
+  _hi_OnEvent(onCreate,TypeV);
 end;
 
 procedure THIType_Create.doClear;
