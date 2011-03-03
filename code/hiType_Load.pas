@@ -9,6 +9,7 @@ type
    private
     FType:PType;
     FObjs:PList;
+    fStg:boolean;
     
     procedure Stream2Type(typ:PType; st:PStream);
     procedure SetType(s:boolean);
@@ -51,6 +52,7 @@ end;
 
 procedure THIType_Load.SetType;
 begin
+  fStg := s;
   if s then FType := NewStorageType else FType := NewType;
   FType.name := #0;
 end;
@@ -108,7 +110,7 @@ var id,cn:byte;
       begin
        bd := NewBitmap(0,0);
        bd.LoadFromStream(sst);
-       FObjs.Add(bd);
+       if not fStg then FObjs.Add(bd);
        dtBitmap(dt^,bd);
       end;
     data_stream: 
@@ -116,7 +118,7 @@ var id,cn:byte;
        s1 := NewMemoryStream;
        sst.read(id, sizeof(id));
        Stream2Stream(s1, sst, id);
-       FObjs.Add(s1);
+       if not fStg then FObjs.Add(s1);
        s1.position := 0;
        dtStream(dt^,s1);
       end;
@@ -128,7 +130,7 @@ var id,cn:byte;
        s1.position := 0;
        ttp := NewType;
        Stream2Type(ttp,s1);
-       FObjs.Add(ttp);
+       if not fStg then FObjs.Add(ttp);
        s1.Free;
        dtType(dt^,ttp);
       end;
