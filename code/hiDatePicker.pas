@@ -23,6 +23,8 @@ const
    DTN_FORMATQUERY      = DTN_FIRST + 5;
    DTN_DROPDOWN         = DTN_FIRST + 6;
    DTN_CLOSEUP          = DTN_FIRST + 7;
+   NM_RELEASEDCAPTURE   = -16;
+   MCN_SELCHANGE        = -749;
    //Messages
    DTM_FIRST            = $1000;
    DTM_GETSYSTEMTIME    = DTM_FIRST + 1;
@@ -81,7 +83,7 @@ type
  THIDatePicker = class(THIWin)
    private
      opt: TPickerOptions;
-     dropdown: boolean;
+     flag: boolean;
    public
      _prop_Style:byte;
      _prop_AlignPicker:byte;
@@ -110,32 +112,30 @@ implementation
 function InitCommonControlsEx(var ICC: TInitCommonControlsEx) : Bool;stdcall;external 'comctl32.dll';
 
 function PickerWndProc(Sender : PControl;var Msg:TMsg;var Rslt:Integer):Boolean;
-var   NMDC: PNMDateTimeChange;
-      fControl: THIDatePicker;
+var
+  NMDC: PNMDateTimeChange;
+  fControl: THIDatePicker;
 begin
-Result := False;
-fControl:= THIDatePicker(Sender.Tag);
-if Msg.message = WM_NOTIFY then begin
-    NMDC := PNMDateTimeChange( Msg.lParam );
-    case  NMDC.nmhdr.code of
-       DTN_DATETIMECHANGE: begin
-             if NMDC.dwFlags = GDT_VALID then begin
-               if fControl.dropdown then
-                 _hi_OnEvent(fControl._event_onChange);
-               fControl.dropdown := false;  
-             Result := True;
-          end;
-       end;
-       DTN_DROPDOWN: fControl.dropdown := true;
-   end;
-end;
+  Result := False;
+  fControl:= THIDatePicker(Sender.Tag);
+  case Msg.message of
+    WM_NOTIFY : begin
+                  NMDC := PNMDateTimeChange(Msg.lParam);
+                  if (NMDC.nmhdr.code = DTN_DATETIMECHANGE) and (NMDC.dwFlags = GDT_VALID) and fControl.flag then
+                  begin
+                    _hi_OnEvent(fControl._event_onChange);
+                    fControl.flag := false;
+                  end;  
+                end;  
+    WM_PAINT: fControl.flag := true;
+  end;
 end;
 
 procedure THIDatePicker.Init;
 var   Flags: Integer;
       icex: INITCOMMONCONTROLEX;
 begin
-   dropdown := false;
+   flag := false;
    opt:=[];
 //Определение параметров
    if _prop_DateFormat=0 then include(opt,piShortDate) else include(opt,piLongDate);
