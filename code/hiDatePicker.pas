@@ -115,6 +115,7 @@ function PickerWndProc(Sender : PControl;var Msg:TMsg;var Rslt:Integer):Boolean;
 var
   NMDC: PNMDateTimeChange;
   fControl: THIDatePicker;
+  dt: TDateTime;
 begin
   Result := False;
   fControl:= THIDatePicker(Sender.Tag);
@@ -123,7 +124,8 @@ begin
                   NMDC := PNMDateTimeChange(Msg.lParam);
                   if (NMDC.nmhdr.code = DTN_DATETIMECHANGE) and (NMDC.dwFlags = GDT_VALID) and fControl.flag then
                   begin
-                    _hi_OnEvent(fControl._event_onChange);
+                    SystemTime2DateTime(NMDC.st, dt);
+                    _hi_OnEvent(fControl._event_onChange, dt);
                     fControl.flag := false;
                   end;  
                 end;  
