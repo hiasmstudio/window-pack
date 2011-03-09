@@ -7,11 +7,10 @@ uses Kol,Share,Debug;
 type
   THIMT_Part = class(TDebug)
    private
-    FCount:integer;
     FData: TData;
     FData_1: TData;    
    public
-    _prop_From:Integer;
+    _prop_After:Integer;
     _data_Data:THI_Event;
     _event_onSplit: THI_Event;
     _event_onPart: THI_Event;    
@@ -42,7 +41,7 @@ begin
   CopyData(@FData,@FData);
   d := @FData;
   i := 0;
-  while i < _prop_From do begin
+  while i < _prop_After do begin
     if (d = nil) or (d.ldata = nil) or (d.data_type = data_null) then exit;
     d := d.ldata;
     inc(i);
