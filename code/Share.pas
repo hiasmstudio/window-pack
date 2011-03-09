@@ -292,7 +292,7 @@ type
     name:string;
    
     constructor Create;
-    destructor  Destroy; virtual;
+    destructor  Destroy; override;
     
     function  Add(nm:string; dt:PData):integer; virtual;
     function  Delete(i:word):boolean; virtual;
