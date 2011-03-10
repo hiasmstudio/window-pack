@@ -13,7 +13,7 @@ type
      _prop_GenerateMode: Byte;
      _prop_KeyLength: Byte;
     
-     _data_OutKeyPair: THI_Event;
+     _data_ExternalKeyPair: THI_Event;
      _event_onError: THI_Event;
      _event_onResult: THI_Event;
      _event_onGetPublicKey: THI_Event;
@@ -116,7 +116,7 @@ begin
   hProv := 0;
   if CryptAcquireContext(@hProv, nil, nil, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
   begin
-    KeyBlob := ReadString(_Data, _data_OutKeyPair);
+    KeyBlob := ReadString(_Data, _data_ExternalKeyPair);
     dwKeyBlobLen := Length(KeyBlob);
 
     if dwKeyBlobLen <> 0 then

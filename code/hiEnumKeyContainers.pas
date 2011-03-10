@@ -15,7 +15,7 @@ type
      
      procedure _work_doEnumKeyContainers(var _Data:TData; Index:word);
 
-     procedure _var_Name(var _Data:TData; Index:word);
+     procedure _var_ContainerName(var _Data:TData; Index:word);
  end;
 
 implementation
@@ -50,7 +50,7 @@ begin
   if hProv <> 0 then CryptReleaseContext(hProv, 0);
 end;
 
-procedure THiEnumKeyContainers._var_Name;
+procedure THiEnumKeyContainers._var_ContainerName;
 begin
   dtString(_Data, FNameKeyContainer);
 end; 

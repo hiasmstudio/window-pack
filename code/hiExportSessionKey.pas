@@ -11,9 +11,9 @@ type
      FExchangeKey: string;
    public
      _prop_GenKeyMode: Byte;
-     _prop_Key: string;
+     _prop_ExternalKey: string;
 
-     _data_Key: THI_Event;
+     _data_ExternalKey: THI_Event;
      _data_PublicKey: THI_Event;
      
      _event_onError: THI_Event;
@@ -50,7 +50,7 @@ TRY
     dwKeyBlobLen := Length(KeyBlob);
     if dwKeyBlobLen <> 0 then 
     begin
-      pass := ReadString(_Data, _data_Key, _prop_Key);
+      pass := ReadString(_Data, _data_ExternalKey, _prop_ExternalKey);
       if CryptCreateHash(hProv, CALG_SHA, 0, 0, @Hash) then
       begin
         if CryptHashData(Hash, @pass[1], length(pass), 0) then

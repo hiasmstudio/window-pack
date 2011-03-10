@@ -10,10 +10,10 @@ type
      FKeyPair,
      FPublicKey: string;
    public
-     _prop_Name: string;
+     _prop_ContainerName: string;
      _prop_ImportKeyPair: Byte;
     
-     _data_Name: THI_Event;
+     _data_ContainerName: THI_Event;
      _data_ImportKeyPair: THI_Event;
      
      _event_onError: THI_Event;
@@ -42,7 +42,7 @@ begin
   Err := NO_ERROR;
   hProv := 0;
   
-  Name := ReadString(_Data, _data_Name, _prop_Name);
+  Name := ReadString(_Data, _data_ContainerName, _prop_ContainerName);
   if Name <> '' then
   begin
     if not CryptAcquireContext(@hProv, @Name[1], nil, PROV_RSA_FULL, 0) then
@@ -72,7 +72,7 @@ begin
   Err := NO_ERROR;
   hProv := 0;
 
-  Name := ReadString(_Data, _data_Name, _prop_Name);
+  Name := ReadString(_Data, _data_ContainerName, _prop_ContainerName);
   if Name <> '' then
   begin
     if CryptAcquireContext(@hProv, @Name[1], nil, PROV_RSA_FULL, 0) then
@@ -105,7 +105,7 @@ begin
   hProv := 0;
   PrivatKey := 0;
   
-  Name := ReadString(_Data, _data_Name, _prop_Name);
+  Name := ReadString(_Data, _data_ContainerName, _prop_ContainerName);
   if Name <> '' then
   begin
     KeyBlob := ReadString(_Data, _data_ImportKeyPair);
@@ -149,7 +149,7 @@ begin
   KeyPair := 0;
   PrivatKey := 0;  
 
-  Name := ReadString(_Data, _data_Name, _prop_Name);
+  Name := ReadString(_Data, _data_ContainerName, _prop_ContainerName);
   if Name <> '' then
   begin
        
