@@ -254,16 +254,15 @@ TRY
            SetLength(FResult, ln);
            CryptEncrypt(hSKey, 0, true, 0, @FResult[1], @sz, ln);
          end
-         else
+         else if GetLastError <> NO_ERROR then 
            Err := ERROR_ENCRYPT;
        end;
     1: if not CryptDecrypt(hSKey, 0, true, 0, @FResult[1], @sz) then
          Err := ERROR_DECRYPT;
   end;     
-
   SetLength(FResult, sz);
   if Err <> NO_ERROR then exit;
-
+  
   Case Mode of
     0: _hi_onEvent(_event_onCrypt, FResult);
     1: _hi_onEvent(_event_onDeCrypt, FResult);
