@@ -27,12 +27,17 @@ type
     _prop_Alpha:boolean;
     _prop_AlphaBlendValue:integer;
 
+    constructor Create(Parent: PControl);
     procedure Init; override;
     destructor Destroy; override;
     property _prop_Normal:HBITMAP write SetNormal;
     property _prop_Select:HBITMAP write SetSelect;
     property _prop_Down:HBITMAP write SetDown;
     property _prop_Enable:HBITMAP write SetBEnabled;
+    procedure _work_doNormal(var _Data:TData; Index:word);
+    procedure _work_doSelect(var _Data:TData; Index:word);
+    procedure _work_doDown(var _Data:TData; Index:word);
+    procedure _work_doEnable(var _Data:TData; Index:word);
     procedure _var_Normal(var _Data:TData; Index:word);
   end;
 
@@ -44,6 +49,15 @@ function _AlphaBlend(hdcDest: HDC; nXOriginDest, nYOriginDest, nWidthDest, nHeig
                      hdcSrc: HDC; nXOriginSrc, nYOriginSrc, nWidthSrc, nHeightSrc: Integer;
                      blendFunction: TBlendFunction): BOOL; stdcall;
                      external 'msimg32.dll' name 'AlphaBlend';
+
+constructor THIImgBtn.Create;
+begin
+   inherited Create(Parent);
+   BNormal := NewBitmap(0,0);
+   BSelect := NewBitmap(0,0);
+   BDown := NewBitmap(0,0);
+   BEnabled := NewBitmap(0,0);
+end;
 
 destructor THIImgBtn.Destroy;
 begin
@@ -77,7 +91,6 @@ end;
 
 procedure THIImgBtn.SetNormal;
 begin
-   BNormal := NewBitmap(0,0);
    BNormal.Handle := Value;
    if _prop_Alpha then
      BNormal.PixelFormat := pf32bit;
@@ -85,7 +98,6 @@ end;
 
 procedure THIImgBtn.SetSelect;
 begin
-   BSelect := NewBitmap(0,0);
    BSelect.Handle := Value;
    if _prop_Alpha then
      BSelect.PixelFormat := pf32bit;
@@ -93,7 +105,6 @@ end;
 
 procedure THIImgBtn.SetDown;
 begin
-   BDown := NewBitmap(0,0);
    BDown.Handle := Value;
    if _prop_Alpha then
      BDown.PixelFormat := pf32bit;   
@@ -101,7 +112,6 @@ end;
 
 procedure THIImgBtn.SetBEnabled;
 begin
-   BEnabled := NewBitmap(0,0);
    BEnabled.Handle := Value;
    if _prop_Alpha then   
      BEnabled.PixelFormat := pf32bit;
@@ -166,6 +176,38 @@ procedure THIImgBtn._onMouseUp;
 begin
    InvalidateRect(Control.Handle, nil, true);
    inherited;
+end;
+
+procedure THIImgBtn._work_doNormal;
+begin
+  BNormal.Assign(ToBitmap(_Data));
+  if _prop_Alpha then
+    BNormal.PixelFormat := pf32bit;
+  Control.Invalidate;
+end;
+
+procedure THIImgBtn._work_doSelect;
+begin
+  BSelect.Assign(ToBitmap(_Data));
+  if _prop_Alpha then
+    BSelect.PixelFormat := pf32bit;
+  Control.Invalidate;
+end;
+
+procedure THIImgBtn._work_doDown;
+begin
+  BDown.Assign(ToBitmap(_Data));
+  if _prop_Alpha then
+    BDown.PixelFormat := pf32bit;  
+  Control.Invalidate;
+end;
+
+procedure THIImgBtn._work_doEnable;
+begin
+  BEnabled.Assign(ToBitmap(_Data));
+  if _prop_Alpha then   
+    BEnabled.PixelFormat := pf32bit;  
+  Control.Invalidate;
 end;
 
 procedure THIImgBtn._var_Normal;
