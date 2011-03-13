@@ -45,7 +45,10 @@ end;
 
 destructor THITimer.Destroy;
 begin
+// Этот костыль связан с некооректностью уничтожения класса в FPC
+{$ifndef F_P}
    FTimer.Free;
+{$endif}
    inherited Destroy;
 end;
 
