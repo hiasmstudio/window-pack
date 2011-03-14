@@ -107,7 +107,6 @@ var
   hProv: HCRYPTPROV;
   PrivatKey, SessionKey: HCRYPTKEY;
   dwKeyBlobLen, dwPublicKeyBlobLen: LongWord;
-  KeyBlob: string;
   Err: Integer;
 begin
   Err := 0;
@@ -116,12 +115,12 @@ begin
   hProv := 0;
   if CryptAcquireContext(@hProv, nil, nil, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT) then
   begin
-    KeyBlob := ReadString(_Data, _data_ExternalKeyPair);
-    dwKeyBlobLen := Length(KeyBlob);
+    FKeyPair := ReadString(_Data, _data_ExternalKeyPair);
+    dwKeyBlobLen := Length(FKeyPair);
 
     if dwKeyBlobLen <> 0 then
     begin
-      if CryptImportKey(hProv, @KeyBlob[1], dwKeyBlobLen, 0, CRYPT_EXPORTABLE, @PrivatKey) then
+      if CryptImportKey(hProv, @FKeyPair[1], dwKeyBlobLen, 0, CRYPT_EXPORTABLE, @PrivatKey) then
       begin
         if CryptExportKey(PrivatKey, 0, PUBLICKEYBLOB, 0, nil, @dwPublicKeyBlobLen) then
         begin
