@@ -100,6 +100,8 @@ type
 
      _data_Data:THI_Event;
      _event_OnChange:THI_Event;
+     _event_OnDropDown:THI_Event;
+     _event_OnCloseUp:THI_Event;     
 
      procedure Init; override;
      procedure _work_doSetDate(var _Data:TData; Index:word);
@@ -127,7 +129,11 @@ begin
                     SystemTime2DateTime(NMDC.st, dt);
                     _hi_OnEvent(fControl._event_onChange, dt);
                     fControl.flag := false;
-                  end;  
+                  end
+                  else if (NMDC.nmhdr.code = DTN_CLOSEUP) then  
+                    _hi_OnEvent(fControl._event_onCloseUp)
+                  else if (NMDC.nmhdr.code = DTN_DROPDOWN) then  
+                    _hi_OnEvent(fControl._event_onDropDown);
                 end;  
     WM_PAINT: fControl.flag := true;
   end;
