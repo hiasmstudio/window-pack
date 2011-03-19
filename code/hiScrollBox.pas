@@ -58,7 +58,7 @@ begin
    if Pos > lpMaxPos then Pos := lpMaxPos;
    if Pos < lpMinPos then Pos := lpMinPos;   
    SetScrollPos(h, SB_HORZ, Pos, True);
-   SendMessage(h, WM_HSCROLL, 0, -1);
+   SendMessage(h, WM_HSCROLL, -1, 0);
 end;
 
 procedure THIScrollBox._work_doVScroll;
@@ -72,7 +72,7 @@ begin
    if Pos > lpMaxPos then Pos := lpMaxPos;
    if Pos < lpMinPos then Pos := lpMinPos;   
    SetScrollPos(h, SB_VERT, Pos, True);
-   SendMessage(h, WM_VSCROLL, 0, -1);
+   SendMessage(h, WM_VSCROLL, -1, 0);
 end;
 
 procedure THIScrollBox._var_HPos;
