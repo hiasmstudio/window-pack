@@ -2,7 +2,7 @@ unit hiWebCam;
 
 interface
 
-uses Windows,Kol,Share,Debug,ActiveX;
+uses Windows,Kol,Share,Debug;
 
 const
   WM_USER = $00000400;
@@ -109,6 +109,7 @@ type
 
     property _prop_RefreshRate:integer write fRefreshRate;
     property _prop_ViewStyle:integer write fViewStyle;
+    constructor Create;
     destructor Destroy; override;
     procedure _work_doConnect(var _Data:TData; Index:word);
     procedure _work_doDisConnect(var _Data:TData; Index:word);
@@ -137,15 +138,10 @@ begin
    _hi_onEvent(pCls._event_onProgress);
 end;
 
-{ Convert a GUID to a string }
-
-function GUIDToString(const ClassID: TGUID): string;
-var
-  P: PWideChar;
+constructor THIWebCam.Create;
 begin
-  StringFromCLSID(ClassID, P);
-  Result := P;
-  CoTaskMemFree(P);
+   inherited;
+   hCamCapture := 0;
 end;
 
 destructor THIWebCam.Destroy;
@@ -160,11 +156,9 @@ var
   ID: TGUID;
   S: string;  
 begin
+   if hCamCapture <> 0 then exit;
    GetWindowRect(hHandle,r);
-   if CoCreateGuid(Id) = s_OK then
-     S := 'WebCam_' + GUIDToString(Id)
-   else
-     S := 'WebCam';
+   S := 'WebCam_' + int2str(LongInt(Self));
    hCamCapture := capCreateCaptureWindow(PChar(S), WS_VISIBLE OR WS_CHILD OR WS_CLIPSIBLINGS, 0, 0, r.right-r.left, r.bottom-r.top, hHandle, LongInt(self));
    if hCamCapture = 0 then exit;
    SetProp(hCamCapture,PChar('OwnerObject'), integer(pointer(self)));
