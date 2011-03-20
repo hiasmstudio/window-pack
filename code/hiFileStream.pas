@@ -46,8 +46,10 @@ begin
     Fs := NewWriteFileStream(fn)
   else if FileExists(Fn) then
     Fs := NewReadFileStream(Fn)
+{$ifdef _ERROR_MAX_}
   else
     MessageBox(ReadHandle,PChar('File <'+fn+'> not found!'),'File stream Error',MB_OK);
+{$endif}
 end;
 
 procedure THIFileStream._work_doClose;
