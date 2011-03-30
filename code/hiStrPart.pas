@@ -28,6 +28,7 @@ implementation
 
 procedure THIStrPart._work_doSplit;
 begin
+  str := ''; Fleft := '';
   str := ReadString(_Data, _data_Str, '');
   {$ifdef _PROTECT_MAX_}
   if (_prop_Char = '') or (str = '') then exit;
