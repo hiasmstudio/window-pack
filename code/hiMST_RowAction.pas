@@ -140,6 +140,7 @@ begin
      or not FColorItems or (PData(sControl.LVItemData[idx]) = nil) then exit;
 
   CopyData(@FData, PData(sControl.LVItemData[idx]));
+
   Color := ToInteger(FData);
   if (idxcolortxt >= 0) and (idxcolortxt <= 15) then
   begin
@@ -151,7 +152,9 @@ begin
     Color := $0F000000 and Color;
     Color := Color or Cardinal(colorback);  
   end;
-  dtInteger(FData, Color);
+  FData.data_type := data_int;
+  FData.idata := Color;
+
   CopyData(PData(sControl.LVItemData[idx]), @FData);
   _hi_onEvent(_event_onChange);
 end;
