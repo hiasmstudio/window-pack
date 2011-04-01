@@ -30,6 +30,7 @@ type
     _prop_ProxyPassword:string;
     _prop_Length:cardinal;
     _prop_UserAgent:PChar;
+    _prop_Method:integer;
 
     _data_FileName:THI_Event;
     _data_URL:THI_Event;
@@ -38,6 +39,7 @@ type
     _data_Proxy:THI_Event;
     _data_ProxyUsername:THI_Event;
     _data_ProxyPassword:THI_Event;
+    _data_PostData:THI_Event;
     _event_onURLSize:THI_Event;
     _event_onDownload:THI_Event;
     _event_onStatus:THI_Event;
@@ -75,6 +77,8 @@ function THIHTTP_Get.Execute;
 var
   NetHandle: HINTERNET;
   UrlHandle: HINTERNET;
+  ConHandle: HINTERNET;
+
   Buffer: array[0..1024] of char;
   BytesRead, len: cardinal;
   Url,Fname,Head:string;
@@ -82,6 +86,7 @@ var
   dwStatus,dwStatusSize:cardinal;
   dwNil:DWORD;
   dt:TData; s,s1:string;
+  i:integer;
 begin
    FBusy := true; dtNull(dt);
    NetHandle := InternetOpen(_prop_UserAgent, INTERNET_OPEN_TYPE_PRECONFIG, nil, nil, 0);
@@ -103,7 +108,40 @@ begin
        Head := 'Range: bytes=' + Int2Str(BytesRead) + '-' + Int2Str(BytesRead + Len) 
      else Head := '';
 
-     UrlHandle := InternetOpenUrl(NetHandle, PChar(Url), PChar(Head), cardinal(-1), INTERNET_FLAG_RELOAD+INTERNET_FLAG_NO_AUTH, 0);
+     if _prop_Method = 1 then
+       begin
+         if pos('https', Url) > 0 then
+           begin
+             dwStatus := INTERNET_DEFAULT_HTTPS_PORT;
+             dwStatusSize := INTERNET_FLAG_SECURE;
+           end 
+         else
+           begin
+             dwStatus := INTERNET_DEFAULT_HTTP_PORT;
+             dwStatusSize := 0;
+           end;
+         i := pos('//', Url);
+         if i <> -1 then
+           delete(url, 1, i + 1);
+         i := pos('/', Url);
+         if i = -1 then
+           begin
+             s := url;
+             s1 := '';
+           end
+         else
+           begin
+             s := copy(url, 1, i-1);
+             s1 := copy(url, i+1, length(url));
+           end;
+         ConHandle := InternetConnect(NetHandle,PChar(s),dwStatus,nil,nil,INTERNET_SERVICE_HTTP, 0, 0);
+         UrlHandle := HttpOpenRequest(ConHandle,'POST',PChar(s1),nil,nil,0,INTERNET_FLAG_KEEP_CONNECTION or dwStatusSize,0);
+         s := 'Content-Type: application/x-www-form-urlencoded';  
+         s1 := ReadString(GData, _data_PostData);
+         HttpSendRequest(UrlHandle, PChar(s), length(s), PAnsiChar(s1), Length(s1));
+       end
+     else
+        UrlHandle := InternetOpenUrl(NetHandle, PChar(Url), PChar(Head), cardinal(-1), INTERNET_FLAG_RELOAD+INTERNET_FLAG_NO_AUTH, 0);
 
      if Assigned(UrlHandle) then
       begin
@@ -136,6 +174,8 @@ begin
         //ProcessMessages;
        until (BytesRead = 0)or FStop;
        InternetCloseHandle(UrlHandle);
+       InternetCloseHandle(NetHandle);
+       
        if Fname = '' then
          fs.Position := 0
        else
