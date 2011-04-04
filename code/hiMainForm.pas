@@ -216,7 +216,7 @@ var
 begin
    Result := false;
    if (Msg.message = WM_INNERMESSAGE) and not isMain and
-      (_prop_FormFastening <> nil) and isWindowVisible(Control.Handle) then
+      (_prop_FormFastening <> nil){ and isWindowVisible(Control.Handle)} then
    begin
      sControl := _prop_FormFastening.ctrlpoint;
      MoveWindow(Control.Handle, sControl.Left + _prop_ShiftLeft, sControl.Top + _prop_ShiftTop,
