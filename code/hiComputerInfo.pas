@@ -36,12 +36,18 @@ begin
     dtString(_Data,s);
 end;
 
+function GetComputerNameEx(
+         NameType: Integer; // name type
+         Buffer: PChar; // name buffer
+         var Size: Dword // size of name buffer
+): BOOL; stdcall; external 'kernel32.dll' name 'GetComputerNameExA';
+
 procedure THIComputerInfo._var_CompName;
 var Size:cardinal;
     s:array[0..MAX_COMPUTERNAME_LENGTH] of char;
 begin
     Size := length(s);
-    GetComputerName(s,Size);
+    GetComputerNameEx(1, s, Size);
     dtString(_Data,s);
 end;
 
