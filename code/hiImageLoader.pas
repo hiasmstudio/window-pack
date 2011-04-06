@@ -229,6 +229,7 @@ begin
    bmp := NewBitmap(w3, h3);
    ARect := MakeRect(0,0,w3,h3);
    FImgCtx.Draw(bmp.canvas.handle, ARect);
+   SetStretchBltMode(DC, HALFTONE);
    StretchBlt(DC, x1, y1, w3, h3, bmp.canvas.handle, x3, y3, w3, h3, SRCCOPY);
    bmp.free;
 //   FImgCtx.StretchBlt(DC, x1,y1,w3,h3,x3,y3,w3,h3, SRCCOPY);
@@ -242,6 +243,7 @@ begin
    bmp := NewBitmap(w3, h3);
    ARect := MakeRect(0,0,w3,h3);
    FImgCtx.Draw(bmp.canvas.handle, ARect);
+   SetStretchBltMode(DC, HALFTONE);
    StretchBlt(DC, x1, y1, w1, h1, bmp.canvas.handle, x3, y3, w3, h3, SRCCOPY);
    bmp.free;
 //   FImgCtx.StretchBlt(DC, x1,y1,w1,h1,x3,y3,w3,h3, SRCCOPY);
@@ -267,6 +269,7 @@ begin
    bmp := NewBitmap(w3, h3);
    ARect := MakeRect(0,0,w3,h3);
    FImgCtx.Draw(bmp.canvas.handle, ARect);
+   SetStretchBltMode(DC, HALFTONE);   
    StretchBlt(DC, x1, y1, w1, h1, bmp.canvas.handle, x3, y3, w3, h3, SRCCOPY);
    bmp.free;
 //   FImgCtx.StretchBlt(DC, x1,y1,w1,h1,x3,y3,w3,h3, SRCCOPY);
@@ -292,6 +295,7 @@ begin
    bmp := NewBitmap(w3, h3);
    ARect := MakeRect(0,0,w3,h3);
    FImgCtx.Draw(bmp.canvas.handle, ARect);
+   SetStretchBltMode(DC, HALFTONE);   
    StretchBlt(DC, x1, y1, w1, h1, bmp.canvas.handle, x3, y3, w3, h3, SRCCOPY);
    bmp.free; 
 //   FImgCtx.StretchBlt(DC, x1,y1,w1,h1,x3,y3,w3,h3, SRCCOPY);
