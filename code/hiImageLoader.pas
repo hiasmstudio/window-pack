@@ -220,40 +220,19 @@ begin
 end;
 
 procedure THiImageLoader.Draw;
-var
-  ARect:TRect;
-  bmp: PBitmap;  
 begin
    if w3>w1 then w3 := w1;
    if h3>h1 then h3 := h1;
-   bmp := NewBitmap(w3, h3);
-   ARect := MakeRect(0,0,w3,h3);
-   FImgCtx.Draw(bmp.canvas.handle, ARect);
-   SetStretchBltMode(DC, HALFTONE);
-   StretchBlt(DC, x1, y1, w3, h3, bmp.canvas.handle, x3, y3, w3, h3, SRCCOPY);
-   bmp.free;
-//   FImgCtx.StretchBlt(DC, x1,y1,w3,h3,x3,y3,w3,h3, SRCCOPY);
+   FImgCtx.StretchBlt(DC, x1,y1,w3,h3,x3,y3,w3,h3, SRCCOPY);
 end;
 
 procedure THiImageLoader.Stretch;
-var
-  ARect:TRect;
-  bmp: PBitmap;  
 begin
-   bmp := NewBitmap(w3, h3);
-   ARect := MakeRect(0,0,w3,h3);
-   FImgCtx.Draw(bmp.canvas.handle, ARect);
-   SetStretchBltMode(DC, HALFTONE);
-   StretchBlt(DC, x1, y1, w1, h1, bmp.canvas.handle, x3, y3, w3, h3, SRCCOPY);
-   bmp.free;
-//   FImgCtx.StretchBlt(DC, x1,y1,w1,h1,x3,y3,w3,h3, SRCCOPY);
+   FImgCtx.StretchBlt(DC, x1,y1,w1,h1,x3,y3,w3,h3, SRCCOPY);
 end;
 
 procedure THiImageLoader.ScaleMin;
-var
-  Z,z1,z2: integer;
-  ARect:TRect;
-  bmp: PBitmap;   
+var   Z,z1,z2: integer;
 begin
    z1 := w3*h1;
    z2 := h3*w1;
@@ -266,20 +245,11 @@ begin
       inc(x1, (w1-Z) div 2);
       w1 := Z;
    end;
-   bmp := NewBitmap(w3, h3);
-   ARect := MakeRect(0,0,w3,h3);
-   FImgCtx.Draw(bmp.canvas.handle, ARect);
-   SetStretchBltMode(DC, HALFTONE);   
-   StretchBlt(DC, x1, y1, w1, h1, bmp.canvas.handle, x3, y3, w3, h3, SRCCOPY);
-   bmp.free;
-//   FImgCtx.StretchBlt(DC, x1,y1,w1,h1,x3,y3,w3,h3, SRCCOPY);
+   FImgCtx.StretchBlt(DC, x1,y1,w1,h1,x3,y3,w3,h3, SRCCOPY);
 end;
 
 procedure THiImageLoader.ScaleMax;
-var
-  Z,z1,z2: integer;
-  ARect:TRect;
-  bmp: PBitmap; 
+var   Z,z1,z2: integer;
 begin
    z1 := w3*h1;
    z2 := h3*w1;
@@ -292,13 +262,7 @@ begin
       inc(x1, (w1-Z) div 2);
       w1 := Z;
    end;
-   bmp := NewBitmap(w3, h3);
-   ARect := MakeRect(0,0,w3,h3);
-   FImgCtx.Draw(bmp.canvas.handle, ARect);
-   SetStretchBltMode(DC, HALFTONE);   
-   StretchBlt(DC, x1, y1, w1, h1, bmp.canvas.handle, x3, y3, w3, h3, SRCCOPY);
-   bmp.free; 
-//   FImgCtx.StretchBlt(DC, x1,y1,w1,h1,x3,y3,w3,h3, SRCCOPY);
+   FImgCtx.StretchBlt(DC, x1,y1,w1,h1,x3,y3,w3,h3, SRCCOPY);
 end;
 
 procedure THiImageLoader.Mosaic;
