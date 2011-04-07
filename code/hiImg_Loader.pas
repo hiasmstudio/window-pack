@@ -124,6 +124,7 @@ begin
     else
     begin
       ARect := MakeRect(0, 0, sz.cx, sz.cy);
+      if not FBitmap.Empty then FBitmap.Clear;
       FBitmap.width := sz.cx;
       FBitmap.height := sz.cy; 
       FImgCtx.Draw(FBitmap.Canvas.handle, ARect);
@@ -146,7 +147,6 @@ begin
   setlength(s, len - 1);
   GetFullPathName(@s1[1], len, @s[1], fn);
   if not FileExists(s) then exit;
-  if not FBitmap.Empty then FBitmap.Clear;
   FImgCtx := CreateComObject(CLSID_IImgCtx) as IImgCtx;
   FImgCtx.Load(PWChar(StringToWideString(s, 3)), 0);
   FImgCtx.SetCallback(@MyCallback, pointer(Self));
