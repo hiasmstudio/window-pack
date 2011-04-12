@@ -2,7 +2,7 @@ unit hiCableDataNamed;
 
 interface
 
-uses Kol,Share,ShareCable;
+uses Share, ShareCable;
 
 type
 
@@ -21,7 +21,7 @@ procedure THICableDataNamed.Cable;
  var i: integer;
 begin
   if not _isCable(data) then exit;
-  i:=Wire.IndexOf(parse(data.sdata, CableNameDelimiter)); 
+  i:=Wire.IndexOf(cparse(data.sdata)); 
   if i>=0 then
     if data.sdata='' then
       _ReadData(data.ldata^, _data_Wire[i])

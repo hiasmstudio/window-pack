@@ -31,15 +31,23 @@ Type
 procedure dtCable(var nCbl: TData; Data: PData; WireNumber: Integer); overload;
 procedure dtCable(var nCbl: PData; Data: PData; WireName: String); overload;
 function _IsCable(const Data: TData): boolean;
-
-// =================== Отладка ==================
-procedure showdata(Var _data:TData; recur:byte);
+function Cparse(var S: String): String;
  
 implementation
 
+function Cparse(var S: String): String;
+var i: Integer;
+begin
+  i := pos(CableNameDelimiter, S);
+  if i=0 then begin 
+     Result := S; S := ''; 
+   end else begin 
+     Result := copy(S, 1, i-1); delete(S,1,i); 
+  end;
+end;
+
 procedure dtCable(var nCbl: TData; Data: PData; WireNumber: Integer);
 begin
-   //dtCable(Cbl, Data, chr(WireNumber+1));
    nCbl.data_type := data_cable;
    nCbl.idata:= WireNumber;
    nCbl.Next := nil;
@@ -68,6 +76,7 @@ end;
 
 // =================== TCable ==================
 procedure TCable.SetCount; begin end;
+
 // =================== TCableNamed ==================
 procedure TCableNamed.SetGroup;
 var i: Integer;
@@ -89,26 +98,4 @@ begin
    inherited;
 end;
 
-// =================== Отладка ==================
-
-const DataNames:array[0..22]of string =  
-   ('NULL','Integer','String','Data','Combo','StrList','Icon','Real','Color',
-     'data_script','Stream','Bitmap','Wave','data_array','combo Ex','Font',
-     'matrix','jpeg','Menu','Code','object','break', 'Cable');
-
-procedure showdata(var _data:TData; recur:byte);
- function mstr(dt:PData; sh: Integer):string;
-  begin
-    result:=copy('                ',1,sh*2)+ 'Data_type:'+int2str(dt.data_type and 128)+':'+DataNames[dt.data_type and 127]+#13#10+
-         copy('                ',1,sh*2)+'idata:'+int2str(dt.idata)+#13#10+
-         copy('                ',1,sh*2)+'rdata:'+int2str(Round(dt.rdata))+#13#10+
-         copy('                ',1,sh*2)+'sdata:'+dt.sdata+#13#10+
-         copy('                ',1,sh*2)+'next :'+int2str(integer(dt.next))+#13#10+
-         copy('                ',1,sh*2)+'ldata:'+int2str(integer(dt.ldata))+#13#10;
-    if (sh<recur) and (dt.ldata<>nil) then result:=result+mstr(dt.ldata,sh+1);
-  end;
-
-begin
-  msgbox(mstr(@_data,0),1);
-end;
 end.

@@ -2,7 +2,7 @@ unit hiCableEventNamed;
 
 interface
 
-uses Kol,Share,ShareCable;
+uses Share,ShareCable;
 
 type
 
@@ -21,7 +21,7 @@ procedure THICableEventNamed.Cable;
  var i: integer;
 begin
   if not _isCable(data) then exit;
-  i:=Wire.IndexOf(parse(data.sdata, CableNameDelimiter)); 
+  i:=Wire.IndexOf(cparse(data.sdata)); 
   if i>=0 then
     if data.sdata='' then
       _hi_onEvent_(_event_Wire[i],data.ldata^)
