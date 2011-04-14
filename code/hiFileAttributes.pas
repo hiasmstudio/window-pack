@@ -198,6 +198,7 @@ begin
    if ico.Handle <> 0 then dtIcon(dt,ico) else dtNull(dt); 
    _hi_onEvent(_event_onGetFileIcon, dt);
    ico.free;
+   DestroyIcon(SFI.hIcon);
 end;
 
 procedure THIFileAttributes._work_doSmallIcon;
