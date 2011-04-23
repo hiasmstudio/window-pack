@@ -22,6 +22,7 @@ type
     _prop_Text:string;
     _prop_ReadOnly:boolean;
     _prop_Alignment:byte;
+    _prop_MaxLenField:integer;
 
     _data_Str:THI_Event;
     _event_onEnter:THI_Event;
@@ -43,6 +44,7 @@ type
     procedure _work_doSelectText(var _Data:TData; Index:word);
     procedure _work_doSelectAll(var _Data:TData; Index:word);
     procedure _work_doReadOnly(var _Data:TData; Index:word);
+    procedure _work_doMaxLenField(var _Data:TData; Index:word);
     procedure _var_Text(var _Data:TData; Index:word);
 
     //********************* FASTED ***************************
@@ -72,6 +74,7 @@ begin
    Control.TextAlign := TTextAlign(_prop_Alignment);
 
    inherited;
+   Control.Perform(em_LimitText,_prop_MaxLenField, 0);
    Control.OnChange := _OnChange;
    Control.Text := _prop_Text;
    FOld := _prop_Text; 
@@ -264,9 +267,9 @@ begin
      if _prop_DataType(dt) then begin
        Fchange := true;
        _hi_onEvent(_event_onEnter,dt);
-       if Fchange then begin
+       if Fchange and _prop_ClearAfterEnter then begin
          ChangeEvent := false; // Установка Control.Text вызывает _OnChange !!!
-         if _prop_ClearAfterEnter then Control.Text := '';
+         Control.Text := '';
        end;
      end;
      Key := 0;
@@ -282,6 +285,12 @@ end;
 procedure THIEdit._work_doReadOnly;
 begin
   Control.Perform(EM_SETREADONLY, ToInteger(_Data), 0);
+end;
+
+procedure THIEdit._work_doMaxLenField;
+begin
+  _prop_MaxLenField := ToInteger(_Data);
+  Control.Perform(em_LimitText, _prop_MaxLenField, 0);
 end;
 
 end.
