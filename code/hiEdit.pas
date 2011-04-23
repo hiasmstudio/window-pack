@@ -10,7 +10,7 @@ type
    private
     FOld:string;
     FPos:integer;
-    ChangeEvent,Fchange:boolean;
+    ChangeEvent:boolean;
 
     function NoText(func:Tfunc; var dt:TData):boolean;
     procedure _OnChange(Obj:PObj);
@@ -83,7 +83,6 @@ end;
 procedure THIEdit._work_doText;
 var p:integer;
 begin
-   Fchange := false;
    p := Control.SelStart;
    Control.Text := ReadString(_Data,_data_Str,'');
    Control.SelStart := p;
@@ -97,25 +96,21 @@ end;
 
 procedure THIEdit._work_doPosition;
 begin
-   Fchange := false;
    Control.SelStart := ToInteger(_Data);
 end;
 
 procedure THIEdit._work_doSelectText;
 begin
-   Fchange := false;
    Control.Selection := ToString(_Data);
 end;
 
 procedure THIEdit._work_doSelectAll;
 begin
-   Fchange := false;
    Control.SelectAll;
 end;
 
 procedure THIEdit._work_doSelectLength;
 begin
-   Fchange := false;
    Control.SelLength := ToInteger(_Data);
 end;
 
@@ -262,19 +257,21 @@ end;
 procedure THIEdit._OnKeyDown;
 var dt:TData;
 begin
-  if Assigned(_event_onEnter.Event) and( Key = 13) then
-   begin
-     if _prop_DataType(dt) then begin
-       Fchange := true;
-       _hi_onEvent(_event_onEnter,dt);
-       if Fchange and _prop_ClearAfterEnter then begin
-         ChangeEvent := false; // Установка Control.Text вызывает _OnChange !!!
-         Control.Text := '';
-       end;
-     end;
-     Key := 0;
-   end
-  else inherited;
+  if Assigned(_event_onEnter.Event) and (Key = 13) then
+  begin
+    if _prop_DataType(dt) then
+    begin
+      _hi_onEvent(_event_onEnter,dt);
+      if _prop_ClearAfterEnter then
+      begin
+        ChangeEvent := false; // Установка Control.Text вызывает _OnChange !!!
+        Control.Text := '';
+      end;
+    end;
+    Key := 0;
+  end
+  else
+    inherited;
 end;
 
 function THIEdit._fast_Text:string;
@@ -289,8 +286,7 @@ end;
 
 procedure THIEdit._work_doMaxLenField;
 begin
-  _prop_MaxLenField := ToInteger(_Data);
-  Control.Perform(em_LimitText, _prop_MaxLenField, 0);
+  Control.Perform(em_LimitText, ToInteger(_Data), 0);
 end;
 
 end.
