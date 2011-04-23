@@ -262,11 +262,11 @@ begin
   if Assigned(_event_onEnter.Event) and( Key = 13) then
    begin
      if _prop_DataType(dt) then begin
-       if _prop_ClearAfterEnter then Fchange := true;
+       Fchange := true;
        _hi_onEvent(_event_onEnter,dt);
        if Fchange then begin
          ChangeEvent := false; // Установка Control.Text вызывает _OnChange !!!
-         Control.Text := '';
+         if _prop_ClearAfterEnter then Control.Text := '';
        end;
      end;
      Key := 0;
