@@ -14,7 +14,7 @@ type
     _prop_FileName: string;
     _data_Text,
     _data_FileName,
-    _event_onSearch: THI_Event;
+    _event_onSearch, _event_onNotSearch: THI_Event;
     _event_onEnd: THI_Event;    
 
     procedure _work_doSearch(var _Data:TData; index:word);
@@ -48,7 +48,10 @@ begin
     begin
       Readln(F, str);
       case Pos(t, str) of
-        0: Continue
+        0: begin
+             _hi_onEvent(_event_onNotSearch, str);
+             Continue;
+           end 
       else
         _hi_onEvent(_event_onSearch, str);
       end;
