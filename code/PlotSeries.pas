@@ -85,6 +85,8 @@ begin
        x := FSeries.Values[FSeries.Count-1].x + _prop_Step;  
    FSeries.Add(y, x);
    FGrapher.ReDraw;
+   
+   _hi_onEvent(_event_onAdd);
 end;
 
 procedure TPlotSeries._work_doClear;
