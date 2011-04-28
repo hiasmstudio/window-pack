@@ -96,7 +96,8 @@ begin
       if _prop_Ctl3D<2 then Ctl3D := _prop_Ctl3D=0;
       Transparent := _prop_Transparent;
       Enabled := _prop_Enabled;
-      Cursor := _prop_Cursor;
+//      Cursor := _prop_Cursor;
+      CursorLoad(0, MakeIntResource(_prop_Cursor));
       if _prop_Flat then
          Style := Style or BS_FLAT;
       if _prop_ParentFont then
