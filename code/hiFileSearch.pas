@@ -115,7 +115,6 @@ procedure THIFileSearch._var_DateCreate;
 var
   m: TFileTime;
   sys: TSystemTime;
-  DateTime: TDateTime;
 begin
   if _prop_TimeType = 1 then
      FileTimeToLocalFileTime(FindData.ftCreationTime, m)
@@ -129,7 +128,6 @@ procedure THIFileSearch._var_DateAccess;
 var
   m: TFileTime;
   sys: TSystemTime;
-  DateTime: TDateTime;
 begin
   if _prop_TimeType = 1 then
      FileTimeToLocalFileTime(FindData.ftLastAccessTime, m)
@@ -143,7 +141,6 @@ procedure THIFileSearch._var_DateModify;
 var
   m: TFileTime;
   sys: TSystemTime;
-  DateTime: TDateTime;
 begin
   if _prop_TimeType = 1 then
      FileTimeToLocalFileTime(FindData.ftLastWriteTime, m)

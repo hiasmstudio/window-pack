@@ -351,6 +351,7 @@ TRY
           // Выполняем GetCommandString
           FillChar(ZVerb, SizeOf(ZVerb), #0);
           AResult := ICMenu.GetCommandString(ICmd, GCS_VERB, nil, ZVerb, SizeOf(ZVerb));
+          if AResult <> S_OK then exit;
           strCmd := StrPas(ZVerb);
 
           // Заполняем структуру TCMInvokeCommandInfo
@@ -360,7 +361,6 @@ TRY
           CMD.hWND := Wnd;
           CMD.lpVerb := MakeIntResource(ICmd);
           CMD.nShow := SW_SHOWNORMAL;
-
           // Выполняем InvokeCommand с заполненной структурой
           AResult := ICMenu.InvokeCommand(CMD);
           if AResult <> S_OK then exit;
