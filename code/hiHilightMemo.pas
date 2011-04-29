@@ -423,6 +423,30 @@ procedure InitUpper;
 implementation
 
 // Вспомогательные функции
+
+function TrimRight(const str: string): string;
+var
+  L: integer;
+begin
+  Result := Str;
+  L := Length(Result);
+  while (L > 0) and (Result[L] <= ' ') do Dec(L);
+  SetLength(Result, L);
+end;
+
+function Trim(const Str : string): string;
+var
+  L: integer;
+begin
+  Result := Str;
+  L := Length(Result);
+  while (L > 0) and (Result[L] <= ' ') do Dec(L);
+  SetLength(Result, L);
+  L := 1;
+  while (L <= Length(Result)) and (Result[L] <= ' ') do Inc(L);
+  Result := string(PChar(integer(@Result[1]) + L - 1));
+end;
+
 function IsLetterDigit(C: Char): boolean; 
 begin
   Result := C in ['A'..'Z', 'a'..'z', 'А'..'Я', 'а'..'я', 'Ё', 'ё', '_', '~', '0'..'9']; 
