@@ -34,6 +34,19 @@ const
   CMF_EXTENDEDVERBS      = $00000100; 
   CMF_RESERVED           = $FFFF0000;      { View specific }
 
+const
+{ GetCommandString uType }
+  GCS_VERBA = 0;
+  GCS_HELPTEXTA = 1;
+  GCS_VALIDATEA = 2;
+  GCS_VERBW = 4;
+  GCS_HELPTEXTW = 5;
+  GCS_VALIDATEW = 6;
+  GCS_UNICODE = 4;
+  GCS_VERB = GCS_VERBA;
+  GCS_HELPTEXT = GCS_HELPTEXTA;
+  GCS_VALIDATE = GCS_VALIDATEA;
+
  type
 
   PSTRRet = ^TStrRet;
@@ -156,6 +169,7 @@ const
   private
   public
     _data_FileName: THI_Event;
+    _event_onCommand: THI_Event;
     procedure _work_doCreateMenu(var _Data:TData; Index:word);
   end;
 //------------------------------------------------------------------------------
@@ -232,7 +246,13 @@ begin
                          0, 0, 0, 0, 0, HInstance, Pointer(ContextMenu));
 end;
 
-procedure GetProperties(Path: String; MousePoint: TPoint; Wnd: HWND);
+procedure GetProperties(Path: String; MousePoint: TPoint; Wnd: HWND; var strCmd: String);
+
+function StrPas(const Str: PChar): string; 
+begin 
+   Result := Str; 
+end;
+
 var
   AResult: HRESULT;
   CDir, FName: PWideChar;
@@ -251,6 +271,7 @@ var
   p: PChar;
   temp: SHORT;
   offset: Word;
+  ZVerb: array[0..255] of AnsiChar;
 begin
   if Path = '' then exit;
   // Первичная инициализация
@@ -326,6 +347,12 @@ TRY
         begin
           // Индекс этого пункта будет лежать в ICmd
           ICmd := LongInt(PopupMenuResult) - 1;
+
+          // Выполняем GetCommandString
+          FillChar(ZVerb, SizeOf(ZVerb), #0);
+          AResult := ICMenu.GetCommandString(ICmd, GCS_VERB, nil, ZVerb, SizeOf(ZVerb));
+          strCmd := StrPas(ZVerb);
+
           // Заполняем структуру TCMInvokeCommandInfo
           FillChar(CMD, SizeOf(CMD), #0);
           CMD.fMask := CMIC_MASK_ICON; 
@@ -359,15 +386,16 @@ end;
 
 procedure THiFilesContextMenu._work_doCreateMenu;
 var
-  fn: String;
+  fn, cmnd: String;
   pos: TPoint;
   CoInit: HRESULT;  
 begin
   fn := ReadString(_data, _data_FileName);
   GetCursorPos(pos);
   CoInit := CoInitializeEx(nil, COINIT_APARTMENTTHREADED);
-  GetProperties(fn, pos, Applet.Handle);
+  GetProperties(fn, pos, Applet.Handle, cmnd);
   if CoInit = S_OK then CoUninitialize;  
+  _hi_OnEvent(_event_onCommand, cmnd);
 end;
 
 end.
