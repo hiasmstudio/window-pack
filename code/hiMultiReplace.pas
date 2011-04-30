@@ -13,7 +13,8 @@ type
     procedure SetEndSymbol(Value: string);
   public
     _prop_ReplaceList: string;    
-    
+    _prop_EnterTag: string;
+
     _data_Text,
     _data_ReplaceList,
     _event_onResult: THI_Event;
@@ -23,7 +24,8 @@ type
         
     procedure _work_doMultiReplace(var _Data:TData; index:word);
     procedure _work_doDelimiter(var _Data:TData; index:word);
-    procedure _work_doEndSymbol(var _Data:TData; index:word);         
+    procedure _work_doEndSymbol(var _Data:TData; index:word);
+    procedure _work_doEnterTag(var _Data:TData; index:word);             
     procedure _var_Result(var _Data:TData; index:word);
  end;
 
@@ -71,22 +73,21 @@ begin
   FMultiReplace := ReadString(_Data, _data_Text);
   s := ReadString(_Data, _data_ReplaceList, _prop_ReplaceList);
 
-  Replace(s, #13#10, '#13#10');  
-  Replace(s, _End + '#13#10', _End);
+  Replace(s, _End + #13#10, _End);
+  Replace(s, #13#10, _prop_EnterTag);  
   
   FListFrom := NewStrList;
   FListTo := NewStrList;
     
   while s <> '' do
   begin
-
     FListFrom.Add(trim(fparse(s, _Dlm)));
     FListTo.Add(trim(fparse(s, _End)));
   end;
 
   for i := 0 to FListFrom.count - 1 do
     Replace(FMultiReplace, FListFrom.Items[i], FListTo.Items[i]);
-  Replace(FMultiReplace, '#13#10', #13#10); 
+  Replace(FMultiReplace, _prop_EnterTag, #13#10); 
   
   FListFrom.free;
   FListTo.free;
@@ -98,6 +99,11 @@ end;
 procedure THiMultiReplace._var_Result;
 begin
   dtString(_Data, FMultiReplace);
+end;
+
+procedure THiMultiReplace._work_doEnterTag;
+begin
+  _prop_EnterTag := ToString(_Data);
 end;
 
 procedure THiMultiReplace._work_doDelimiter;
