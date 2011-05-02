@@ -2205,6 +2205,7 @@ var
   S:     string; 
   i, j:  integer; 
 begin
+  if (X mod CharWidth) > 0.5 then X:=(X + trunc(CharWidth/2)); ///проверяем где находится коретка относительно середины символа. MAV
   Pt := MakePoint(X div CharWidth + LeftCol, Y div LineHeight + TopLine); 
   if Shift and MK_SHifT <> 0 then
     SetSel(SelFrom, Pt, SelFrom)
@@ -2246,7 +2247,7 @@ procedure THIHiLightMemo.DoMouseMove;
 var
   Pt: TPoint;
 begin
-  Pt := MakePoint(Round(X / CharWidth) + LeftCol, Y div LineHeight + TopLine);
+  Pt := MakePoint(trunc(X / CharWidth + 0.5) + LeftCol, Y div LineHeight + TopLine);/// round заменил на trunc для предoтвращения скачков и привязал к середине символа +0.5.  MAV
   FCoordinatMouse := Pt; 
   if not FMouseDown then
   begin
