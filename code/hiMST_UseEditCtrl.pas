@@ -32,6 +32,7 @@ type
    public
 
      _prop_KeyCellEnter: byte;
+     _prop_DblClick: boolean;
      _event_onEscCell: THI_Event;
      _event_onEnterCell: THI_Event;
      _event_onCellSize: THI_Event;
@@ -133,7 +134,7 @@ begin
           HTI.pt.x := Pt.X;
           HTI.pt.y := Pt.Y;
           Sender.Perform( LVM_SUBITEMHITTEST, 0, Integer( @HTI ) );
-          if HTI.flags <> LVHT_ONITEMSTATEICON then
+          if (HTI.flags <> LVHT_ONITEMSTATEICON) and _prop_DblClick then
           begin     
             InitOnEvent;
             _hi_onEvent(fClass._event_onEnterCell);
