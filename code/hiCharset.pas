@@ -310,7 +310,6 @@ var
   i, j: integer;
   chr: Char;
   TypeUNICODE: byte;
-  len:integer;  
 begin
   s := ReadString(_Data,_data_Text,'');
   TypeUNICODE := _prop_InTypeUNICODE;
@@ -322,11 +321,10 @@ begin
       j := 3;
     end;
   Res := '';
-  len := length(s) - (j-1);
 
-  BufLen := WideCharToMultiByte(CP_THREAD_ACP,WC_COMPOSITECHECK or WC_DISCARDNS or WC_SEPCHARS or WC_DEFAULTCHAR, @s[j], len, nil, 0, nil, nil);
-  if BufLen > 1 then begin
-    SetLength(Res, BufLen div 2);
+  BufLen := WideCharToMultiByte(CP_THREAD_ACP,WC_COMPOSITECHECK or WC_DISCARDNS or WC_SEPCHARS or WC_DEFAULTCHAR, @s[j], -1, nil, 0, nil, nil);
+  if BufLen > 1 then
+  begin
     case TypeUNICODE of
       1: begin
            i := 1;
@@ -339,7 +337,8 @@ begin
            end;  
          end;
     end;
-    WideCharToMultiByte(CP_THREAD_ACP,WC_COMPOSITECHECK or WC_DISCARDNS or WC_SEPCHARS or WC_DEFAULTCHAR, @s[j], len, @Res[1], BufLen div 2, nil, nil);
+    SetLength(Res, BufLen  - 1);
+    WideCharToMultiByte(CP_THREAD_ACP,WC_COMPOSITECHECK or WC_DISCARDNS or WC_SEPCHARS or WC_DEFAULTCHAR, @s[j], -1, @Res[1], BufLen, nil, nil);
   end;
   _hi_OnEvent(_event_onCharset, res);
 end;
