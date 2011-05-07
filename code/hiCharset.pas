@@ -5,7 +5,6 @@ interface
 uses Windows,Kol,Share,Debug;
 
 const
-   CP_THREAD_ACP =  3;           // current thread's ANSI code page
    CP_UTF8       =  65001;       // UTF-8 translation
    CP_KOI8       =  20866;       // KOI-8 translation
    CP_DOS        =  866;         // DOS   translation
@@ -287,13 +286,13 @@ end;
 procedure THICharset._work_doCharset6;
 begin
    _hi_OnEvent(_event_onCharset,CodePage1ToCodePage2(ReadString(_Data,_data_Text,''),
-               CP_THREAD_ACP, CP_UTF8));
+               CP_ACP, CP_UTF8));
 end;
 
 procedure THICharset._work_doCharset7;
 begin
    _hi_OnEvent(_event_onCharset,CodePage1ToCodePage2(ReadString(_Data,_data_Text,''),
-               CP_UTF8, CP_THREAD_ACP));
+               CP_UTF8, CP_ACP));
 end;
 
 procedure THICharset._work_doCharset8;
@@ -322,7 +321,7 @@ begin
     end;
   Res := '';
 
-  BufLen := WideCharToMultiByte(CP_THREAD_ACP,WC_COMPOSITECHECK or WC_DISCARDNS or WC_SEPCHARS or WC_DEFAULTCHAR, @s[j], -1, nil, 0, nil, nil);
+  BufLen := WideCharToMultiByte(CP_ACP,WC_COMPOSITECHECK or WC_DISCARDNS or WC_SEPCHARS or WC_DEFAULTCHAR, @s[j], -1, nil, 0, nil, nil);
   if BufLen > 1 then
   begin
     case TypeUNICODE of
@@ -338,7 +337,7 @@ begin
          end;
     end;
     SetLength(Res, BufLen  - 1);
-    WideCharToMultiByte(CP_THREAD_ACP,WC_COMPOSITECHECK or WC_DISCARDNS or WC_SEPCHARS or WC_DEFAULTCHAR, @s[j], -1, @Res[1], BufLen, nil, nil);
+    WideCharToMultiByte(CP_ACP,WC_COMPOSITECHECK or WC_DISCARDNS or WC_SEPCHARS or WC_DEFAULTCHAR, @s[j], -1, @Res[1], BufLen, nil, nil);
   end;
   _hi_OnEvent(_event_onCharset, res);
 end;
@@ -352,11 +351,11 @@ var
 begin
   s := ReadString(_Data,_data_Text,'');
   res := '';              
-  BufLen := MultiByteToWideChar(CP_THREAD_ACP, MB_PRECOMPOSED, @s[1], -1, nil, 0);
+  BufLen := MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, @s[1], -1, nil, 0);
   if BufLen > 1 then
   begin
     SetLength(res, 2 * (BufLen - 1)); 
-    MultiByteToWideChar(CP_THREAD_ACP, MB_PRECOMPOSED, @s[1], -1, @res[1], BufLen);
+    MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, @s[1], -1, @res[1], BufLen);
     case _prop_OutTypeUnicode of
       1,3: begin
              i := 1;

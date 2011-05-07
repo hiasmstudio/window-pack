@@ -65,7 +65,7 @@ begin
   if checkSqliteLoaded then
   begin
     Close;
-    sqlite3_open(PChar(CodePage1ToCodePage2(ReadString(_Data,_data_FileName, _prop_FileName), CP_THREAD_ACP, CP_UTF8)), id);
+    sqlite3_open(PChar(CodePage1ToCodePage2(ReadString(_Data,_data_FileName, _prop_FileName), CP_ACP, CP_UTF8)), id);
     if id <> nil then
       _hi_CreateEvent(_Data, @_event_onOpen)
     else  

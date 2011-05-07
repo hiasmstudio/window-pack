@@ -6,7 +6,6 @@ uses
   Windows, Messages, ActiveX, KolComObj, Kol, Share, Debug;
 
 const
-  CP_THREAD_ACP =  3; // текущая кодовая страница
   TMPFILEFORMAT = 'ddMMyyyyhhmmss';
   
 const
@@ -252,10 +251,10 @@ begin
     Result := ''
   else
   begin
-    l := WideCharToMultiByte(CP_THREAD_ACP, WC_COMPOSITECHECK or WC_DISCARDNS or WC_SEPCHARS or WC_DEFAULTCHAR, PWChar(ws), -1, nil, 0, nil, nil);
+    l := WideCharToMultiByte(CP_ACP, WC_COMPOSITECHECK or WC_DISCARDNS or WC_SEPCHARS or WC_DEFAULTCHAR, PWChar(ws), -1, nil, 0, nil, nil);
     SetLength(Result, l - 1);
     if l > 1 then
-      WideCharToMultiByte(CP_THREAD_ACP, WC_COMPOSITECHECK or WC_DISCARDNS or WC_SEPCHARS or WC_DEFAULTCHAR, PWChar(ws), -1, PChar(Result), l - 1, nil, nil);
+      WideCharToMultiByte(CP_ACP, WC_COMPOSITECHECK or WC_DISCARDNS or WC_SEPCHARS or WC_DEFAULTCHAR, PWChar(ws), -1, PChar(Result), l - 1, nil, nil);
   end;
 end;
 
@@ -273,10 +272,10 @@ begin
     Result := ''
   else
   begin
-    l := MultiByteToWideChar(CP_THREAD_ACP, MB_PRECOMPOSED, PChar(s), -1, nil, 0);
+    l := MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, PChar(s), -1, nil, 0);
     SetLength(Result, l - 1);
     if l > 1 then
-      MultiByteToWideChar(CP_THREAD_ACP, MB_PRECOMPOSED, PChar(s), -1, PWChar(Result), l - 1);
+      MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, PChar(s), -1, PWChar(Result), l - 1);
   end;
 end;
 
