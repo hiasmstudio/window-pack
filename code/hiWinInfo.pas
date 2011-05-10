@@ -14,7 +14,7 @@ type
     FLeft, FTop, FWidth, FHeight: integer;
     FClientLeft, FClientTop, FClientWidth, FClientHeight: integer;
     FContext: integer;
-    FIsWindow, FIsZoomed, FIsEnabled, FIsVisible: integer;    
+    FParentHandle, FIsWindow, FIsZoomed, FIsEnabled, FIsVisible: integer;    
     FThreadID, FProcessID, FControlID: Dword;
     Icon: PIcon;
    public
@@ -46,6 +46,7 @@ type
     procedure _var_IsZoomed(var _Data:TData; Index:word);
     procedure _var_IsEnabled(var _Data:TData; Index:word);
     procedure _var_IsVisible(var _Data:TData; Index:word);
+    procedure _var_ParentHandle(var _Data:TData; Index:word);    
   
   end;
 
@@ -108,8 +109,9 @@ begin
   FControlID := GetDlgCtrlID(AHandle);
     
   Icon.Clear;
-  Icon.Handle:= GetClassLong(AHandle, GCL_HICON);;
-
+  Icon.Handle:= GetClassLong(AHandle, GCL_HICON);
+  
+  FParentHandle := GetParent(AHandle);
   _hi_onEvent(_event_onWinInfo);
 
 end;
@@ -212,6 +214,11 @@ end;
 procedure THIWinInfo._var_IsVisible;
 begin
   dtInteger(_Data, FIsVisible);
+end;
+
+procedure THIWinInfo._var_ParentHandle;
+begin
+  dtInteger(_Data, FParentHandle);
 end;
 
 end.
