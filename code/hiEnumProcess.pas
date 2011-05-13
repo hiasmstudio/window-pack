@@ -11,7 +11,19 @@ const
    REALTIME_PRIORITY_CLASS     = $00000100;
    BELOW_NORMAL_PRIORITY_CLASS = $00004000;
    ABOVE_NORMAL_PRIORITY_CLASS = $00008000;
+   LIST_MODULES_ALL            = $00000003;
+   PROCESS_QUERY_LIMITED_INFORMATION = $1000;      
 
+type
+  PROCESS_BASIC_INFORMATION = packed record
+    ExitStatus: DWORD;
+    PebBaseAddress: Pointer;
+    AffinityMask: DWORD;
+    BasePriority: DWORD;
+    uUniqueProcessId: Ulong;
+    uInheritedFromUniqueProcessId: Ulong;
+  end;
+  
 type
    TCB = function: boolean of object;
    ThiEnumProcess = class(TDebug)
@@ -19,6 +31,7 @@ type
       DebugPrivilege: boolean;
       ID:Cardinal;
       PName, FFullPath:string;
+      OCMajorVersion: Cardinal;
       procEntry:PROCESSENTRY32;
       procedure Enum(CallBack:TCB);
       procedure EnumNT(CallBack:TCB);
@@ -60,6 +73,7 @@ type
    procedure _work_doGetProc(var _Data:TData; Index:word);
    procedure _work_doGetProcBoost(var _Data:TData; Index:word);
    procedure _var_CurrentID(var _Data:TData; Index:word);
+   procedure _var_CurrParentID(var _Data:TData; Index:word);   
    procedure _var_FileName(var _Data:TData; Index:word);
    procedure _var_CPUCount(var _Data:TData; Index:word);
    procedure _var_FullPath(var _Data:TData; Index:word);   
@@ -101,15 +115,22 @@ implementation
 type
    TEnumProcesses = function (lpidProcess: LPDWORD; cb: DWORD; var cbNeeded: DWORD): BOOL stdcall;
    TEnumProcessModules = function (hProcess: THandle; lphModule: LPDWORD; cb: DWORD;  var lpcbNeeded: DWORD): BOOL stdcall;
+   TEnumProcessModulesEx = function (hProcess: THandle; lphModule: LPDWORD; cb: DWORD;  var lpcbNeeded: DWORD; dwFilterFlag: DWORD): BOOL stdcall;
    TGetModuleFileNameExA = function (hProcess: THandle; hModule: HMODULE;lpFilename: PAnsiChar; nSize: DWORD): DWORD stdcall;
    TGetProcessMemoryInfo = function (hProcess: THandle; ppsmemCounters: PPROCESS_MEMORY_COUNTERS; cb: DWORD): BOOL; stdcall;
-
+   TNtQueryInformationProcess = function(ProcessHandle: THandle; ProcessInformationClass: Byte; ProcessInformation: Pointer; ProcessInformationLength: ULONG; ReturnLength : PULONG): DWORD; stdcall;
+   TQueryFullProcessImageNameA = function(Process: THandle; Flags: DWORD; Buffer: PChar; Size: PDWORD): DWORD; stdcall;
 var
    hPSAPI: THandle;
+   hNTDLL: THandle;
+   hKRNL: THandle;     
    EnumProcesses: TEnumProcesses;
    EnumProcessModules: TEnumProcessModules;
+   EnumProcessModulesEx: TEnumProcessModulesEx;   
    GetModuleFileNameEx: TGetModuleFileNameExA;
    GetProcessMemoryInfo: TGetProcessMemoryInfo;
+   NtQueryInformationProcess : TNtQueryInformationProcess;   
+   QueryFullProcessImageNameA : TQueryFullProcessImageNameA;
 
 procedure SetDebugPrivilege(Enabled : Boolean);
 var   hToken : THandle;
@@ -199,38 +220,62 @@ begin
   _hi_onEvent(_event_onTerminateApp, TerminateApp(procEntry.th32ProcessID, _prop_TimeOut)); 
 end;
 
-procedure Init;
+procedure Init(OCMajorVersion: DWORD);
 begin
-   if hPSAPI = 0 then begin
-      hPSAPI := LoadLibrary('PSAPI.dll');
-      @EnumProcesses        := GetProcAddress(hPSAPI, 'EnumProcesses');
-      @EnumProcessModules   := GetProcAddress(hPSAPI, 'EnumProcessModules');
-      @GetModuleFileNameEx  := GetProcAddress(hPSAPI, 'GetModuleFileNameExA');
-      @GetProcessMemoryInfo := GetProcAddress(hPSAPI, 'GetProcessMemoryInfo');
+   if hPSAPI = 0 then
+   begin
+     hPSAPI := LoadLibrary('PSAPI.dll');
+     @EnumProcesses        := GetProcAddress(hPSAPI, 'EnumProcesses');
+     if OCMajorVersion < 6 then
+       @EnumProcessModules   := GetProcAddress(hPSAPI, 'EnumProcessModules')
+     else  
+       @EnumProcessModulesEx := GetProcAddress(hPSAPI, 'EnumProcessModulesEx');
+     @GetModuleFileNameEx    := GetProcAddress(hPSAPI, 'GetModuleFileNameExA');
+     @GetProcessMemoryInfo   := GetProcAddress(hPSAPI, 'GetProcessMemoryInfo');
    end;
+   if hNTDLL = 0 then
+   begin
+     hNTDLL := LoadLibrary('ntdll.dll');
+     @NtQueryInformationProcess := GetProcAddress(hNTDLL, 'NtQueryInformationProcess');
+   end;
+   if (hKRNL = 0) and (OCMajorVersion >= 6) then
+   begin
+     hKRNL := LoadLibrary('kernel32.dll');
+     @QueryFullProcessImageNameA := GetProcAddress(hKRNL, 'QueryFullProcessImageNameA');
+   end;  
+    
 end;
 
 procedure ThiEnumProcess.EnumNT;
 var   PIDArray: array [0..1023] of DWORD;
       cb: DWORD;
-      I: Integer;
+      i: Integer;
       ProcCount: Integer;
-      hMod: HMODULE;
       hProcess: THandle;
+      S: DWORD;      
 begin
-   Init;
+   Init(OCMajorVersion);
    EnumProcesses(@PIDArray, SizeOf(PIDArray), cb);
    ProcCount := cb div SizeOf(DWORD);
-   for I := 0 to ProcCount - 1 do begin
-      hProcess := OpenProcess(PROCESS_QUERY_INFORMATION or PROCESS_VM_READ, False, PIDArray[I]);
-      if (hProcess <> 0) then begin
-         EnumProcessModules(hProcess, @hMod, SizeOf(hMod), cb);
-         GetModuleFilenameEx(hProcess, hMod, procEntry.szExeFile, SizeOf(procEntry.szExeFile));
-         procEntry.th32ProcessID := PIDArray[I];
-         if not CallBack() then Break;
+   for I := 0 to ProcCount - 1 do
+   begin
+     hProcess := OpenProcess(PROCESS_QUERY_INFORMATION or PROCESS_VM_READ, False, PIDArray[I]);
+     if (hProcess <> 0) then
+     begin
+       if OCMajorVersion < 6 then
+         GetModuleFilenameEx(hProcess, 0, procEntry.szExeFile, SizeOf(procEntry.szExeFile))
+       else
+       begin
          CloseHandle(hProcess);
-      end;
-    end;
+         hProcess := OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, PIDArray[I]);
+         S := SizeOf(procEntry.szExeFile);  
+         QueryFullProcessImageNameA(hProcess, 0, procEntry.szExeFile, @S);
+       end;
+       procEntry.th32ProcessID := PIDArray[I];
+       if not CallBack() then Break;
+       CloseHandle(hProcess);
+     end;
+   end;
     _hi_OnEvent(_event_onEndEnum);
 end;
 
@@ -241,6 +286,7 @@ var   hSnapshot: Cardinal;
 begin
    ovi.dwOSVersionInfoSize := SizeOf(TOSVersionInfo);
    GetVersionEx(ovi);
+   OCMajorVersion := ovi.dwMajorVersion;
    if ovi.dwPlatformId = VER_PLATFORM_WIN32_NT then begin
       EnumNT(CallBack);
       Exit;
@@ -283,7 +329,7 @@ begin
    Enum(FindID);
    if ID = procEntry.th32ProcessID then
    begin
-      FFullPath := procEntry.szExeFile; 
+      FFullPath := procEntry.szExeFile;
       _hi_CreateEvent(_Data,@_event_onFind);
    end   
    else
@@ -425,6 +471,25 @@ end;
 procedure ThiEnumProcess._var_CurrentID;
 begin
    dtInteger(_Data, procEntry.th32ProcessID);
+end;
+
+procedure ThiEnumProcess._var_CurrParentID;
+var
+  dwProcessHandle: DWORD;
+  
+  function GetOwnedProcessID(const dwProcessHandle: DWORD): DWORD;
+  var
+    Info: PROCESS_BASIC_INFORMATION;
+  begin
+    Result := 0;
+    if NtQueryInformationProcess(dwProcessHandle, 0, @Info, SizeOf(Info), nil) = NO_ERROR then
+      Result := Info.uInheritedFromUniqueProcessId;
+end;
+begin
+  SetDebugPrivilege(DebugPrivilege);
+  dwProcessHandle := OpenProcess(PROCESS_ALL_ACCESS, false, procEntry.th32ProcessID);
+  dtInteger(_Data, GetOwnedProcessID(dwProcessHandle));
+  CloseHandle(dwProcessHandle);
 end;
 
 procedure ThiEnumProcess._var_FileName;
