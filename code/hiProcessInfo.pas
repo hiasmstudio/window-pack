@@ -14,6 +14,7 @@ type
   THiProcessInfo = class(TDebug)
    private
       ProcessID      : string;
+      ParentProcessID: string;
       Name           : string;
       ExecutablePath : string;
       CommandLine    : string;
@@ -43,6 +44,7 @@ type
       procedure _work_doArrayId(var _Data:TData; Index:word);
 
       procedure _var_ProcessID(var _Data:TData; Index:word);
+      procedure _var_ParentProcessID(var _Data:TData; Index:word);
       procedure _var_Name(var _Data:TData; Index:word);
       procedure _var_ExecutablePath(var _Data:TData; Index:word);
       procedure _var_PageFileUsage(var _Data:TData; Index:word);
@@ -182,6 +184,7 @@ begin
    iValue := nil;
    while oEnum.Next(1,objProcess,iValue) = 0 do begin
       ProcessID         := Trim(VarToStr(objProcess.ProcessID));
+      ParentProcessID   := Trim(VarToStr(objProcess.ParentProcessID));
       Name              := Trim(VarToStr(objProcess.Name));
       ExecutablePath    := Trim(VarToStr(objProcess.ExecutablePath));
       CommandLine       := Trim(VarToStr(objProcess.CommandLine));
@@ -203,6 +206,7 @@ begin
 end;
 
 procedure THiProcessInfo._var_ProcessID;begin dtString(_Data,ProcessID);end;
+procedure THiProcessInfo._var_ParentProcessID;begin dtString(_Data,ParentProcessID);end;
 procedure THiProcessInfo._var_Name;begin dtString(_Data,Name);end;
 procedure THiProcessInfo._var_ExecutablePath;begin dtString(_Data,ExecutablePath);end;
 procedure THiProcessInfo._var_CommandLine;begin dtString(_Data,CommandLine);end;
