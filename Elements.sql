@@ -499,7 +499,7 @@ INSERT INTO "elements" VALUES(465,'CharArray','Массив символов',14,4,'DAEF2C0205
 INSERT INTO "elements" VALUES(466,'ArrayEnum','Перебор массива',14,5,'AE20B0A828657686BC4E3FA860A92AFE');
 INSERT INTO "elements" VALUES(467,'ArrayRW','Запись и чтение из массива',14,6,'8A5D970902D77B15B573D0B0497A44DB');
 INSERT INTO "elements" VALUES(468,'*Arrays_Матрицы','Матрицы',14,7,'');
-INSERT INTO "elements" VALUES(469,'Matrix','Матрица целых чисел',14,8,'1D15683AD18163AC47197848A46D76E3');
+INSERT INTO "elements" VALUES(469,'Matrix','Матрица данных',14,8,'1D15683AD18163AC47197848A46D76E3');
 INSERT INTO "elements" VALUES(470,'MatrixRW','Матрица запись/чтение',14,9,'E9542B5CEE06789646F14E6FED77A778');
 INSERT INTO "elements" VALUES(471,'*Arrays_Работа с Массивами','Работа с Массивами',14,10,'');
 INSERT INTO "elements" VALUES(472,'ArrayFilterRepeats','Фильтр повторений',14,11,'');
