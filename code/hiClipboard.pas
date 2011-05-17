@@ -17,6 +17,7 @@ type
     _data_PutType:THI_Event;
     _event_onGetItems:THI_Event;
     _event_onGetFinish:THI_Event;
+    _prop_Unicode:byte;
     _prop_PutType:byte;
 
     destructor Destroy; override;
@@ -28,6 +29,7 @@ type
     procedure _var_DropType(var _Data:TData; Index:word);
     procedure _work_doPutBitmap(var _Data:TData; Index:word);
     procedure _work_doPutType(var _Data:TData; Index:word);
+    procedure _work_doUnicode(var _Data:TData; Index:word);
   end;
 
 implementation
@@ -41,7 +43,10 @@ end;
 
 procedure THIClipboard._work_doPutText;
 begin
-   Text2Clipboard(ReadString(_Data,_data_PutText,''));
+   if bool(_prop_Unicode) then
+     Text2Clipboard(ReadString(_Data,_data_PutText,''))
+   else
+     WText2Clipboard(StringToWideString(ReadString(_Data,_data_PutText,''),3));
 end;
 
 procedure THIClipboard._work_doPutBitmap;
@@ -85,6 +90,11 @@ begin
    finally
      CloseClipboard;
    end;
+end;
+
+procedure THIClipboard._work_doUnicode;
+begin
+   _prop_Unicode := ToInteger(_Data);
 end;
 
 procedure THIClipboard._work_doPutType;

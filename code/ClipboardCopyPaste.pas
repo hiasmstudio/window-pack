@@ -6,6 +6,7 @@ uses kol, Windows, Share, Debug;
 
 procedure GetDropType(var dt: cardinal);
 procedure PutClipboard(PutType: integer; Arr: PArray);
+function StringToWideString(const s: String; codePage: Word): WideString;
 
 implementation
 
