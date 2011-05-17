@@ -104,7 +104,10 @@ end;
 
 procedure THIClipboard._var_Text;
 begin
-   dtString(_Data,Clipboard2Text);
+   if bool(_prop_Unicode) then
+     dtString(_Data,Clipboard2Text)
+   else
+     dtString(_Data,WideStringToString(Clipboard2WText));
 end;
 
 procedure THIClipboard._var_DropType;

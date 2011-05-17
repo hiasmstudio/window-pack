@@ -7,6 +7,7 @@ uses kol, Windows, Share, Debug;
 procedure GetDropType(var dt: cardinal);
 procedure PutClipboard(PutType: integer; Arr: PArray);
 function StringToWideString(const s: String; codePage: Word): WideString;
+function WideStringToString(const ws: WideString): String;
 
 implementation
 
@@ -115,6 +116,21 @@ function StringToWideString(const s: String; codePage: Word): WideString;
     SetLength(Result, len - 1);
     if len <= 1 then exit;
     MultiByteToWideChar(CodePage, MB_PRECOMPOSED, PChar(@s[1]), -1, PWideChar(@Result[1]), len);
+  end;
+
+function WideStringToString(const ws: WideString): String;
+  var
+    l: integer;
+  begin
+    if ws = '' then
+      Result := ''
+    else
+    begin
+      l := WideCharToMultiByte(CP_ACP, WC_COMPOSITECHECK or WC_DISCARDNS or WC_SEPCHARS or WC_DEFAULTCHAR, PWChar(ws), -1, nil, 0, nil, nil);
+      SetLength(Result, l - 1);
+      if l > 1 then
+        WideCharToMultiByte(CP_ACP, WC_COMPOSITECHECK or WC_DISCARDNS or WC_SEPCHARS or WC_DEFAULTCHAR, PWChar(ws), -1, PChar(Result), l - 1, nil, nil);
+    end;
   end;
 
 function ExtractShortPathName(const FileName: string): string;
