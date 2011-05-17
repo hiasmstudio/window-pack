@@ -78,7 +78,7 @@ begin
          DragQueryFile(f,i,buffer,SizeOf(buffer));
          _hi_OnEvent(_event_onGetItems,string(buffer));
        end;
-       DragFinish(f);
+       // DragFinish(f); // repeatedly paste doesn't work
        if bool(FDropType) then EmptyClipboard();
        _hi_OnEvent(_event_onGetFinish,numFiles);
      end;
