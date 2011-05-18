@@ -69,9 +69,9 @@ var
    buffer:array[0..MAX_PATH] of Char;
    i,numFiles:Integer;
 begin
+  try
    if not OpenClipboard(Applet.Handle) then exit;
    if not IsClipboardFormatAvailable(CF_HDROP) then exit;
-   try
      f := GetClipboardData(CF_HDROP);
      if f <> 0 then
      begin
@@ -83,7 +83,7 @@ begin
          DragQueryFile(f,i,buffer,SizeOf(buffer));
          _hi_OnEvent(_event_onGetItems,string(buffer));
        end;
-       // DragFinish(f); // repeatedly paste doesn't work
+       //DragFinish(f); // repeatedly paste doesn't work
        if bool(FDropType) then EmptyClipboard();
        _hi_OnEvent(_event_onGetFinish,numFiles);
      end;
