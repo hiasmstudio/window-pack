@@ -36,6 +36,7 @@ type
     procedure _work_doAdd(var _Data:TData; Index:word);
     procedure _work_doClear(var _Data:TData; Index:word);
     procedure _work_doMaxValues(var _Data:TData; Index:word);
+    procedure _work_doColor(var _Data:TData; Index:word);
     procedure _var_MinX(var _Data:TData; Index:word);
     procedure _var_MaxX(var _Data:TData; Index:word);
     procedure _var_MinY(var _Data:TData; Index:word);
@@ -97,6 +98,11 @@ end;
 procedure TPlotSeries._work_doMaxValues;
 begin
    FSeries.MaxValues := ToInteger(_Data);
+end;
+
+procedure TPlotSeries._work_doColor;
+begin
+   FSeries.Color := ToInteger(_Data);
 end;
 
 procedure TPlotSeries._var_MinY;
