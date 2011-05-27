@@ -33,14 +33,18 @@ type
 
      _prop_KeyCellEnter: byte;
      _prop_DblClick: boolean;
+     _data_Row: THI_Event;
+     _data_Col: THI_Event;
      _event_onEscCell: THI_Event;
      _event_onEnterCell: THI_Event;
      _event_onCellSize: THI_Event;
+     _event_onClientRect: THI_Event;
           
      property _prop_MSTControl: IMSTControl read FMSTControl write SetMSTControl;
      property NewCurIdx:integer read gnewcuridx write snewcuridx;
      
      procedure _work_doSetData(var _Data: TData; Index: word);
+     procedure _work_doClientRect(var _Data: TData; Index: word);     
      procedure _var_Index(var _Data: TData; Index: word);
      procedure _var_Cell(var _Data: TData; Index: word);
      procedure _var_SubItem(var _Data: TData; Index: word);
@@ -270,6 +274,42 @@ procedure THIMST_UseEditCtrl._var_Matrix;
 begin
   if not Assigned(_prop_MSTControl) then exit;
   _prop_MSTControl.matrix(_Data);    
+end;
+
+procedure THIMST_UseEditCtrl._work_doClientRect;
+var
+  Row,Col: integer;
+  R, ARect: TRect;
+  dTop, dWidth, dHeight, Data: TData;
+  b: integer;
+  sControl: PControl;  
+begin
+  Row := ReadInteger(_Data, _data_Row);
+  Col := ReadInteger(_Data, _data_Col);
+  if not Assigned(_prop_MSTControl) then exit;
+  sControl := _prop_MSTControl.ctrlpoint;
+  
+  R := sControl.LVSubItemRect(Row, Col);
+  if Col = 0 then
+  begin
+    ARect := sControl.LVItemRect(Row, lvipLabel);
+    R.Left := ARect.Left;
+    R.Right := ARect.Right;
+  end; 
+  if fctl3d then
+    b := 2
+  else
+    b := 1;
+
+  dtInteger(Data, R.Left + sControl.Left + b);
+  dtInteger(dWidth, R.Right - R.Left - 1);
+  dtInteger(dTop, R.Top + sControl.Top + b);
+  dtInteger(dHeight, R.Bottom - R.Top - 1);
+
+  Data.ldata:= @dTop;
+  dTop.ldata:= @dWidth;
+  dWidth.ldata:= @dHeight;
+  _hi_OnEvent_(_event_onClientRect, Data);
 end;
 
 end.
