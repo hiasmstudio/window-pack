@@ -12,13 +12,14 @@ const
    BELOW_NORMAL_PRIORITY_CLASS  = $00004000;
    ABOVE_NORMAL_PRIORITY_CLASS  = $00008000;
    OBJ_KERNEL_HANDLE            = $00000200;
-   
+   SYSTEM_PROCESSES_AND_THREAD_INFORMATION = 5;
    SE_KERNEL_OBJECT             = 6;
 
 type
    PPSID = ^PSID;
    PPACL = ^PACL;
    SIZE_T = LONGWORD;
+   NTStatus = DWORD;
    PPSECURITY_DESCRIPTOR = ^PSECURITY_DESCRIPTOR;
 
 type
@@ -178,8 +179,9 @@ type
      _event_onNotFind,
      _event_onEndEnum:THI_Event;
 
-   property _prop_DebugPrivilege: boolean write FDebugPrivilege;
+
    constructor Create;
+   
    procedure _work_doDebugPrivilege(var _Data:TData; Index:word);
    procedure _work_doEnum(var _Data: TData; Index: Word);
    procedure _work_doFindID(var _Data: TData; Index: Word);
@@ -201,6 +203,8 @@ type
    procedure _var_FullPath(var _Data: TData; Index: Word);
    procedure _var_MajorVersion(var _Data: TData; Index: Word);
    procedure _var_MinorVersion(var _Data: TData; Index: Word);   
+
+   property _prop_DebugPrivilege: boolean write FDebugPrivilege;
 end;
 
 implementation
@@ -216,18 +220,23 @@ type
    TGetSecurityInfo            = function(Handle: THandle; ObjectType: DWORD; SecurityInfo: SECURITY_INFORMATION; ppsidOwner, ppsidGroup: PPSID;
                                           ppDacl, ppSacl: PPACL; var ppSecurityDescriptor:  PSecurityDescriptor): DWORD; stdcall;
    TZwQueryInformationProcess = function(hProcess: THandle; InformationClass: DWORD; Buffer: PChar; BufferLength : DWORD;ReturnLength: PDWORD): DWORD; stdcall;
+   TZwQuerySystemInformation  = function(ASystemInformationClass: DWORD; ASystemInformation: Pointer; ASystemInformationLength: DWORD;
+                                         AReturnLength: PDWORD): NTStatus; stdcall;
+   TGetProcessImageFileName   = function(Process: THandle; Buffer: PChar; Size: DWORD): DWORD; stdcall;                                         
 
 var
    hPSAPI, hNTDLL, hADVAP, hKRNL  : THandle;   
    GetProcessMemoryInfo           : TGetProcessMemoryInfo;
    GetSecurityInfo                : TGetSecurityInfo;
    ZwQueryInformationProcess      : TZwQueryInformationProcess;
+   ZwQuerySystemInformation       : TZwQuerySystemInformation;
    GetProcessPriorityBoost        : TGetProcessPriorityBoost;
    SetProcessPriorityBoost        : TSetProcessPriorityBoost;
    GetProcessAffinityMask         : TGetProcessAffinityMask;
    SetProcessAffinityMask         : TSetProcessAffinityMask;
    GetModuleFileNameEx            : TGetModuleFileNameExA;
-   QueryFullProcessImageName     : TQueryFullProcessImageName;
+   QueryFullProcessImageName      : TQueryFullProcessImageName;
+   GetProcessImageFileName        : TGetProcessImageFileName;
 //**********************************************************************************
 
 function Trim(const Str : string): string;
@@ -269,14 +278,16 @@ begin
   if hPSAPI = 0 then
   begin
     hPSAPI := LoadLibrary('psapi.dll');
-    @GetProcessMemoryInfo   := GetProcAddress(hPSAPI, 'GetProcessMemoryInfo');
+    @GetProcessMemoryInfo    := GetProcAddress(hPSAPI, 'GetProcessMemoryInfo');
     if ovi.dwMajorVersion < 6 then
-      @GetModuleFileNameEx    := GetProcAddress(hPSAPI, 'GetModuleFileNameExA');
+      @GetModuleFileNameEx   := GetProcAddress(hPSAPI, 'GetModuleFileNameExA');
+    @GetProcessImageFileName := GetProcAddress(hPSAPI, 'GetProcessImageFileNameA');       
   end;
   if hNTDLL = 0 then
   begin
     hNTDLL := LoadLibrary('ntdll.dll');
     @ZwQueryInformationProcess := GetProcAddress(hNTDLL, 'ZwQueryInformationProcess');
+    @ZwQuerySystemInformation  := GetProcAddress(hNTDLL, 'ZwQuerySystemInformation');
   end;
   if hADVAP = 0 then
   begin
@@ -421,6 +432,8 @@ var
   hSnapshot: Cardinal;
   res: boolean;  
   procEnt: PROCESSENTRY32;
+  path, pathstr: string;
+  DeviceList: PStrListEx;    
   
   function GetOwnedProcessID(const dwProcessHandle: DWORD): DWORD;
   var
@@ -431,8 +444,51 @@ var
       Result := Info.uInheritedFromUniqueProcessId;
   end;
 
+  procedure GetDeviceList(List: PStrListEx);
+  var
+    Root: string; 
+    DeviceName: string; 
+    Drives: DWORD;
+    len: integer;
+  begin
+    Drives := GetLogicalDrives();
+    Root := 'A:';
+    while Drives <> 0 do
+    begin 
+      if (Drives and 1) = 1 then
+      begin 
+        SetLength(DeviceName, 256); 
+        len := QueryDosDevice(@Root[1], @DeviceName[1], 256);
+        if len <> 0 then
+        begin 
+          SetLength(DeviceName, len);
+          DeviceList.AddObject(Trim(DeviceName), ord(Root[1]));
+        end;  
+      end;
+      inc(Root[1]); 
+      Drives:= Drives shr (1); 
+    end;    
+  end;
+
+  function GetDeviceName(NTDevice: string): string;
+  var
+    ii, jj: integer;
+  begin
+    for ii := 0 to DeviceList.Count - 1 do
+    begin
+      if DeviceList.Items[ii] = Trim(NTDevice) then
+      begin
+        jj := DeviceList.Objects[ii]; 
+        Result := char(jj) + ':\';
+        break;
+      end;
+    end;  
+  end;
+
 begin
   SetDebugPrivilege(FDebugPrivilege);
+  DeviceList := NewStrListEx;
+  GetDeviceList(DeviceList); 
   buflen := INITIAL_BUFFER_SIZE;
   // Выделяем начальный буфер
   GetMem(PerfData, buflen);
@@ -486,8 +542,18 @@ TRY
 
               hProcess := OpenProcess(PROCESS_ALL_ACCESS, false, Integer(pData^));
 
-              if ovi.dwMajorVersion < 6 then
+              if (ovi.dwMajorVersion = 5) and (ovi.dwMinorVersion = 0) then
                 GetModuleFilenameEx(hProcess, 0, procEntry.szExeFile, S)
+              else if (ovi.dwMajorVersion = 5) and (ovi.dwMinorVersion > 0) then 
+              begin
+                SetLength(path, S);
+                GetProcessImageFileName(hProcess, @path[1], S);
+                delete(path, 1, 1);
+                pathstr := GetTok(path, '\') + '\';
+                pathstr := pathstr + GetTok(path, '\');
+                path := Trim(GetDeviceName('\' + pathstr) + path);
+                Move(path[1], procEntry.szExeFile, length(path));
+              end
               else
                 QueryFullProcessImageName(hProcess, 0, procEntry.szExeFile, @S);
 
@@ -495,6 +561,7 @@ TRY
               procEntry.th32ParentProcessID := GetOwnedProcessID(hProcess);
               CloseHandle(hProcess);                
 //------------------------------------------------------------------------------
+
               FPart := ExtractFilePath(string(procEntry.szExeFile));
               if FPart = '' then
               begin
@@ -518,6 +585,7 @@ TRY
                 else                    
                   Move(procEnt.szExeFile, procEntry.szExeFile, SizeOf(procEntry.szExeFile));
               end;  
+
 //------------------------------------------------------------------------------
               if not CallBack() then exit;
             end;
@@ -537,6 +605,7 @@ TRY
 FINALLY
   // В любом случае освобождаем память, занятую буфером
   FreeMem(PerfData);
+  DeviceList.free;  
   _hi_OnEvent(_event_onEndEnum);
 END;
 end;
