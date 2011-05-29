@@ -27,14 +27,7 @@ function _StrCmp(const Str,M:string; sInd,mInd:integer ):boolean;
 begin
   while (mInd <= length(M))or(sInd <= length(Str)) do begin
     case M[mInd] of
-{      '\':
-         begin
-           inc(mInd);
-           if M[mInd] = Str[sInd] then begin
-             inc(sInd); inc(mInd);
-           end else Break;
-         end;
-}      '?':
+      '?':
         if Str[sInd] <> #0  then
          begin
           inc(sInd); inc(mInd);
