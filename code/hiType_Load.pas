@@ -9,10 +9,8 @@ type
    private
     FType:PType;
     FObjs:PList;
-    fStg:boolean;
     
-    procedure Stream2Type(typ:PType; st:PStream);
-    procedure SetType(s:boolean);
+    procedure Stream2Type(var typ:PType; st:PStream);
    public
     _prop_FileName:string;
     _prop_StreamFormat:byte;
@@ -28,8 +26,6 @@ type
     procedure _work_doLoad(var _Data:TData; Index:word);
     procedure _work_doClear(var _Data:TData; Index:word);
     procedure _var_FType(var _Data:TData; Index:word);
-    
-    property _prop_StorageType:boolean write SetType;
   end;
 
 implementation
@@ -50,13 +46,6 @@ begin
   inherited Destroy;
 end;
 
-procedure THIType_Load.SetType;
-begin
-  fStg := s;
-  if s then FType := NewStorageType else FType := NewType;
-  FType.name := #0;
-end;
-
 procedure Mem2Var(m:string; var v);
 begin
   Move(m[1],v,length(m));
@@ -66,18 +55,26 @@ procedure THIType_Load.Stream2Type;
 var id,cn:byte;
     nm:string;
     dt:TData;
+    fStg:boolean;
 
- procedure RInd(sst:PStream; tp:PType);
+ procedure RInd(sst:PStream; var tp:PType; var fStg:boolean);
  var i:byte;
      s:string;
  begin
+   sst.read(fStg,sizeof(fStg));
+   if fStg then begin
+     tp := NewStorageType;
+   end else begin
+     tp := NewType;
+     FObjs.Add(tp);
+   end;
    sst.read(i,sizeof(i));
    SetLength(s,i);
    sst.read(s[1],i);
    tp.name := LowerCase(s);
  end;
  
- procedure RVar(sst:PStream; dt:PData; cn:word);
+ procedure RVar(sst:PStream; dt:PData; cn:word; fStg:boolean);
  var b:byte;
      id:integer;
      sd:string;
@@ -128,9 +125,7 @@ var id,cn:byte;
        sst.read(id, sizeof(id));
        Stream2Stream(s1, sst, id);
        s1.position := 0;
-       ttp := NewType;
        Stream2Type(ttp,s1);
-       if not fStg then FObjs.Add(ttp);
        s1.Free;
        dtType(dt^,ttp);
       end;
@@ -138,16 +133,14 @@ var id,cn:byte;
    
    if cn > 1 then begin
      new(dt.ldata);
-     RVar(sst,dt.ldata,cn-1);
+     RVar(sst,dt.ldata,cn-1,fStg);
    end;
  end;
 begin
-  typ.Clear;
-  typ.name := #0;
   if st <> nil then begin
     st.read(id,sizeof(id));
     if id = data_types then begin
-      RInd(st,typ);
+      RInd(st,typ,fStg);
       while st.position < st.size do begin
         st.read(cn,sizeof(cn));
         
@@ -155,7 +148,7 @@ begin
         SetLength(nm,id);
         st.read(nm[1],id);
 
-        RVar(st,@dt,cn);
+        RVar(st,@dt,cn,fStg);
         typ.Add(LowerCase(nm),@dt);
       end;
     end else CallTypeError('',_event_onError,TYPE_ERR_INVALID_TYPE);
@@ -163,10 +156,12 @@ begin
 end;
 
 procedure THIType_Load._work_doClear;
+var i:integer;
 begin
+  for i := 0 to FObjs.Count-1 do
+    PObj(FObjs.Items[i]).Free;
   FObjs.Clear;
-  FType.Clear;
-  FType.name := #1;
+  if FType <> nil then FType.Free; //Check for memory leak
 end;
 
 procedure THIType_Load._work_doLoad;
@@ -176,9 +171,7 @@ var st:PStream;
     i:integer;
     dt:TData;
 begin
-  for i := 0 to FObjs.Count-1 do
-    PObj(FObjs.Items[i]).Free;
-  FObjs.Clear;
+  _work_doClear(_Data,Index); //sometime it can be modified
   dt := ReadData(_Data,_data_FileName);
   if ToString(dt) <> '' then fn := ToString(dt)
   else if _prop_FileName <> '' then fn := _prop_FileName;
@@ -196,8 +189,6 @@ begin
       end else CallTypeError('',_event_onError,TYPE_ERR_INVALID_TYPE);
     end;
   end else begin
-    FType.Clear;
-    FType.name := #0;
     list := NewStrList;
     if fn <> '' then begin
       list.LoadFromFile(fn);
@@ -209,7 +200,10 @@ begin
     end; 
     if list.text <> '' then begin
       nm := LowerCase(list.Items[0]);
-      FType.name := Copy(nm,2,length(nm)-2);
+      fn := Copy(nm,2,length(nm)-2);
+      if fn[1] = '1' then FType := NewStorageType else FType := NewType;
+      Delete(fn,1,1);
+      FType.name := fn;
       for i := 1 to list.count-1 do begin
         itm := list.items[i];
         nm := LowerCase(GetTok(itm,'='));

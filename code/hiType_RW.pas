@@ -56,7 +56,7 @@ var typ:PType;
 begin
   dtNull(ddt);
   typ := ReadType(_Data,_data_Gtype);
-  if typ <> nil then begin
+  if typ <> nil then begin 
     idx := typ.IndexOf(LowerCase(ReadString(_Data,_data_Name,_prop_Name)));
     if idx <> -1 then begin
       dt := ReadMTData(_Data,_data_Value,@ddt);

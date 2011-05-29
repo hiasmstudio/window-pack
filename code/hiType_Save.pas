@@ -48,14 +48,16 @@ var i:integer;
     sd:string;
     dt:TData;
  
- procedure WInd(sst:PStream; nm:string);
+ procedure WInd(sst:PStream; typ:PType);
  var i:byte;
  begin
    i := data_types;
    sst.write(i,sizeof(i));
-   i := length(nm);
+   i := byte(typ^ is TStorageType); //get class type
+   sst.write(i, sizeof(i)); //write class type
+   i := length(typ.name);
    sst.write(i,sizeof(i));
-   sst.write(nm[1],i);
+   sst.write(typ.name[1],i);
  end;
  
  procedure WVar(sst:PStream; dat:PData);
@@ -119,7 +121,7 @@ var i:integer;
 begin
   lst.size := 0;
   if typ <> nil then begin
-    WInd(lst,typ.name);
+    WInd(lst,typ);
     for i := 0 to typ.count-1 do begin
       sd := typ.NameOf[i];
       
@@ -235,7 +237,7 @@ begin
   end else if _prop_streamFormat = 1 then begin
     list := NewStrList;
     if typ <> nil then begin
-      list.text := '[' + typ.name + ']';
+      list.text := '[' + int2str(integer(typ^ is TStorageType)) + typ.name + ']';
       for i := 0 to typ.count-1 do 
         list.add(typ.NameOf[i] + '=' + ToString(typ.data[i]^));
     end else CallTypeError('',_event_onError,TYPE_ERR_INVALID_TYPE);
