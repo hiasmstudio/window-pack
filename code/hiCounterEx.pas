@@ -15,18 +15,11 @@ type
    private
      FCounter:integer;
      FDirect: byte;
-     FThrough: boolean;
      FunctionDirect: procedure of object;
      ReverseFunctionDirect: procedure of object;     
-     FunctionThroughMax: procedure of object;
-     FunctionThroughMin: procedure of object;     
      procedure SetDirect(Value: byte);
-     procedure SetThrough(Value: boolean);     
      procedure Increment;
      procedure Decrement;
-     procedure ThroughMax;
-     procedure ThroughMin;     
-     procedure DummyThrough;     
    public
     _prop_Min: integer;
     _prop_Max: integer;
@@ -37,7 +30,6 @@ type
     _event_onThroughMin: THI_Event;        
 
     property _prop_Direct: byte read FDirect write SetDirect;
-    property _prop_Through: boolean read FThrough write SetThrough;
 
     procedure _work_doNext(var _Data:TData; Index:word);
     procedure _work_doPrev(var _Data:TData; Index:word);
@@ -62,7 +54,7 @@ begin
   if FCounter > _prop_Max then
   begin
     FCounter := _prop_Min;
-    FunctionThroughMax;    
+    _hi_onEvent(_event_onThroughMax);    
   end  
 end;
 
@@ -72,22 +64,8 @@ begin
   if FCounter < _prop_Min then
   begin
     FCounter := _prop_Max;
-    FunctionThroughMin;
+    _hi_onEvent(_event_onThroughMin);
   end;  
-end;
-
-procedure THICounterEx.ThroughMax;
-begin
-  _hi_onEvent(_event_onThroughMax);
-end;
-
-procedure THICounterEx.ThroughMin;
-begin
-  _hi_onEvent(_event_onThroughMin);
-end;
-
-procedure  THICounterEx.DummyThrough;
-begin
 end;
 
 procedure THICounterEx.SetDirect;
@@ -103,21 +81,6 @@ begin
     FunctionDirect        := Decrement;
     ReverseFunctionDirect := Increment;
   end;            
-end;
-
-procedure THICounterEx.SetThrough;
-begin
-  FThrough := Value;
-  if FThrough then
-  begin
-    FunctionThroughMax := ThroughMax;
-    FunctionThroughMin := ThroughMin;    
-  end  
-  else
-  begin
-    FunctionThroughMax := DummyThrough;
-    FunctionThroughMin := DummyThrough;    
-  end;    
 end;
 
 procedure THICounterEx._work_doNext;
