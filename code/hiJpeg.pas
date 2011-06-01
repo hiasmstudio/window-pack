@@ -47,6 +47,8 @@ type
     procedure _var_idUserComments(var _Data:TData; Index:word);
     procedure _var_idExposureTime(var _Data:TData; Index:word);
     procedure _var_idFocalLength(var _Data:TData; Index:word);
+    procedure _var_Width(var _Data:TData; Index:word);
+    procedure _var_Height(var _Data:TData; Index:word);    
     property _prop_Jpeg:PStream write SetJpeg;
   end;
 
@@ -203,6 +205,25 @@ procedure THIJpeg._var_idFocalLength;
 begin
   dtInteger(_Data,exif.FocalLength);
 end;
+
+procedure THIJpeg._var_Width;
+begin
+  {$ifdef gdip}
+    dtInteger(_Data,jpg.GetWidth);
+  {$else}
+    dtInteger(_Data,jpg.Width);
+  {$endif}
+end;
+
+procedure THIJpeg._var_Height;
+begin
+  {$ifdef gdip}
+    dtInteger(_Data,jpg.GetHeight);
+  {$else}
+    dtInteger(_Data,jpg.Height);
+  {$endif}
+end;
+
 
 {
 procedure THIJpeg._var_Jpeg;
