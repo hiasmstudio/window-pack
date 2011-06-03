@@ -23,6 +23,7 @@ type
     procedure _work_doCreate(var _Data:TData; Index:word);
     procedure _work_doDestroy(var _Data:TData; Index:word);
     procedure _work_doShow(var _Data:TData; Index:word);
+    procedure _work_doTitle(var _Data:TData; Index:word);
   end;
 
 implementation
@@ -138,6 +139,11 @@ procedure THIBaloonToolTips._work_doShow;
 begin
   SendMessage(hToolTip,TTM_TRACKPOSITION,0,ToIntegerEvent(_data_Point));
   SendMessage(hToolTip,TTM_TRACKACTIVATE,integer(ReadBool(_Data)),Integer(@ti));
+end;
+
+procedure THIBaloonToolTips._work_doTitle;
+begin
+  _prop_Title := ToString(_Data);
 end;
 
 procedure THIBaloonToolTips._work_doDestroy;
