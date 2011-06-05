@@ -70,7 +70,7 @@ begin
       if typ = nil then CallTypeError('GType' + int2str(i+1),_event_onError,TYPE_ERR_INVALID_TYPE)
       else 
         for i2 := 0 to typ.count-1 do begin
-          idx := TypeV.IndexOf(typ.Name[i2]);
+          idx := TypeV.IndexOf(typ.NameOf[i2]);
           if idx = -1 then TypeV.Add(typ.NameOf[i2],typ.data[i2])
           else if _prop_ReplaceData then TypeV.Data[idx] := typ.data[i2];
         end;
