@@ -32,6 +32,7 @@ type
     procedure Init; override;
     procedure _work_doEnable(var _Data:TData; Index:word);
     procedure _work_doDisable(var _Data:TData; Index:word);
+    procedure _work_doCheck(var _Data:TData; Index:word);
     property _prop_Buttons:PStrListEx write SetBtns;
   end;
 
@@ -121,6 +122,16 @@ begin
    ind := ToInteger(_Data);
    if(ind >=0 )and(ind < Control.TBButtonCount)then
      Control.TBButtonEnabled[ind] := false;
+end;
+
+procedure THIToolBar._work_doCheck;
+var ind:integer;
+begin
+   ind := ReadInteger(_Data, Null);
+   if(ind >=0 )and(ind < Control.TBButtonCount)then
+     Control.TBButtonChecked[ind] := ReadBool(_Data);
+   Control.CurIndex := ind;
+   _hi_OnEvent(_event_onClick, Control.CurIndex);  
 end;
 
 procedure THIToolBar._OnClick;
