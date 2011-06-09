@@ -19,12 +19,14 @@ type
 
     procedure SetBtns(Value:PStrListEx);
     procedure _OnClick(Obj:PObj);
+    procedure _OnTBDropDown(Obj:PObj);    
    public
     _prop_Caption:byte;
     _prop_Flat:boolean;
     _prop_Wrapable:boolean;
 
     _event_onClick:THI_Event;
+    _event_onTBDropDown:THI_Event;    
 
     destructor Destroy; override; 
     procedure Init; override;
@@ -99,6 +101,7 @@ begin
    if bmp = nil then bmp := NewBitmap(0,0);
    Control := NewToolbar(FParent,_prop_Align,Fl,Bmp.Handle,Cap,Indx);
    Control.Style := Control.Style and not TBSTYLE_TRANSPARENT;
+   Control.OnTBDropDown := _OnTBDropDown;
    Control.OnClick := _OnClick;
    Control.TBSetTooltips(Control.TBIndex2Item(0),Tips);
    inherited;
@@ -124,6 +127,22 @@ procedure THIToolBar._OnClick;
 begin
    if not Control.RightClick then
      _hi_OnEvent(_event_onClick,Control.CurIndex);
+end;
+
+procedure THIToolBar._OnTBDropDown(Obj:PObj);
+var
+  pos: TPoint;
+  r: TRect;
+  dtidx, dtpos: TData;
+begin
+  r := Control.TBButtonRect[Control.CurItem];
+  pos.x := r.left;
+  pos.y := r.bottom;
+  pos := Control.Client2Screen(pos);
+  dtInteger(dtidx, Control.CurItem mod 100);
+  dtInteger(dtpos, pos.y shl 16 + pos.x);
+  dtidx.ldata := @dtpos;
+  _hi_onEvent_(_event_onTBDropDown, dtidx); 
 end;
 
 procedure THIToolBar.SetBtns;
