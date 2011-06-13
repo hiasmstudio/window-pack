@@ -146,21 +146,27 @@ type
    TCB = function: boolean of object;
    ThiEnumProcess = class(TDebug)
    private
+      FProcessUsage: Real;
+      FThread: PThread;
       FDebugPrivilege: boolean;
-      ID: Cardinal;
+      ID, ScanID: Cardinal;
       PName, FFullPath: string;
       ovi: TOSVersionInfo;
       procEntry: PROCESSENTRY32;
       procedure Enum(CallBack: TCB);
       procedure EnumNT(CallBack: TCB);
       function GetProcessAccount(proc: THandle): string;
-      procedure SetDebugPrivilege(Value: boolean);      
+      procedure SetDebugPrivilege(Value: boolean);
       function EnumAll: boolean;
       function FindID: boolean;
       function FindName: boolean;
+      function GetProcessUsage(PID:cardinal): Real;     
+      function Execute(Sender: PThread): Integer;
+      procedure SyncExec;      
    public
      _prop_Name: string;
-     _prop_TimeOut:integer;
+     _prop_TimeOut: integer;
+     _prop_TimeScan: integer;
 
      _data_ID,
      _data_Name,
@@ -177,10 +183,11 @@ type
      _event_onGetProcessAccount,
      _event_onFind,
      _event_onNotFind,
+     _event_onCPUUsage,
      _event_onEndEnum:THI_Event;
 
-
    constructor Create;
+   destructor Destroy; override;   
    
    procedure _work_doDebugPrivilege(var _Data:TData; Index:word);
    procedure _work_doEnum(var _Data: TData; Index: Word);
@@ -196,6 +203,8 @@ type
    procedure _work_doGetProcessAccount(var _Data: TData; Index: Word);
    procedure _work_doGetProc(var _Data: TData; Index: Word);
    procedure _work_doGetProcBoost(var _Data: TData; Index: Word);
+   procedure _work_doStartCPUUsage(var _Data: TData; Index: Word);
+   procedure _work_doStopCPUUsage(var _Data: TData; Index: Word);
    procedure _var_CurrentID(var _Data: TData; Index: Word);
    procedure _var_CurrParentID(var _Data: TData; Index: Word);   
    procedure _var_FileName(var _Data: TData; Index: Word);
@@ -203,7 +212,6 @@ type
    procedure _var_FullPath(var _Data: TData; Index: Word);
    procedure _var_MajorVersion(var _Data: TData; Index: Word);
    procedure _var_MinorVersion(var _Data: TData; Index: Word);   
-
    property _prop_DebugPrivilege: boolean write FDebugPrivilege;
 end;
 
@@ -303,6 +311,72 @@ begin
     @SetProcessAffinityMask     := GetProcAddress(hKRNL, 'SetProcessAffinityMask');
     @QueryFullProcessImageName  := GetProcAddress(hKRNL, 'QueryFullProcessImageNameA');
   end;
+end;
+
+destructor ThiEnumProcess.Destroy;
+begin
+  if FThread <> nil then free_and_nil(FThread);
+  inherited;
+end;
+
+function ThiEnumProcess.GetProcessUsage;
+var 
+  pHandle : THandle;
+  mCreationTime, mExitTime, mKernelTime, mUserTime: _FILETIME;
+  TotalTime1, TotalTime2: int64;
+begin
+  SetDebugPrivilege(FDebugPrivilege);
+  {We need to get a handle of the process with PROCESS_QUERY_INFORMATION privileges.}
+  pHandle := OpenProcess(PROCESS_QUERY_INFORMATION, false, PID);
+
+  {We can use the GetProcessTimes() function to get the amount of time the process has spent in kernel mode and user mode.}
+  GetProcessTimes(pHandle, mCreationTime, mExitTime, mKernelTime, mUserTime);
+  TotalTime1 := int64(mKernelTime.dwLowDateTime or (mKernelTime.dwHighDateTime shr 32)) +
+                int64(mUserTime.dwLowDateTime or (mUserTime.dwHighDateTime shr 32));
+
+  {Wait a little}
+  Sleep(_prop_TimeScan); 
+
+  GetProcessTimes(pHandle, mCreationTime, mExitTime, mKernelTime, mUserTime);
+  TotalTime2 := int64(mKernelTime.dwLowDateTime or (mKernelTime.dwHighDateTime shr 32)) +
+                int64(mUserTime.dwLowDateTime or (mUserTime.dwHighDateTime shr 32));
+
+  {This should work out nicely, as there were approx. _prop_TimeScan between the calls
+  and the result will be a percentage between 0 and 100}
+  Result := ((TotalTime2 - TotalTime1) / _prop_TimeScan) / 100;
+
+  CloseHandle(pHandle);
+end;
+
+procedure ThiEnumProcess.Execute;
+begin
+  repeat
+    FProcessUsage := GetProcessUsage(ScanID);
+    if Assigned(_event_onCPUUsage.Event) then Sender.Synchronize(SyncExec);
+  until Sender.Terminated;
+  Result := 0;
+end;
+
+procedure ThiEnumProcess.SyncExec;
+begin
+  if ScanID <> procEntry.th32ProcessID then
+    free_and_nil(FThread)
+  else
+    _hi_onEvent(_event_onCPUUsage, FProcessUsage);
+end;
+
+procedure ThiEnumProcess._work_doStartCPUUsage;
+begin
+  ScanID := procEntry.th32ProcessID;
+  if FThread <> nil then free_and_nil(FThread);
+  FThread := {$ifdef F_P}NewThreadforFPC{$else}NewThread{$endif};
+  FThread.OnExecute := Execute;
+  FThread.Resume; 
+end;
+
+procedure ThiEnumProcess._work_doStopCPUUsage;
+begin
+  if FThread <> nil then free_and_nil(FThread);
 end;
 
 procedure ThiEnumProcess.SetDebugPrivilege;
