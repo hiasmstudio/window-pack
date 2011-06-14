@@ -39,10 +39,10 @@ var
 begin
   Result := Str;
   L := Length(Result);
-  while (L > 0) and (Result[L] <= ' ') do Dec(L);
+  while (L > 0) and (Result[L] = ' ') do Dec(L);
   SetLength(Result, L);
   L := 1;
-  while (L <= Length(Result)) and (Result[L] <= ' ') do Inc(L);
+  while (L <= Length(Result)) and (Result[L] = ' ') do Inc(L);
   Result := string(PChar(integer(@Result[1]) + L - 1)); 
 end;
 
