@@ -27,7 +27,7 @@ type
   THIHintManager = class(TDebug)
    private
      hm:IHintManager;
-     
+     FHintWidth: integer;
      function init(HintParent:HWND):pointer;
      procedure free(id:pointer);
      procedure hint(id:pointer; const text:string);
@@ -48,6 +48,7 @@ type
      constructor Create;
      function getInterfaceHint:IHintManager;
      procedure InitByDefault;
+     property _prop_HintWidth: integer read FHintWidth write FHintWidth;
   end;
 
 implementation
@@ -63,6 +64,7 @@ begin
    hm.show := show;
    hm.hide := hide;
    hm.move := move;
+   FHintWidth := -1;   
 end;
 
 procedure THIHintManager.InitByDefault;
@@ -128,6 +130,8 @@ begin
 //  SendMessage(fTThwnd, TTM_SETDELAYTIME, WPARAM(TTDT_AUTOMATIC), Delay);
   SendMessage(fTThwnd, TTM_SETDELAYTIME, WPARAM(TTDT_INITIAL), LPARAM(_prop_HintDelay));
   SendMessage(fTThwnd, TTM_SETDELAYTIME, WPARAM(TTDT_AUTOPOP), LPARAM(_prop_HintAutoPopUp));
+  SendMessage(fTThwnd, TTM_SETMAXTIPWIDTH, 0, LPARAM(_prop_HintWidth));
+    
   Rect.Top := _prop_HintMargin;
   Rect.Left := _prop_HintMargin;
   Rect.Bottom := _prop_HintMargin;
@@ -147,8 +151,8 @@ end;
 
 procedure THIHintManager.hint;
 begin     
-  PTOOLINFO(id).lpszText :=  PChar(text);
-  SendMessage(PTOOLINFO(id).lParam, TTM_UPDATETIPTEXT, 0, LPARAM(id))
+  PTOOLINFO(id).lpszText := PChar(text);
+  SendMessage(PTOOLINFO(id).lParam, TTM_UPDATETIPTEXT, 0, LPARAM(id));
 end;
 
 procedure THIHintManager.title;
