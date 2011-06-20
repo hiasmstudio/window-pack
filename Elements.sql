@@ -28,7 +28,7 @@ INSERT INTO "groups" VALUES(41,'Cables','Кабели',28);
 INSERT INTO "groups" VALUES(42,'GameEngine','GameEngine',29);
 DELETE FROM sqlite_sequence;
 INSERT INTO "sqlite_sequence" VALUES('groups',42);
-INSERT INTO "sqlite_sequence" VALUES('elements',859);
+INSERT INTO "sqlite_sequence" VALUES('elements',861);
 INSERT INTO "sqlite_sequence" VALUES('files',21);
 CREATE TABLE elements(id INTEGER PRIMARY KEY AUTOINCREMENT,name varchar(64),info varchar(64),tab int,pos int,hash varchar(32));
 INSERT INTO "elements" VALUES(1,'Label','Нaдпиcь',1,1,'9A8A102B87CC1EA8F21DC8AF6D60B970');
@@ -886,6 +886,8 @@ INSERT INTO "elements" VALUES(856,'MultiBlockFind','Множественный цепочный поиск
 INSERT INTO "elements" VALUES(857,'CounterEx','Расширенный счетчик',13,4,NULL);
 INSERT INTO "elements" VALUES(858,'Img_MultiText','Отрисовка многострочного текста',4,10,NULL);
 INSERT INTO "elements" VALUES(859,'DropFileManager','Приём сброшенных объектов',1,83,NULL);
+INSERT INTO "elements" VALUES(860,'DropTextManager','Приём сброшенного текста',1,84,NULL);
+INSERT INTO "elements" VALUES(861,'DragText','Перетаскивание текста',3,16,NULL);
 CREATE TABLE files_link(file_id int,el_id int);
 INSERT INTO "files_link" VALUES(21,404);
 INSERT INTO "files_link" VALUES(21,405);
