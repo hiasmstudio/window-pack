@@ -77,6 +77,7 @@ type
 
     FData_1: TData;
 
+    GMouse: boolean;
     FLargIconsManager,
     FSmallIconsManager,
     FStateIconsManager: IIconsManager;
@@ -152,7 +153,10 @@ type
     procedure ColDlm(Val: string);    
      
     procedure _OnClick(Obj:PObj);
-    procedure _OnMouseDown(Sender: PControl; var Mouse: TMouseEventData); override;    
+    procedure _OnMouseDown(Sender: PControl; var Mouse: TMouseEventData); override;
+    procedure _OnMouseUp(Sender: PControl; var Mouse: TMouseEventData); override;         
+    procedure _onDblClick(Sender: PControl; var Mouse: TMouseEventData); override;
+
     procedure SetColumns(const ListCol: PStrList; Mode:integer);
     procedure _OnColumnClick(Sender: PControl; Idx: Integer);
     procedure _OnBeforeLineChange(Sender: PControl; Idx: Integer);
@@ -497,6 +501,19 @@ end;
 procedure ThiMTStrTbl._OnMouseDown;
 begin
    sel := Control.LVCurItem;
+   GMouse := true;
+   inherited;
+end;
+
+procedure ThiMTStrTbl._OnMouseUp;
+begin
+   GMouse := false;
+   inherited;
+end;
+
+procedure ThiMTStrTbl._onDblClick;
+begin
+   GMouse := true;
    inherited;
 end;
 
@@ -511,6 +528,13 @@ begin
     _hi_OnEvent(_event_onSelect, IdxFrom);
     exit;
   end;
+
+  if GMouse and (OldState and $0000F000 = 0) then
+  begin 
+    Sender.LVItemStateImgIdx[IdxFrom] := 0;
+    GMouse := false;
+    exit;    
+  end;
   if (Newstate = $2000) and (OldState = $1000) then
     dtInteger(dt, 1)
   else if (Newstate = $1000) and (OldState = $2000) then
@@ -520,6 +544,7 @@ begin
   dtInteger(Data, IdxFrom);
   Data.ldata := @dt;
   _hi_onEvent_(_event_onCheck, Data);
+  GMouse := false;  
 end;
 
 //---------------------   Графический обработчик   -----------------------
@@ -748,7 +773,10 @@ begin
   mtstc.ncolorrow      := ncolorrow;
   mtstc.codepageget    := CodePageGet;
   
+  GMouse := false;
   Control.OnMouseDown     := _OnMouseDown;
+  Control.OnMouseUp       := _OnMouseUp;
+  Control.OnMouseDblClk   := _onDblClick;
   Control.OnColumnClick   := _OnColumnClick;
   Control.OnClick         := _OnClick;
   Control.OnLVStateChange := _OnSelState;

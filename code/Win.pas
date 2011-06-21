@@ -46,7 +46,7 @@ type
      procedure _onMouseUp(Sender: PControl; var Mouse: TMouseEventData); virtual;
      procedure _onMouseWheel(Sender: PControl; var Mouse: TMouseEventData); virtual;//!!!
      function  _onMessage( var Msg: TMsg; var Rslt: Integer ): Boolean; virtual;
-     procedure _onDblClick(Sender: PControl; var Mouse: TMouseEventData);
+     procedure _onDblClick(Sender: PControl; var Mouse: TMouseEventData); virtual;
      procedure _OnDestroy(Sender:PObj);virtual;
      procedure _onResize(Obj:PObj);virtual;
      procedure _onShow(Obj:PObj); virtual;
