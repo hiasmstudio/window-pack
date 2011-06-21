@@ -522,6 +522,7 @@ var
   dt, Data: TData;
 begin
   dtNull(Data);
+TRY
   if (Newstate = 3) or (Newstate = 1) then
   begin
     if  FEnableOnClick then _hi_OnEvent(_event_onClick, IdxFrom);
@@ -529,10 +530,9 @@ begin
     exit;
   end;
 
-  if GMouse and (OldState and $0000F000 = 0) then
+  if GMouse and (OldState = 0) then
   begin 
     Sender.LVItemStateImgIdx[IdxFrom] := 0;
-    GMouse := false;
     exit;    
   end;
   if (Newstate = $2000) and (OldState = $1000) then
@@ -544,7 +544,9 @@ begin
   dtInteger(Data, IdxFrom);
   Data.ldata := @dt;
   _hi_onEvent_(_event_onCheck, Data);
-  GMouse := false;  
+FINALLY
+  GMouse := false;
+END;  
 end;
 
 //---------------------   Графический обработчик   -----------------------
