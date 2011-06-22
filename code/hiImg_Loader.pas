@@ -141,7 +141,6 @@ var
   fn: pchar;
 begin
   if not sg then exit;
-  sg := false;
   s1 := ReadString(_Data,_data_FileName,_prop_FileName);
   len := GetFullPathName(@s1[1],0,nil,fn);
   setlength(s, len - 1);
@@ -151,6 +150,7 @@ begin
   FImgCtx.Load(PWChar(StringToWideString(s, 3)), 0);
   FImgCtx.SetCallback(@MyCallback, pointer(Self));
   FImgCtx.SelectChanges(IMGCHG_COMPLETE,0,1);
+  sg := false;
 end;
 
 procedure THiImg_Loader._var_ImageWidth;
