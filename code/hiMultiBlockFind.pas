@@ -82,10 +82,14 @@ var
 begin
   Result := Str;
   L := Length(Result);
-  while (L > 0) and (Result[L] <= ' ') do Dec(L);
+  if Result[L] <> '\' then 
+    while (L > 0) and (Result[L] <= ' ') do Dec(L)
+  else Dec(L);
   SetLength(Result, L);
   L := 1;
-  while (L <= Length(Result)) and (Str[L] <= ' ') do Inc(L);
+  if Result[L] <> '\' then
+    while (L <= Length(Result)) and (Str[L] <= ' ') do Inc(L)
+  else Inc(L);
   Delete(Result, 1, L - 1);
 end;
 
