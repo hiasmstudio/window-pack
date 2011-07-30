@@ -2,7 +2,7 @@ unit hiMultiBlockFind;
 
 interface
 
-uses Windows, Kol, Share, Debug;
+uses Kol, Share, Debug;
 
 const
   _ENTER    = #13#10; 
@@ -30,8 +30,6 @@ type
  end;
 
 implementation
-
-uses hiStr_Enum;
 
 //--------------------------------------------------------------------------------
 
@@ -84,12 +82,14 @@ begin
   L := Length(Result);
   if Result[L] <> '\' then 
     while (L > 0) and (Result[L] <= ' ') do Dec(L)
-  else Dec(L);
+  else
+    Dec(L);
   SetLength(Result, L);
   L := 1;
   if Result[L] <> '\' then
     while (L <= Length(Result)) and (Str[L] <= ' ') do Inc(L)
-  else Inc(L);
+  else
+    Inc(L);
   Delete(Result, 1, L - 1);
 end;
 
@@ -263,10 +263,11 @@ var
   end;
   
 begin
+  if (FListTag.Count = 0) then exit;
   text := ReadString(_Data, _data_Text);
+  if (text = '') then exit;
   dtNull(dt);
-  if (FListTag.Count = 0) or (text = '') then exit; 
-
+  
   for i := 0 to FListTag.Count - 1 do
   begin
     mt := nil;
