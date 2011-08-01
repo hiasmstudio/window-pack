@@ -24,6 +24,7 @@ type
     procedure _work_doExecute1(var _Data:TData; Index:word);
     procedure _work_doStartDir(var _Data:TData; Index:word);
     procedure _work_doFileName(var _Data:TData; Index:word);
+    procedure _work_doFilter(var _Data:TData; Index:word);
   end;
 
 implementation
@@ -92,6 +93,11 @@ end;
 procedure THIODialog._work_doFileName;
 begin
   _prop_FileName := ReadString(_Data,_data_FileName,'');
+end;
+
+procedure THIODialog._work_doFilter;
+begin
+  _prop_Filter := ToString(_Data);
 end;
 
 end.
