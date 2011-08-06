@@ -12,6 +12,7 @@ type
    public
     _data_Data:THI_Event;
     _event_onData:THI_Event;
+    _event_onNoData:THI_Event;    
 
     procedure _work_doData(var _Data:TData; Index:word);
     property _prop_Data:TData write _Dt;
@@ -38,7 +39,9 @@ begin
   if not CmpData(_Dt,_Data) then begin
     _Dt := _Data;
     _hi_CreateEvent_(_Data,@_event_onData);
-  end;
+  end
+  else
+    _hi_CreateEvent_(_Data,@_event_onNoData);
 end;
 
 end.
