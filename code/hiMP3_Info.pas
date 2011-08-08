@@ -13,7 +13,8 @@ type
     function _Count:integer;
    public
     _data_FileName:THI_Event;
-
+    _event_onReadInfo: THI_Event;
+    
     destructor Destroy; override;
     procedure _work_doReadInfo(var _Data:TData; Index:word);
     procedure _var_Tags(var _Data:TData; Index:word);
@@ -32,6 +33,9 @@ var
   Buffer: array [1..128] of Char;
   FS:PStream;
   FileName:string;
+  dt: TData;
+  mt: PMT;
+  i: integer; 
 begin
   FileName := ReadString(_Data,_data_FileName,'');
   if not Assigned(List) then
@@ -43,12 +47,19 @@ begin
     FS.Read(Buffer, 128);
     if Copy(Buffer, 1, 3) = 'TAG' then
      begin
-      {ID}      List.Add( Copy(Buffer, 4,  30) );
-      {Titel  } List.Add( Copy(Buffer, 34, 30) );
+      {Title  } List.Add( Copy(Buffer, 4,  30) );
+      {Artist } List.Add( Copy(Buffer, 34, 30) );
       {Album  } List.Add( Copy(Buffer, 64, 30) );
       {Year   } List.Add( Copy(Buffer, 94, 4) );
       {Comment} List.Add( Copy(Buffer, 98, 30) );
       {Genre  } List.Add( int2str(Ord(Buffer[128])) );
+      {Track  } List.Add( int2str(Ord(Buffer[127])) );
+      dtString(dt, List.Items[0]);
+      mt := mt_make(dt);
+      for i := 1 to List.Count - 1 do
+        mt_string(mt, List.Items[i]);
+      _hi_onEvent(_event_onReadInfo, dt);
+      mt_free(mt);         
      end;
   finally
     FS.Free;
