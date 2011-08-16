@@ -12,12 +12,15 @@ type
     _prop_AlphaBlendValue: Byte;
     _prop_AlphaMode: boolean;    
     _data_AlphaBitmap: THI_Event;
+    _prop_Antialias: boolean;
+
     constructor Create;
     destructor Destroy; override;
        
     procedure _work_doDraw(var _Data:TData; Index:word);
     procedure _work_doAlphaBlendValue(var _Data:TData; Index:word);
-    procedure _work_doAlphaMode(var _Data:TData; Index:word);    
+    procedure _work_doAlphaMode(var _Data:TData; Index:word);
+    procedure _work_doAntialias(var _Data:TData; Index:word);     
   end;
 
 implementation
@@ -39,6 +42,27 @@ begin
   inherited;
 end;
 
+procedure _AntiAlias(var Clip: PBitmap);
+const
+  Pix = 4;
+var X,Y: integer;
+    P0,P1,P2: PByteArray;
+begin
+  for Y := 1 to Clip.Height-2 do
+  begin
+    P0 := Clip.ScanLine[Y-1];
+    P1 := Clip.ScanLine[Y];
+    P2 := Clip.ScanLine[Y+1];
+    for X := 1 to Clip.Width-2 do
+    begin
+      P1[X*4]   := (P0[X*4]   + P2[X*4]   + P1[(X-1)*4]   + P1[(x+1)*4])   div Pix;
+      P1[X*4+1] := (P0[X*4+1] + P2[X*4+1] + P1[(X-1)*4+1] + P1[(X+1)*4+1]) div Pix;
+      P1[X*4+2] := (P0[X*4+2] + P2[X*4+2] + P1[(X-1)*4+2] + P1[(X+1)*4+2]) div Pix;
+      P1[X*4+3] := (P0[X*4+3] + P2[X*4+3] + P1[(X-1)*4+3] + P1[(X+1)*4+3]) div Pix;
+    end;
+  end;
+end;
+
 procedure THIImg_AlphaBmp._work_doDraw;
 var   dt: TData;
       src: PBitmap;
@@ -52,6 +76,8 @@ TRY
 
    Bitmap.Assign(Src);
    if (Bitmap.PixelFormat <> pf32bit) then Bitmap.PixelFormat := pf32bit;
+
+   if _prop_Antialias then _AntiAlias(Bitmap);
 
    blend.BlendOp := AC_SRC_OVER;
    blend.BlendFlags := 0;
@@ -86,6 +112,11 @@ end;
 procedure THIImg_AlphaBmp._work_doAlphaMode;
 begin
   _prop_AlphaMode := ReadBool(_Data);
+end;
+
+procedure THIImg_AlphaBmp._work_doAntialias;
+begin
+  _prop_Antialias := ReadBool(_Data);
 end;
 
 end.
