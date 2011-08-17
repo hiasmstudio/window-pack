@@ -76,6 +76,7 @@ var st:PStream;
 begin
    st := ReadStream(_data,_data_Stream,_prop_PNG);
    if st = nil then exit;
+   st.Position := 0;
    fImage.LoadFromStream(st);
    AlphaMask;
 end;
@@ -85,6 +86,7 @@ var st:PStream;
 begin
    st := ReadStream(_data,_data_Stream,nil);
    if st = nil then exit;
+   st.Position := 0;
    fImage.SaveToStream(st);
 end;
 
@@ -132,6 +134,7 @@ var
   S: PColor;
   fFrom: TRGB;
 begin
+  if fImage.Empty then exit;
   if Assigned(fAlphaBmp) then fAlphaBmp.free;
   fAlphaBmp := NewDIBBitmap(fImage.Width, fImage.Height, pf32bit);
   fAlphaBmp.Assign(fImage.Bitmap);
@@ -139,7 +142,6 @@ begin
   if fImage.AlphaScanline[0] = nil then exit;
   
   fAlphaBmp.PixelFormat := pf32bit;
- 
   for y := 0 to fAlphaBmp.Height - 1 do
   begin
     MS := fImage.AlphaScanline[y];
