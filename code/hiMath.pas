@@ -66,6 +66,8 @@ type
     procedure _work_doOperation39(var _Data:TData; Index:word);
     procedure _work_doOperation40(var _Data:TData; Index:word);
     procedure _work_doOperation41(var _Data:TData; Index:word);
+    procedure _work_doOperation42(var _Data:TData; Index:word);
+    procedure _work_doOperation43(var _Data:TData; Index:word);
     procedure _work_doClear(var _Data:TData; Index:word);
     procedure _work_doDefault(var _Data:TData; Index:word);
     procedure _work_doAngleMode(var _Data:TData; Index:word);        
@@ -730,6 +732,44 @@ begin
   Res := ReadReal(_Data,_data_Op1,_prop_Op1);
   _Err:=false;
   Res := ord(not odd(round(Res)));
+  if _prop_ResultType = 0 then
+    _hi_OnEvent(_event_onResult,integer(Round(Res)))
+  else _hi_OnEvent(_event_onResult,Res);
+end;
+
+procedure THIMath._work_doOperation42;{Floor}
+var
+  x: double;
+
+  function Floor(X: Extended): Integer;
+  begin
+    Result := Integer(Trunc(X));
+    if Frac(X) < 0 then Dec(Result);
+  end;
+
+begin
+  x := ReadReal(_Data,_data_Op1,_prop_Op1);
+  _Err := false;
+  Res := Floor(x);
+  if _prop_ResultType = 0 then
+    _hi_OnEvent(_event_onResult,integer(Round(Res)))
+  else _hi_OnEvent(_event_onResult,Res);
+end;
+
+procedure THIMath._work_doOperation43;{Ceil}
+var
+  x: double;
+
+  function Ceil(X: Extended): Integer;
+  begin
+    Result := Integer(Trunc(X));
+    if Frac(X) > 0 then Inc(Result);
+  end;
+
+begin
+  x := ReadReal(_Data,_data_Op1,_prop_Op1);
+  _Err := false;
+  Res := Ceil(x);
   if _prop_ResultType = 0 then
     _hi_OnEvent(_event_onResult,integer(Round(Res)))
   else _hi_OnEvent(_event_onResult,Res);
