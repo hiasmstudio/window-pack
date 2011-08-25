@@ -738,26 +738,26 @@ begin
 end;
 
 procedure THIMath._work_doOperation42;{Floor}
-var
-  x: double;
 begin
-  x := ReadReal(_Data,_data_Op1,_prop_Op1);
+  Res := ReadReal(_Data,_data_Op1,_prop_Op1);
   _Err := false;
-  Res := Trunc(x);
-  if Frac(x) < 0 then Res := Res - 1;  
+  if frac(Res) < 0 then
+    Res := trunc(Res) - 1
+  else  
+    Res := trunc(Res); 
   if _prop_ResultType = 0 then
     _hi_OnEvent(_event_onResult,integer(Round(Res)))
   else _hi_OnEvent(_event_onResult,Res);
 end;
 
 procedure THIMath._work_doOperation43;{Ceil}
-var
-  x: double;
 begin
-  x := ReadReal(_Data,_data_Op1,_prop_Op1);
+  Res := ReadReal(_Data,_data_Op1,_prop_Op1);
   _Err := false;
-  Res := Trunc(x);
-  if Frac(x) > 0 then Res := Res + 1;
+  if frac(Res) > 0 then
+    Res := trunc(Res) + 1
+  else  
+    Res := trunc(Res);
   if _prop_ResultType = 0 then
     _hi_OnEvent(_event_onResult,integer(Round(Res)))
   else _hi_OnEvent(_event_onResult,Res);

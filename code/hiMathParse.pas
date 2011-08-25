@@ -603,6 +603,10 @@ begin
       else if Token = 'trunc'  then  ReadFunc(x,28)
       else if Token = 'min'    then  ReadFunc(x,29)
       else if Token = 'max'    then  ReadFunc(x,30)
+      else if Token = 'floor'  then  ReadFunc(x,31)
+      else if Token = 'ceil'   then  ReadFunc(x,32)
+      else if Token = 'odd'    then  ReadFunc(x,33)
+      else if Token = 'even'   then  ReadFunc(x,34)                   
       else{$ifdef F_P}Err:=0;if Err>=0 then exit{$else}raise Exception.Create(e_Custom,''){$endif};
      end;
     TokReal,TokNumber: x := Str2Double(Token);
@@ -727,6 +731,23 @@ begin
             else if x<y then x := y;
           end;
         end;
+    31: {floor}
+        begin
+          if frac(x) < 0 then
+            x := trunc(x) - 1
+          else  
+            x := trunc(x);
+        end;
+    32: {ceil}
+        begin
+          if frac(x) > 0 then
+            x := trunc(x) + 1
+          else  
+            x := trunc(x);
+        end;
+    33: x := ord(odd(round(x)));     {odd}
+    34: x := ord(not odd(round(x))); {even}
+                         
   end;
   if Token <> ')' then {$ifdef F_P}Err:=0{$else}raise Exception.Create(e_Custom,''){$endif};
 end;
