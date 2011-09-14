@@ -10,6 +10,7 @@ type
     PM:PMenu;
     FC:PControl;
     Old:TOnMessage;
+    ListMenuStr: array  of string;
 
 //    procedure SetMenu(const Value:string);
     procedure AddMenuItem(const Caption:string);
@@ -45,10 +46,46 @@ begin
    FC := Control;
    old := FC.OnMessage;
    FC.OnMessage := _OnMes;
-   PM := NewMenu(nil,0,[],nil);
+//   PM := NewMenu(nil,0,[],nil);
    InitAdd(init);
 end;
 
+{$ifdef F_P}
+var ListMenu: array[0..200] of PChar;
+{$endif}
+
+procedure THIPopupMenu.Init;
+type TPCharArray = array[0..0] of PChar;
+//     PPCharArray = ^TPCharArray;
+var i:integer;
+    List:PStrList;
+   {$ifndef F_P}
+   ListMenu: array of PChar;
+   {$endif}
+    //k:PPCharArray;
+begin
+   List := NewStrList;
+   List.text := _prop_Menu;
+   if List.Count > 0 then
+    begin
+     SetLength(ListMenuStr,List.Count);
+     {$ifndef F_P}
+     SetLength(ListMenu,List.Count);
+     {$endif}
+     //getmem(k,4*10);
+     for i := 0 to List.Count-1 do
+      begin
+       ListMenuStr[i] := List.Items[i];
+       ListMenu[i] := PChar(@ListMenuStr[i][1]);
+       //k[i] := PChar(ListMenuStr[i]);
+      end;
+    end;
+   PM := NewMenu( nil, 0, ListMenu, nil );
+   List.free;   
+end;
+
+
+(*
 procedure THIPopupMenu.Init;
 var   List:PStrList;
       i:integer;
@@ -59,6 +96,7 @@ begin
       AddmenuItem(List.Items[i]);
    List.Free;
 end;
+*)
 
 destructor THIPopupMenu.Destroy;
 begin

@@ -41,7 +41,7 @@ begin
 end;
 
 {$ifdef F_P}
-var ListMenu: array[0..50] of PChar;
+var ListMenu: array[0..200] of PChar;
 {$endif}
 
 procedure THIMenu.SetMenu;
@@ -72,6 +72,7 @@ begin
     end;
    FMainMenu := NewMenu( Applet, 0, ListMenu, nil );
    Form.Menu := FMainMenu.Handle;
+   List.free;      
 end;
 
 procedure THIMenu._work_doInit(var _Data:TData; Index:word);
