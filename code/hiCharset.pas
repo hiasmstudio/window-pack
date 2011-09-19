@@ -17,6 +17,7 @@ type
     _prop_Type:byte;
     _prop_OutTypeUnicode:byte;
     _prop_InTypeUnicode:byte;
+    _prop_URLMode:byte;
     
     _prop_CodePage1:integer;
     _prop_CodePage2:integer;    
@@ -44,7 +45,7 @@ type
 function Base64_Code(const s:string):string;
 function Base64_Decode(const s:string):string;
 function CodePage1ToCodePage2(const s: String; codePage1,codePage2: Word): String;
-function URLEncode(const S: string): string;
+function URLEncode(const S: string; URLMode: byte): string;
 function URLDecode(const S: string): string;
 implementation
 
@@ -128,7 +129,7 @@ begin
    FreeMem(buffer);
 end;
 
-function URLEncode(const S: string): string;
+function URLEncode(const S: string; URLMode: byte): string;
 var
   i, idx, len: Integer;
 
@@ -145,26 +146,28 @@ var
 begin
   len := 0;
   for i := 1 to Length(S) do
-    if ((S[i] >= '0') and (S[i] <= '9')) or
+    if (((S[i] >= '0') and (S[i] <= '9')) or
        ((S[i] >= 'A') and (S[i] <= 'Z')) or
        ((S[i] >= 'a') and (S[i] <= 'z')) or (S[i] = ' ') or
-       (S[i] = '_') or (S[i] = '*') or (S[i] = '-') or (S[i] = '.') then
+       (S[i] = '_') or (S[i] = '*') or (S[i] = '-') or (S[i] = '.')) and
+       (URLMode = 0) then
       len := len + 1
     else
       len := len + 3;
   SetLength(Result, len);
   idx := 1;
   for i := 1 to Length(S) do
-    if S[i] = ' ' then
+    if (S[i] = ' ') and (URLMode = 0) then
     begin
       Result[idx] := '+';
       idx := idx + 1;
     end
     else
-      if ((S[i] >= '0') and (S[i] <= '9')) or
+      if (((S[i] >= '0') and (S[i] <= '9')) or
          ((S[i] >= 'A') and (S[i] <= 'Z')) or
          ((S[i] >= 'a') and (S[i] <= 'z')) or
-         (S[i] = '_') or (S[i] = '*') or (S[i] = '-') or (S[i] = '.') then
+         (S[i] = '_') or (S[i] = '*') or (S[i] = '-') or (S[i] = '.')) and
+         (URLMode = 0) then
       begin
         Result[idx] := S[i];
         idx := idx + 1;
@@ -324,8 +327,8 @@ begin
   Res := '';
 
   BufLen := WideCharToMultiByte(CP_ACP, WC_COMPOSITECHECK or WC_DISCARDNS or WC_SEPCHARS or WC_DEFAULTCHAR, @s[j], -1, nil, 0, nil, nil);
-    if BufLen > 1 then
-    begin
+  if BufLen > 1 then
+  begin
     case TypeUNICODE of
       1: begin
            i := 1;
@@ -386,7 +389,7 @@ end;
 
 procedure THICharset._work_doCharset12;
 begin
-  _hi_OnEvent(_event_onCharset, URLEncode(ReadString(_Data,_data_Text,'')));
+  _hi_OnEvent(_event_onCharset, URLEncode(ReadString(_Data,_data_Text,''), _prop_URLMode));
 end;
 
 end.
