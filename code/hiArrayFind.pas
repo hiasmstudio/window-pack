@@ -57,6 +57,8 @@ var
   S1, S2: PChar;
   dt: TData;
 begin
+  ItemIdx := -1;
+TRY   
   ArrIn := ReadArray(_data_Array);
   if (ArrIn = nil) or (ArrIn._Count = 0) then exit;
   idx := ReadInteger(_Data, _data_Index, _prop_Index);
@@ -68,7 +70,6 @@ begin
   if not _prop_CaseSensitive  and (Length(S1) <> 0) then
     CharLower(S1);
 
-  ItemIdx := -1;
   for i := idx to ArrIn._Count - 1 do
   begin
     S2 := PChar(ToString(GetArrayVal(i)));
@@ -83,8 +84,10 @@ begin
       ItemIdx := i;
       break;
     end;
-  end;  
+  end;
+FINALLY    
   _hi_CreateEvent(_Data, @_event_onFind, ItemIdx);
+END;  
 end;
 
 procedure THIArrayFind._work_doFind1;
@@ -92,6 +95,8 @@ var
   i, idx, v: integer;
   dt: TData;
 begin
+  ItemIdx := -1;
+TRY  
   ArrIn := ReadArray(_data_Array);
   if (ArrIn = nil) or (ArrIn._Count = 0) then exit;
   idx := ReadInteger(_Data, _data_Index, _prop_Index);
@@ -106,7 +111,9 @@ begin
       ItemIdx := i;
       break;
     end;
+FINALLY    
   _hi_CreateEvent(_Data, @_event_onFind, ItemIdx);
+END;  
 end;
 
 procedure THIArrayFind._work_doFind2;
@@ -115,6 +122,8 @@ var
   r: real;
   dt: TData;
 begin
+  ItemIdx := -1;
+TRY  
   ArrIn := ReadArray(_data_Array);
   if (ArrIn = nil) or (ArrIn._Count = 0) then exit;
   idx := ReadInteger(_Data, _data_Index, _prop_Index);
@@ -122,14 +131,15 @@ begin
   if idx < 0 then exit;  
 
   r := ToReal(dt);
-  ItemIdx := -1;
   for i := idx to ArrIn._Count - 1 do
     if (r = ToReal(GetArrayVal(i))) then
     begin
       ItemIdx := i;
       break;
     end;
+FINALLY
   _hi_CreateEvent(_Data, @_event_onFind, ItemIdx);
+END;  
 end;
 
 procedure THIArrayFind._var_ItemIdx;
