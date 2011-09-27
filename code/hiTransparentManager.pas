@@ -232,7 +232,9 @@ end;
 
 procedure THITransparentManager.setaeromode;
 const
-  DWM_BB_ENABLE = $00000001; 
+  DWM_BB_ENABLE = $00000001;
+  DWM_BB_BLURREGION = $00000002;
+  DWM_BB_TRANSITIONONMAXIMIZED = $00000004; 
 
 type
   DWM_BLURBEHIND = record
@@ -301,6 +303,24 @@ begin
            @DwmExtendFrameIntoClientArea := GetProcAddress(Hdwmapi, 'DwmExtendFrameIntoClientArea');
            DwmExtendFrameIntoClientArea(Wnd, pMargins);
            dispose(pMargins);
+         end;
+      3: begin
+           new(pMargins);
+           pMargins.cxLeftWidth    := _prop_LeftWidth;
+           pMargins.cxRightWidth   := _prop_RightWidth;
+           pMargins.cyTopHeight    := _prop_TopHeight;
+           pMargins.cyBottomHeight := _prop_BottomHeight;
+           @DwmExtendFrameIntoClientArea := GetProcAddress(Hdwmapi, 'DwmExtendFrameIntoClientArea');
+           DwmExtendFrameIntoClientArea(Wnd, pMargins);
+           dispose(pMargins);
+           new(pBlurBehind);
+           pBlurBehind.dwFlags := DWM_BB_ENABLE OR DWM_BB_BLURREGION;
+           pBlurBehind.fEnable := true;
+           pBlurBehind.hRgnBlur := 0;
+           pBlurBehind.fTransitionOnMaximized := true;
+           @DwmEnableBlurBehindWindow := GetProcAddress(Hdwmapi, 'DwmEnableBlurBehindWindow');
+           DwmEnableBlurBehindWindow(Wnd, pBlurBehind);
+           dispose(pBlurBehind);
          end;
     end;
   end;
