@@ -10,9 +10,10 @@ type
     PM:PMenu;
     FC:PControl;
     Old:TOnMessage;
+    FMenuList: string;
     ListMenuStr: array  of string;
 
-//    procedure SetMenu(const Value:string);
+    procedure SetMenu(const Value:string);
     procedure AddMenuItem(const Caption:string);
 //    function  _OnDraw( Sender: PObj; DC: HDC; const Rect: TRect; ItemIdx: Integer;
 //                           DrawAction: TDrawAction; ItemState: TDrawState ): Boolean;
@@ -21,12 +22,13 @@ type
 
     procedure Init;
    public
-    _prop_Menu: string;
     _prop_TranspIcon:boolean;
     _event_onClick:THI_Event;
     _event_onSelectStr:THI_Event;
     _event_onEndPopup:THI_Event;
     _data_Bitmaps:THI_Event;
+
+    property _prop_Menu: string write SetMenu;
 
     constructor Create(Control:PControl);
     destructor Destroy; override;
@@ -45,9 +47,7 @@ begin
    inherited Create;
    FC := Control;
    old := FC.OnMessage;
-   FC.OnMessage := _OnMes;
 //   PM := NewMenu(nil,0,[],nil);
-   InitAdd(init);
 end;
 
 {$ifdef F_P}
@@ -65,7 +65,7 @@ var i:integer;
     //k:PPCharArray;
 begin
    List := NewStrList;
-   List.text := _prop_Menu;
+   List.text := FMenuList;
    if List.Count > 0 then
     begin
      SetLength(ListMenuStr,List.Count);
@@ -80,6 +80,7 @@ begin
        //k[i] := PChar(ListMenuStr[i]);
       end;
     end;
+   if Assigned(PM) then PM.free;
    PM := NewMenu( nil, 0, ListMenu, nil );
    List.free;   
 end;
@@ -110,11 +111,11 @@ var   m:PMenu;
 begin
    case Msg.message of
       WM_COMMAND: begin
-         m := PM.Items[Msg.WParam];
-         if m <> nil then begin
-            _hi_OnEvent(_event_onSelectStr,PM.Items[PM.IndexOf(m)].Caption);
-            _hi_OnEvent(_event_onClick,PM.IndexOf(m));
-         end;
+           m := PM.Items[Msg.WParam];
+           if m <> nil then begin
+              _hi_OnEvent(_event_onSelectStr,PM.Items[PM.IndexOf(m)].Caption);
+              _hi_OnEvent(_event_onClick,PM.IndexOf(m));
+         end;  
          end;
       end;
    Result := Old(Msg,Rslt);
@@ -154,6 +155,13 @@ begin
    end;
 end;
 
+procedure THIPopupMenu.SetMenu;
+begin
+  FMenuList := Value;
+  Init;  
+  FC.OnMessage := _OnMes;
+end;
+
 (*
 function THIPopupMenu._OnDraw;
 var bmp:PBitmap;
@@ -168,16 +176,6 @@ begin   // debug('ok');
    Result := true;
 end;
 
-procedure THIPopupMenu.SetMenu;
-var   List:PStrList;
-      i:integer;
-begin
-   List := NewStrList;
-   List.text := Value;
-   for i := 0 to List.Count-1 do
-      AddmenuItem(List.Items[i]);
-   List.Free;
-end;
 *)
 
 procedure THIPopupMenu._work_doPopup;
@@ -195,8 +193,8 @@ end;
 
 procedure THIPopupMenu._work_doClear;
 begin
-   PM.Free;
-   PM := NewMenu(nil,100,[],nil);
+   if Assigned(PM) then PM.Free;
+   PM := NewMenu(nil,200,[],nil);
 end;
 
 procedure THIPopupMenu._work_doPopupHere;
