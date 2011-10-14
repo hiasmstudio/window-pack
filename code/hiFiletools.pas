@@ -9,6 +9,8 @@ type
    private
    public
     _prop_DelToRecycle:byte;
+    _prop_FileName:string;
+    _prop_NewFileName:string;        
     _data_NewFileName:THI_Event;
     _data_FileName:THI_Event;
     _event_onEnd:THI_Event;
@@ -27,8 +29,8 @@ procedure THIFileTools._work_doMove;
 var
    F1,F2:string;
 begin
-   F1 := ReadString(_Data,_data_FileName,'');
-   F2 := ReadString(_Data,_data_NewFileName,'');
+   F1 := ReadString(_Data,_data_FileName,_prop_FileName);
+   F2 := ReadString(_Data,_data_NewFileName,_prop_NewFileName);
    MoveFile(PChar(F1),PChar(F2));
    if FileExists(F2) then
      _hi_CreateEvent(_Data,@_event_onEnd);
@@ -38,8 +40,8 @@ procedure THIFileTools._work_doCopy;
 var
    F1,F2:string;
 begin
-   F1 := ReadString(_Data,_data_FileName,'');
-   F2 := ReadString(_Data,_data_NewFileName,'');
+   F1 := ReadString(_Data,_data_FileName,_prop_FileName);
+   F2 := ReadString(_Data,_data_NewFileName,_prop_NewFileName);
    CopyFile(PChar(F1),PChar(F2),false);
    if FileExists(F2) then
      _hi_CreateEvent(_Data,@_event_onEnd);
@@ -60,7 +62,7 @@ var F1:string;
     end;
   end;
 begin
-   F1 := ReadString(_Data,_data_FileName,'');
+   F1 := ReadString(_Data,_data_FileName,_prop_FileName);
    if _prop_DelToRecycle = 0 then
       DeleteFile2Recycle(f1)
    else DeleteFiles(F1);
@@ -70,7 +72,7 @@ end;
 
 procedure THIFileTools._work_doFileExists;
 begin
-   _hi_CreateEvent(_Data,@_event_onEnd,integer(FileExists(ReadString(_Data,_data_FileName,''))));
+   _hi_CreateEvent(_Data,@_event_onEnd,integer(FileExists(ReadString(_Data,_data_FileName,_prop_FileName))));
 end;
 
 end.
