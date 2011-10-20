@@ -4,6 +4,13 @@ interface
 
 uses Windows,Kol,Share,Debug,Img_Draw;
 
+const
+  _TEXT         = 'text';
+  _IMAGE        = 'image';
+  _SHAPE        = 'shape';
+  _TABLE        = 'table';
+  _GRADIENTRECT = 'gradientrect';
+
 type
   TClassDocumentTemplate = class
     public
@@ -15,16 +22,19 @@ type
   THiClassDocumentTemplate = TClassDocumentTemplate;
   TDocItem = class(TDebug)
     public
+     _NameType:string;
      _prop_Name:string;
      _prop_X:integer;
      _prop_Y:integer;
      _prop_Width:integer;
      _prop_Height:integer;
-     
+
      procedure Draw(dc:HDC; x,y:integer; const Scale:TScale); virtual; abstract; 
   end;
   TIDocumentTemplate = record
-    getItem:function(const name:string):TDocItem of object; 
+    getItem:function(const name:string):TDocItem of object;
+    getItemCount:function():integer of object;
+    getItemIdx:function(const idx:integer):TDocItem of object;     
   end;
   IDocumentTemplate = ^TIDocumentTemplate;
   THIDocumentTemplate = class(THIDraw2P)
@@ -34,6 +44,8 @@ type
      
      procedure InitChild;
      function _getItem(const name:string):TDocItem;
+     function _getItemCount():integer;
+     function _getItemIdx(const idx:integer):TDocItem;          
    public
      _prop_Name:string;
      
@@ -88,6 +100,8 @@ end;
 function THIDocumentTemplate.getInterfaceDocumentTemplate:IDocumentTemplate;
 begin
    DocTpl.getItem := _getItem;
+   DocTpl.getItemCount := _getItemCount;
+   DocTpl.getItemIdx := _getItemIdx;
    Result := @DocTpl;
 end;
 
@@ -103,6 +117,20 @@ begin
        exit;
       end;
    Exit; 
+end;
+
+function THIDocumentTemplate._getItemIdx(const idx:integer):TDocItem;
+begin
+   InitChild;
+   Result := nil;
+   if (idx < 0) or (idx >= FChild.List.Count) then exit; 
+   Result := TDocItem(FChild.List.Items[idx]);
+end;
+
+function THIDocumentTemplate._getItemCount():integer;
+begin
+   InitChild;
+   Result := FChild.List.Count;
 end;
 
 procedure THIDocumentTemplate._work_doDraw;

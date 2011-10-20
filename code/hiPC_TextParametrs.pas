@@ -11,8 +11,11 @@ type
     _prop_Parametrs: string;
     _data_Parametrs:THI_Event;
     _event_onSet:THI_Event;
+    _event_onEnum:THI_Event;
+    _event_onEndEnum:THI_Event;         
 
     procedure _work_doSet(var _Data:TData; Index:word);
+    procedure _work_doEnum(var _Data:TData; Index:word);    
   end;
 
 implementation
@@ -224,6 +227,44 @@ FINALLY
   ParamList.free;
   _hi_onEvent(_event_onSet);
 END;  
+end;
+
+procedure THIPC_TextParametrs._work_doEnum;
+var
+  i: integer;
+  Parametrs: string;
+begin
+  for i := 0 to _prop_Document.getItemCount() - 1 do
+  begin
+    FItem := _prop_Document.getItemIdx(i);
+    if (TDocItem(FItem)._NameType = _TEXT) and (TDocItem(FItem)._prop_Name <> '') then 
+    begin
+      Parametrs := TDocItem(FItem)._prop_Name +
+      '|' + THIPrint_Text(FItem)._prop_Text +
+      '|' + int2str(TDocItem(FItem)._prop_X) +
+      ',' + int2str(TDocItem(FItem)._prop_Y) +
+      ',' + int2str(TDocItem(FItem)._prop_Width) +
+      ',' + int2str(TDocItem(FItem)._prop_Height) +
+      '|' + THIPrint_Text(FItem)._prop_Font.Name +
+      ',' + int2str(THIPrint_Text(FItem)._prop_Font.Size) +
+      ',' + int2str(THIPrint_Text(FItem)._prop_Font.Style) +
+      ',' + int2str(THIPrint_Text(FItem)._prop_Font.Color) +
+      ',' + int2str(THIPrint_Text(FItem)._prop_Font.CharSet) +
+      '|' + int2str(THIPrint_Text(FItem)._prop_FrameStyle) +
+      ',' + int2str(THIPrint_Text(FItem)._prop_FrameSize) +
+      ',' + int2str(THIPrint_Text(FItem)._prop_FrameColor) +
+      '|' + int2str(THIPrint_Text(FItem)._prop_BackStyle) +
+      ',' + int2str(THIPrint_Text(FItem)._prop_BackColor) +
+      '|' + int2str(THIPrint_Text(FItem)._prop_Vertical) +
+      ',' + int2str(THIPrint_Text(FItem)._prop_Horizontal) +
+      '|' + int2str(THIPrint_Text(FItem)._prop_Left) +
+      ',' + int2str(THIPrint_Text(FItem)._prop_Top) +
+      ',' + int2str(THIPrint_Text(FItem)._prop_Right) +
+      ',' + int2str(THIPrint_Text(FItem)._prop_Bottom);                                           
+      _hi_onEvent(_event_onEnum, Parametrs);
+    end;  
+  end;
+  _hi_onEvent(_event_onEndEnum);
 end;
 
 end.

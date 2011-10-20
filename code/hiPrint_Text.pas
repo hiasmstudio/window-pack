@@ -28,6 +28,7 @@ type
     _prop_Right:integer;
     _prop_Bottom:integer;
     
+    constructor Create;
     destructor Destroy; override;
     procedure Draw(dc:HDC; x,y:integer; const Scale:TScale); override;    
     property _prop_Font:TFontRec read FontRec write SetNewFont;
@@ -46,6 +47,12 @@ begin
   r.Right := Round(r.Right * sx);
   r.Top := Round(r.Top * sy);
   r.Bottom := Round(r.Bottom * sy);
+end;
+
+constructor THIPrint_Text.Create;
+begin
+   inherited;
+   _NameType := _TEXT;
 end;
 
 destructor THIPrint_Text.Destroy; 
