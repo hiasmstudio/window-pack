@@ -95,6 +95,7 @@ function THIDocumentTemplate._getItem(const name:string):TDocItem;
 var i:integer;
 begin
    InitChild;
+   Result := nil;
    for i := 0 to FChild.List.Count-1 do
      if StrIComp(PChar(TDocItem(FChild.List.Items[i])._prop_Name), PChar(name)) = 0 then
       begin

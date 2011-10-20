@@ -7,6 +7,8 @@ uses Windows,Kol,Share,Debug,hiDocumentTemplate,Img_Draw;
 type
   THIPrint_Text = class(TDocItem)
    private
+    FontRec: TFontRec;
+    FrameColor, BackColor: TColor;
     GFont   : PGraphicTool;
     txPen:HPEN;
     txBrush:HBRUSH;
@@ -17,7 +19,7 @@ type
    public
     _prop_Text:string;
     _prop_FrameStyle:byte;
-    _prop_FrameSize:TColor;
+    _prop_FrameSize:byte;
     _prop_BackStyle:byte;
     _prop_Vertical:byte;
     _prop_Horizontal:byte;
@@ -28,9 +30,9 @@ type
     
     destructor Destroy; override;
     procedure Draw(dc:HDC; x,y:integer; const Scale:TScale); override;    
-    property _prop_Font:TFontRec write SetNewFont;
-    property _prop_FrameColor:TColor write SetPen;
-    property _prop_BackColor:TColor write SetBrush;
+    property _prop_Font:TFontRec read FontRec write SetNewFont;
+    property _prop_FrameColor:TColor read FrameColor write SetPen;
+    property _prop_BackColor:TColor read BackColor write SetBrush;
   end;
 
 implementation
@@ -56,6 +58,7 @@ end;
 
 procedure THIPrint_Text.SetNewFont;
 begin
+   FontRec := Value;
    if Assigned(GFont) then GFont.free;
    GFont := NewFont;
    GFont.Color:= Value.Color;
@@ -67,11 +70,13 @@ end;
 
 procedure THIPrint_Text.SetPen;
 begin
+   FrameColor := Value;
    txPen := CreatePen(_prop_FrameStyle, _prop_FrameSize, Color2RGB(value));
 end;
 
 procedure THIPrint_Text.SetBrush;
 begin
+   BackColor := Value;
    if _prop_BackStyle = 0 then
      txBrush := GetStockObject(NULL_BRUSH)
    else txBrush := CreateSolidBrush(Color2RGB(value));
