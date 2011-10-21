@@ -1,15 +1,15 @@
-unit hiPC_TextParametrs;
+unit hiPC_TextParameters;
 
 interface
 
 uses Kol, Share, Debug, hiDocumentTemplate, hiPrint_Text, PrintController;
 
 type
-  THIPC_TextParametrs = class(TPrintController)
+  THIPC_TextParameters = class(TPrintController)
    private
    public
-    _prop_Parametrs: string;
-    _data_Parametrs:THI_Event;
+    _prop_Parameters: string;
+    _data_Parameters:THI_Event;
     _event_onSet:THI_Event;
     _event_onEnum:THI_Event;
     _event_onEndEnum:THI_Event;         
@@ -31,7 +31,7 @@ uses hiStr_Enum;
    <Vertical>,<Horizontal>|
    <Left>,<Top>,<Right>,<Bottom> *)
 
-procedure THIPC_TextParametrs._work_doSet;
+procedure THIPC_TextParameters._work_doSet;
 var
   ss: string;
   se: string;
@@ -46,7 +46,7 @@ var
   ParamList: PStrList;  
 begin
   ParamList := NewStrList;
-  ParamList.text := ReadString(_Data, _data_Parametrs, _prop_Parametrs);
+  ParamList.text := ReadString(_Data, _data_Parameters, _prop_Parameters);
 TRY
   if ParamList.Count = 0 then exit;
   for i := 0 to ParamList.Count - 1 do
@@ -229,17 +229,17 @@ FINALLY
 END;  
 end;
 
-procedure THIPC_TextParametrs._work_doEnum;
+procedure THIPC_TextParameters._work_doEnum;
 var
   i: integer;
-  Parametrs: string;
+  Parameters: string;
 begin
   for i := 0 to _prop_Document.getItemCount() - 1 do
   begin
     FItem := _prop_Document.getItemIdx(i);
     if (TDocItem(FItem)._NameType = _TEXT) and (TDocItem(FItem)._prop_Name <> '') then 
     begin
-      Parametrs := TDocItem(FItem)._prop_Name +
+      Parameters := TDocItem(FItem)._prop_Name +
       '|' + THIPrint_Text(FItem)._prop_Text +
       '|' + int2str(TDocItem(FItem)._prop_X) +
       ',' + int2str(TDocItem(FItem)._prop_Y) +
@@ -261,7 +261,7 @@ begin
       ',' + int2str(THIPrint_Text(FItem)._prop_Top) +
       ',' + int2str(THIPrint_Text(FItem)._prop_Right) +
       ',' + int2str(THIPrint_Text(FItem)._prop_Bottom);                                           
-      _hi_onEvent(_event_onEnum, Parametrs);
+      _hi_onEvent(_event_onEnum, Parameters);
     end;  
   end;
   _hi_onEvent(_event_onEndEnum);
