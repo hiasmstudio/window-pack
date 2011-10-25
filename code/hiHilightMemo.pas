@@ -183,6 +183,7 @@ end;
     procedure _var_Array                   (var _Data: TData; Index: Word); 
     procedure _var_Text                    (var _Data: TData; Index: Word); override; 
     procedure _var_Count                   (var _Data: TData; Index: Word); 
+    procedure _var_EndIdx                  (var _Data: TData; Index: Word);
     procedure _var_TopLine                 (var _Data: TData; Index: Word); 
     procedure _var_LeftCol                 (var _Data: TData; Index: Word); 
     procedure _var_LinesPerPage            (var _Data: TData; Index: Word); 
@@ -1289,6 +1290,14 @@ procedure THIHiLightMemo._work_doAutoFocus;          begin _prop_AutoFocus := Re
 procedure THIHiLightMemo._work_doAllowDelim;         begin _prop_AllowDelim := ReadBool(_Data);        end; 
 procedure THIHiLightMemo._work_doAutoSubSpace;       begin _prop_AutoSubSpace := ReadBool(_Data);      end;
 procedure THIHiLightMemo._work_doHilightCaseSens;    begin _prop_HilightCaseSens := ReadBool(_Data);   end;
+
+procedure THIHiLightMemo._var_EndIdx;
+begin
+  if Count = 0 then
+    dtNull(_Data)
+  else
+    dtInteger(_Data, Count - 1);
+end;
 
 procedure THIHiLightMemo._work_doColorUnderLine; 
 begin

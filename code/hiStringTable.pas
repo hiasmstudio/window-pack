@@ -76,6 +76,7 @@ type
     procedure _var_Strings(var _Data:TData; Index:word);
     procedure _var_Index(var _Data:TData; Index:word);
     procedure _var_StringTable(var _Data:TData; Index:word);
+    procedure _var_EndIdx(var _Data:TData; Index:word);    
   end;
 
 implementation
@@ -356,6 +357,14 @@ end;
 procedure THIStringTable._var_Count;
 begin
    dtInteger(_Data,control.Count);
+end;
+
+procedure THIStringTable._var_EndIdx;
+begin
+  if Control.Count = 0 then
+    dtNull(_Data)
+  else
+    dtInteger(_Data, Control.Count - 1);
 end;
 
 function THIStringTable.Get(index:integer):string;

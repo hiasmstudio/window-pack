@@ -59,6 +59,7 @@ type
 
     procedure _var_Text(var _Data:TData; Index:word); virtual;
     procedure _var_Count(var _Data:TData; Index:word);
+    procedure _var_EndIdx(var _Data:TData; Index:word);
     procedure _var_Array(var _Data:TData; Index:word);
     procedure _var_String(var _Data:TData; Index:word);
     procedure _var_SelText(var _Data:TData; Index:word);
@@ -268,6 +269,14 @@ end;
 procedure THIWinList._var_Count;
 begin
    dtInteger(_Data,Control.Count);
+end;
+
+procedure THIWinList._var_EndIdx;
+begin
+  if Control.Count = 0 then
+    dtNull(_Data)
+  else
+    dtInteger(_Data, Control.Count - 1);
 end;
 
 procedure THIWinList._Set;
