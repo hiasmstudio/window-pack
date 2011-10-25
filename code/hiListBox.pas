@@ -43,7 +43,9 @@ type
       procedure Init; override;
       destructor Destroy; override;
       procedure _work_doSelectAll(var _Data:TData; Index:word);
-      procedure _work_doEnsureVisible(var _Data:TData; Index:word);
+      procedure _work_doEnsureVisible(var _Data:TData; Index:word);      
+      procedure _work_doUp(var _Data:TData; Index:word);
+      procedure _work_doDown(var _Data:TData; Index:word);
       procedure _var_Index(var _Data:TData; Index:word);
       procedure _var_SelectArray(var _Data:TData; Index:word);
       procedure _var_ValueArray(var _Data:TData; Index:word);
@@ -144,6 +146,44 @@ begin
     Control.ItemSelected[-1] := a
   else for i := 0 to Control.Count-1 do
     Control.ItemSelected[i] := a;
+end;
+
+procedure THIListBox._work_doUp;
+var
+  str2: string;
+  data2: integer;
+begin
+  if Control.CurIndex <= 0 then exit;
+
+  str2 := Control.Items[Control.CurIndex - 1];
+  data2 := Control.ItemData[Control.CurIndex - 1];
+  
+  Control.Items[Control.CurIndex - 1] := Control.Items[Control.CurIndex];
+  Control.ItemData[Control.CurIndex - 1] := Control.ItemData[Control.CurIndex];    
+
+  Control.Items[Control.CurIndex] := str2;
+  Control.ItemData[Control.CurIndex] := data2;
+
+  Control.CurIndex := Control.CurIndex - 1;
+end;
+
+procedure THIListBox._work_doDown;
+var
+  str2: string;
+  data2: integer;
+begin
+  if (Control.CurIndex = (Control.Count - 1)) or (Control.CurIndex < 0) then exit;
+
+  str2 := Control.Items[Control.CurIndex + 1];
+  data2 := Control.ItemData[Control.CurIndex + 1];
+  
+  Control.Items[Control.CurIndex + 1] := Control.Items[Control.CurIndex];
+  Control.ItemData[Control.CurIndex + 1] := Control.ItemData[Control.CurIndex];    
+
+  Control.Items[Control.CurIndex] := str2;
+  Control.ItemData[Control.CurIndex] := data2;
+
+  Control.CurIndex := Control.CurIndex + 1;
 end;
 
 procedure THIListBox.Select;
