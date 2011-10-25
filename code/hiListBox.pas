@@ -46,6 +46,7 @@ type
       procedure _work_doEnsureVisible(var _Data:TData; Index:word);      
       procedure _work_doUp(var _Data:TData; Index:word);
       procedure _work_doDown(var _Data:TData; Index:word);
+      procedure _work_doInsert(var _Data:TData; Index:word);      
       procedure _var_Index(var _Data:TData; Index:word);
       procedure _var_SelectArray(var _Data:TData; Index:word);
       procedure _var_ValueArray(var _Data:TData; Index:word);
@@ -265,6 +266,23 @@ end;
 function  THIListBox.Add(const Text:string):integer;
 begin
    Result := Control.Perform(LB_ADDSTRING, 0, cardinal(PChar(Text)));
+end;
+
+procedure THIListBox._work_doInsert;
+var
+  ind: integer;
+  dt: TData;
+begin
+   ind := ToIntIndex(_Data);
+   if (ind < -1) or (ind > Control.Count) then
+     exit
+   else if ind = -1 then
+     ind := Control.Count;
+  Control.Insert(ind, ReadString(_Data, _data_Str));
+  if _prop_SelectAdd then Control.CurIndex := ind;
+  dt := ReadData(_Data,_data_Value);
+  Control.ItemData[ind] := ToInteger(dt);  
+  _hi_CreateEvent(_Data,@_event_onChange);
 end;
 
 end.
