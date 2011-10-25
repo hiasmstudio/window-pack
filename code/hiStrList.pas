@@ -57,6 +57,7 @@ type
     procedure _work_doGetString(var _Data:TData; Index:word);
     procedure _var_Text(var _Data:TData; Index:word);
     procedure _var_Count(var _Data:TData; Index:word);
+    procedure _var_EndIdx(var _Data:TData; Index:word);    
     procedure _var_Array(var _Data:TData; Index:word);
     procedure _var_Index(var _Data:TData; Index:word);
     procedure _var_String(var _Data:TData; Index:word);
@@ -237,6 +238,14 @@ end;
 procedure THIStrList._var_Count;
 begin
   dtInteger(_Data,FList.Count);
+end;
+
+procedure THIStrList._var_EndIdx;
+begin
+  if FList.Count = 0 then
+    dtNull(_Data)
+  else
+    dtInteger(_Data, FList.Count - 1);
 end;
 
 procedure THIStrList._var_Index;
