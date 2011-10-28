@@ -93,7 +93,7 @@ begin
       begin
         Move(x^[i], tnr, SizeOf(tnr));
         case tnr.dwDisplayType of
-          RESOURCEDISPLAYTYPE_SERVER,RESOURCETYPE_PRINT:
+          RESOURCEDISPLAYTYPE_SERVER or RESOURCETYPE_PRINT:
             begin
               _hi_onEvent(_event_onComputer, tnr.lpRemoteName);
             end;
