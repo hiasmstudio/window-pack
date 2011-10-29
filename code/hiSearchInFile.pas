@@ -13,6 +13,7 @@ type
   public
     _prop_Text,
     _prop_FileName: string;
+    _prop_Sensitive:boolean;
     _data_Text,
     _data_FileName,
     _event_onSearch, _event_onNotSearch: THI_Event;
@@ -39,6 +40,7 @@ var
   F: TextFile;
   fn, t: string;
   BufIn : Array[0..65535] of Char;
+  k: integer;
 begin
   num := -1;
   str := '';
@@ -56,19 +58,22 @@ begin
       inc(num); // счетчик строк
       _hi_onEvent(_event_onSearch, str);
     end
-  else    
+  else
+  begin    
+    if not _prop_Sensitive then t := AnsiLowerCase(t);
     while not eof(F) and not FStop do
     begin
       Readln(F, str);
       inc(num); // счетчик строк
-      case Pos(t, str) of
-        0: begin
-             _hi_onEvent(_event_onNotSearch, str);
-             Continue;
-           end 
+      if _prop_Sensitive then
+        k := Pos(t, str)
+      else
+        k := Pos(t, AnsiLowerCase(str));
+      if k = 0 then
+        _hi_onEvent(_event_onNotSearch, str)
       else
         _hi_onEvent(_event_onSearch, str);
-      end;
+    end;
   end;
   CloseFile(F);
   _hi_onEvent(_event_onEnd);  
