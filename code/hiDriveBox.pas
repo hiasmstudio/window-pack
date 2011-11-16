@@ -507,7 +507,10 @@ end;
 destructor THIDriveBox.Destroy;
 begin
   Timer1.Enabled := False;
-  Timer1.free;
+//  Timer1.free;
+{$ifndef F_P}
+   Timer1.Free;
+{$endif}
   IL.free;
   VolList.free;
   DriveBoxs.Remove(Control);
