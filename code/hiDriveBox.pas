@@ -9,9 +9,6 @@ const
   dspc = #32 + #32;
   IMAGE_SIZE  = 16;
 
-var
-  DriveBoxs: PList; // Список с указателями на BAPDriveBox'ы
-
 type
   THIDriveBox = class(THIWin)
     private
@@ -64,6 +61,9 @@ type
   end;
 
 implementation
+
+var
+  DriveBoxs: PList; // Список с указателями на BAPDriveBox'ы
 
 const
   WM_DEVICECHANGE = $0219;
@@ -514,12 +514,8 @@ begin
   IL.free;
   VolList.free;
   DriveBoxs.Remove(Control);
-  if DriveBoxs.Count = 0 then
-  begin
-    free_and_nil(DriveBoxs);
-    if (@WndProcDriveChange <> nil) and (Applet <> nil) then
-      Applet.DetachProc(WndProcDriveChange);
-  end;
+  if (@WndProcDriveChange <> nil) and (Applet <> nil) then
+    Applet.DetachProc(WndProcDriveChange);
   inherited;
 end;
 
@@ -534,8 +530,6 @@ begin
   else
     Control.OnDrawItem := OldOnDrawItem;
 
-  if DriveBoxs = nil then
-    DriveBoxs := NewList;
   DriveBoxs.Add(Control);
 
   IL := NewImageList(nil);
@@ -597,4 +591,10 @@ begin
   Result := _prop_ItemHeight;
 end;
 
+initialization
+  DriveBoxs := NewList;
+
+finalization
+  DriveBoxs.free;
+  
 end.
