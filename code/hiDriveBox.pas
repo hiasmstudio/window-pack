@@ -152,11 +152,11 @@ begin
   // В WinNT 5.x - нет метки диска -> Название устройства + #32 + (x:)
 
   i := Pos('(', Result);
-  l := Pos(')', Result);  
+  l := Pos(':)', Result);  
 
   if (i <> 0) and (l <> 0) and (l > i) then
   begin 
-    Delete(Result, i, l - i + 1); 
+    Delete(Result, i, l - i + 2); 
     l := Length(Result);
     while (l > 0) and (Result[l] < ' ') do Dec(l);
     SetLength(Result, l);
