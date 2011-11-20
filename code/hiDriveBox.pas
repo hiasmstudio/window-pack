@@ -20,7 +20,7 @@ type
       FSelTextColor: TColor;
       FSelBackColor: TColor;
       fBoxDrawManager:IBoxDrawManager;    
-
+ 
       procedure ChangeLabel(Sender: PObj);
       function GetDriveName: string;
       procedure SetDriveName(const Value: string);
@@ -140,34 +140,46 @@ end;
 function GetLabelDisk(Drv: Char; VolReal: Boolean): string;
 var  WinVer: Byte;
      DriveType, NotUsed: DWORD;
-     Buf: array [0..MAX_PATH - 1] of Char;
-
-function DisplayName(Drv: Char): string;
-var  SFI: TSHFileInfo;
+     l, i: integer;
+     SFI: TSHFileInfo;
+     
+function DisplayName(sDrv: Char): string;
 begin
   FillChar(SFI, SizeOf(SFI), 0);
-  SHGetFileInfo(PChar(Drv + ':\'), 0, SFI, SizeOf(SFI), SHGFI_DISPLAYNAME);
+  SHGetFileInfo(PChar(sDrv + ':\'), 0, SFI, SizeOf(SFI), SHGFI_DISPLAYNAME);
   Result := SFI.szDisplayName;
   // В Win9x, Me - нет метки диска -> #32 + (x:)
   // В WinNT 5.x - нет метки диска -> Название устройства + #32 + (x:)
-  if Pos('(', Result) <> 0 then
-    SetLength(Result, Pos('(', Result) - 2);
+
+  i := Pos('(', Result);
+  l := Pos(')', Result);  
+
+  if (i <> 0) and (l <> 0) and (l > i) then
+  begin 
+    Delete(Result, i, l - i + 1); 
+    l := Length(Result);
+    while (l > 0) and (Result[l] < ' ') do Dec(l);
+    SetLength(Result, l);
+    l := 1;
+    while (l <= Length(Result)) and (Result[l] < ' ') do Inc(l);
+    Result := string(PChar(integer(@Result[1]) + l - 1));
+    Replace(Result, '  ', ' - '); 
+  end;  
 end;
 
 begin
   Result := '';
-  WinVer := LOBYTE(LOWORD(GetVersion));
+  WinVer := LoByte(LoWord(GetVersion));
   DriveType := GetDriveType(PChar(Drv + ':\'));
 
   if (WinVer <= 4) and (DriveType <> DRIVE_REMOVABLE) or VolReal then
   begin // Win9x, Me, NT <= 4.0
-    Buf[0] := #0;
-    GetVolumeInformation(PChar(Drv + ':\'), Buf, DWORD(SizeOf(Buf)), nil,
-      NotUsed, NotUsed, nil, 0);
-    Result := Buf;
-
-    if VolReal and (WinVer >= 5) and (Result <> '') and
-       (DriveType <> DRIVE_REMOVABLE) then // Win2k, XP и выше
+    L := MAX_PATH;
+    SetLength(Result, L);
+    GetVolumeInformation(PChar(Drv + ':\'), @Result[1], L, nil, NotUsed, NotUsed, nil, 0);
+    while (L > 0) and (Result[L] = ' ') do Dec(L);
+    SetLength(Result, L);
+    if VolReal and (WinVer >= 5) and (Result <> '') and (DriveType <> DRIVE_REMOVABLE) then // Win2k, XP и выше
       Result := DisplayName(Drv)
     else if (Result = '') and (not VolReal) then
       Result := '<none>';
@@ -382,20 +394,20 @@ begin
       Err := True;
   until not Retry;
 
+  if Err then
   begin
-    if Err then
-      if DriveReady(Control.Items[DrvIdx][3]) then
-        Control.CurIndex := DrvIdx
-      else
-      begin // При возврате возникла ошибка
-        Drv := #99 + ':';
-        Control.CurIndex := Control.SearchFor(Drv[1], 0, True);
-      end
+    if DriveReady(Control.Items[DrvIdx][3]) then
+      Control.CurIndex := DrvIdx
     else
+    begin // При возврате возникла ошибка
+      Drv := #99 + ':';
       Control.CurIndex := Control.SearchFor(Drv[1], 0, True);
-    VolList.Items[Control.CurIndex] := dspc + GetLabelDisk(Drv[1], False);
-    if FixedDrive(Drv[1]) then Timer1.Enabled := True;
-  end;
+    end;
+  end  
+  else
+    Control.CurIndex := Control.SearchFor(Drv[1], 0, True);
+  VolList.Items[Control.CurIndex] := dspc + GetLabelDisk(Drv[1], False);
+  if FixedDrive(Drv[1]) then Timer1.Enabled := true;
 end;
 
 function THIDriveBox.GetDriveName;
