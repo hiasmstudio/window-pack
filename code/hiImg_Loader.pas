@@ -66,12 +66,14 @@ type
       _data_FileName       : THI_Event;
 
       _event_onLoad        : THI_Event;
+      _event_onSize        : THI_Event;      
       _event_onBitmap      : THI_Event;
 
       constructor Create;
       destructor Destroy; override; 
       procedure _work_doLoad(var _Data:TData; idx:word);
-
+      procedure _work_doSize(var _Data:TData; idx:word);
+      
       procedure _var_ImageWidth(var _Data:TData; idx:word);
       procedure _var_ImageHeight(var _Data:TData; idx:word);
       procedure _var_Busy(var _Data:TData; idx:word);
@@ -134,6 +136,24 @@ begin
   end;
 end;
 
+procedure MyCallbackSz(pCtx: pointer; pUserData: pointer); stdcall;
+var
+  stat: Dword;
+  ARect: TRect;
+  dtx, dty: TData;
+begin
+  with THiImg_Loader(pUserData) do
+  begin
+    FImgCtx.GetStateInfo(stat, sz, 0);
+    FImgCtx.Disconnect;
+    sg := true;
+    dtInteger(dtx, sz.cx);
+    dtInteger(dty, sz.cy);
+    dtx.ldata := @dty;    
+    _hi_onEvent(_event_onSize, dtx);
+  end;
+end;
+
 procedure THiImg_Loader._work_doLoad;
 var
   s,s1: string;
@@ -150,6 +170,25 @@ begin
   FImgCtx.Load(PWChar(StringToWideString(s, 3)), 0);
   FImgCtx.SetCallback(@MyCallback, pointer(Self));
   FImgCtx.SelectChanges(IMGCHG_COMPLETE,0,1);
+  sg := false;
+end;
+
+procedure THiImg_Loader._work_doSize;
+var
+  s,s1: string;
+  len: dword;
+  fn: pchar;
+begin
+  if not sg then exit;
+  s1 := ReadString(_Data,_data_FileName,_prop_FileName);
+  len := GetFullPathName(@s1[1],0,nil,fn);
+  setlength(s, len - 1);
+  GetFullPathName(@s1[1], len, @s[1], fn);
+  if not FileExists(s) then exit;
+  FImgCtx := CreateComObject(CLSID_IImgCtx) as IImgCtx;
+  FImgCtx.Load(PWChar(StringToWideString(s, 3)), 0);
+  FImgCtx.SetCallback(@MyCallbackSz, pointer(Self));
+  FImgCtx.SelectChanges(IMGCHG_SIZE,0,1);
   sg := false;
 end;
 
