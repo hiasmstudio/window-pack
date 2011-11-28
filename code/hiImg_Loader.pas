@@ -139,7 +139,6 @@ end;
 procedure MyCallbackSz(pCtx: pointer; pUserData: pointer); stdcall;
 var
   stat: Dword;
-  ARect: TRect;
   dtx, dty: TData;
 begin
   with THiImg_Loader(pUserData) do
