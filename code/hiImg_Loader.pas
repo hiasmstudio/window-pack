@@ -60,6 +60,7 @@ type
       sz                   : TSize;
       sg                   : boolean;
       FBitmap              : PBitmap;
+      hOK                  : THandle;
    public
       _prop_FileName       : string;
 
@@ -95,6 +96,7 @@ end;
 destructor THiImg_Loader.Destroy;
 begin
   FBitmap.free;
+  if hOK <> 0 then CloseHandle(hOK);
   inherited;
 end;
 
@@ -122,7 +124,11 @@ begin
     begin
     end
     else if (Stat and IMGLOAD_NOTLOADED = 1) OR (Stat and IMGLOAD_STOPPED = 1) OR (Stat and IMGLOAD_ERROR = 1) then 
-      sg := true    
+    begin
+      if not FBitmap.Empty then FBitmap.Clear;
+      sg := true;
+      SetEvent(hOK);
+    end
     else
     begin
       ARect := MakeRect(0, 0, sz.cx, sz.cy);
@@ -131,7 +137,7 @@ begin
       FBitmap.height := sz.cy; 
       FImgCtx.Draw(FBitmap.Canvas.handle, ARect);
       sg := true;
-      _hi_onEvent(_event_onLoad, FBitmap);
+      SetEvent(hOK);      
     end;  
   end;
 end;
@@ -139,17 +145,13 @@ end;
 procedure MyCallbackSz(pCtx: pointer; pUserData: pointer); stdcall;
 var
   stat: Dword;
-  dtx, dty: TData;
 begin
   with THiImg_Loader(pUserData) do
   begin
     FImgCtx.GetStateInfo(stat, sz, 0);
     FImgCtx.Disconnect;
     sg := true;
-    dtInteger(dtx, sz.cx);
-    dtInteger(dty, sz.cy);
-    dtx.ldata := @dty;    
-    _hi_onEvent(_event_onSize, dtx);
+    SetEvent(hOK);    
   end;
 end;
 
@@ -158,8 +160,11 @@ var
   s,s1: string;
   len: dword;
   fn: pchar;
+  m: TMsg;  
 begin
   if not sg then exit;
+  hOK := CreateEvent(nil, false, false, nil);
+TRY    
   s1 := ReadString(_Data,_data_FileName,_prop_FileName);
   len := GetFullPathName(@s1[1],0,nil,fn);
   setlength(s, len - 1);
@@ -170,6 +175,17 @@ begin
   FImgCtx.SetCallback(@MyCallback, pointer(Self));
   FImgCtx.SelectChanges(IMGCHG_COMPLETE,0,1);
   sg := false;
+  while WaitForSingleObject(hOK,0) <> WAIT_OBJECT_0 do
+  begin
+    if not GetMessage(m, 0, 0, 0) then continue;
+    TranslateMessage(m);
+    DispatchMessage(m);
+  end;
+  _hi_onEvent(_event_onLoad, FBitmap);
+FINALLY
+  CloseHandle(hOK);
+  hOK := 0;
+END;    
 end;
 
 procedure THiImg_Loader._work_doSize;
@@ -177,8 +193,12 @@ var
   s,s1: string;
   len: dword;
   fn: pchar;
+  dtx, dty: TData;
+  m: TMsg;    
 begin
   if not sg then exit;
+  hOK := CreateEvent(nil, false, false, nil);
+TRY  
   s1 := ReadString(_Data,_data_FileName,_prop_FileName);
   len := GetFullPathName(@s1[1],0,nil,fn);
   setlength(s, len - 1);
@@ -189,6 +209,20 @@ begin
   FImgCtx.SetCallback(@MyCallbackSz, pointer(Self));
   FImgCtx.SelectChanges(IMGCHG_SIZE,0,1);
   sg := false;
+  while WaitForSingleObject(hOK,0) <> WAIT_OBJECT_0 do
+  begin
+    if not GetMessage(m, 0, 0, 0) then continue;
+    TranslateMessage(m);
+    DispatchMessage(m);
+  end;
+  dtInteger(dtx, sz.cx);
+  dtInteger(dty, sz.cy);
+  dtx.ldata := @dty;    
+  _hi_onEvent(_event_onSize, dtx);
+FINALLY
+  CloseHandle(hOK);
+  hOK := 0;  
+END;      
 end;
 
 procedure THiImg_Loader._var_ImageWidth;
