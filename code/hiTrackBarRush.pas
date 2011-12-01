@@ -398,11 +398,19 @@ begin
           end;
           SetPosition(FPosition);
           if _prop_AbsPosition then
-            _hi_onEvent(_event_onStop, abs(integer(Round(FAbsPos * (FMax - FMin) / FAbsLength) + FMin)))
+            _hi_onEvent(_event_onStart, abs(integer(Round(FAbsPos * (FMax - FMin) / FAbsLength) + FMin)))
           else
-            _hi_onEvent(_event_onStop, integer(Round(FAbsPos * (FMax - FMin) / FAbsLength) + FMin))
+            _hi_onEvent(_event_onStart, integer(Round(FAbsPos * (FMax - FMin) / FAbsLength) + FMin))
         end;
       //Пользователь нажал на л.кнопку мыши
+      WM_KEYUP:
+        if Sender.Focused then
+        begin
+          if _prop_AbsPosition then
+            _hi_onEvent(_event_onStop, abs(integer(trunc(FAbsPos * (FMax - FMin) / FAbsLength) + FMin)))
+          else
+            _hi_onEvent(_event_onStop, integer(trunc(FAbsPos * (FMax - FMin) / FAbsLength) + FMin))
+        end;    
       WM_LBUTTONDOWN:
         begin
           if not Sender.Enabled then exit;
@@ -442,9 +450,9 @@ begin
             SetPosition(FPosition);
           end;
           if _prop_AbsPosition then
-            _hi_onEvent(_event_onStop, abs(integer(Round(FAbsPos * (FMax - FMin) / FAbsLength) + FMin)))
+            _hi_onEvent(_event_onStart, abs(integer(Round(FAbsPos * (FMax - FMin) / FAbsLength) + FMin)))
           else
-            _hi_onEvent(_event_onStop, integer(Round(FAbsPos * (FMax - FMin) / FAbsLength) + FMin))
+            _hi_onEvent(_event_onStart, integer(Round(FAbsPos * (FMax - FMin) / FAbsLength) + FMin))
         end;
       WM_LBUTTONUP:
         begin
@@ -624,8 +632,8 @@ begin
     if FThumbWidth = 0 then FThumbWidth := FThumbLength div 2; 
     FAbsLength:= ClientHeight - FThumbWidth;
 
-    FPosition:= Round(FAbsPos * (FMax - FMin) / FAbsLength) + FMin;
-    FAbsPos:= Round((FAbsLength / (FMax - FMin)) * (FPosition - FMin));
+//    FPosition:= Round(FAbsPos * (FMax - FMin) / FAbsLength) + FMin;
+    FAbsPos:= Round((FAbsLength / (FMax - FMin)) * (Round(FAbsPos * (FMax - FMin) / FAbsLength) + FMin - FMin));
 
     FThumbRect.Left:= (ClientWidth - FThumbLength) div 2;
     FThumbRect.Right:= FThumbRect.Left + FThumbLength;
