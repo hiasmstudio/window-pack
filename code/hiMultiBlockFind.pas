@@ -140,7 +140,7 @@ var
   p, r: integer;
   sb: string;
 begin
-  s := Value;
+  s := Trim(Value);
   p := PosABM('{**c', s);
   r := PosABM('c**}', s, p + 4);
   while (p > 0) and (r > 0) do
