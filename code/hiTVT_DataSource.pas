@@ -43,6 +43,7 @@ begin
   _prop_TreeView.Control.Clear;
 
   sql := _prop_Columns;
+  sql := Trim(sql);
   replace(sql, #13#10, ',');
   sql := 'SELECT ' + sql + ' FROM ' + _prop_TableName; 
   err := _prop_DataSource.procquery(sql, nil, callBackData);
