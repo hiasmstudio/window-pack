@@ -41,7 +41,8 @@ type
     procedure _work_doSave(var _Data:TData; Index:word);
     procedure _work_doAddBitmap(var _Data:TData; Index:word);
     procedure _work_doUndo(var _Data:TData; Index:word);
-    procedure _work_doRedo(var _Data:TData; Index:word);        
+    procedure _work_doRedo(var _Data:TData; Index:word);      
+    procedure _work_doFormatSel(var _Data:TData; Index:word);  
     procedure _var_RichEdit(var _Data:TData; Index:word);
     procedure _var_Text(var _Data:TData; Index:word); override;
     procedure Init; override;
@@ -52,6 +53,23 @@ implementation
 {$ifndef F_P}
 uses KOLOleRE;
 {$endif}
+
+procedure THIRichEdit._work_doFormatSel;
+var
+  p: byte;
+
+begin
+  if (Control.SelLength <> 0) then {no valid selection -> quit}
+  begin
+    Control.RE_CharFmtArea := raSelection; {apply attribute(s) only to selection}
+    Control.RE_FmtFontColor := ReadInteger(_Data,_data_Color);
+
+    p := ReadInteger(_Data,_data_Style);
+    Control.RE_FmtBold := p and 1 > 0;
+    Control.RE_FmtItalic := p and 2 > 0;
+    Control.RE_FmtUnderline := p and 4 > 0;
+  end;
+end;
 
 procedure THIRichEdit._onMouseUp;
 var s,p:string;
