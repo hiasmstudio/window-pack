@@ -11,7 +11,7 @@ type
     FOld:string;
     FPos:integer;
     ChangeEvent:boolean;
-
+    IdxPassSym: Integer;
     function NoText(func:Tfunc; var dt:TData):boolean;
     procedure _OnChange(Obj:PObj);
     procedure _OnKeyDown( Sender: PControl; var Key: Longint; Shift: DWORD ); override;
@@ -45,6 +45,7 @@ type
     procedure _work_doSelectAll(var _Data:TData; Index:word);
     procedure _work_doReadOnly(var _Data:TData; Index:word);
     procedure _work_doMaxLenField(var _Data:TData; Index:word);
+    procedure _work_doPassword(var _Data:TData; Index:word);    
     procedure _var_Text(var _Data:TData; Index:word);
 
     //********************* FASTED ***************************
@@ -63,9 +64,9 @@ end;
 procedure THIEdit.Init;
 var fl:TEditOptions;
 begin
-   if _prop_Password then
-      fl := [eoPassword]
-   else fl := [];
+//   if _prop_Password then
+   fl := [eoPassword];
+//   else fl := [];
 
    if _prop_ReadOnly then
     Include(Fl,eoReadonly);
@@ -78,6 +79,9 @@ begin
    Control.OnChange := _OnChange;
    Control.Text := _prop_Text;
    FOld := _prop_Text; 
+   IdxPassSym := Control.Perform(EM_GETPASSWORDCHAR, 0, 0);
+   if not _prop_Password then
+     Control.Perform(EM_SETPASSWORDCHAR, 0, 0);   
 end;
 
 procedure THIEdit._work_doText;
@@ -287,6 +291,18 @@ end;
 procedure THIEdit._work_doMaxLenField;
 begin
   Control.Perform(em_LimitText, ToInteger(_Data), 0);
+end;
+
+procedure THIEdit._work_doPassword;
+var
+  epass: Boolean;
+begin
+  epass := ReadBool(_Data);
+  if epass then
+    Control.Perform(EM_SETPASSWORDCHAR, IdxPassSym, 0)
+  else    
+    Control.Perform(EM_SETPASSWORDCHAR, 0, 0);
+  Control.Invalidate;     
 end;
 
 end.
