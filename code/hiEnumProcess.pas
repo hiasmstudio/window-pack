@@ -576,7 +576,7 @@ begin
   CloseHandle(pHandle);
 end;
 
-procedure ThiEnumProcess.Execute;
+function ThiEnumProcess.Execute;
 begin
   repeat
     FProcessUsage := GetProcessUsage(ScanID);
