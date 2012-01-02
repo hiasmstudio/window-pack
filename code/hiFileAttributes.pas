@@ -4,6 +4,10 @@ interface
 
 uses Windows,Shellapi,Kol,Share,Debug;
 
+type 
+  TVerInfo = packed record 
+    vMajor, vMinor, vRelease, vBuild: word;
+  end;  
 type
   THIFileAttributes = class(TDebug)
    private
@@ -11,6 +15,7 @@ type
     fSmallIcon:boolean;
     fOpenIcon:boolean;    
     sys:WIN32_FILE_ATTRIBUTE_DATA;
+    sVersion: TVerInfo;
     procedure GetTimeV(var _Data:TData; t:PFileTime; RealDate:boolean);
    public
     _prop_FileName:string;
@@ -26,13 +31,15 @@ type
     _event_onRead:THI_Event;
     _event_onError:THI_Event;
     _event_onGetFileIcon:THI_Event;
+    _event_onGetFileVersion:THI_Event;    
 
     property _prop_SmallIcon:boolean write fSmallIcon; 
     property _prop_OpenIcon:boolean write fOpenIcon;
     procedure _work_doRead(var _Data:TData; Index:word);
     procedure _work_doSet(var _Data:TData; Index:word);
     procedure _work_doSetDate(var _Data:TData; Index:word);
-    procedure _work_doGetFileIcon(var _Data:TData; Index:word);    
+    procedure _work_doGetFileIcon(var _Data:TData; Index:word);
+    procedure _work_doGetFileVersion(var _Data:TData; Index:word);        
     procedure _work_doSmallIcon(var _Data:TData; Index:word);
     procedure _work_doOpenIcon(var _Data:TData; Index:word);
     procedure _var_DateCreate(var _Data:TData; Index:word);
@@ -42,6 +49,10 @@ type
     procedure _var_DateAccessReal(var _Data:TData; Index:word);
     procedure _var_DateModifyReal(var _Data:TData; Index:word);
     procedure _var_FileSize(var _Data:TData; Index:word);
+    procedure _var_Major(var _Data:TData; Index:word);
+    procedure _var_Minor(var _Data:TData; Index:word);
+    procedure _var_Release(var _Data:TData; Index:word);
+    procedure _var_Build(var _Data:TData; Index:word);
   end;
 
 implementation
@@ -71,8 +82,8 @@ var i,j:integer;
 begin
   fn := readString(_Data,_data_FileName,_prop_FileName);
   if not GetFileAttributesEx(PChar(fn),GetFileExInfoStandard,@sys) then begin
-    fn := '';
     _hi_CreateEvent(_Data,@_event_onError,integer(getlasterror));
+    fn := '';
     exit;
   end;
   i := 0;
@@ -92,7 +103,7 @@ begin
    Attr := Attr or ((i shr j) and 1)*At[j];
 
   if not SetFileAttributes(PChar(fn),Attr )then
-    _hi_CreateEvent(_Data,@_event_onError);
+    _hi_CreateEvent(_Data,@_event_onError,integer(getlasterror));
 end;
 
 procedure THIFileAttributes._work_doSetDate;
@@ -239,6 +250,71 @@ end;
 procedure THIFileAttributes._var_DateModifyReal;
 begin
   GetTimeV(_Data,@sys.ftLastWriteTime,true);
+end;
+
+procedure THIFileAttributes._work_doGetFileVersion;
+var
+  len, dummy: cardinal; 
+  verdata: pointer; 
+  verstruct: pointer;
+  f: string;
+  dt: TData;
+  mt: PMT;
+  Err: integer;
+begin
+  sVersion.vMajor := 0;
+  sVersion.vMinor := 0;
+  sVersion.vRelease := 0;
+  sVersion.vRelease := 0;
+
+  f := ReadString(_Data,_data_FileName,_prop_FileName);
+  len := GetFileVersionInfoSize(PChar(f), dummy);
+  Err := integer(getlasterror);  
+
+  if Err <> NO_ERROR then
+  begin
+    _hi_CreateEvent(_Data,@_event_onError, Err);
+    exit;  
+  end;
+
+  GetMem(verdata, len); 
+  try 
+    GetFileVersionInfo(PChar(f), 0, len, verdata); 
+    VerQueryValue(verdata, '\', verstruct, dummy); 
+    sVersion.vMajor := HiWord(TVSFixedFileInfo(verstruct^).dwFileVersionMS); 
+    sVersion.vMinor := LoWord(TVSFixedFileInfo(verstruct^).dwFileVersionMS); 
+    sVersion.vRelease := HiWord(TVSFixedFileInfo(verstruct^).dwFileVersionLS); 
+    sVersion.vBuild := LoWord(TVSFixedFileInfo(verstruct^).dwFileVersionLS);
+  finally 
+    FreeMem(verdata); 
+  end;          
+  dtInteger(dt, sVersion.vMajor);
+  mt := mt_make(dt);
+  mt_int(mt, sVersion.vMinor);
+  mt_int(mt, sVersion.vRelease);
+  mt_int(mt, sVersion.vBuild);
+  _hi_onEvent(_event_onGetFileVersion, dt);
+  mt_free(mt); 
+end;  
+
+procedure THIFileAttributes._var_Major;
+begin
+  dtInteger(_Data, sVersion.vMajor);
+end;
+
+procedure THIFileAttributes._var_Minor;
+begin
+  dtInteger(_Data, sVersion.vMinor);
+end;
+
+procedure THIFileAttributes._var_Release;
+begin
+  dtInteger(_Data, sVersion.vRelease);
+end;
+
+procedure THIFileAttributes._var_Build;
+begin
+  dtInteger(_Data, sVersion.vBuild);
 end;
 
 end.
