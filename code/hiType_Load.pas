@@ -41,8 +41,9 @@ var i:integer;
 begin
   for i := 0 to FObjs.Count-1 do
     PObj(FObjs.Items[i]).Free;
-  FType.Free;
   FObjs.Free;
+  if FType <> nil then
+    FType.Free;
   inherited Destroy;
 end;
 
