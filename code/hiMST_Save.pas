@@ -84,24 +84,31 @@ begin
     Fs.Write(s[1], length(s));
   end;
 
-  if sControl.Count = 0 then exit;
-  for i := 0 to sControl.Count - 1 do
+  if sControl.Count <> 0 then
   begin
-    dt := _prop_MSTControl.getstring(i);
-    d := @dt;
-    if _prop_SaveCheckBoxes then
-      s := int2str(sControl.LVItemStateImgIdx[i] - 1) + _Dlm
-    else   
-      s := '';
-    while (d <> nil) and not _IsNULL(d^) do
+    for i := 0 to sControl.Count - 1 do
     begin
-      s := s + ToString(d^) + _Dlm;
-      d := d.ldata;
-    end;  
-    deleteTail(s, 1);
-    s := s + LFCR;
-    Fs.Write(s[1], length(s));
-  end;
+      dt := _prop_MSTControl.getstring(i);
+      d := @dt;
+      if _prop_SaveCheckBoxes then
+        s := int2str(sControl.LVItemStateImgIdx[i] - 1) + _Dlm
+      else   
+        s := '';
+      while (d <> nil) and not _IsNULL(d^) do
+      begin
+        s := s + ToString(d^) + _Dlm;
+        d := d.ldata;
+      end;  
+      deleteTail(s, 1);
+      s := s + LFCR;
+      Fs.Write(s[1], length(s));
+    end;
+  end
+  else
+  begin
+    s := '';
+    Fs.Write(s[1], length(s));    
+  end;  
 end; 
 
 procedure THIMST_Save._work_doSave;
