@@ -26,6 +26,7 @@ type
     _prop_Step: integer;
     
     _event_onNext: THI_Event;
+    _event_onSet: THI_Event;    
     _event_onThroughMax: THI_Event;
     _event_onThroughMin: THI_Event;        
 
@@ -101,11 +102,13 @@ begin
     FCounter := _prop_Min
   else
     FCounter := _prop_Max;
+  _hi_CreateEvent(_Data, @_event_onSet, FCounter);    
 end;
 
 procedure THICounterEx._work_doValue;
 begin
   FCounter := ToInteger(_Data);
+  _hi_CreateEvent(_Data, @_event_onSet, FCounter);
 end;
 
 procedure THICounterEx._work_doMax;
