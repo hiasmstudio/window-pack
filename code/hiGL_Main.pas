@@ -5,9 +5,10 @@ interface
 {$I share.inc}
 
 uses Windows,Kol,Share,Debug,OpenGL;
-function wglGetProcAddress(ProcName:PChar): Pointer; stdcall;
+
 var
-   // VSync
+   // WGL_EXT_swap_control
+   WGL_EXT_swap_control  : Boolean;
    wglSwapIntervalEXT    : function (interval: GLint): Boolean; stdcall;
    wglGetSwapIntervalEXT : function: GLint; stdcall;
 
@@ -34,67 +35,68 @@ const
 type
    THIGL_Main = class(TDebug)
    private
-    hrc: HGLRC;
-    DC:HDC;
-    fps_time: Integer;
-    fps_cur : Integer;
-    g_FPS   : Integer;
-    AASamples : Boolean;
-    MaxAnisotropy:Integer;
-    MaxAASamples:Integer;
+   hrc: HGLRC;
+   DC:HDC;
+   fps_time: Integer;
+   fps_cur : Integer;
+   g_FPS   : Integer;
+   AASamples : Boolean;
+   MaxAnisotropy:Integer;
+   MaxAASamples:Integer;
 
    public
-    _data_Handle:THI_Event;
-    _data_AALevel:THI_Event;
+   _data_Handle:THI_Event;
+   _data_AALevel:THI_Event;
 
-    _prop_EnvironmentMode:cardinal;
+   _prop_EnvironmentMode:cardinal;
 
-    _prop_Color:TColor;
-    _prop_TwoSide:boolean;
-    _prop_ClearStencil:integer;
-    _prop_StencilMask:integer;
-    _prop_StencilBits:integer;
+   _prop_Color:TColor;
+   _prop_TwoSide:boolean;
+   _prop_ClearStencil:integer;
+   _prop_StencilMask:integer;
+   _prop_StencilBits:integer;
 
-    _prop_Fovy:real;
-    _prop_zNear:real;
-    _prop_zFar:real;
-    _prop_AASamples:boolean;
-    _prop_AALevel:integer;
+   _prop_Fovy:real;
+   _prop_zNear:real;
+   _prop_zFar:real;
+   _prop_AASamples:boolean;
+   _prop_AALevel:integer;
 
-    _event_onInit:THI_Event;
-    _event_onViewPort:THI_Event;
-    _event_onVSync:THI_Event;
-    _event_onExtensions:THI_Event;
+   _event_onInit:THI_Event;
+   _event_onViewPort:THI_Event;
+   _event_onVSync:THI_Event;
+   _event_onExtensions:THI_Event;
 
-    destructor Destroy; override;
-    procedure _work_doInit(var _Data:TData; Index:word);
-    procedure _work_doViewPort(var _Data:TData; Index:word);
-    procedure _work_doFlip(var _Data:TData; Index:word);
-    procedure _work_doColor(var _Data:TData; Index:word);
-    procedure _work_doVSync(var _Data:TData; Index:word);
-    procedure _var_GLHandle(var _Data:TData; Index:word);
-    procedure _var_Fps(var _Data:TData; Index:word);
-    procedure _var_MaxTextureSize(var _Data:TData; Index:word);
-    procedure _var_MaxAnisotropy(var _Data:TData; Index:word);
-    procedure _var_MaxAASamples(var _Data:TData; Index:word);
-    procedure _var_Vendor(var _Data:TData; Index:word);
-    procedure _var_Renderer(var _Data:TData; Index:word);
-    procedure _var_VersionGL(var _Data:TData; Index:word);
+   destructor Destroy; override;
+   procedure _work_doInit(var _Data:TData; Index:word);
+   procedure _work_doViewPort(var _Data:TData; Index:word);
+   procedure _work_doFlip(var _Data:TData; Index:word);
+   procedure _work_doColor(var _Data:TData; Index:word);
+   procedure _work_doVSync(var _Data:TData; Index:word);
+   procedure _var_GLHandle(var _Data:TData; Index:word);
+   procedure _var_Fps(var _Data:TData; Index:word);
+   procedure _var_MaxTextureSize(var _Data:TData; Index:word);
+   procedure _var_MaxAnisotropy(var _Data:TData; Index:word);
+   procedure _var_MaxAASamples(var _Data:TData; Index:word);
+   procedure _var_Vendor(var _Data:TData; Index:word);
+   procedure _var_Renderer(var _Data:TData; Index:word);
+   procedure _var_VersionGL(var _Data:TData; Index:word);
   end;
 
-  procedure glColor(C:TColor);
-  procedure glColora(C:TColor; Alpha:real);
+procedure glColor(C:TColor);
+procedure glColora(C:TColor; Alpha:real);
+function ReadAndCheck_WGL_EXT_swap_control: boolean;
 
 implementation
 
-  {$ifdef F_P}
-  function wglCreateContext(DC: HDC): HGLRC; stdcall; external opengl32 name 'wglCreateContext';
-  function wglMakeCurrent(DC: HDC; p2: HGLRC): BOOL; stdcall; external opengl32 name 'wglMakeCurrent';
-  function SwapBuffers(DC: HDC): BOOL; stdcall; external gdi32 name 'SwapBuffers';
-  function wglDeleteContext(p1: HGLRC): BOOL; stdcall; external opengl32 name 'wglDeleteContext';
-  function wglGetCurrentDC():DWORD; stdcall; external opengl32 name 'wglGetCurrentDC';//поправлена ошибка, для работы FPC
-  {$endif}
-  function wglGetProcAddress; external 'opengl32';
+{$ifdef F_P}
+function wglCreateContext(DC: HDC): HGLRC; stdcall; external opengl32 name 'wglCreateContext';
+function wglMakeCurrent(DC: HDC; p2: HGLRC): BOOL; stdcall; external opengl32 name 'wglMakeCurrent';
+function SwapBuffers(DC: HDC): BOOL; stdcall; external gdi32 name 'SwapBuffers';
+function wglDeleteContext(p1: HGLRC): BOOL; stdcall; external opengl32 name 'wglDeleteContext';
+function wglGetCurrentDC():DWORD; stdcall; external opengl32 name 'wglGetCurrentDC';//поправлена ошибка, для работы FPC
+function wglGetProcAddress(ProcName:PChar): Pointer; stdcall; external opengl32 name 'wglGetProcAddress';
+{$endif}
 
 function WGLisExtensionSupported(const extension: string): boolean;//Функция проверки необходимых расширений
 var
@@ -119,6 +121,23 @@ begin
       exit;
    end;
    Result := true;
+end;
+
+function ReadAndCheck_WGL_EXT_swap_control;
+var
+   Extensions: String;
+begin
+   Extensions := glGetString(GL_EXTENSIONS);
+   WGL_EXT_swap_control := Pos('WGL_EXT_swap_control', Extensions) <> 0;
+   if WGL_EXT_swap_control then
+   begin
+      wglSwapIntervalEXT := wglGetProcAddress('wglSwapIntervalEXT');
+      wglGetSwapIntervalEXT := wglGetProcAddress('wglGetSwapIntervalEXT');
+   end
+   else
+   begin
+      Result := false;
+   end;
 end;
 
 procedure glColor(C:TColor);
@@ -183,8 +202,8 @@ begin
       begin
          nSize      := SizeOf(TPIXELFORMATDESCRIPTOR);
          dwFlags    := PFD_DRAW_TO_WINDOW or
-                       PFD_SUPPORT_OPENGL or
-                       PFD_DOUBLEBUFFER;
+         PFD_SUPPORT_OPENGL or
+         PFD_DOUBLEBUFFER;
       end;
       //---Получаем формат пикселя временного окна, создаём контест вывода ---//
       nPixelFormat := ChoosePixelFormat(DC, @pfd); // Выбираем правильный формат пикселя
@@ -195,7 +214,7 @@ begin
       if  WGLisExtensionSupported('WGL_ARB_multisample') then //Проверяем наличие необходимых расширений ARB
       begin
          wglChoosePixelFormatARB := wglGetProcAddress('wglChoosePixelFormatARB');
-          
+
          iAttributes[0]  := WGL_DRAW_TO_WINDOW_ARB;
          iAttributes[1]  := 1;
          iAttributes[2]  := WGL_SUPPORT_OPENGL_ARB;
@@ -214,7 +233,7 @@ begin
          iAttributes[15] := 1;
          iAttributes[16] := 0;
          iAttributes[17] := 0;
-         
+
          // устанавливаем MaxAASamples
          MaxAASamples := 0;
          valid := wglChoosePixelFormatARB(DC,@iattributes,@fattributes,1,@pixelFormat,@numFormats);
@@ -253,15 +272,15 @@ begin
       wglDeleteContext(hrc);//Удаляем контекст временного окна
    end;
    // После получения значения wglpixelFormat, создаём контекст для основного окна и делаем его текущим
-   DC := GetDC(ReadInteger(_Data,_data_handle,0)); 
+   DC := GetDC(ReadInteger(_Data,_data_handle,0));
    FillChar(pfd, SizeOf(pfd), 0);
    with pfd do
    begin
       nSize        := SizeOf(TPIXELFORMATDESCRIPTOR);
       nVersion     := 1;
       dwFlags      := PFD_DRAW_TO_WINDOW or
-                      PFD_SUPPORT_OPENGL or
-                      PFD_DOUBLEBUFFER;
+      PFD_SUPPORT_OPENGL or
+      PFD_DOUBLEBUFFER;
       iPixelType   := PFD_TYPE_RGBA;
       cColorBits   := 32;
       cDepthBits   := 24;
@@ -354,15 +373,20 @@ end;
 procedure THIGL_Main._work_doVSync;
 var
    vs : Integer;
+   SwapIntervalEXT : Integer;
 begin
-   wglSwapIntervalEXT    := wglGetProcAddress('wglSwapIntervalEXT');
-   wglGetSwapIntervalEXT := wglGetProcAddress('wglGetSwapIntervalEXT');
-   vs := ToInteger(_Data);
-   if vs = 0 then
-   wglSwapIntervalEXT(0);
-   if vs = 1 then
-   wglSwapIntervalEXT(1);
-   _hi_onEvent(_event_onVSync,wglGetSwapIntervalEXT);
+   if ReadAndCheck_WGL_EXT_swap_control then
+   begin
+      vs := ToInteger(_Data);
+      if vs = 0 then
+      wglSwapIntervalEXT(0);
+      if vs = 1 then
+      wglSwapIntervalEXT(1);
+      SwapIntervalEXT := wglGetSwapIntervalEXT;
+   end
+   else
+   exit;
+   _hi_onEvent(_event_onVSync,SwapIntervalEXT);
 end;
 
 procedure THIGL_Main._var_GLHandle(var _Data:TData; Index:word);
