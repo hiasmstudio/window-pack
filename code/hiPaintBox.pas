@@ -108,6 +108,7 @@ end;
 
 procedure THIPaintBox.Clear;
 begin
+  if Bmp.Empty then exit;
   Bmp.BkColor := _prop_Color;
   Bmp.Canvas.Brush.BrushStyle := bsSolid;
   Bmp.Canvas.FillRect(Bmp.BoundsRect);
