@@ -38,6 +38,7 @@ var   dt: TData;
       hOldFont: HFONT;
       OldFontSize: Integer;
       s:string;
+      a:integer;
 begin
    dt := _Data;
 TRY
@@ -45,11 +46,13 @@ TRY
    ReadXY(_Data);
    ImgNewSizeDC;
    s := ReadString(_Data,_data_Text,_prop_Text);
+   a := ReadInteger(_Data, _data_Orientation, _prop_Orientation);
+   if a < 0 then a := 360 - (abs(a) mod 360); 
    SetBkMode(pDC, TRANSPARENT);
    SetTextColor(pDC, Color2RGB(GFont.Color));   
    OldFontSize := GFont.FontHeight;
    GFont.FontHeight := Round(GFont.FontHeight * fScale.y);
-   GFont.FontOrientation := ReadInteger(_Data, _data_Orientation, _prop_Orientation) * 10;
+   GFont.FontOrientation := a * 10;
    hOldFont := SelectObject(pDC, GFont.Handle);
    TextOut(pDC, x1, y1, PChar(s), length(s));
    SelectObject(pDC, hOldFont);
