@@ -13,6 +13,9 @@ type
     procedure SetNewFont(Value:TFontRec);
    public
 
+    _prop_Orientation: Integer;
+    _data_Orientation: THI_Event;
+    
     property _prop_Font:TFontRec write SetNewFont;
 
     destructor Destroy; override;
@@ -46,6 +49,7 @@ TRY
    SetTextColor(pDC, Color2RGB(GFont.Color));   
    OldFontSize := GFont.FontHeight;
    GFont.FontHeight := Round(GFont.FontHeight * fScale.y);
+   GFont.FontOrientation := ReadInteger(_Data, _data_Orientation, _prop_Orientation) * 10;
    hOldFont := SelectObject(pDC, GFont.Handle);
    TextOut(pDC, x1, y1, PChar(s), length(s));
    SelectObject(pDC, hOldFont);
