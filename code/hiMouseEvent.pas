@@ -15,6 +15,7 @@ type
     _data_X:THI_Event;
     _data_Button:THI_Event;
     _data_WheelDelta:THI_Event;
+    _event_onVisible:THI_Event;
 
     procedure _work_doClick(var _Data:TData; Index:word);
     procedure _work_doMouseDown(var _Data:TData; Index:word);
@@ -88,7 +89,7 @@ end;
 
 procedure THIMouseEvent._work_doVisible;
 begin
-  ShowCursor(ReadBool(_Data));
+  _hi_onEvent(_event_onVisible, ShowCursor(ReadBool(_Data)));
 end;
 
 procedure THIMouseEvent._var_MouseX;
