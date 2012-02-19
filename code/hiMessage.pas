@@ -10,9 +10,9 @@ type
    public
     _prop_Message:string;
     _prop_Caption:string;
-    _prop_Type:byte;
-    _prop_Icon:byte;
-    _prop_DefButton:byte;
+    _prop_Type:integer;
+    _prop_Icon:integer;
+    _prop_DefButton:integer;
 
     _data_Message:THI_Event;
     _data_Caption:THI_Event;
@@ -30,6 +30,9 @@ type
     _event_onNO:THI_Event;
 
     procedure _work_doMessage(var _Data:TData; Index:word);
+    procedure _work_doType(var _Data:TData; Index:word);
+    procedure _work_doIcon(var _Data:TData; Index:word);
+    procedure _work_doDefButton(var _Data:TData; Index:word);            
   end;
 
 implementation
@@ -76,6 +79,21 @@ begin
     IDYES:    _hi_CreateEvent(_Data,@_event_onYES);
     IDNO:     _hi_CreateEvent(_Data,@_event_onNO);
    end
+end;
+
+procedure THIMessage._work_doType;
+begin
+  _prop_Type := ToInteger(_Data);
+end;
+
+procedure THIMessage._work_doIcon;
+begin
+  _prop_Icon := ToInteger(_Data);
+end;
+
+procedure THIMessage._work_doDefButton; 
+begin
+  _prop_DefButton := ToInteger(_Data);
 end;
 
 end.
