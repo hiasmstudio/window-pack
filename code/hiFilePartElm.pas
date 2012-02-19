@@ -25,11 +25,23 @@ type
 
 implementation
 
+uses hiStr_Enum;
+
 procedure THIFilePartElm._work_doPart0;  // path name
 begin
    FPart := ReadString(_Data, _data_FileName, '');
    if FPart = '' then exit;
-   FPart := ExtractFilePath(FPart);
+   if Pos('/', FPart) <> 0 then
+   begin
+     rparse(FPart, '/');
+     FPart := FPart + '/';
+   end  
+   else       
+   begin
+     rparse(FPart, '\');
+     FPart := FPart + '\';
+   end;
+//     FPart := ExtractFilePath(FPart);
    _hi_CreateEvent(_Data, @_event_onPart, FPart);
 end;
 
@@ -37,7 +49,11 @@ procedure THIFilePartElm._work_doPart1;  // file name
 begin
    FPart := ReadString(_Data, _data_FileName, '');
    if FPart = '' then exit;
-   FPart := ExtractFileName(FPart);
+//   FPart := ExtractFileName(FPart);
+   if Pos('/', FPart) <> 0 then
+     FPart := rparse(FPart, '/')
+   else
+     FPart := rparse(FPart, '\');
    _hi_CreateEvent(_Data, @_event_onPart, FPart);
 end;
 
@@ -45,7 +61,12 @@ procedure THIFilePartElm._work_doPart2;  // file name WOExt
 begin
    FPart := ReadString(_Data, _data_FileName, '');
    if FPart = '' then exit;
-   FPart := ExtractFileNameWOext(FPart);
+//   FPart := ExtractFileNameWOext(FPart);
+   if Pos('/', FPart) <> 0 then
+     FPart := rparse(FPart, '/')
+   else
+     FPart := rparse(FPart, '\');
+   rparse(FPart, '.');
    _hi_CreateEvent(_Data, @_event_onPart, FPart);
 end;
 
@@ -54,7 +75,8 @@ procedure THIFilePartElm._work_doPart3;  // ext name
 begin
    FPart := ReadString(_Data, _data_FileName, '');
    if FPart = '' then exit;
-   FPart := ExtractFileExt(FPart);
+//   FPart := ExtractFileExt(FPart);
+   FPart := '.' + rparse(FPart, '.');
    _hi_CreateEvent(_Data, @_event_onPart, FPart);
 end;
 
@@ -62,8 +84,9 @@ procedure THIFilePartElm._work_doPart4;  // ext name WOPoint
 begin
    FPart := ReadString(_Data, _data_FileName, '');
    if FPart = '' then exit;
-   FPart := ExtractFileExt(FPart);
-   delete(FPart, 1, 1);
+//   FPart := ExtractFileExt(FPart);
+//   delete(FPart, 1, 1);
+   FPart := rparse(FPart, '.');
    _hi_CreateEvent(_Data, @_event_onPart, FPart);
 end;
 
