@@ -23,6 +23,7 @@ type
       procedure SetInitBoxDrawManager(value:IBoxDrawManager);
       procedure SetIconsManager(value:IIconsManager);        
       procedure _OnChange(Obj:PObj);
+      procedure _OnDropDown( Sender: PObj );  // === DropDownCount
     protected
       function  Add(const Text:string):integer; override;
       procedure SetStringsBefore(len:cardinal); override;
@@ -31,7 +32,8 @@ type
       _prop_Text:string;
       _prop_Strings:string;
       _prop_Sort:boolean;
-      _prop_ItemHeight:integer;
+      _prop_ItemHeight:integer;     
+      _prop_DropDownCount:integer; // === DropDownCount
     
       _event_onChangeText: THI_Event;
       procedure Init; override;
@@ -39,6 +41,7 @@ type
       procedure _work_doEditText(var _Data:TData; Index:word);
       procedure _var_EditText(var _Data:TData; Index:word);
       procedure _var_Index(var _Data:TData; Index:word);
+      procedure _work_doDropDownCount(var _Data:TData; Index:word);
 
       property _prop_IndexManager:IIndexManager read fIdxMgr write SetIndexManager;
       property _prop_BoxDrawManager:IBoxDrawManager read fBoxDrawManager write SetInitBoxDrawManager;
@@ -55,7 +58,12 @@ begin
   if _prop_Sort then include(Flags,coSort);
   if ManFlags and $8 > 0 then include(Flags,coOwnerDrawFixed);
   Control := NewCombobox(FParent,Flags);
-  Control.OnMeasureItem:= _OnMeasureItem;    
+  Control.OnMeasureItem:= _OnMeasureItem; 
+  
+  // === DropDownCount === //
+   Control.OnDropDown := _OnDropDown;
+  // === ============ === //
+     
   inherited;
   SetStrings(_prop_Strings);
   with Control{$ifndef F_P}^{$endif} do
@@ -67,6 +75,30 @@ begin
     if (Count > 0) and (_prop_ReadOnly = 0) then CurIndex := 0; 
   end;
 end;
+
+// === DropDownCount === //
+procedure THIComboBox._OnDropDown( Sender: PObj );
+var
+  CB: PControl;
+  IC: Integer;
+  H: Integer;
+begin
+  CB := PControl( Sender );
+  IC := CB.Count;
+  if IC > _prop_DropDownCount then IC := _prop_DropDownCount;
+  if IC < 1 then IC := 1;
+  
+  H := CB.Perform(CB_GETITEMHEIGHT, 0, 0);
+
+  MoveWindow(CB.Handle, CB.Left, CB.Top, CB.Width, H * (IC + 2) + 2, false);
+end;
+
+procedure THIComboBox._work_doDropDownCount;
+begin
+  _prop_DropDownCount := ToInteger(_Data); 
+end;
+
+// === ============ === //
 
 procedure THIComboBox._OnChange;
 begin
