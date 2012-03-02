@@ -9,6 +9,7 @@ uses Kol,Share,LWinList,Windows,Messages,hiBoxDrawManager,hiIconsManager,hiIndex
 const
   MODE_COMBOBOX = 0;
   MODE_LISTBOX  = 1;
+  CB_SETMINVISIBLE = 5889;
 
 type
   THIComboBox = class(THILWinList)
@@ -50,6 +51,39 @@ type
 
 implementation
 
+var
+  ComCtlVersion: integer = 0;
+
+function GetComCtlVersion: Integer;
+var
+  FileName: string;
+  InfoSize, Wnd: DWORD;
+  VerBuf: Pointer;
+  FI: PVSFixedFileInfo;
+  VerSize: DWORD;
+begin
+  if ComCtlVersion = 0 then
+  begin
+    // GetFileVersionInfo modifies the filename parameter data while parsing.
+    // Copy the string const into a local variable to create a writeable copy.
+    FileName := 'comctl32.dll';
+    InfoSize := GetFileVersionInfoSize(PChar(FileName), Wnd);
+    if InfoSize <> 0 then
+    begin
+      GetMem(VerBuf, InfoSize);
+      try
+        if GetFileVersionInfo(PChar(FileName), Wnd, InfoSize, VerBuf) then
+          if VerQueryValue(VerBuf, '\', Pointer(FI), VerSize) then
+            ComCtlVersion := FI.dwFileVersionMS;
+      finally
+        FreeMem(VerBuf);
+      end;
+    end;
+  end;
+  Result := ComCtlVersion;
+end;
+
+
 procedure THIComboBox.Init;
 var  Flags:TComboOptions;
 begin
@@ -88,9 +122,12 @@ begin
   if IC > _prop_DropDownCount then IC := _prop_DropDownCount;
   if IC < 1 then IC := 1;
   
-  H := CB.Perform(CB_GETITEMHEIGHT, 0, 0);
-
-  MoveWindow(CB.Handle, CB.Left, CB.Top, CB.Width, H * (IC + 2) + 2, false);
+  if (GetComCtlVersion and $FFFF0000) shr 16 >= 6 then
+    CB.Perform(CB_SETMINVISIBLE, IC, 0);   
+  begin
+    H := CB.Perform(CB_GETITEMHEIGHT, 0, 0);
+    MoveWindow(CB.Handle, CB.Left, CB.Top, CB.Width, H * (IC + 2) + 2, false);
+  end
 end;
 
 procedure THIComboBox._work_doDropDownCount;
