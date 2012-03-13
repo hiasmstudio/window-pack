@@ -2,7 +2,7 @@ unit hiBrowse;
 
 interface
 
-uses Kol,Share,ShellAPI,Windows,Debug{,ShlObj};
+uses Kol,Share,ShellAPI,Windows,Debug, Messages{,ShlObj};
 
 type
   THIBrowse = class(TDebug)
@@ -10,6 +10,7 @@ type
      function GetFlag(const Flag:integer):integer;
      function BrowseDialog(const Title: string; const Flag: integer): string;
    public
+    _prop_DefaultFolder:string;
     _prop_BrowseObj:byte;
     _prop_Title:string;
     _prop_Edit:integer;
@@ -19,11 +20,14 @@ type
     _event_onCancel:THI_Event;
 
     procedure _work_doBrowse(var _Data:TData; Index:word);
+    procedure _work_doDefaultFolder(var _Data:TData; Index:word);
   end;
 
 implementation
 
 const
+  BFFM_INITIALIZED       = 1;
+  BFFM_SETSELECTION      = WM_USER + 102;
   //BIF_RETURNONLYFSDIRS   = $0001;
   BIF_STATUSTEXT         = $0004;
   BIF_EDITBOX            = $0010;
@@ -74,6 +78,14 @@ function SHBrowseForFolder(var lpbi: TBrowseInfo): PItemIDList;  stdcall;  exter
 function SHGetPathFromIDList(pidl: PItemIDList; pszPath: PChar): BOOL; stdcall; external shell32 name 'SHGetPathFromIDListA';
 function SHGetSpecialFolderLocation(hwnd:HWND; csidl:integer; var ppidl:PItemIDList):cardinal; stdcall; external shell32 name 'SHGetSpecialFolderLocation';
 
+function BrowseProc(Wnd: HWND; uMsg: UINT; lParam, lpData: LPARAM): Integer stdcall;
+begin
+  case uMsg of
+    BFFM_INITIALIZED: SendMessage(wnd, BFFM_SETSELECTION, 1, LongInt(PChar(lpData)));
+  end;
+  Result := 0;
+end;
+
 function THIBrowse.BrowseDialog(const Title: string; const Flag: integer): string;
 var
   lpItemID: PItemIDList;
@@ -98,6 +110,11 @@ begin
      begin
       SHGetSpecialFolderLocation(ReadHandle,CSIDL_PRINTERS, lpItemID);
       pidlRoot := lpItemID;
+     end
+    else if Flag and (($0001 or 28) or $4000) > 0 then
+     begin
+       lpfn := BrowseProc;
+       lParam := LongInt(PChar(_prop_DefaultFolder));
      end;
    end;
   lpItemID := SHBrowseForFolder(BrowseInfo);
@@ -119,6 +136,11 @@ begin
    if s <> '' then
     _hi_CreateEvent(_Data,@_event_onBrowse,s)
    else _hi_CreateEvent(_Data,@_event_onCancel);
+end;
+
+procedure THIBrowse._work_doDefaultFolder;
+begin
+  _prop_DefaultFolder := ToString(_Data);
 end;
 
 end.
