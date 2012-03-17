@@ -124,39 +124,39 @@ begin
     if _prop_Alpha then
       case BtnState of
         0,3:     //normal;
-          if BNormal <> nil then
+          if (BNormal <> nil) and not BNormal.Empty then
             _AlphaBlend(Handle, 0, 0, BNormal.width, BNormal.Height, BNormal.Canvas.Handle, 0, 0, BNormal.width, BNormal.Height, blend);
         1:
-          if BDown <> nil then
+          if (BDown <> nil) and not BDown.Empty then
             _AlphaBlend(Handle, 0, 0, BDown.width, BDown.Height, BDown.Canvas.Handle, 0, 0, BDown.width, BDown.Height, blend)
-          else if BNormal <> nil then 
+          else if (BNormal <> nil) and not BNormal.Empty then 
             _AlphaBlend(Handle, 0, 0, BNormal.width, BNormal.Height, BNormal.Canvas.Handle, 0, 0, BNormal.width, BNormal.Height, blend);
         2:
-          if BEnabled <> nil then
+          if (BEnabled <> nil) and not BEnabled.Empty then
             _AlphaBlend(Handle, 0, 0, BEnabled.width, BEnabled.Height, BEnabled.Canvas.Handle, 0, 0, BEnabled.width, BEnabled.Height, blend);
         4:
-          if BSelect <> nil then
+          if (BSelect <> nil) and not BSelect.Empty then
             _AlphaBlend(Handle, 0, 0, BSelect.width, BSelect.Height, BSelect.Canvas.Handle, 0, 0, BSelect.width, BSelect.Height, blend)
-          else if BNormal <> nil then 
+          else if (BNormal <> nil) and not BNormal.Empty then 
             _AlphaBlend(Handle, 0, 0, BNormal.width, BNormal.Height, BNormal.Canvas.Handle, 0, 0, BNormal.width, BNormal.Height, blend);
       end
     else
       case BtnState of
         0,3:     //normal;
-          if BNormal <> nil then
+          if (BNormal <> nil) and not BNormal.Empty then
             BNormal.Draw(Handle,0,0);
         1:
-          if BDown <> nil then
+          if (BDown <> nil) and not BDown.Empty then
             BDown.Draw(Handle,0,0)
-          else if BNormal <> nil then 
+          else if (BNormal <> nil)and not BNormal.Empty then 
             BNormal.Draw(Handle,0,0);
         2:
-          if BEnabled <> nil then
+          if (BEnabled <> nil) and not BEnabled.Empty then
             BEnabled.Draw(Handle,0,0);
         4:
-          if BSelect <> nil then
+          if (BSelect <> nil) and not BSelect.Empty then
             BSelect.Draw(Handle,0,0)
-          else if BNormal <> nil then 
+          else if (BNormal <> nil) and not BNormal.Empty then 
             BNormal.Draw(Handle,0,0);
       end;
 end;
