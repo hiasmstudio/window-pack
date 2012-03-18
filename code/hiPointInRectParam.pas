@@ -94,10 +94,7 @@ FINALLY
     _hi_CreateEvent(_Data, @_event_onTrue, idx);
   end  
   else
-  begin
-    idx := -1; 
-    _hi_CreateEvent(_Data,@_event_onFalse, idx);
-  end;  
+    _hi_CreateEvent(_Data,@_event_onFalse);
 END;    
 end;
 
