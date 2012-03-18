@@ -7,6 +7,7 @@ uses Kol, Share, Debug;
 type
   ThiPointInRectParam = class(TDebug)
    private
+     idx: integer;
    public
     _prop_Parameters: string;
     _prop_Delimiter: string;    
@@ -19,7 +20,8 @@ type
     _event_onFalse:THI_Event;    
 
     procedure _work_doCheck(var _Data:TData; Index:word);
-    procedure _var_TextParam(var _Data:TData; Index:word);    
+    procedure _var_TextParam(var _Data:TData; Index:word);
+    procedure _var_IdxParam(var _Data:TData; Index:word);        
   end;
 
 implementation
@@ -87,9 +89,15 @@ TRY
 FINALLY
   ParamList.free;
   if Result then
-    _hi_CreateEvent(_Data, @_event_onTrue, i)
+  begin
+    idx := i; 
+    _hi_CreateEvent(_Data, @_event_onTrue, idx);
+  end  
   else
-   _hi_CreateEvent(_Data,@_event_onFalse);
+  begin
+    idx := -1; 
+    _hi_CreateEvent(_Data,@_event_onFalse, idx);
+  end;  
 END;    
 end;
 
@@ -99,6 +107,11 @@ var
 begin
   dtNull(dt);
   dtString(_Data, ReadString(dt, _data_Parameters, _prop_Parameters));
+end;
+
+procedure ThiPointInRectParam._var_IdxParam;
+begin
+  dtInteger(_Data, idx);
 end;
 
 end.
