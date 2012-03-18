@@ -890,7 +890,7 @@ INSERT INTO "elements" VALUES(860,'DropTextManager','Приём сброшенного текста',1
 INSERT INTO "elements" VALUES(861,'DragText','Перетаскивание текста',3,16,NULL);
 INSERT INTO "elements" VALUES(862,'PC_TextParameters','Контроллер текстовых параметров',4,73,NULL);
 INSERT INTO "elements" VALUES(863,'ConvertorEx','Конвертер одной величины в другую',15,37,NULL);
-INSERT INTO "elements" VALUES(864,'PointInRectParam','Проверка нахождения точки по списку прямоугольных координат',15,26,NULL);
+INSERT INTO "elements" VALUES(864,'PointInRectParam','Проверка попадания точки в прямоугольные координаты по списку',15,26,NULL);
 CREATE TABLE files_link(file_id int,el_id int);
 INSERT INTO "files_link" VALUES(21,404);
 INSERT INTO "files_link" VALUES(21,405);
