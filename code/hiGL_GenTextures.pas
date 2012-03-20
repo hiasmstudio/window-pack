@@ -4,11 +4,7 @@ interface
 
 uses kol,Share,Debug,OpenGL;
 
-procedure glBindTexture(Target, Texture: integer); stdcall;
-procedure glDeleteTextures(n: GLsizei; textures: PGLuint); stdcall;
-
 const
-    GL_TEXTURE_MAX_ANISOTROPY_EXT = $84FE;
     glLinear = GL_LINEAR;
     glNearest = GL_NEAREST;
     glNearestMipMapNearest = GL_NEAREST_MIPMAP_NEAREST;
@@ -38,8 +34,6 @@ type
 
 implementation
 
-procedure glBindTexture; external 'opengl32';
-procedure glDeleteTextures; external 'opengl32';
 
 procedure THIGL_GenTextures._work_doGenTextures;
 

@@ -2,29 +2,13 @@ unit hiGL_Main;
 
 interface
 
-{$I share.inc}
-
 uses Windows,Kol,Share,Debug,OpenGL;
 
 var
    // WGL_EXT_swap_control
    WGL_EXT_swap_control  : Boolean;
-   wglSwapIntervalEXT    : function (interval: GLint): Boolean; stdcall;
-   wglGetSwapIntervalEXT : function: GLint; stdcall;
-
+   
 const
-   WGL_SAMPLE_BUFFERS_ARB = $2041;
-   WGL_SAMPLES_ARB	= $2042;
-   WGL_DRAW_TO_WINDOW_ARB = $2001;
-   WGL_SUPPORT_OPENGL_ARB = $2010;
-   WGL_ACCELERATION_ARB = $2003;
-   WGL_FULL_ACCELERATION_ARB = $2027;
-   WGL_COLOR_BITS_ARB = $2014;
-   WGL_ALPHA_BITS_ARB = $201B;
-   WGL_DEPTH_BITS_ARB = $2022;
-   WGL_STENCIL_BITS_ARB = $2023;
-   WGL_DOUBLE_BUFFER_ARB = $2011;
-   GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT = $84FF;
    VSyncOn  = 1;
    VSyncOff = 0;
 
@@ -89,14 +73,6 @@ function ReadAndCheck_WGL_EXT_swap_control: boolean;
 
 implementation
 
-{$ifdef F_P}
-function wglCreateContext(DC: HDC): HGLRC; stdcall; external opengl32 name 'wglCreateContext';
-function wglMakeCurrent(DC: HDC; p2: HGLRC): BOOL; stdcall; external opengl32 name 'wglMakeCurrent';
-function SwapBuffers(DC: HDC): BOOL; stdcall; external gdi32 name 'SwapBuffers';
-function wglDeleteContext(p1: HGLRC): BOOL; stdcall; external opengl32 name 'wglDeleteContext';
-function wglGetCurrentDC():DWORD; stdcall; external opengl32 name 'wglGetCurrentDC';//поправлена ошибка, для работы FPC
-function wglGetProcAddress(ProcName:PChar): Pointer; stdcall; external opengl32 name 'wglGetProcAddress';
-{$endif}
 
 function WGLisExtensionSupported(const extension: string): boolean;//Функция проверки необходимых расширений
 var

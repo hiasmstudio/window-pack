@@ -2,8 +2,6 @@ unit hiGl_Text;
 
 interface
 
-{$I share.inc}
-
 uses Windows,Kol,Share,Debug,OpenGL;
 
 const
@@ -35,10 +33,10 @@ implementation
 
 uses hiGL_Main;
 
-{$ifdef F_P}
+
 function wglUseFontOutlines(p1: HDC; p2, p3, p4: DWORD;
   p5, p6: Single; p7: Integer; p8: PGlyphMetricsFloat): BOOL; stdcall; external opengl32 name 'wglUseFontOutlinesA';
-{$endif}
+
 
 procedure THIGl_Text._work_doInit;
 var hFontNew, hOldFont : HFONT;

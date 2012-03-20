@@ -385,7 +385,7 @@ procedure CrossProd(v1, v2 : array of GLfloat; var prod : array of GLfloat);
 procedure Normalize(var v : array of GLfloat);
 
 var
-  quadObj : GLUquadricObj;  dodec : array[0..19, 0..2] of GLfloat;
+  quadObj : PGLUquadricObj;  dodec : array[0..19, 0..2] of GLfloat;
 
 implementation
 

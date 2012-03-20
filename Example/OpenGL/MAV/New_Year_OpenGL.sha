@@ -1,43 +1,44 @@
 *Заставка для рабочего стола на тему Новый год#13#10___________#13#10Автор: MAV#13#10e-mail: andreimaw@yandex.ru
 Make(delphi)
-Add(GL_GluTools,4593655,525,70)
+ver(4.04 build 185)
+Add(GL_GluTools,4593655,476,91)
 {
  Texture=0
  link(onInit,11539355:doEnabled,[])
 }
-Add(GL_Options,16663485,315,70)
+Add(GL_Options,16663485,266,91)
 {
  Flag=2
  link(onEvent,1648236:doEnabled,[])
 }
-Add(GL_Options,1571481,357,119)
+Add(GL_Options,1571481,378,175)
 {
  link(onEvent,14690515:doRotate,[])
 }
-Add(GL_Options,15984634,399,70)
+Add(GL_Options,15984634,350,91)
 {
  Flag=1
  link(onEvent,15675277:doEnabled,[])
 }
-Add(GL_Light,11539355,574,70)
+Add(GL_Light,11539355,525,91)
 {
  Diffuse=8421504
  Specular=15780518
- link(onEnabled,11539355:doMove,[(612,76)(612,106)(562,106)(562,83)])
- link(onMove,9360669:doSet,[(618,83)(618,76)])
+ link(onEnabled,11539355:doMove,[(563,97)(563,127)(513,127)(513,104)])
+ link(onMove,9360669:doSet,[(569,104)(569,97)])
  link(Point,8056367:Point3D,[])
 }
-Add(GL_Options,15675277,441,70)
+Add(GL_Options,15675277,392,91)
 {
  Flag=8
  link(onEvent,14720182:doEnabled,[])
 }
-Add(GL_Point3D,8056367,574,28)
+Add(GL_Point3D,8056367,525,49)
 {
  Y=5
  Z=10
 }
-Add(MultiElement,12832518,665,70)
+Add(MultiElement,12832518,616,91)
 {
  @Hint=#5:Ветки|
  link(onEvent1,2718532:doWork1,[])
@@ -180,28 +181,28 @@ BEGIN_SDK
    link(onRotate,10660711:doColor,[])
   }
 END_SDK
-Add(GL_CallList,16021294,441,168)
+Add(GL_CallList,16021294,462,231)
 {
  Index=100
  link(onCallList,15738025:doPopMatrix,[])
 }
-Add(GL_Rotate,12384541,525,168)
+Add(GL_Rotate,12384541,546,231)
 {
  Angle=40
  X=1
  link(onRotate,1034581:doCallList,[])
 }
-Add(GL_CallList,1034581,574,168)
+Add(GL_CallList,1034581,588,231)
 {
  Index=100
  link(onCallList,2318620:doPopMatrix,[])
 }
-Add(Gl_Translate,9215560,441,119)
+Add(Gl_Translate,9215560,462,175)
 {
  Z=-1.5
- link(onTranslate,7237191:doPointSize,[(478,125)(478,132)])
+ link(onTranslate,7237191:doPointSize,[(499,181)(499,188)])
 }
-Add(Gl_Particles,2942892,525,119)
+Add(Gl_Particles,2942892,546,175)
 {
  ColorStart=15793151
  ColorEnd=16711680
@@ -213,78 +214,78 @@ Add(Gl_Particles,2942892,525,119)
  Count=1
  link(onDraw,14288356:doEnabled,[])
 }
-Add(GL_PrimSizes,7237191,483,119)
+Add(GL_PrimSizes,7237191,504,175)
 {
  Size=5
  link(onSize,2942892:doDraw,[])
 }
-Add(GL_Options,1648236,357,70)
+Add(GL_Options,1648236,308,91)
 {
  link(onEvent,15984634:doEnabled,[])
 }
-Add(GL_Rotate,14690515,399,119)
+Add(GL_Rotate,14690515,420,175)
 {
  Angle=90
  X=1
  link(onRotate,9215560:doTranslate,[])
 }
-Add(GL_Options,14288356,574,119)
+Add(GL_Options,14288356,588,175)
 {
  link(onEvent,9382744:doNext,[])
 }
-Add(GL_Rotate,6810553,399,168)
+Add(GL_Rotate,6810553,420,231)
 {
  Angle=-40
  X=1
  Y=1
  link(onRotate,16021294:doCallList,[])
 }
-Add(GL_GTools,15738025,483,168)
+Add(GL_GTools,15738025,504,231)
 {
  Point(doPopMatrix)
  link(onEvent,12384541:doRotate,[])
 }
-Add(GL_GTools,2318620,616,168)
+Add(GL_GTools,2318620,630,231)
 {
  Point(doPopMatrix)
  link(onEvent,1755496:doTranslate,[])
 }
-Add(GL_GTools,6086571,357,168)
+Add(GL_GTools,6086571,378,231)
 {
  Point(doPushMatrix)
  link(onEvent,6810553:doRotate,[])
 }
-Add(Gl_Translate,1755496,658,168)
+Add(Gl_Translate,1755496,672,231)
 {
  Z=1.8
  link(onTranslate,9751460:doCallList,[])
 }
-Add(GL_CallList,9751460,700,168)
+Add(GL_CallList,9751460,714,231)
 {
  Index=101
- link(onCallList,769574:doDisabled,[(752,174)(752,209)(303,209)(303,230)])
+ link(onCallList,769574:doDisabled,[(763,237)(763,277)(324,277)(324,300)])
 }
-Add(GL_GTools,9071934,315,119)
+Add(GL_GTools,9071934,336,175)
 {
  Point(doPopMatrix)
- link(onEvent,1571481:doDisabled,[(352,125)(352,132)])
+ link(onEvent,1571481:doDisabled,[(373,181)(373,188)])
 }
-Add(GL_Rotate,7766693,742,119)
+Add(GL_Rotate,7766693,756,175)
 {
  Z=1
- link(onRotate,998101:doPushMatrix,[(788,125)(788,161)(303,161)(303,174)])
- link(Z,8615881:Value,[(769,107)(737,107)(737,163)(706,163)])
+ link(onRotate,998101:doPushMatrix,[(808,181)(808,224)(324,224)(324,237)])
+ link(Z,8615881:Value,[(783,163)(750,163)(750,216)(720,216)])
 }
-Add(Counter,9382744,616,119)
+Add(Counter,9382744,630,175)
 {
  Max=1800
  link(onNext,12831426:doOperation,[])
 }
-Add(Memory,8615881,700,119)
+Add(Memory,8615881,714,175)
 {
  link(onData,7766693:doRotate,[])
 }
-Add(Math,12831426,658,119)
+Add(Math,12831426,672,175)
 {
  OpType=3
  Op2=5
@@ -294,7 +295,7 @@ Add(MainForm,5471030,91,42)
 {
  Width=281
  Height=319
- Color=32768
+ Color=4533025
  BorderStyle=0
  Point(MouseX)
  Point(MouseY)
@@ -303,148 +304,84 @@ Add(MainForm,5471030,91,42)
  Point(doWidth)
  Point(doHeight)
  link(onCreate,5584133:doEvent1,[(145,62)(145,27)])
- link(onResize,5421034:doWork1,[(172,69)])
+ link(onResize,5421034:doWork1,[(130,69)])
 }
-Add(GL_Main,4742279,196,126)
+Add(GL_Main,4742279,154,126)
 {
  Color=4533025
- link(onInit,16663485:doEnabled,[(236,132)(236,76)])
- link(onViewPort,8468442:doEvent1,[(240,139)(240,181)])
- link(Handle,5471030:Handle,[(202,100)(111,100)])
+ AASamples=1
+ link(onInit,16663485:doEnabled,[(198,132)(198,97)])
+ link(onViewPort,12781012:doPerspective,[])
+ link(Handle,5471030:Handle,[(160,100)(111,100)])
 }
-Add(Timer,9604483,70,224)
+Add(Timer,9604483,28,224)
 {
  Interval=10
  link(onTimer,2082420:doEvent1,[])
 }
-Add(GL_GTools,656992,196,224)
+Add(GL_GTools,656992,154,224)
 {
  Point(doClear)
  Point(doPushMatrix)
  Point(doPopMatrix)
 }
-Add(Hub,2082420,119,224)
+Add(Hub,2082420,77,224)
 {
- OutCount=7
+ OutCount=6
  link(onEvent1,656992:doClear,[])
  link(onEvent2,656992:doPushMatrix,[])
- link(onEvent3,2871436:doWork1,[(195,244)(195,223)])
- link(onEvent4,656992:doPopMatrix,[(173,251)(173,244)])
- link(onEvent5,9619122:doEvent1,[(173,258)(173,181)])
- link(onEvent6,14427063:doReadKey,[(163,265)(163,286)(51,286)(51,307)])
+ link(onEvent3,2871436:doWork1,[(180,244)(180,181)])
+ link(onEvent4,656992:doPopMatrix,[(145,251)(145,244)])
+ link(onEvent5,4742279:doFlip,[(128,258)(128,146)])
+ link(onEvent6,14427063:doReadKey,[(144,265)(144,272)])
 }
-Add(Hub,14649772,112,126)
+Add(Hub,14649772,105,126)
 {
- OutCount=3
  link(onEvent1,4742279:doInit,[])
  link(onEvent2,5421034:doWork2,[])
 }
-Add(HubEx,5421034,168,126)
+Add(HubEx,5421034,126,133)
 {
  link(onEvent,4742279:doViewPort,[])
 }
-Add(GL_Perspective,12781012,252,126)
+Add(GL_Perspective,12781012,210,133)
 {
  Fovy=21
  zFar=100
- link(Aspect,4161604:Var1,[(258,108)(48,108)])
+ link(Aspect,9358857:Var,[])
 }
-Add(Hub,9619122,196,175)
-{
- link(onEvent1,4742279:doFlip,[(235,181)(235,167)(184,167)(184,146)])
-}
-Add(Hub,8468442,252,175)
-{
- InCount=2
- OutCount=1
- link(onEvent1,12781012:doPerspective,[(290,181)(290,164)(247,164)(247,132)])
-}
-Add(Hub,5584133,168,21)
+Add(Hub,5584133,154,21)
 {
  OutCount=3
- link(onEvent1,4161604:doWork1,[(213,27)(213,17)(30,17)(30,76)])
- link(onEvent2,14649772:doEvent1,[(216,34)(216,92)(100,92)(100,132)])
+ link(onEvent1,12025328:doWork1,[(180,27)(180,17)(25,17)(25,76)])
+ link(onEvent2,14649772:doEvent1,[(181,34)(181,115)(100,115)(100,132)])
  link(onEvent3,16262568:doData,[])
 }
-Add(MultiElement,4161604,42,70)
-{
- @Hint=#87:Считывает разрешение экрана и соотношение сторон.  Устанавливает размер формы и аспект.|
- link(onEvent1,5471030:doWidth,[])
- link(onEvent2,5471030:doHeight,[])
-}
-BEGIN_SDK
-  Add(EditMulti,14495888,10,10)
-  {
-   EventCount=2
-   WorkCount=1
-   VarCount=1
-   Width=279
-   Height=270
-   link(doWork1,14428931:doEnum,[(68,16)(68,48)])
-   link(Var1,4020073:Result,[(16,261)(146,261)])
-  }
-  Add(Screen,14428931,126,28)
-  {
-   EnumMask="%v%h"
-   link(onEnum,10190258:doEvent1,[(170,34)(170,80)(36,80)(36,153)])
-  }
-  Add(Hub,10190258,49,147)
-  {
-   OutCount=3
-   link(onEvent1,13019782:doData,[])
-   link(onEvent2,11320503:doData,[])
-   link(onEvent3,4020073:doOperation,[(103,167)(103,216)])
-  }
-  Add(Math,4020073,140,210)
-  {
-   OpType=3
-   link(Op1,5983030:Data2,[(146,167)(118,167)])
-   link(Op2,5775196:Data2,[(153,167)(181,167)])
-  }
-  Add(GetData,5983030,105,98)
-  {
-   link(Data,14428931:Width,[(111,86)(132,86)])
-  }
-  Add(GetData,5775196,168,98)
-  {
-   link(Data,14428931:Height,[(174,86)(139,86)])
-  }
-  Add(DoData,13019782,105,147)
-  {
-   link(onEventData,14495888:onEvent1,[(213,153)(213,16)])
-   link(Data,5983030:Data1,[])
-  }
-  Add(DoData,11320503,168,154)
-  {
-   link(onEventData,14495888:onEvent2,[(244,160)(244,23)])
-   link(Data,5775196:Data1,[])
-  }
-END_SDK
-Add(MouseEvent,5201576,294,21)
+Add(MouseEvent,5201576,245,21)
 {
  Point(doVisible)
 }
-Add(DoData,16262568,245,35)
+Add(DoData,16262568,196,35)
 {
  Data=Integer(0)
  link(onEventData,5201576:doVisible,[])
 }
-Add(Keyboard,14427063,63,301)
+Add(Keyboard,14427063,154,266)
 {
  Key=27
  link(onReadKey,6757641:doCase,[])
 }
-Add(Case,6757641,112,301)
+Add(Case,6757641,196,266)
 {
  Value=Integer(1)
- link(onTrue,5471030:doClose,[(166,314)(166,192)(79,192)(79,69)])
+ link(onTrue,14817489:In,[])
 }
-Add(GL_GTools,998101,315,168)
+Add(GL_GTools,998101,336,231)
 {
  Point(doPushMatrix)
  link(onEvent,6086571:doPushMatrix,[])
 }
-Add(MultiElement,8230860,749,70)
+Add(MultiElement,8230860,700,91)
 {
  @Hint=#5:Шарик|
  link(onEvent1,10131255:doEnabled,[])
@@ -508,7 +445,7 @@ BEGIN_SDK
    link(onEndList,7987971:onEvent1,[(442,55)(442,27)])
   }
 END_SDK
-Add(GL_Material,9360669,623,70)
+Add(GL_Material,9360669,574,91)
 {
  Diffuse=0
  Specular=16777215
@@ -516,54 +453,54 @@ Add(GL_Material,9360669,623,70)
  Point(doSpecular)
  link(onSet,12832518:doWork1,[])
 }
-Add(GL_Options,14720182,483,70)
+Add(GL_Options,14720182,434,91)
 {
  Flag=9
  link(onEvent,4593655:doInit,[])
 }
-Add(Gl_Begin,6614034,483,217)
+Add(Gl_Begin,6614034,504,287)
 {
  BlockType=1
  link(onBegin,11676982:doVertex,[])
 }
-Add(Gl_End,15602546,616,217)
+Add(Gl_End,15602546,630,287)
 {
  link(onEnd,10403522:doEnabled,[])
 }
-Add(GL_Vertex3D,11676982,525,217)
+Add(GL_Vertex3D,11676982,546,287)
 {
  link(onVertex,14411393:doVertex,[])
 }
-Add(GL_Vertex3D,14411393,574,217)
+Add(GL_Vertex3D,14411393,588,287)
 {
  Z=-1.5
  link(onVertex,15602546:doEnd,[])
 }
-Add(GL_PrimSizes,1208121,441,217)
+Add(GL_PrimSizes,1208121,462,287)
 {
  Size=2
  link(onSize,6614034:doBegin,[])
 }
-Add(GL_Options,769574,315,217)
+Add(GL_Options,769574,336,287)
 {
- link(onEvent,5032299:doDisabled,[(352,223)(352,230)])
+ link(onEvent,5032299:doDisabled,[(373,293)(373,300)])
 }
-Add(GL_Options,5032299,357,217)
+Add(GL_Options,5032299,378,287)
 {
  Flag=8
  link(onEvent,15930617:doColor,[])
 }
-Add(GL_Color,15930617,399,217)
+Add(GL_Color,15930617,420,287)
 {
  Color=19351
  link(onColor,1208121:doLineSize,[])
 }
-Add(GL_Options,10403522,658,217)
+Add(GL_Options,10403522,672,287)
 {
  Flag=8
  link(onEvent,925226:doEnabled,[])
 }
-Add(GL_Cylinder,16256965,826,217)
+Add(GL_Cylinder,16256965,840,287)
 {
  BaseRadius=0.1
  TopRadius=0.1
@@ -571,24 +508,24 @@ Add(GL_Cylinder,16256965,826,217)
  Slices=20
  Stacks=20
 }
-Add(Gl_Translate,6026552,745,217)
+Add(Gl_Translate,6026552,756,287)
 {
  Z=-0.8
  link(onTranslate,1938026:doColor,[])
 }
-Add(GL_Color,1938026,784,217)
+Add(GL_Color,1938026,798,287)
 {
  Color=19351
  link(onColor,16256965:doDraw,[])
 }
-Add(GL_Options,925226,700,217)
+Add(GL_Options,925226,714,287)
 {
  link(onEvent,6026552:doTranslate,[])
 }
-Add(MultiElement,2871436,252,217)
+Add(MultiElement,2871436,294,175)
 {
  @Hint=#28:Динамические источники света|
- link(onEvent1,9071934:doPopMatrix,[(296,223)(296,125)])
+ link(onEvent1,9071934:doPopMatrix,[])
 }
 BEGIN_SDK
   Add(EditMulti,4525908,21,21)
@@ -676,7 +613,7 @@ BEGIN_SDK
    Y=2
    Z=-1
   }
-  Add(GetDataEx,11556843,233,63)
+  Add(GetDataEx,11556843,240,67)
   {
    Angle=3
    link(Data,8950855:Value,[(212,72)(212,128)(190,128)])
@@ -719,18 +656,18 @@ BEGIN_SDK
    Op2=2
    link(onResult,5837853:doValue,[])
   }
-  Add(GetDataEx,1818518,226,231)
+  Add(GetDataEx,1818518,233,235)
   {
    Angle=3
    link(Data,5837853:Value,[(212,240)(212,296)(190,296)])
   }
-  Add(GetDataEx,13549973,226,147)
+  Add(GetDataEx,13549973,233,151)
   {
    Angle=3
    link(Data,570767:Value,[(212,156)(212,212)(190,212)])
   }
 END_SDK
-Add(MultiElement,2718532,707,70)
+Add(MultiElement,2718532,658,91)
 {
  @Hint=#45:Загрузка текстуры, наложение надписи на шарик|
  link(onEvent1,8230860:doWork1,[])
@@ -769,7 +706,7 @@ BEGIN_SDK
    link(onDraw,6087382:doEvent1,[(177,132)(177,164)(51,164)(51,195)])
    link(Bitmap,650799:Var1,[(111,114)(193,114)(193,142)])
   }
-  Add(GetDataEx,650799,203,133)
+  Add(GetDataEx,650799,210,137)
   {
    link(Data,950318:Bitmap,[])
   }
@@ -783,7 +720,6 @@ BEGIN_SDK
   }
   Add(Hub,6087382,63,189)
   {
-   link(onEvent1,2779338:doLoad,[])
    link(onEvent2,2779338:doRotate,[])
   }
   Add(Img_Rotate,2779338,105,189)
@@ -803,7 +739,99 @@ BEGIN_SDK
    Step=1
   }
 END_SDK
-Add(GL_Options,10131255,791,70)
+Add(GL_Options,10131255,742,91)
 {
  Flag=7
+}
+Add(MultiElement,12025328,35,70)
+{
+ @Hint=#92:Устанавливает полноэкранный режим приложения и соотношение сторон при  BorderStyle - bsNone.|
+ link(onEvent1,5471030:doWidth,[])
+ link(onEvent2,5471030:doHeight,[])
+}
+BEGIN_SDK
+  Add(EditMulti,16677441,7,7)
+  {
+   EventCount=2
+   WorkCount=1
+   VarCount=1
+   Width=307
+   Height=277
+   link(doWork1,9938436:doEvent1,[(31,13)(31,48)])
+   link(Var1,8872951:Result,[(13,263)(237,263)])
+  }
+  Add(Screen,7951566,126,28)
+  {
+   EnumMask="%v"
+   link(onEnum,11571689:doOperation,[])
+  }
+  Add(Math,11571689,168,28)
+  {
+   OpType=39
+   link(onResult,8277205:doValue,[])
+   link(Op2,11571689:Result,[(181,16)(213,16)(213,72)(174,72)])
+  }
+  Add(Screen,8335904,133,161)
+  {
+   EnumMask="%h"
+   link(onEnum,16134009:doOperation,[])
+  }
+  Add(Hub,9938436,56,42)
+  {
+   OutCount=5
+   link(onEvent1,7951566:doEnum,[])
+   link(onEvent2,1329470:doData,[(111,55)(111,76)])
+   link(onEvent3,400462:doData,[(105,62)(105,118)])
+   link(onEvent4,8335904:doEnum,[(98,69)(98,181)])
+   link(onEvent5,8872951:doOperation,[(91,76)(91,216)])
+  }
+  Add(Math,16134009,175,161)
+  {
+   OpType=39
+   link(onResult,16143879:doValue,[])
+   link(Op2,16134009:Result,[(188,149)(220,149)(220,205)(181,205)])
+  }
+  Add(Memory,8277205,231,28)
+  {
+  }
+  Add(Memory,16143879,238,161)
+  {
+  }
+  Add(Math,8872951,231,210)
+  {
+   OpType=3
+   link(Op1,8277205:Value,[])
+   link(Op2,16143879:Value,[])
+  }
+  Add(DoData,400462,133,112)
+  {
+   link(onEventData,16677441:onEvent2,[(296,118)(296,20)])
+   link(Data,7951566:Height,[])
+  }
+  Add(DoData,1329470,126,70)
+  {
+   link(onEventData,16677441:onEvent1,[(290,76)(290,13)])
+   link(Data,7951566:Width,[])
+  }
+END_SDK
+Add(LineBreak,16284542,35,126)
+{
+ Caption="Aspect"
+ Type=1
+ Color=13750693
+ link(Data,12025328:Var1,[])
+ Primary=[9358857,175,-21]
+}
+Add(LineBreak,3136276,28,49)
+{
+ Caption="Close"
+ Color=14280447
+ link(Out,5471030:doClose,[(83,55)(83,69)])
+ Primary=[14817489,210,224]
+}
+Add(InfoTip,2557943,287,154)
+{
+ Info=#15:Отрисовка сцены|
+ Width=603
+ Height=186
 }

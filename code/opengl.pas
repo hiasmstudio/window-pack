@@ -1,1846 +1,5467 @@
+{******************************************************************************}
+{                                                                              }
+{       Borland Delphi Runtime Library                                         }
+{       OpenGL1.5 - Headertranslation (includes GL1.1-1.5)                     }
+{       Version 1.3c                                                           }
+{                                                                              }
+{       Основа кода dglOpenGL.pas                                              }
+{       Delphi OpenGL Community(DGL) - www.delphigl.com                        }
+{       Портировал  MAV - andreimav@yandex.ru                                  }
+{******************************************************************************}
 
-{*******************************************************}
-{                                                       }
-{       Borland Delphi Runtime Library                  }
-{       OpenGL interface unit                           }
-{                                                       }
-{*******************************************************}
-
-(*
-** Copyright 1991-1993, Silicon Graphics, Inc.
-** All Rights Reserved.
-**
-** This is UNPUBLISHED PROPRIETARY SOURCE CODE of Silicon Graphics, Inc.;
-** the contents of this file may not be disclosed to third parties, copied or
-** duplicated in any form, in whole or in part, without the prior written
-** permission of Silicon Graphics, Inc.
-**
-** RESTRICTED RIGHTS LEGEND:
-** Use, duplication or disclosure by the Government is subject to restrictions
-** as set forth in subdivision (c)(1)(ii) of the Rights in Technical Data
-** and Computer Software clause at DFARS 252.227-7013, and/or in similar or
-** successor clauses in the FAR, DOD or NASA FAR Supplement. Unpublished -
-** rights reserved under the Copyright Laws of the United States.
-*)
-
-unit Opengl;
+unit OpenGL;
 
 interface
 
-uses Windows;
-
-type
-  {$EXTERNALSYM HGLRC}
-  HGLRC = THandle;
-
-type
-  GLenum = Cardinal;
-  GLboolean = BYTEBOOL;
-  GLbitfield = Cardinal;
-  GLbyte = Shortint;   { signed char }
-  GLshort = SmallInt;
-  GLint = Integer;
-  GLsizei = Integer;
-  GLubyte = Byte;
-  GLushort = Word;
-  GLuint = Cardinal;
-  GLfloat = Single;
-  GLclampf = Single;
-  GLdouble = Double;
-  GLclampd = Double;
-
-  PGLBoolean = ^GLBoolean;
-  PGLByte = ^GLByte;
-  PGLShort = ^GLShort;
-  PGLInt = ^GLInt;
-  PGLSizei = ^GLSizei;
-  PGLubyte = ^GLubyte;
-  PGLushort = ^GLushort;
-  PGLuint = ^GLuint;
-  PGLclampf = ^GLclampf;
-  PGLfloat =  ^GLFloat;
-  PGLdouble = ^GLDouble;
-  PGLclampd = ^GLclampd;
-
-  TGLArrayf4 = array [0..3] of GLFloat;
-  TGLArrayf3 = array [0..2] of GLFloat;
-  TGLArrayi4 = array [0..3] of GLint;
-  {...}
-
-{*************************************************************}
+uses
+   Windows;
 
 const
-{ AttribMask }
-  GL_CURRENT_BIT                      = $00000001;
-  GL_POINT_BIT                        = $00000002;
-  GL_LINE_BIT                         = $00000004;
-  GL_POLYGON_BIT                      = $00000008;
-  GL_POLYGON_STIPPLE_BIT              = $00000010;
-  GL_PIXEL_MODE_BIT                   = $00000020;
-  GL_LIGHTING_BIT                     = $00000040;
-  GL_FOG_BIT                          = $00000080;
-  GL_DEPTH_BUFFER_BIT                 = $00000100;
-  GL_ACCUM_BUFFER_BIT                 = $00000200;
-  GL_STENCIL_BUFFER_BIT               = $00000400;
-  GL_VIEWPORT_BIT                     = $00000800;
-  GL_TRANSFORM_BIT                    = $00001000;
-  GL_ENABLE_BIT                       = $00002000;
-  GL_COLOR_BUFFER_BIT                 = $00004000;
-  GL_HINT_BIT                         = $00008000;
-  GL_EVAL_BIT                         = $00010000;
-  GL_LIST_BIT                         = $00020000;
-  GL_TEXTURE_BIT                      = $00040000;
-  GL_SCISSOR_BIT                      = $00080000;
-  GL_ALL_ATTRIB_BITS                  = $000fffff;
-
-{ ClearBufferMask }
-{      GL_COLOR_BUFFER_BIT }
-{      GL_ACCUM_BUFFER_BIT }
-{      GL_STENCIL_BUFFER_BIT }
-{      GL_DEPTH_BUFFER_BIT }
-
-{ Boolean }
-  GL_FALSE                            = 0;
-  GL_TRUE                             = 1;
-
-{ BeginMode }
-  GL_POINTS                           = $0000    ;
-  GL_LINES                            = $0001    ;
-  GL_LINE_LOOP                        = $0002    ;
-  GL_LINE_STRIP                       = $0003    ;
-  GL_TRIANGLES                        = $0004    ;
-  GL_TRIANGLE_STRIP                   = $0005    ;
-  GL_TRIANGLE_FAN                     = $0006    ;
-  GL_QUADS                            = $0007    ;
-  GL_QUAD_STRIP                       = $0008    ;
-  GL_POLYGON                          = $0009    ;
-
-{ AccumOp }
-  GL_ACCUM                            = $0100;
-  GL_LOAD                             = $0101;
-  GL_RETURN                           = $0102;
-  GL_MULT                             = $0103;
-  GL_ADD                              = $0104;
-
-{ AlphaFunction }
-  GL_NEVER                            = $0200;
-  GL_LESS                             = $0201;
-  GL_EQUAL                            = $0202;
-  GL_LEQUAL                           = $0203;
-  GL_GREATER                          = $0204;
-  GL_NOTEQUAL                         = $0205;
-  GL_GEQUAL                           = $0206;
-  GL_ALWAYS                           = $0207;
-
-{ BlendingFactorDest }
-  GL_ZERO                             = 0;
-  GL_ONE                              = 1;
-  GL_SRC_COLOR                        = $0300;
-  GL_ONE_MINUS_SRC_COLOR              = $0301;
-  GL_SRC_ALPHA                        = $0302;
-  GL_ONE_MINUS_SRC_ALPHA              = $0303;
-  GL_DST_ALPHA                        = $0304;
-  GL_ONE_MINUS_DST_ALPHA              = $0305;
-
-{ BlendingFactorSrc }
-{      GL_ZERO }
-{      GL_ONE }
-  GL_DST_COLOR                        = $0306;
-  GL_ONE_MINUS_DST_COLOR              = $0307;
-  GL_SRC_ALPHA_SATURATE               = $0308;
-{      GL_SRC_ALPHA }
-{      GL_ONE_MINUS_SRC_ALPHA }
-{      GL_DST_ALPHA }
-{      GL_ONE_MINUS_DST_ALPHA }
-
-{ BlendingMode }
-{      GL_LOGIC_OP }
-
-{ ColorMaterialFace }
-{      GL_FRONT }
-{      GL_BACK }
-{      GL_FRONT_AND_BACK }
-
-{ ColorMaterialParameter }
-{      GL_AMBIENT }
-{      GL_DIFFUSE }
-{      GL_SPECULAR }
-{      GL_EMISSION }
-{      GL_AMBIENT_AND_DIFFUSE }
-
-{ CullFaceMode }
-{      GL_FRONT }
-{      GL_BACK }
-{      GL_FRONT_AND_BACK }
-
-{ DepthFunction }
-{      GL_NEVER }
-{      GL_LESS }
-{      GL_EQUAL }
-{      GL_LEQUAL }
-{      GL_GREATER }
-{      GL_NOTEQUAL }
-{      GL_GEQUAL }
-{      GL_ALWAYS }
-
-{ DrawBufferMode }
-  GL_NONE                             = 0;
-  GL_FRONT_LEFT                       = $0400;
-  GL_FRONT_RIGHT                      = $0401;
-  GL_BACK_LEFT                        = $0402;
-  GL_BACK_RIGHT                       = $0403;
-  GL_FRONT                            = $0404;
-  GL_BACK                             = $0405;
-  GL_LEFT                             = $0406;
-  GL_RIGHT                            = $0407;
-  GL_FRONT_AND_BACK                   = $0408;
-  GL_AUX0                             = $0409;
-  GL_AUX1                             = $040A;
-  GL_AUX2                             = $040B;
-  GL_AUX3                             = $040C;
-
-{ ErrorCode }
-  GL_NO_ERROR                         = 0;
-  GL_INVALID_ENUM                     = $0500;
-  GL_INVALID_VALUE                    = $0501;
-  GL_INVALID_OPERATION                = $0502;
-  GL_STACK_OVERFLOW                   = $0503;
-  GL_STACK_UNDERFLOW                  = $0504;
-  GL_OUT_OF_MEMORY                    = $0505;
-
-{ FeedBackMode }
-  GL_2D                               = $0600;
-  GL_3D                               = $0601;
-  GL_3D_COLOR                         = $0602;
-  GL_3D_COLOR_TEXTURE                 = $0603;
-  GL_4D_COLOR_TEXTURE                 = $0604;
-
-{ FeedBackToken }
-  GL_PASS_THROUGH_TOKEN               = $0700;
-  GL_POINT_TOKEN                      = $0701;
-  GL_LINE_TOKEN                       = $0702;
-  GL_POLYGON_TOKEN                    = $0703;
-  GL_BITMAP_TOKEN                     = $0704;
-  GL_DRAW_PIXEL_TOKEN                 = $0705;
-  GL_COPY_PIXEL_TOKEN                 = $0706;
-  GL_LINE_RESET_TOKEN                 = $0707;
-
-{ FogMode }
-{      GL_LINEAR }
-  GL_EXP                              = $0800;
-  GL_EXP2                             = $0801;
-
-{ FogParameter }
-{      GL_FOG_COLOR }
-{      GL_FOG_DENSITY }
-{      GL_FOG_END }
-{      GL_FOG_INDEX }
-{      GL_FOG_MODE }
-{      GL_FOG_START }
-
-{ FrontFaceDirection }
-  GL_CW                               = $0900;
-  GL_CCW                              = $0901;
-
-{ GetMapTarget }
-  GL_COEFF                            = $0A00;
-  GL_ORDER                            = $0A01;
-  GL_DOMAIN                           = $0A02;
-
-{ GetPixelMap }
-  GL_PIXEL_MAP_I_TO_I                 = $0C70;
-  GL_PIXEL_MAP_S_TO_S                 = $0C71;
-  GL_PIXEL_MAP_I_TO_R                 = $0C72;
-  GL_PIXEL_MAP_I_TO_G                 = $0C73;
-  GL_PIXEL_MAP_I_TO_B                 = $0C74;
-  GL_PIXEL_MAP_I_TO_A                 = $0C75;
-  GL_PIXEL_MAP_R_TO_R                 = $0C76;
-  GL_PIXEL_MAP_G_TO_G                 = $0C77;
-  GL_PIXEL_MAP_B_TO_B                 = $0C78;
-  GL_PIXEL_MAP_A_TO_A                 = $0C79;
-
-{ GetTarget }
-  GL_CURRENT_COLOR                    = $0B00;
-  GL_CURRENT_INDEX                    = $0B01;
-  GL_CURRENT_NORMAL                   = $0B02;
-  GL_CURRENT_TEXTURE_COORDS           = $0B03;
-  GL_CURRENT_RASTER_COLOR             = $0B04;
-  GL_CURRENT_RASTER_INDEX             = $0B05;
-  GL_CURRENT_RASTER_TEXTURE_COORDS    = $0B06;
-  GL_CURRENT_RASTER_POSITION          = $0B07;
-  GL_CURRENT_RASTER_POSITION_VALID    = $0B08;
-  GL_CURRENT_RASTER_DISTANCE          = $0B09;
-  GL_POINT_SMOOTH                     = $0B10;
-  GL_POINT_SIZE                       = $0B11;
-  GL_POINT_SIZE_RANGE                 = $0B12;
-  GL_POINT_SIZE_GRANULARITY           = $0B13;
-  GL_LINE_SMOOTH                      = $0B20;
-  GL_LINE_WIDTH                       = $0B21;
-  GL_LINE_WIDTH_RANGE                 = $0B22;
-  GL_LINE_WIDTH_GRANULARITY           = $0B23;
-  GL_LINE_STIPPLE                     = $0B24;
-  GL_LINE_STIPPLE_PATTERN             = $0B25;
-  GL_LINE_STIPPLE_REPEAT              = $0B26;
-  GL_LIST_MODE                        = $0B30;
-  GL_MAX_LIST_NESTING                 = $0B31;
-  GL_LIST_BASE                        = $0B32;
-  GL_LIST_INDEX                       = $0B33;
-  GL_POLYGON_MODE                     = $0B40;
-  GL_POLYGON_SMOOTH                   = $0B41;
-  GL_POLYGON_STIPPLE                  = $0B42;
-  GL_EDGE_FLAG                        = $0B43;
-  GL_CULL_FACE                        = $0B44;
-  GL_CULL_FACE_MODE                   = $0B45;
-  GL_FRONT_FACE                       = $0B46;
-  GL_LIGHTING                         = $0B50;
-  GL_LIGHT_MODEL_LOCAL_VIEWER         = $0B51;
-  GL_LIGHT_MODEL_TWO_SIDE             = $0B52;
-  GL_LIGHT_MODEL_AMBIENT              = $0B53;
-  GL_SHADE_MODEL                      = $0B54;
-  GL_COLOR_MATERIAL_FACE              = $0B55;
-  GL_COLOR_MATERIAL_PARAMETER         = $0B56;
-  GL_COLOR_MATERIAL                   = $0B57;
-  GL_FOG                              = $0B60;
-  GL_FOG_INDEX                        = $0B61;
-  GL_FOG_DENSITY                      = $0B62;
-  GL_FOG_START                        = $0B63;
-  GL_FOG_END                          = $0B64;
-  GL_FOG_MODE                         = $0B65;
-  GL_FOG_COLOR                        = $0B66;
-  GL_DEPTH_RANGE                      = $0B70;
-  GL_DEPTH_TEST                       = $0B71;
-  GL_DEPTH_WRITEMASK                  = $0B72;
-  GL_DEPTH_CLEAR_VALUE                = $0B73;
-  GL_DEPTH_FUNC                       = $0B74;
-  GL_ACCUM_CLEAR_VALUE                = $0B80;
-  GL_STENCIL_TEST                     = $0B90;
-  GL_STENCIL_CLEAR_VALUE              = $0B91;
-  GL_STENCIL_FUNC                     = $0B92;
-  GL_STENCIL_VALUE_MASK               = $0B93;
-  GL_STENCIL_FAIL                     = $0B94;
-  GL_STENCIL_PASS_DEPTH_FAIL          = $0B95;
-  GL_STENCIL_PASS_DEPTH_PASS          = $0B96;
-  GL_STENCIL_REF                      = $0B97;
-  GL_STENCIL_WRITEMASK                = $0B98;
-  GL_MATRIX_MODE                      = $0BA0;
-  GL_NORMALIZE                        = $0BA1;
-  GL_VIEWPORT                         = $0BA2;
-  GL_MODELVIEW_STACK_DEPTH            = $0BA3;
-  GL_PROJECTION_STACK_DEPTH           = $0BA4;
-  GL_TEXTURE_STACK_DEPTH              = $0BA5;
-  GL_MODELVIEW_MATRIX                 = $0BA6;
-  GL_PROJECTION_MATRIX                = $0BA7;
-  GL_TEXTURE_MATRIX                   = $0BA8;
-  GL_ATTRIB_STACK_DEPTH               = $0BB0;
-  GL_ALPHA_TEST                       = $0BC0;
-  GL_ALPHA_TEST_FUNC                  = $0BC1;
-  GL_ALPHA_TEST_REF                   = $0BC2;
-  GL_DITHER                           = $0BD0;
-  GL_BLEND_DST                        = $0BE0;
-  GL_BLEND_SRC                        = $0BE1;
-  GL_BLEND                            = $0BE2;
-  GL_LOGIC_OP_MODE                    = $0BF0;
-  GL_LOGIC_OP                         = $0BF1;
-  GL_AUX_BUFFERS                      = $0C00;
-  GL_DRAW_BUFFER                      = $0C01;
-  GL_READ_BUFFER                      = $0C02;
-  GL_SCISSOR_BOX                      = $0C10;
-  GL_SCISSOR_TEST                     = $0C11;
-  GL_INDEX_CLEAR_VALUE                = $0C20;
-  GL_INDEX_WRITEMASK                  = $0C21;
-  GL_COLOR_CLEAR_VALUE                = $0C22;
-  GL_COLOR_WRITEMASK                  = $0C23;
-  GL_INDEX_MODE                       = $0C30;
-  GL_RGBA_MODE                        = $0C31;
-  GL_DOUBLEBUFFER                     = $0C32;
-  GL_STEREO                           = $0C33;
-  GL_RENDER_MODE                      = $0C40;
-  GL_PERSPECTIVE_CORRECTION_HINT      = $0C50;
-  GL_POINT_SMOOTH_HINT                = $0C51;
-  GL_LINE_SMOOTH_HINT                 = $0C52;
-  GL_POLYGON_SMOOTH_HINT              = $0C53;
-  GL_FOG_HINT                         = $0C54;
-  GL_TEXTURE_GEN_S                    = $0C60;
-  GL_TEXTURE_GEN_T                    = $0C61;
-  GL_TEXTURE_GEN_R                    = $0C62;
-  GL_TEXTURE_GEN_Q                    = $0C63;
-  GL_PIXEL_MAP_I_TO_I_SIZE            = $0CB0;
-  GL_PIXEL_MAP_S_TO_S_SIZE            = $0CB1;
-  GL_PIXEL_MAP_I_TO_R_SIZE            = $0CB2;
-  GL_PIXEL_MAP_I_TO_G_SIZE            = $0CB3;
-  GL_PIXEL_MAP_I_TO_B_SIZE            = $0CB4;
-  GL_PIXEL_MAP_I_TO_A_SIZE            = $0CB5;
-  GL_PIXEL_MAP_R_TO_R_SIZE            = $0CB6;
-  GL_PIXEL_MAP_G_TO_G_SIZE            = $0CB7;
-  GL_PIXEL_MAP_B_TO_B_SIZE            = $0CB8;
-  GL_PIXEL_MAP_A_TO_A_SIZE            = $0CB9;
-  GL_UNPACK_SWAP_BYTES                = $0CF0;
-  GL_UNPACK_LSB_FIRST                 = $0CF1;
-  GL_UNPACK_ROW_LENGTH                = $0CF2;
-  GL_UNPACK_SKIP_ROWS                 = $0CF3;
-  GL_UNPACK_SKIP_PIXELS               = $0CF4;
-  GL_UNPACK_ALIGNMENT                 = $0CF5;
-  GL_PACK_SWAP_BYTES                  = $0D00;
-  GL_PACK_LSB_FIRST                   = $0D01;
-  GL_PACK_ROW_LENGTH                  = $0D02;
-  GL_PACK_SKIP_ROWS                   = $0D03;
-  GL_PACK_SKIP_PIXELS                 = $0D04;
-  GL_PACK_ALIGNMENT                   = $0D05;
-  GL_MAP_COLOR                        = $0D10;
-  GL_MAP_STENCIL                      = $0D11;
-  GL_INDEX_SHIFT                      = $0D12;
-  GL_INDEX_OFFSET                     = $0D13;
-  GL_RED_SCALE                        = $0D14;
-  GL_RED_BIAS                         = $0D15;
-  GL_ZOOM_X                           = $0D16;
-  GL_ZOOM_Y                           = $0D17;
-  GL_GREEN_SCALE                      = $0D18;
-  GL_GREEN_BIAS                       = $0D19;
-  GL_BLUE_SCALE                       = $0D1A;
-  GL_BLUE_BIAS                        = $0D1B;
-  GL_ALPHA_SCALE                      = $0D1C;
-  GL_ALPHA_BIAS                       = $0D1D;
-  GL_DEPTH_SCALE                      = $0D1E;
-  GL_DEPTH_BIAS                       = $0D1F;
-  GL_MAX_EVAL_ORDER                   = $0D30;
-  GL_MAX_LIGHTS                       = $0D31;
-  GL_MAX_CLIP_PLANES                  = $0D32;
-  GL_MAX_TEXTURE_SIZE                 = $0D33;
-  GL_MAX_PIXEL_MAP_TABLE              = $0D34;
-  GL_MAX_ATTRIB_STACK_DEPTH           = $0D35;
-  GL_MAX_MODELVIEW_STACK_DEPTH        = $0D36;
-  GL_MAX_NAME_STACK_DEPTH             = $0D37;
-  GL_MAX_PROJECTION_STACK_DEPTH       = $0D38;
-  GL_MAX_TEXTURE_STACK_DEPTH          = $0D39;
-  GL_MAX_VIEWPORT_DIMS                = $0D3A;
-  GL_SUBPIXEL_BITS                    = $0D50;
-  GL_INDEX_BITS                       = $0D51;
-  GL_RED_BITS                         = $0D52;
-  GL_GREEN_BITS                       = $0D53;
-  GL_BLUE_BITS                        = $0D54;
-  GL_ALPHA_BITS                       = $0D55;
-  GL_DEPTH_BITS                       = $0D56;
-  GL_STENCIL_BITS                     = $0D57;
-  GL_ACCUM_RED_BITS                   = $0D58;
-  GL_ACCUM_GREEN_BITS                 = $0D59;
-  GL_ACCUM_BLUE_BITS                  = $0D5A;
-  GL_ACCUM_ALPHA_BITS                 = $0D5B;
-  GL_NAME_STACK_DEPTH                 = $0D70;
-  GL_AUTO_NORMAL                      = $0D80;
-  GL_MAP1_COLOR_4                     = $0D90;
-  GL_MAP1_INDEX                       = $0D91;
-  GL_MAP1_NORMAL                      = $0D92;
-  GL_MAP1_TEXTURE_COORD_1             = $0D93;
-  GL_MAP1_TEXTURE_COORD_2             = $0D94;
-  GL_MAP1_TEXTURE_COORD_3             = $0D95;
-  GL_MAP1_TEXTURE_COORD_4             = $0D96;
-  GL_MAP1_VERTEX_3                    = $0D97;
-  GL_MAP1_VERTEX_4                    = $0D98;
-  GL_MAP2_COLOR_4                     = $0DB0;
-  GL_MAP2_INDEX                       = $0DB1;
-  GL_MAP2_NORMAL                      = $0DB2;
-  GL_MAP2_TEXTURE_COORD_1             = $0DB3;
-  GL_MAP2_TEXTURE_COORD_2             = $0DB4;
-  GL_MAP2_TEXTURE_COORD_3             = $0DB5;
-  GL_MAP2_TEXTURE_COORD_4             = $0DB6;
-  GL_MAP2_VERTEX_3                    = $0DB7;
-  GL_MAP2_VERTEX_4                    = $0DB8;
-  GL_MAP1_GRID_DOMAIN                 = $0DD0;
-  GL_MAP1_GRID_SEGMENTS               = $0DD1;
-  GL_MAP2_GRID_DOMAIN                 = $0DD2;
-  GL_MAP2_GRID_SEGMENTS               = $0DD3;
-  GL_TEXTURE_1D                       = $0DE0;
-  GL_TEXTURE_2D                       = $0DE1;
-
-{ GetTextureParameter }
-{      GL_TEXTURE_MAG_FILTER }
-{      GL_TEXTURE_MIN_FILTER }
-{      GL_TEXTURE_WRAP_S }
-{      GL_TEXTURE_WRAP_T }
-  GL_TEXTURE_WIDTH                    = $1000;
-  GL_TEXTURE_HEIGHT                   = $1001;
-  GL_TEXTURE_COMPONENTS               = $1003;
-  GL_TEXTURE_BORDER_COLOR             = $1004;
-  GL_TEXTURE_BORDER                   = $1005;
-
-{ HintMode }
-  GL_DONT_CARE                        = $1100;
-  GL_FASTEST                          = $1101;
-  GL_NICEST                           = $1102;
-
-{ HintTarget }
-{      GL_PERSPECTIVE_CORRECTION_HINT }
-{      GL_POINT_SMOOTH_HINT }
-{      GL_LINE_SMOOTH_HINT }
-{      GL_POLYGON_SMOOTH_HINT }
-{      GL_FOG_HINT }
-
-{ LightModelParameter }
-{      GL_LIGHT_MODEL_AMBIENT }
-{      GL_LIGHT_MODEL_LOCAL_VIEWER }
-{      GL_LIGHT_MODEL_TWO_SIDE }
-
-{ LightParameter }
-  GL_AMBIENT                          = $1200;
-  GL_DIFFUSE                          = $1201;
-  GL_SPECULAR                         = $1202;
-  GL_POSITION                         = $1203;
-  GL_SPOT_DIRECTION                   = $1204;
-  GL_SPOT_EXPONENT                    = $1205;
-  GL_SPOT_CUTOFF                      = $1206;
-  GL_CONSTANT_ATTENUATION             = $1207;
-  GL_LINEAR_ATTENUATION               = $1208;
-  GL_QUADRATIC_ATTENUATION            = $1209;
-
-{ ListMode }
-  GL_COMPILE                          = $1300;
-  GL_COMPILE_AND_EXECUTE              = $1301;
-
-{ ListNameType }
-  GL_BYTE                             = $1400;
-  GL_UNSIGNED_BYTE                    = $1401;
-  GL_SHORT                            = $1402;
-  GL_UNSIGNED_SHORT                   = $1403;
-  GL_INT                              = $1404;
-  GL_UNSIGNED_INT                     = $1405;
-  GL_FLOAT                            = $1406;
-  GL_2_BYTES                          = $1407;
-  GL_3_BYTES                          = $1408;
-  GL_4_BYTES                          = $1409;
-
-{ LogicOp }
-  GL_CLEAR                            = $1500;
-  GL_AND                              = $1501;
-  GL_AND_REVERSE                      = $1502;
-  GL_COPY                             = $1503;
-  GL_AND_INVERTED                     = $1504;
-  GL_NOOP                             = $1505;
-  GL_XOR                              = $1506;
-  GL_OR                               = $1507;
-  GL_NOR                              = $1508;
-  GL_EQUIV                            = $1509;
-  GL_INVERT                           = $150A;
-  GL_OR_REVERSE                       = $150B;
-  GL_COPY_INVERTED                    = $150C;
-  GL_OR_INVERTED                      = $150D;
-  GL_NAND                             = $150E;
-  GL_SET                              = $150F;
-
-{ MapTarget }
-{      GL_MAP1_COLOR_4 }
-{      GL_MAP1_INDEX }
-{      GL_MAP1_NORMAL }
-{      GL_MAP1_TEXTURE_COORD_1 }
-{      GL_MAP1_TEXTURE_COORD_2 }
-{      GL_MAP1_TEXTURE_COORD_3 }
-{      GL_MAP1_TEXTURE_COORD_4 }
-{      GL_MAP1_VERTEX_3 }
-{      GL_MAP1_VERTEX_4 }
-{      GL_MAP2_COLOR_4 }
-{      GL_MAP2_INDEX }
-{      GL_MAP2_NORMAL }
-{      GL_MAP2_TEXTURE_COORD_1 }
-{      GL_MAP2_TEXTURE_COORD_2 }
-{      GL_MAP2_TEXTURE_COORD_3 }
-{      GL_MAP2_TEXTURE_COORD_4 }
-{      GL_MAP2_VERTEX_3 }
-{      GL_MAP2_VERTEX_4 }
-
-{ MaterialFace }
-{      GL_FRONT }
-{      GL_BACK }
-{      GL_FRONT_AND_BACK }
-
-{ MaterialParameter }
-  GL_EMISSION                         = $1600;
-  GL_SHININESS                        = $1601;
-  GL_AMBIENT_AND_DIFFUSE              = $1602;
-  GL_COLOR_INDEXES                    = $1603;
-{      GL_AMBIENT }
-{      GL_DIFFUSE }
-{      GL_SPECULAR }
-
-{ MatrixMode }
-  GL_MODELVIEW                        = $1700;
-  GL_PROJECTION                       = $1701;
-  GL_TEXTURE                          = $1702;
-
-{ MeshMode1 }
-{      GL_POINT }
-{      GL_LINE }
-
-{ MeshMode2 }
-{      GL_POINT }
-{      GL_LINE }
-{      GL_FILL }
-
-{ PixelCopyType }
-  GL_COLOR                            = $1800;
-  GL_DEPTH                            = $1801;
-  GL_STENCIL                          = $1802;
-
-{ PixelFormat }
-  GL_COLOR_INDEX                      = $1900;
-  GL_STENCIL_INDEX                    = $1901;
-  GL_DEPTH_COMPONENT                  = $1902;
-  GL_RED                              = $1903;
-  GL_GREEN                            = $1904;
-  GL_BLUE                             = $1905;
-  GL_ALPHA                            = $1906;
-  GL_RGB                              = $1907;
-  GL_RGBA                             = $1908;
-  GL_LUMINANCE                        = $1909;
-  GL_LUMINANCE_ALPHA                  = $190A;
-
-{ PixelMap }
-{      GL_PIXEL_MAP_I_TO_I }
-{      GL_PIXEL_MAP_S_TO_S }
-{      GL_PIXEL_MAP_I_TO_R }
-{      GL_PIXEL_MAP_I_TO_G }
-{      GL_PIXEL_MAP_I_TO_B }
-{      GL_PIXEL_MAP_I_TO_A }
-{      GL_PIXEL_MAP_R_TO_R }
-{      GL_PIXEL_MAP_G_TO_G }
-{      GL_PIXEL_MAP_B_TO_B }
-{      GL_PIXEL_MAP_A_TO_A }
-
-{ PixelStore }
-{      GL_UNPACK_SWAP_BYTES }
-{      GL_UNPACK_LSB_FIRST }
-{      GL_UNPACK_ROW_LENGTH }
-{      GL_UNPACK_SKIP_ROWS }
-{      GL_UNPACK_SKIP_PIXELS }
-{      GL_UNPACK_ALIGNMENT }
-{      GL_PACK_SWAP_BYTES }
-{      GL_PACK_LSB_FIRST }
-{      GL_PACK_ROW_LENGTH }
-{      GL_PACK_SKIP_ROWS }
-{      GL_PACK_SKIP_PIXELS }
-{      GL_PACK_ALIGNMENT }
-
-{ PixelTransfer }
-{      GL_MAP_COLOR }
-{      GL_MAP_STENCIL }
-{      GL_INDEX_SHIFT }
-{      GL_INDEX_OFFSET }
-{      GL_RED_SCALE }
-{      GL_RED_BIAS }
-{      GL_GREEN_SCALE }
-{      GL_GREEN_BIAS }
-{      GL_BLUE_SCALE }
-{      GL_BLUE_BIAS }
-{      GL_ALPHA_SCALE }
-{      GL_ALPHA_BIAS }
-{      GL_DEPTH_SCALE }
-{      GL_DEPTH_BIAS }
-
-{ PixelType }
-  GL_BITMAP                           = $1A00;
-{      GL_BYTE }
-{      GL_UNSIGNED_BYTE }
-{      GL_SHORT }
-{      GL_UNSIGNED_SHORT }
-{      GL_INT }
-{      GL_UNSIGNED_INT }
-{      GL_FLOAT }
-
-{ PolygonMode }
-  GL_POINT                            = $1B00;
-  GL_LINE                             = $1B01;
-  GL_FILL                             = $1B02;
-
-{ ReadBufferMode }
-{      GL_FRONT_LEFT }
-{      GL_FRONT_RIGHT }
-{      GL_BACK_LEFT }
-{      GL_BACK_RIGHT }
-{      GL_FRONT }
-{      GL_BACK }
-{      GL_LEFT }
-{      GL_RIGHT }
-{      GL_AUX0 }
-{      GL_AUX1 }
-{      GL_AUX2 }
-{      GL_AUX3 }
-
-{ RenderingMode }
-  GL_RENDER                           = $1C00;
-  GL_FEEDBACK                         = $1C01;
-  GL_SELECT                           = $1C02;
-
-{ ShadingModel }
-  GL_FLAT                             = $1D00;
-  GL_SMOOTH                           = $1D01;
-
-{ StencilFunction }
-{      GL_NEVER }
-{      GL_LESS }
-{      GL_EQUAL }
-{      GL_LEQUAL }
-{      GL_GREATER }
-{      GL_NOTEQUAL }
-{      GL_GEQUAL }
-{      GL_ALWAYS }
-
-{ StencilOp }
-{      GL_ZERO }
-  GL_KEEP                             = $1E00;
-  GL_REPLACE                          = $1E01;
-  GL_INCR                             = $1E02;
-  GL_DECR                             = $1E03;
-{      GL_INVERT }
-
-{ StringName }
-  GL_VENDOR                           = $1F00;
-  GL_RENDERER                         = $1F01;
-  GL_VERSION                          = $1F02;
-  GL_EXTENSIONS                       = $1F03;
-
-{ TextureCoordName }
-  GL_S                                = $2000;
-  GL_T                                = $2001;
-  GL_R                                = $2002;
-  GL_Q                                = $2003;
-
-{ TextureEnvMode }
-  GL_MODULATE                         = $2100;
-  GL_DECAL                            = $2101;
-{      GL_BLEND }
-
-{ TextureEnvParameter }
-  GL_TEXTURE_ENV_MODE                 = $2200;
-  GL_TEXTURE_ENV_COLOR                = $2201;
-
-{ TextureEnvTarget }
-  GL_TEXTURE_ENV                      = $2300;
-
-{ TextureGenMode }
-  GL_EYE_LINEAR                       = $2400;
-  GL_OBJECT_LINEAR                    = $2401;
-  GL_SPHERE_MAP                       = $2402;
-
-{ TextureGenParameter }
-  GL_TEXTURE_GEN_MODE                 = $2500;
-  GL_OBJECT_PLANE                     = $2501;
-  GL_EYE_PLANE                        = $2502;
-
-{ TextureMagFilter }
-  GL_NEAREST                          = $2600;
-  GL_LINEAR                           = $2601;
-
-{ TextureMinFilter }
-{      GL_NEAREST }
-{      GL_LINEAR }
-  GL_NEAREST_MIPMAP_NEAREST           = $2700;
-  GL_LINEAR_MIPMAP_NEAREST            = $2701;
-  GL_NEAREST_MIPMAP_LINEAR            = $2702;
-  GL_LINEAR_MIPMAP_LINEAR             = $2703;
-
-{ TextureParameterName }
-  GL_TEXTURE_MAG_FILTER               = $2800;
-  GL_TEXTURE_MIN_FILTER               = $2801;
-  GL_TEXTURE_WRAP_S                   = $2802;
-  GL_TEXTURE_WRAP_T                   = $2803;
-{      GL_TEXTURE_BORDER_COLOR }
-
-{ TextureTarget }
-{      GL_TEXTURE_1D }
-{      GL_TEXTURE_2D }
-
-{ TextureWrapMode }
-  GL_CLAMP                            = $2900;
-  GL_REPEAT                           = $2901;
-
-{ ClipPlaneName }
-  GL_CLIP_PLANE0                      = $3000;
-  GL_CLIP_PLANE1                      = $3001;
-  GL_CLIP_PLANE2                      = $3002;
-  GL_CLIP_PLANE3                      = $3003;
-  GL_CLIP_PLANE4                      = $3004;
-  GL_CLIP_PLANE5                      = $3005;
-
-{ LightName }
-  GL_LIGHT0                           = $4000;
-  GL_LIGHT1                           = $4001;
-  GL_LIGHT2                           = $4002;
-  GL_LIGHT3                           = $4003;
-  GL_LIGHT4                           = $4004;
-  GL_LIGHT5                           = $4005;
-  GL_LIGHT6                           = $4006;
-  GL_LIGHT7                           = $4007;
-
-// Extensions
-  GL_EXT_vertex_array                 = 1;
-  GL_WIN_swap_hint                    = 1;
-
-// EXT_vertex_array
-  GL_VERTEX_ARRAY_EXT               = $8074;
-  GL_NORMAL_ARRAY_EXT               = $8075;
-  GL_COLOR_ARRAY_EXT                = $8076;
-  GL_INDEX_ARRAY_EXT                = $8077;
-  GL_TEXTURE_COORD_ARRAY_EXT        = $8078;
-  GL_EDGE_FLAG_ARRAY_EXT            = $8079;
-  GL_VERTEX_ARRAY_SIZE_EXT          = $807A;
-  GL_VERTEX_ARRAY_TYPE_EXT          = $807B;
-  GL_VERTEX_ARRAY_STRIDE_EXT        = $807C;
-  GL_VERTEX_ARRAY_COUNT_EXT         = $807D;
-  GL_NORMAL_ARRAY_TYPE_EXT          = $807E;
-  GL_NORMAL_ARRAY_STRIDE_EXT        = $807F;
-  GL_NORMAL_ARRAY_COUNT_EXT         = $8080;
-  GL_COLOR_ARRAY_SIZE_EXT           = $8081;
-  GL_COLOR_ARRAY_TYPE_EXT           = $8082;
-  GL_COLOR_ARRAY_STRIDE_EXT         = $8083;
-  GL_COLOR_ARRAY_COUNT_EXT          = $8084;
-  GL_INDEX_ARRAY_TYPE_EXT           = $8085;
-  GL_INDEX_ARRAY_STRIDE_EXT         = $8086;
-  GL_INDEX_ARRAY_COUNT_EXT          = $8087;
-  GL_TEXTURE_COORD_ARRAY_SIZE_EXT   = $8088;
-  GL_TEXTURE_COORD_ARRAY_TYPE_EXT   = $8089;
+   opengl32 =  'opengl32';
+   glu32    = 'glu32.dll';
+
+type
+   TRCOptions = set of (opDoubleBuffered,opGDI,opStereo);
+
+type
+   // Needed for Delphi 6 and less (defined in system.pas for Delphi 7)
+   PPointer    = ^Pointer;
+
+   TGLenum     = Cardinal;
+   TGLboolean  = BYTEBOOL;
+   TGLbitfield = Cardinal;
+   TGLbyte     = Shortint;
+   TGLshort    = SmallInt;
+   TGLint      = Integer;
+   TGLsizei    = Integer;
+   TGLubyte    = Byte;
+   TGLushort   = Word;
+   TGLuint     = Cardinal;
+   TGLfloat    = Single;
+   TGLclampf   = Single;
+   TGLdouble   = Double;
+   TGLclampd   = Double;
+   TGLvoid     = Pointer;
+   TGLint64    = Int64;
+
+   GLenum      = Cardinal;
+   GLboolean   = BYTEBOOL;
+   GLbitfield  = Cardinal;
+   GLbyte      = Shortint;
+   GLshort     = SmallInt;
+   GLint       = Integer;
+   GLsizei     = Integer;
+   GLubyte     = Byte;
+   GLushort    = Word;
+   GLuint      = Cardinal;
+   GLfloat     = Single;
+   GLclampf    = Single;
+   GLdouble    = Double;
+   GLclampd    = Double;
+   GLvoid      = Pointer;
+   GLint64     = Int64;
+
+   PGLBoolean  = ^TGLboolean;
+   PGLByte     = ^TGLbyte;
+   PGLShort    = ^TGLshort;
+   PGLInt      = ^TGLint;
+   PGLSizei    = ^TGLsizei;
+   PGLubyte    = ^TGLubyte;
+   PGLushort   = ^TGLushort;
+   PGLuint     = ^TGLuint;
+   PGLclampf   = ^TGLclampf;
+   PGLfloat    = ^TGLfloat;
+   PGLdouble   = ^TGLdouble;
+   PGLclampd   = ^TGLclampd;
+   PGLenum     = ^TGLenum;
+   PGLvoid     = Pointer;
+   PGLint64    = ^TGLint64;
+
+   // Datatypes corresponding to GL's types TGL(name)(type)(count)
+   TGLVectori4 = array[0..3] of TGLInt;
+   TGLVectorf4 = array[0..3] of TGLFloat;
+   TGLVectord3 = array[0..2] of TGLDouble;
+   TGLVectord4 = array[0..3] of TGLDouble;
+   TGLVectorp4 = array[0..3] of Pointer;
+
+   TGLArrayf4  = array [0..3] of TGLFloat;
+   TGLArrayf3  = array [0..2] of TGLFloat;
+   TGLArrayd3  = array [0..2] of TGLDouble;
+   TGLArrayi4  = array [0..3] of TGLint;
+   TGLArrayp4  = array [0..3] of Pointer;
+
+   TGLMatrixf4 = array[0..3, 0..3] of Single;
+   TGLMatrixd4 = array[0..3, 0..3] of Double;
+   TGlMatrixi4 = array[0..3, 0..3] of Integer;
+
+   // Datatypes corresponding to OpenGL12.pas for easy porting
+   TVector3d = TGLVectord3;
+
+   TVector4i = TGLVectori4;
+   TVector4f = TGLVectorf4;
+   TVector4p = TGLVectorp4;
+
+   TMatrix4f = TGLMatrixf4;
+   TMatrix4d = TGLMatrixd4;
+
+
+   // WGL_ARB_pbuffer
+   HPBUFFERARB = THandle;
+
+   // WGL_EXT_pbuffer
+   HPBUFFEREXT = THandle;
+
+   // GL_NV_half_float
+   TGLhalfNV = WORD;
+   PGLhalfNV = ^TGLhalfNV;
+
+   // GL_ARB_SHADER_OBJECTS
+   PGLHandleARB = ^GLHandleARB;
+   GLHandleARB  = Integer;
+   PPGLCharARB  = ^PChar;
+   PGLCharARB   = PChar;
+   GLCharARB    = Char;
+
+type
+   // GLU types
+TGLUNurbs      = record end;
+TGLUQuadric    = record end;
+TGLUTesselator = record end;
+PGLUNurbs      = ^TGLUNurbs;
+PGLUQuadric    = ^TGLUQuadric;
+PGLUTesselator = ^TGLUTesselator;
+// backwards compatibility
+TGLUNurbsObj        = TGLUNurbs;
+TGLUQuadricObj      = TGLUQuadric;
+TGLUTesselatorObj   = TGLUTesselator;
+TGLUTriangulatorObj = TGLUTesselator;
+PGLUNurbsObj        = PGLUNurbs;
+PGLUQuadricObj      = PGLUQuadric;
+PGLUTesselatorObj   = PGLUTesselator;
+PGLUTriangulatorObj = PGLUTesselator;
+// GLUQuadricCallback
+TGLUQuadricErrorProc     = procedure(errorCode: TGLEnum); stdcall; 
+// GLUTessCallback
+TGLUTessBeginProc        = procedure(AType: TGLEnum); stdcall; 
+TGLUTessEdgeFlagProc     = procedure(Flag: TGLboolean); stdcall;
+TGLUTessVertexProc       = procedure(VertexData: Pointer); stdcall; 
+TGLUTessEndProc          = procedure;  stdcall; 
+TGLUTessErrorProc        = procedure(ErrNo: TGLEnum);  stdcall; 
+TGLUTessCombineProc      = procedure(Coords: TGLArrayd3; VertexData: TGLArrayp4; Weight: TGLArrayf4; OutData: PPointer); stdcall; 
+TGLUTessBeginDataProc    = procedure(AType: TGLEnum; UserData: Pointer); stdcall; 
+TGLUTessEdgeFlagDataProc = procedure(Flag: TGLboolean; UserData: Pointer); stdcall; 
+TGLUTessVertexDataProc   = procedure(VertexData: Pointer; UserData: Pointer);  stdcall; 
+TGLUTessEndDataProc      = procedure(UserData: Pointer); stdcall; 
+TGLUTessErrorDataProc    = procedure(ErrNo: TGLEnum; UserData: Pointer);  stdcall; 
+TGLUTessCombineDataProc  = procedure(Coords: TGLArrayd3; VertexData: TGLArrayp4; Weight: TGLArrayf4; OutData: PPointer; UserData: Pointer); stdcall; 
+// GLUNurbsCallback
+TGLUNurbsErrorProc       = procedure(ErrorCode: TGLEnum); stdcall; 
+
+const
+  // GL_VERSION_1_1
+  GL_ACCUM = $0100;
+  GL_LOAD = $0101;
+  GL_RETURN = $0102;
+  GL_MULT = $0103;
+  GL_ADD = $0104;
+  GL_NEVER = $0200;
+  GL_LESS = $0201;
+  GL_EQUAL = $0202;
+  GL_LEQUAL = $0203;
+  GL_GREATER = $0204;
+  GL_NOTEQUAL = $0205;
+  GL_GEQUAL = $0206;
+  GL_ALWAYS = $0207;
+  GL_CURRENT_BIT = $00000001;
+  GL_POINT_BIT = $00000002;
+  GL_LINE_BIT = $00000004;
+  GL_POLYGON_BIT = $00000008;
+  GL_POLYGON_STIPPLE_BIT = $00000010;
+  GL_PIXEL_MODE_BIT = $00000020;
+  GL_LIGHTING_BIT = $00000040;
+  GL_FOG_BIT = $00000080;
+  GL_DEPTH_BUFFER_BIT = $00000100;
+  GL_ACCUM_BUFFER_BIT = $00000200;
+  GL_STENCIL_BUFFER_BIT = $00000400;
+  GL_VIEWPORT_BIT = $00000800;
+  GL_TRANSFORM_BIT = $00001000;
+  GL_ENABLE_BIT = $00002000;
+  GL_COLOR_BUFFER_BIT = $00004000;
+  GL_HINT_BIT = $00008000;
+  GL_EVAL_BIT = $00010000;
+  GL_LIST_BIT = $00020000;
+  GL_TEXTURE_BIT = $00040000;
+  GL_SCISSOR_BIT = $00080000;
+  GL_ALL_ATTRIB_BITS = $000FFFFF;
+  GL_POINTS = $0000;
+  GL_LINES = $0001;
+  GL_LINE_LOOP = $0002;
+  GL_LINE_STRIP = $0003;
+  GL_TRIANGLES = $0004;
+  GL_TRIANGLE_STRIP = $0005;
+  GL_TRIANGLE_FAN = $0006;
+  GL_QUADS = $0007;
+  GL_QUAD_STRIP = $0008;
+  GL_POLYGON = $0009;
+  GL_ZERO = 0;
+  GL_ONE = 1;
+  GL_SRC_COLOR = $0300;
+  GL_ONE_MINUS_SRC_COLOR = $0301;
+  GL_SRC_ALPHA = $0302;
+  GL_ONE_MINUS_SRC_ALPHA = $0303;
+  GL_DST_ALPHA = $0304;
+  GL_ONE_MINUS_DST_ALPHA = $0305;
+  GL_DST_COLOR = $0306;
+  GL_ONE_MINUS_DST_COLOR = $0307;
+  GL_SRC_ALPHA_SATURATE = $0308;
+  GL_TRUE = 1;
+  GL_FALSE = 0;
+  GL_CLIP_PLANE0 = $3000;
+  GL_CLIP_PLANE1 = $3001;
+  GL_CLIP_PLANE2 = $3002;
+  GL_CLIP_PLANE3 = $3003;
+  GL_CLIP_PLANE4 = $3004;
+  GL_CLIP_PLANE5 = $3005;
+  GL_BYTE = $1400;
+  GL_UNSIGNED_BYTE = $1401;
+  GL_SHORT = $1402;
+  GL_UNSIGNED_SHORT = $1403;
+  GL_INT = $1404;
+  GL_UNSIGNED_INT = $1405;
+  GL_FLOAT = $1406;
+  GL_2_BYTES = $1407;
+  GL_3_BYTES = $1408;
+  GL_4_BYTES = $1409;
+  GL_DOUBLE = $140A;
+  GL_NONE = 0;
+  GL_FRONT_LEFT = $0400;
+  GL_FRONT_RIGHT = $0401;
+  GL_BACK_LEFT = $0402;
+  GL_BACK_RIGHT = $0403;
+  GL_FRONT = $0404;
+  GL_BACK = $0405;
+  GL_LEFT = $0406;
+  GL_RIGHT = $0407;
+  GL_FRONT_AND_BACK = $0408;
+  GL_AUX0 = $0409;
+  GL_AUX1 = $040A;
+  GL_AUX2 = $040B;
+  GL_AUX3 = $040C;
+  GL_NO_ERROR = 0;
+  GL_INVALID_ENUM = $0500;
+  GL_INVALID_VALUE = $0501;
+  GL_INVALID_OPERATION = $0502;
+  GL_STACK_OVERFLOW = $0503;
+  GL_STACK_UNDERFLOW = $0504;
+  GL_OUT_OF_MEMORY = $0505;
+  GL_2D = $0600;
+  GL_3D = $0601;
+  GL_3D_COLOR = $0602;
+  GL_3D_COLOR_TEXTURE = $0603;
+  GL_4D_COLOR_TEXTURE = $0604;
+  GL_PASS_THROUGH_TOKEN = $0700;
+  GL_POINT_TOKEN = $0701;
+  GL_LINE_TOKEN = $0702;
+  GL_POLYGON_TOKEN = $0703;
+  GL_BITMAP_TOKEN = $0704;
+  GL_DRAW_PIXEL_TOKEN = $0705;
+  GL_COPY_PIXEL_TOKEN = $0706;
+  GL_LINE_RESET_TOKEN = $0707;
+  GL_EXP = $0800;
+  GL_EXP2 = $0801;
+  GL_CW = $0900;
+  GL_CCW = $0901;
+  GL_COEFF = $0A00;
+  GL_ORDER = $0A01;
+  GL_DOMAIN = $0A02;
+  GL_CURRENT_COLOR = $0B00;
+  GL_CURRENT_INDEX = $0B01;
+  GL_CURRENT_NORMAL = $0B02;
+  GL_CURRENT_TEXTURE_COORDS = $0B03;
+  GL_CURRENT_RASTER_COLOR = $0B04;
+  GL_CURRENT_RASTER_INDEX = $0B05;
+  GL_CURRENT_RASTER_TEXTURE_COORDS = $0B06;
+  GL_CURRENT_RASTER_POSITION = $0B07;
+  GL_CURRENT_RASTER_POSITION_VALID = $0B08;
+  GL_CURRENT_RASTER_DISTANCE = $0B09;
+  GL_POINT_SMOOTH = $0B10;
+  GL_POINT_SIZE = $0B11;
+  GL_POINT_SIZE_RANGE = $0B12;
+  GL_POINT_SIZE_GRANULARITY = $0B13;
+  GL_LINE_SMOOTH = $0B20;
+  GL_LINE_WIDTH = $0B21;
+  GL_LINE_WIDTH_RANGE = $0B22;
+  GL_LINE_WIDTH_GRANULARITY = $0B23;
+  GL_LINE_STIPPLE = $0B24;
+  GL_LINE_STIPPLE_PATTERN = $0B25;
+  GL_LINE_STIPPLE_REPEAT = $0B26;
+  GL_LIST_MODE = $0B30;
+  GL_MAX_LIST_NESTING = $0B31;
+  GL_LIST_BASE = $0B32;
+  GL_LIST_INDEX = $0B33;
+  GL_POLYGON_MODE = $0B40;
+  GL_POLYGON_SMOOTH = $0B41;
+  GL_POLYGON_STIPPLE = $0B42;
+  GL_EDGE_FLAG = $0B43;
+  GL_CULL_FACE = $0B44;
+  GL_CULL_FACE_MODE = $0B45;
+  GL_FRONT_FACE = $0B46;
+  GL_LIGHTING = $0B50;
+  GL_LIGHT_MODEL_LOCAL_VIEWER = $0B51;
+  GL_LIGHT_MODEL_TWO_SIDE = $0B52;
+  GL_LIGHT_MODEL_AMBIENT = $0B53;
+  GL_SHADE_MODEL = $0B54;
+  GL_COLOR_MATERIAL_FACE = $0B55;
+  GL_COLOR_MATERIAL_PARAMETER = $0B56;
+  GL_COLOR_MATERIAL = $0B57;
+  GL_FOG = $0B60;
+  GL_FOG_INDEX = $0B61;
+  GL_FOG_DENSITY = $0B62;
+  GL_FOG_START = $0B63;
+  GL_FOG_END = $0B64;
+  GL_FOG_MODE = $0B65;
+  GL_FOG_COLOR = $0B66;
+  GL_DEPTH_RANGE = $0B70;
+  GL_DEPTH_TEST = $0B71;
+  GL_DEPTH_WRITEMASK = $0B72;
+  GL_DEPTH_CLEAR_VALUE = $0B73;
+  GL_DEPTH_FUNC = $0B74;
+  GL_ACCUM_CLEAR_VALUE = $0B80;
+  GL_STENCIL_TEST = $0B90;
+  GL_STENCIL_CLEAR_VALUE = $0B91;
+  GL_STENCIL_FUNC = $0B92;
+  GL_STENCIL_VALUE_MASK = $0B93;
+  GL_STENCIL_FAIL = $0B94;
+  GL_STENCIL_PASS_DEPTH_FAIL = $0B95;
+  GL_STENCIL_PASS_DEPTH_PASS = $0B96;
+  GL_STENCIL_REF = $0B97;
+  GL_STENCIL_WRITEMASK = $0B98;
+  GL_MATRIX_MODE = $0BA0;
+  GL_NORMALIZE = $0BA1;
+  GL_VIEWPORT = $0BA2;
+  GL_MODELVIEW_STACK_DEPTH = $0BA3;
+  GL_PROJECTION_STACK_DEPTH = $0BA4;
+  GL_TEXTURE_STACK_DEPTH = $0BA5;
+  GL_MODELVIEW_MATRIX = $0BA6;
+  GL_PROJECTION_MATRIX = $0BA7;
+  GL_TEXTURE_MATRIX = $0BA8;
+  GL_ATTRIB_STACK_DEPTH = $0BB0;
+  GL_CLIENT_ATTRIB_STACK_DEPTH = $0BB1;
+  GL_ALPHA_TEST = $0BC0;
+  GL_ALPHA_TEST_FUNC = $0BC1;
+  GL_ALPHA_TEST_REF = $0BC2;
+  GL_DITHER = $0BD0;
+  GL_BLEND_DST = $0BE0;
+  GL_BLEND_SRC = $0BE1;
+  GL_BLEND = $0BE2;
+  GL_LOGIC_OP_MODE = $0BF0;
+  GL_INDEX_LOGIC_OP = $0BF1;
+  GL_COLOR_LOGIC_OP = $0BF2;
+  GL_AUX_BUFFERS = $0C00;
+  GL_DRAW_BUFFER = $0C01;
+  GL_READ_BUFFER = $0C02;
+  GL_SCISSOR_BOX = $0C10;
+  GL_SCISSOR_TEST = $0C11;
+  GL_INDEX_CLEAR_VALUE = $0C20;
+  GL_INDEX_WRITEMASK = $0C21;
+  GL_COLOR_CLEAR_VALUE = $0C22;
+  GL_COLOR_WRITEMASK = $0C23;
+  GL_INDEX_MODE = $0C30;
+  GL_RGBA_MODE = $0C31;
+  GL_DOUBLEBUFFER = $0C32;
+  GL_STEREO = $0C33;
+  GL_RENDER_MODE = $0C40;
+  GL_PERSPECTIVE_CORRECTION_HINT = $0C50;
+  GL_POINT_SMOOTH_HINT = $0C51;
+  GL_LINE_SMOOTH_HINT = $0C52;
+  GL_POLYGON_SMOOTH_HINT = $0C53;
+  GL_FOG_HINT = $0C54;
+  GL_TEXTURE_GEN_S = $0C60;
+  GL_TEXTURE_GEN_T = $0C61;
+  GL_TEXTURE_GEN_R = $0C62;
+  GL_TEXTURE_GEN_Q = $0C63;
+  GL_PIXEL_MAP_I_TO_I = $0C70;
+  GL_PIXEL_MAP_S_TO_S = $0C71;
+  GL_PIXEL_MAP_I_TO_R = $0C72;
+  GL_PIXEL_MAP_I_TO_G = $0C73;
+  GL_PIXEL_MAP_I_TO_B = $0C74;
+  GL_PIXEL_MAP_I_TO_A = $0C75;
+  GL_PIXEL_MAP_R_TO_R = $0C76;
+  GL_PIXEL_MAP_G_TO_G = $0C77;
+  GL_PIXEL_MAP_B_TO_B = $0C78;
+  GL_PIXEL_MAP_A_TO_A = $0C79;
+  GL_PIXEL_MAP_I_TO_I_SIZE = $0CB0;
+  GL_PIXEL_MAP_S_TO_S_SIZE = $0CB1;
+  GL_PIXEL_MAP_I_TO_R_SIZE = $0CB2;
+  GL_PIXEL_MAP_I_TO_G_SIZE = $0CB3;
+  GL_PIXEL_MAP_I_TO_B_SIZE = $0CB4;
+  GL_PIXEL_MAP_I_TO_A_SIZE = $0CB5;
+  GL_PIXEL_MAP_R_TO_R_SIZE = $0CB6;
+  GL_PIXEL_MAP_G_TO_G_SIZE = $0CB7;
+  GL_PIXEL_MAP_B_TO_B_SIZE = $0CB8;
+  GL_PIXEL_MAP_A_TO_A_SIZE = $0CB9;
+  GL_UNPACK_SWAP_BYTES = $0CF0;
+  GL_UNPACK_LSB_FIRST = $0CF1;
+  GL_UNPACK_ROW_LENGTH = $0CF2;
+  GL_UNPACK_SKIP_ROWS = $0CF3;
+  GL_UNPACK_SKIP_PIXELS = $0CF4;
+  GL_UNPACK_ALIGNMENT = $0CF5;
+  GL_PACK_SWAP_BYTES = $0D00;
+  GL_PACK_LSB_FIRST = $0D01;
+  GL_PACK_ROW_LENGTH = $0D02;
+  GL_PACK_SKIP_ROWS = $0D03;
+  GL_PACK_SKIP_PIXELS = $0D04;
+  GL_PACK_ALIGNMENT = $0D05;
+  GL_MAP_COLOR = $0D10;
+  GL_MAP_STENCIL = $0D11;
+  GL_INDEX_SHIFT = $0D12;
+  GL_INDEX_OFFSET = $0D13;
+  GL_RED_SCALE = $0D14;
+  GL_RED_BIAS = $0D15;
+  GL_ZOOM_X = $0D16;
+  GL_ZOOM_Y = $0D17;
+  GL_GREEN_SCALE = $0D18;
+  GL_GREEN_BIAS = $0D19;
+  GL_BLUE_SCALE = $0D1A;
+  GL_BLUE_BIAS = $0D1B;
+  GL_ALPHA_SCALE = $0D1C;
+  GL_ALPHA_BIAS = $0D1D;
+  GL_DEPTH_SCALE = $0D1E;
+  GL_DEPTH_BIAS = $0D1F;
+  GL_MAX_EVAL_ORDER = $0D30;
+  GL_MAX_LIGHTS = $0D31;
+  GL_MAX_CLIP_PLANES = $0D32;
+  GL_MAX_TEXTURE_SIZE = $0D33;
+  GL_MAX_PIXEL_MAP_TABLE = $0D34;
+  GL_MAX_ATTRIB_STACK_DEPTH = $0D35;
+  GL_MAX_MODELVIEW_STACK_DEPTH = $0D36;
+  GL_MAX_NAME_STACK_DEPTH = $0D37;
+  GL_MAX_PROJECTION_STACK_DEPTH = $0D38;
+  GL_MAX_TEXTURE_STACK_DEPTH = $0D39;
+  GL_MAX_VIEWPORT_DIMS = $0D3A;
+  GL_MAX_CLIENT_ATTRIB_STACK_DEPTH = $0D3B;
+  GL_SUBPIXEL_BITS = $0D50;
+  GL_INDEX_BITS = $0D51;
+  GL_RED_BITS = $0D52;
+  GL_GREEN_BITS = $0D53;
+  GL_BLUE_BITS = $0D54;
+  GL_ALPHA_BITS = $0D55;
+  GL_DEPTH_BITS = $0D56;
+  GL_STENCIL_BITS = $0D57;
+  GL_ACCUM_RED_BITS = $0D58;
+  GL_ACCUM_GREEN_BITS = $0D59;
+  GL_ACCUM_BLUE_BITS = $0D5A;
+  GL_ACCUM_ALPHA_BITS = $0D5B;
+  GL_NAME_STACK_DEPTH = $0D70;
+  GL_AUTO_NORMAL = $0D80;
+  GL_MAP1_COLOR_4 = $0D90;
+  GL_MAP1_INDEX = $0D91;
+  GL_MAP1_NORMAL = $0D92;
+  GL_MAP1_TEXTURE_COORD_1 = $0D93;
+  GL_MAP1_TEXTURE_COORD_2 = $0D94;
+  GL_MAP1_TEXTURE_COORD_3 = $0D95;
+  GL_MAP1_TEXTURE_COORD_4 = $0D96;
+  GL_MAP1_VERTEX_3 = $0D97;
+  GL_MAP1_VERTEX_4 = $0D98;
+  GL_MAP2_COLOR_4 = $0DB0;
+  GL_MAP2_INDEX = $0DB1;
+  GL_MAP2_NORMAL = $0DB2;
+  GL_MAP2_TEXTURE_COORD_1 = $0DB3;
+  GL_MAP2_TEXTURE_COORD_2 = $0DB4;
+  GL_MAP2_TEXTURE_COORD_3 = $0DB5;
+  GL_MAP2_TEXTURE_COORD_4 = $0DB6;
+  GL_MAP2_VERTEX_3 = $0DB7;
+  GL_MAP2_VERTEX_4 = $0DB8;
+  GL_MAP1_GRID_DOMAIN = $0DD0;
+  GL_MAP1_GRID_SEGMENTS = $0DD1;
+  GL_MAP2_GRID_DOMAIN = $0DD2;
+  GL_MAP2_GRID_SEGMENTS = $0DD3;
+  GL_TEXTURE_1D = $0DE0;
+  GL_TEXTURE_2D = $0DE1;
+  GL_FEEDBACK_BUFFER_POINTER = $0DF0;
+  GL_FEEDBACK_BUFFER_SIZE = $0DF1;
+  GL_FEEDBACK_BUFFER_TYPE = $0DF2;
+  GL_SELECTION_BUFFER_POINTER = $0DF3;
+  GL_SELECTION_BUFFER_SIZE = $0DF4;
+  GL_TEXTURE_WIDTH = $1000;
+  GL_TEXTURE_HEIGHT = $1001;
+  GL_TEXTURE_INTERNAL_FORMAT = $1003;
+  GL_TEXTURE_BORDER_COLOR = $1004;
+  GL_TEXTURE_BORDER = $1005;
+  GL_DONT_CARE = $1100;
+  GL_FASTEST = $1101;
+  GL_NICEST = $1102;
+  GL_LIGHT0 = $4000;
+  GL_LIGHT1 = $4001;
+  GL_LIGHT2 = $4002;
+  GL_LIGHT3 = $4003;
+  GL_LIGHT4 = $4004;
+  GL_LIGHT5 = $4005;
+  GL_LIGHT6 = $4006;
+  GL_LIGHT7 = $4007;
+  GL_AMBIENT = $1200;
+  GL_DIFFUSE = $1201;
+  GL_SPECULAR = $1202;
+  GL_POSITION = $1203;
+  GL_SPOT_DIRECTION = $1204;
+  GL_SPOT_EXPONENT = $1205;
+  GL_SPOT_CUTOFF = $1206;
+  GL_CONSTANT_ATTENUATION = $1207;
+  GL_LINEAR_ATTENUATION = $1208;
+  GL_QUADRATIC_ATTENUATION = $1209;
+  GL_COMPILE = $1300;
+  GL_COMPILE_AND_EXECUTE = $1301;
+  GL_CLEAR = $1500;
+  GL_AND = $1501;
+  GL_AND_REVERSE = $1502;
+  GL_COPY = $1503;
+  GL_AND_INVERTED = $1504;
+  GL_NOOP = $1505;
+  GL_XOR = $1506;
+  GL_OR = $1507;
+  GL_NOR = $1508;
+  GL_EQUIV = $1509;
+  GL_INVERT = $150A;
+  GL_OR_REVERSE = $150B;
+  GL_COPY_INVERTED = $150C;
+  GL_OR_INVERTED = $150D;
+  GL_NAND = $150E;
+  GL_SET = $150F;
+  GL_EMISSION = $1600;
+  GL_SHININESS = $1601;
+  GL_AMBIENT_AND_DIFFUSE = $1602;
+  GL_COLOR_INDEXES = $1603;
+  GL_MODELVIEW = $1700;
+  GL_PROJECTION = $1701;
+  GL_TEXTURE = $1702;
+  GL_COLOR = $1800;
+  GL_DEPTH = $1801;
+  GL_STENCIL = $1802;
+  GL_COLOR_INDEX = $1900;
+  GL_STENCIL_INDEX = $1901;
+  GL_DEPTH_COMPONENT = $1902;
+  GL_RED = $1903;
+  GL_GREEN = $1904;
+  GL_BLUE = $1905;
+  GL_ALPHA = $1906;
+  GL_RGB = $1907;
+  GL_RGBA = $1908;
+  GL_LUMINANCE = $1909;
+  GL_LUMINANCE_ALPHA = $190A;
+  GL_BITMAP = $1A00;
+  GL_POINT = $1B00;
+  GL_LINE = $1B01;
+  GL_FILL = $1B02;
+  GL_RENDER = $1C00;
+  GL_FEEDBACK = $1C01;
+  GL_SELECT = $1C02;
+  GL_FLAT = $1D00;
+  GL_SMOOTH = $1D01;
+  GL_KEEP = $1E00;
+  GL_REPLACE = $1E01;
+  GL_INCR = $1E02;
+  GL_DECR = $1E03;
+  GL_VENDOR = $1F00;
+  GL_RENDERER = $1F01;
+  GL_VERSION = $1F02;
+  GL_EXTENSIONS = $1F03;
+  GL_S = $2000;
+  GL_T = $2001;
+  GL_R = $2002;
+  GL_Q = $2003;
+  GL_MODULATE = $2100;
+  GL_DECAL = $2101;
+  GL_TEXTURE_ENV_MODE = $2200;
+  GL_TEXTURE_ENV_COLOR = $2201;
+  GL_TEXTURE_ENV = $2300;
+  GL_EYE_LINEAR = $2400;
+  GL_OBJECT_LINEAR = $2401;
+  GL_SPHERE_MAP = $2402;
+  GL_TEXTURE_GEN_MODE = $2500;
+  GL_OBJECT_PLANE = $2501;
+  GL_EYE_PLANE = $2502;
+  GL_NEAREST = $2600;
+  GL_LINEAR = $2601;
+  GL_NEAREST_MIPMAP_NEAREST = $2700;
+  GL_LINEAR_MIPMAP_NEAREST = $2701;
+  GL_NEAREST_MIPMAP_LINEAR = $2702;
+  GL_LINEAR_MIPMAP_LINEAR = $2703;
+  GL_TEXTURE_MAG_FILTER = $2800;
+  GL_TEXTURE_MIN_FILTER = $2801;
+  GL_TEXTURE_WRAP_S = $2802;
+  GL_TEXTURE_WRAP_T = $2803;
+  GL_CLAMP = $2900;
+  GL_REPEAT = $2901;
+  GL_CLIENT_PIXEL_STORE_BIT = $00000001;
+  GL_CLIENT_VERTEX_ARRAY_BIT = $00000002;
+  GL_CLIENT_ALL_ATTRIB_BITS = $FFFFFFFF;
+  GL_POLYGON_OFFSET_FACTOR = $8038;
+  GL_POLYGON_OFFSET_UNITS = $2A00;
+  GL_POLYGON_OFFSET_POINT = $2A01;
+  GL_POLYGON_OFFSET_LINE = $2A02;
+  GL_POLYGON_OFFSET_FILL = $8037;
+  GL_ALPHA4 = $803B;
+  GL_ALPHA8 = $803C;
+  GL_ALPHA12 = $803D;
+  GL_ALPHA16 = $803E;
+  GL_LUMINANCE4 = $803F;
+  GL_LUMINANCE8 = $8040;
+  GL_LUMINANCE12 = $8041;
+  GL_LUMINANCE16 = $8042;
+  GL_LUMINANCE4_ALPHA4 = $8043;
+  GL_LUMINANCE6_ALPHA2 = $8044;
+  GL_LUMINANCE8_ALPHA8 = $8045;
+  GL_LUMINANCE12_ALPHA4 = $8046;
+  GL_LUMINANCE12_ALPHA12 = $8047;
+  GL_LUMINANCE16_ALPHA16 = $8048;
+  GL_INTENSITY = $8049;
+  GL_INTENSITY4 = $804A;
+  GL_INTENSITY8 = $804B;
+  GL_INTENSITY12 = $804C;
+  GL_INTENSITY16 = $804D;
+  GL_R3_G3_B2 = $2A10;
+  GL_RGB4 = $804F;
+  GL_RGB5 = $8050;
+  GL_RGB8 = $8051;
+  GL_RGB10 = $8052;
+  GL_RGB12 = $8053;
+  GL_RGB16 = $8054;
+  GL_RGBA2 = $8055;
+  GL_RGBA4 = $8056;
+  GL_RGB5_A1 = $8057;
+  GL_RGBA8 = $8058;
+  GL_RGB10_A2 = $8059;
+  GL_RGBA12 = $805A;
+  GL_RGBA16 = $805B;
+  GL_TEXTURE_RED_SIZE = $805C;
+  GL_TEXTURE_GREEN_SIZE = $805D;
+  GL_TEXTURE_BLUE_SIZE = $805E;
+  GL_TEXTURE_ALPHA_SIZE = $805F;
+  GL_TEXTURE_LUMINANCE_SIZE = $8060;
+  GL_TEXTURE_INTENSITY_SIZE = $8061;
+  GL_PROXY_TEXTURE_1D = $8063;
+  GL_PROXY_TEXTURE_2D = $8064;
+  GL_TEXTURE_PRIORITY = $8066;
+  GL_TEXTURE_RESIDENT = $8067;
+  GL_TEXTURE_BINDING_1D = $8068;
+  GL_TEXTURE_BINDING_2D = $8069;
+  GL_VERTEX_ARRAY = $8074;
+  GL_NORMAL_ARRAY = $8075;
+  GL_COLOR_ARRAY = $8076;
+  GL_INDEX_ARRAY = $8077;
+  GL_TEXTURE_COORD_ARRAY = $8078;
+  GL_EDGE_FLAG_ARRAY = $8079;
+  GL_VERTEX_ARRAY_SIZE = $807A;
+  GL_VERTEX_ARRAY_TYPE = $807B;
+  GL_VERTEX_ARRAY_STRIDE = $807C;
+  GL_NORMAL_ARRAY_TYPE = $807E;
+  GL_NORMAL_ARRAY_STRIDE = $807F;
+  GL_COLOR_ARRAY_SIZE = $8081;
+  GL_COLOR_ARRAY_TYPE = $8082;
+  GL_COLOR_ARRAY_STRIDE = $8083;
+  GL_INDEX_ARRAY_TYPE = $8085;
+  GL_INDEX_ARRAY_STRIDE = $8086;
+  GL_TEXTURE_COORD_ARRAY_SIZE = $8088;
+  GL_TEXTURE_COORD_ARRAY_TYPE = $8089;
+  GL_TEXTURE_COORD_ARRAY_STRIDE = $808A;
+  GL_EDGE_FLAG_ARRAY_STRIDE = $808C;
+  GL_VERTEX_ARRAY_POINTER = $808E;
+  GL_NORMAL_ARRAY_POINTER = $808F;
+  GL_COLOR_ARRAY_POINTER = $8090;
+  GL_INDEX_ARRAY_POINTER = $8091;
+  GL_TEXTURE_COORD_ARRAY_POINTER = $8092;
+  GL_EDGE_FLAG_ARRAY_POINTER = $8093;
+  GL_V2F = $2A20;
+  GL_V3F = $2A21;
+  GL_C4UB_V2F = $2A22;
+  GL_C4UB_V3F = $2A23;
+  GL_C3F_V3F = $2A24;
+  GL_N3F_V3F = $2A25;
+  GL_C4F_N3F_V3F = $2A26;
+  GL_T2F_V3F = $2A27;
+  GL_T4F_V4F = $2A28;
+  GL_T2F_C4UB_V3F = $2A29;
+  GL_T2F_C3F_V3F = $2A2A;
+  GL_T2F_N3F_V3F = $2A2B;
+  GL_T2F_C4F_N3F_V3F = $2A2C;
+  GL_T4F_C4F_N3F_V4F = $2A2D;
+  GL_COLOR_TABLE_FORMAT_EXT = $80D8;
+  GL_COLOR_TABLE_WIDTH_EXT = $80D9;
+  GL_COLOR_TABLE_RED_SIZE_EXT = $80DA;
+  GL_COLOR_TABLE_GREEN_SIZE_EXT = $80DB;
+  GL_COLOR_TABLE_BLUE_SIZE_EXT = $80DC;
+  GL_COLOR_TABLE_ALPHA_SIZE_EXT = $80DD;
+  GL_COLOR_TABLE_LUMINANCE_SIZE_EXT = $80DE;
+  GL_COLOR_TABLE_INTENSITY_SIZE_EXT = $80DF;
+  GL_LOGIC_OP = GL_INDEX_LOGIC_OP;
+  GL_TEXTURE_COMPONENTS = GL_TEXTURE_INTERNAL_FORMAT;
+
+  // GL_VERSION_1_2
+  GL_UNSIGNED_BYTE_3_3_2 = $8032;
+  GL_UNSIGNED_SHORT_4_4_4_4 = $8033;
+  GL_UNSIGNED_SHORT_5_5_5_1 = $8034;
+  GL_UNSIGNED_INT_8_8_8_8 = $8035;
+  GL_UNSIGNED_INT_10_10_10_2 = $8036;
+  GL_RESCALE_NORMAL = $803A;
+  GL_TEXTURE_BINDING_3D = $806A;
+  GL_PACK_SKIP_IMAGES = $806B;
+  GL_PACK_IMAGE_HEIGHT = $806C;
+  GL_UNPACK_SKIP_IMAGES = $806D;
+  GL_UNPACK_IMAGE_HEIGHT = $806E;
+  GL_TEXTURE_3D = $806F;
+  GL_PROXY_TEXTURE_3D = $8070;
+  GL_TEXTURE_DEPTH = $8071;
+  GL_TEXTURE_WRAP_R = $8072;
+  GL_MAX_3D_TEXTURE_SIZE = $8073;
+  GL_UNSIGNED_BYTE_2_3_3_REV = $8362;
+  GL_UNSIGNED_SHORT_5_6_5 = $8363;
+  GL_UNSIGNED_SHORT_5_6_5_REV = $8364;
+  GL_UNSIGNED_SHORT_4_4_4_4_REV = $8365;
+  GL_UNSIGNED_SHORT_1_5_5_5_REV = $8366;
+  GL_UNSIGNED_INT_8_8_8_8_REV = $8367;
+  GL_UNSIGNED_INT_2_10_10_10_REV = $8368;
+  GL_BGR = $80E0;
+  GL_BGRA = $80E1;
+  GL_MAX_ELEMENTS_VERTICES = $80E8;
+  GL_MAX_ELEMENTS_INDICES = $80E9;
+  GL_CLAMP_TO_EDGE = $812F;
+  GL_TEXTURE_MIN_LOD = $813A;
+  GL_TEXTURE_MAX_LOD = $813B;
+  GL_TEXTURE_BASE_LEVEL = $813C;
+  GL_TEXTURE_MAX_LEVEL = $813D;
+  GL_LIGHT_MODEL_COLOR_CONTROL = $81F8;
+  GL_SINGLE_COLOR = $81F9;
+  GL_SEPARATE_SPECULAR_COLOR = $81FA;
+  GL_SMOOTH_POINT_SIZE_RANGE = $0B12;
+  GL_SMOOTH_POINT_SIZE_GRANULARITY = $0B13;
+  GL_SMOOTH_LINE_WIDTH_RANGE = $0B22;
+  GL_SMOOTH_LINE_WIDTH_GRANULARITY = $0B23;
+  GL_ALIASED_POINT_SIZE_RANGE = $846D;
+  GL_ALIASED_LINE_WIDTH_RANGE = $846E;
+
+  // GL_VERSION_1_3
+  GL_TEXTURE0 = $84C0;
+  GL_TEXTURE1 = $84C1;
+  GL_TEXTURE2 = $84C2;
+  GL_TEXTURE3 = $84C3;
+  GL_TEXTURE4 = $84C4;
+  GL_TEXTURE5 = $84C5;
+  GL_TEXTURE6 = $84C6;
+  GL_TEXTURE7 = $84C7;
+  GL_TEXTURE8 = $84C8;
+  GL_TEXTURE9 = $84C9;
+  GL_TEXTURE10 = $84CA;
+  GL_TEXTURE11 = $84CB;
+  GL_TEXTURE12 = $84CC;
+  GL_TEXTURE13 = $84CD;
+  GL_TEXTURE14 = $84CE;
+  GL_TEXTURE15 = $84CF;
+  GL_TEXTURE16 = $84D0;
+  GL_TEXTURE17 = $84D1;
+  GL_TEXTURE18 = $84D2;
+  GL_TEXTURE19 = $84D3;
+  GL_TEXTURE20 = $84D4;
+  GL_TEXTURE21 = $84D5;
+  GL_TEXTURE22 = $84D6;
+  GL_TEXTURE23 = $84D7;
+  GL_TEXTURE24 = $84D8;
+  GL_TEXTURE25 = $84D9;
+  GL_TEXTURE26 = $84DA;
+  GL_TEXTURE27 = $84DB;
+  GL_TEXTURE28 = $84DC;
+  GL_TEXTURE29 = $84DD;
+  GL_TEXTURE30 = $84DE;
+  GL_TEXTURE31 = $84DF;
+  GL_ACTIVE_TEXTURE = $84E0;
+  GL_CLIENT_ACTIVE_TEXTURE = $84E1;
+  GL_MAX_TEXTURE_UNITS = $84E2;
+  GL_TRANSPOSE_MODELVIEW_MATRIX = $84E3;
+  GL_TRANSPOSE_PROJECTION_MATRIX = $84E4;
+  GL_TRANSPOSE_TEXTURE_MATRIX = $84E5;
+  GL_TRANSPOSE_COLOR_MATRIX = $84E6;
+  GL_MULTISAMPLE = $809D;
+  GL_SAMPLE_ALPHA_TO_COVERAGE = $809E;
+  GL_SAMPLE_ALPHA_TO_ONE = $809F;
+  GL_SAMPLE_COVERAGE = $80A0;
+  GL_SAMPLE_BUFFERS = $80A8;
+  GL_SAMPLES = $80A9;
+  GL_SAMPLE_COVERAGE_VALUE = $80AA;
+  GL_SAMPLE_COVERAGE_INVERT = $80AB;
+  GL_MULTISAMPLE_BIT = $20000000;
+  GL_NORMAL_MAP = $8511;
+  GL_REFLECTION_MAP = $8512;
+  GL_TEXTURE_CUBE_MAP = $8513;
+  GL_TEXTURE_BINDING_CUBE_MAP = $8514;
+  GL_TEXTURE_CUBE_MAP_POSITIVE_X = $8515;
+  GL_TEXTURE_CUBE_MAP_NEGATIVE_X = $8516;
+  GL_TEXTURE_CUBE_MAP_POSITIVE_Y = $8517;
+  GL_TEXTURE_CUBE_MAP_NEGATIVE_Y = $8518;
+  GL_TEXTURE_CUBE_MAP_POSITIVE_Z = $8519;
+  GL_TEXTURE_CUBE_MAP_NEGATIVE_Z = $851A;
+  GL_PROXY_TEXTURE_CUBE_MAP = $851B;
+  GL_MAX_CUBE_MAP_TEXTURE_SIZE = $851C;
+  GL_COMPRESSED_ALPHA = $84E9;
+  GL_COMPRESSED_LUMINANCE = $84EA;
+  GL_COMPRESSED_LUMINANCE_ALPHA = $84EB;
+  GL_COMPRESSED_INTENSITY = $84EC;
+  GL_COMPRESSED_RGB = $84ED;
+  GL_COMPRESSED_RGBA = $84EE;
+  GL_TEXTURE_COMPRESSION_HINT = $84EF;
+  GL_TEXTURE_COMPRESSED_IMAGE_SIZE = $86A0;
+  GL_TEXTURE_COMPRESSED = $86A1;
+  GL_NUM_COMPRESSED_TEXTURE_FORMATS = $86A2;
+  GL_COMPRESSED_TEXTURE_FORMATS = $86A3;
+  GL_CLAMP_TO_BORDER = $812D;
+  GL_CLAMP_TO_BORDER_SGIS = $812D;
+  GL_COMBINE = $8570;
+  GL_COMBINE_RGB = $8571;
+  GL_COMBINE_ALPHA = $8572;
+  GL_SOURCE0_RGB = $8580;
+  GL_SOURCE1_RGB = $8581;
+  GL_SOURCE2_RGB = $8582;
+  GL_SOURCE0_ALPHA = $8588;
+  GL_SOURCE1_ALPHA = $8589;
+  GL_SOURCE2_ALPHA = $858A;
+  GL_OPERAND0_RGB = $8590;
+  GL_OPERAND1_RGB = $8591;
+  GL_OPERAND2_RGB = $8592;
+  GL_OPERAND0_ALPHA = $8598;
+  GL_OPERAND1_ALPHA = $8599;
+  GL_OPERAND2_ALPHA = $859A;
+  GL_RGB_SCALE = $8573;
+  GL_ADD_SIGNED = $8574;
+  GL_INTERPOLATE = $8575;
+  GL_SUBTRACT = $84E7;
+  GL_CONSTANT = $8576;
+  GL_PRIMARY_COLOR = $8577;
+  GL_PREVIOUS = $8578;
+  GL_DOT3_RGB = $86AE;
+  GL_DOT3_RGBA = $86AF;
+
+  // GL_VERSION_1_4
+  GL_BLEND_DST_RGB = $80C8;
+  GL_BLEND_SRC_RGB = $80C9;
+  GL_BLEND_DST_ALPHA = $80CA;
+  GL_BLEND_SRC_ALPHA = $80CB;
+  GL_POINT_SIZE_MIN = $8126;
+  GL_POINT_SIZE_MAX = $8127;
+  GL_POINT_FADE_THRESHOLD_SIZE = $8128;
+  GL_POINT_DISTANCE_ATTENUATION = $8129;
+  GL_GENERATE_MIPMAP = $8191;
+  GL_GENERATE_MIPMAP_HINT = $8192;
+  GL_DEPTH_COMPONENT16 = $81A5;
+  GL_DEPTH_COMPONENT24 = $81A6;
+  GL_DEPTH_COMPONENT32 = $81A7;
+  GL_MIRRORED_REPEAT = $8370;
+  GL_FOG_COORDINATE_SOURCE = $8450;
+  GL_FOG_COORDINATE = $8451;
+  GL_FRAGMENT_DEPTH = $8452;
+  GL_CURRENT_FOG_COORDINATE = $8453;
+  GL_FOG_COORDINATE_ARRAY_TYPE = $8454;
+  GL_FOG_COORDINATE_ARRAY_STRIDE = $8455;
+  GL_FOG_COORDINATE_ARRAY_POINTER = $8456;
+  GL_FOG_COORDINATE_ARRAY = $8457;
+  GL_COLOR_SUM = $8458;
+  GL_CURRENT_SECONDARY_COLOR = $8459;
+  GL_SECONDARY_COLOR_ARRAY_SIZE = $845A;
+  GL_SECONDARY_COLOR_ARRAY_TYPE = $845B;
+  GL_SECONDARY_COLOR_ARRAY_STRIDE = $845C;
+  GL_SECONDARY_COLOR_ARRAY_POINTER = $845D;
+  GL_SECONDARY_COLOR_ARRAY = $845E;
+  GL_MAX_TEXTURE_LOD_BIAS = $84FD;
+  GL_TEXTURE_FILTER_CONTROL = $8500;
+  GL_TEXTURE_LOD_BIAS = $8501;
+  GL_INCR_WRAP = $8507;
+  GL_DECR_WRAP = $8508;
+  GL_TEXTURE_DEPTH_SIZE = $884A;
+  GL_DEPTH_TEXTURE_MODE = $884B;
+  GL_TEXTURE_COMPARE_MODE = $884C;
+  GL_TEXTURE_COMPARE_FUNC = $884D;
+  GL_COMPARE_R_TO_TEXTURE = $884E;
+
+  // GL_VERSION_1_5
+  GL_BUFFER_SIZE                    = $8764;
+  GL_BUFFER_USAGE                   = $8765;
+  GL_QUERY_COUNTER_BITS             = $8864;
+  GL_CURRENT_QUERY                  = $8865;
+  GL_QUERY_RESULT                   = $8866;
+  GL_QUERY_RESULT_AVAILABLE         = $8867;
+  GL_ARRAY_BUFFER                   = $8892;
+  GL_ELEMENT_ARRAY_BUFFER           = $8893;
+  GL_ARRAY_BUFFER_BINDING           = $8894;
+  GL_ELEMENT_ARRAY_BUFFER_BINDING   = $8895;
+  GL_VERTEX_ARRAY_BUFFER_BINDING    = $8896;
+  GL_NORMAL_ARRAY_BUFFER_BINDING    = $8897;
+  GL_COLOR_ARRAY_BUFFER_BINDING     = $8898;
+  GL_INDEX_ARRAY_BUFFER_BINDING     = $8899;
+  GL_TEXTURE_COORD_ARRAY_BUFFER_BINDING = $889A;
+  GL_EDGE_FLAG_ARRAY_BUFFER_BINDING = $889B;
+  GL_SECONDARY_COLOR_ARRAY_BUFFER_BINDING = $889C;
+  GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING = $889D;
+  GL_WEIGHT_ARRAY_BUFFER_BINDING    = $889E;
+  GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING = $889F;
+  GL_READ_ONLY                      = $88B8;
+  GL_WRITE_ONLY                     = $88B9;
+  GL_READ_WRITE                     = $88BA;
+  GL_BUFFER_ACCESS                  = $88BB;
+  GL_BUFFER_MAPPED                  = $88BC;
+  GL_BUFFER_MAP_POINTER             = $88BD;
+  GL_STREAM_DRAW                    = $88E0;
+  GL_STREAM_READ                    = $88E1;
+  GL_STREAM_COPY                    = $88E2;
+  GL_STATIC_DRAW                    = $88E4;
+  GL_STATIC_READ                    = $88E5;
+  GL_STATIC_COPY                    = $88E6;
+  GL_DYNAMIC_DRAW                   = $88E8;
+  GL_DYNAMIC_READ                   = $88E9;
+  GL_DYNAMIC_COPY                   = $88EA;
+  GL_SAMPLES_PASSED                 = $8914;
+  GL_FOG_COORD_SRC                  = GL_FOG_COORDINATE_SOURCE;
+  GL_FOG_COORD                      = GL_FOG_COORDINATE;
+  GL_CURRENT_FOG_COORD              = GL_CURRENT_FOG_COORDINATE;
+  GL_FOG_COORD_ARRAY_TYPE           = GL_FOG_COORDINATE_ARRAY_TYPE;
+  GL_FOG_COORD_ARRAY_STRIDE         = GL_FOG_COORDINATE_ARRAY_STRIDE;
+  GL_FOG_COORD_ARRAY_POINTER        = GL_FOG_COORDINATE_ARRAY_POINTER;
+  GL_FOG_COORD_ARRAY                = GL_FOG_COORDINATE_ARRAY;
+  GL_FOG_COORD_ARRAY_BUFFER_BINDING = GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING;
+  GL_SRC0_RGB                       = GL_SOURCE0_RGB;
+  GL_SRC1_RGB                       = GL_SOURCE1_RGB;
+  GL_SRC2_RGB                       = GL_SOURCE2_RGB;
+  GL_SRC0_ALPHA                     = GL_SOURCE0_ALPHA;
+  GL_SRC1_ALPHA                     = GL_SOURCE1_ALPHA;
+  GL_SRC2_ALPHA                     = GL_SOURCE2_ALPHA;
+
+  // GL_VERSION_2_0
+  GL_BLEND_EQUATION_RGB             = $8009;
+  GL_VERTEX_ATTRIB_ARRAY_ENABLED    = $8622;
+  GL_VERTEX_ATTRIB_ARRAY_SIZE       = $8623;
+  GL_VERTEX_ATTRIB_ARRAY_STRIDE     = $8624;
+  GL_VERTEX_ATTRIB_ARRAY_TYPE       = $8625;
+  GL_CURRENT_VERTEX_ATTRIB          = $8626;
+  GL_VERTEX_PROGRAM_POINT_SIZE      = $8642;
+  GL_VERTEX_PROGRAM_TWO_SIDE        = $8643;
+  GL_VERTEX_ATTRIB_ARRAY_POINTER    = $8645;
+  GL_STENCIL_BACK_FUNC              = $8800;
+  GL_STENCIL_BACK_FAIL              = $8801;
+  GL_STENCIL_BACK_PASS_DEPTH_FAIL   = $8802;
+  GL_STENCIL_BACK_PASS_DEPTH_PASS   = $8803;
+  GL_MAX_DRAW_BUFFERS               = $8824;
+  GL_DRAW_BUFFER0                   = $8825;
+  GL_DRAW_BUFFER1                   = $8826;
+  GL_DRAW_BUFFER2                   = $8827;
+  GL_DRAW_BUFFER3                   = $8828;
+  GL_DRAW_BUFFER4                   = $8829;
+  GL_DRAW_BUFFER5                   = $882A;
+  GL_DRAW_BUFFER6                   = $882B;
+  GL_DRAW_BUFFER7                   = $882C;
+  GL_DRAW_BUFFER8                   = $882D;
+  GL_DRAW_BUFFER9                   = $882E;
+  GL_DRAW_BUFFER10                  = $882F;
+  GL_DRAW_BUFFER11                  = $8830;
+  GL_DRAW_BUFFER12                  = $8831;
+  GL_DRAW_BUFFER13                  = $8832;
+  GL_DRAW_BUFFER14                  = $8833;
+  GL_DRAW_BUFFER15                  = $8834;
+  GL_BLEND_EQUATION_ALPHA           = $883D;
+  GL_POINT_SPRITE                   = $8861;
+  GL_COORD_REPLACE                  = $8862;
+  GL_MAX_VERTEX_ATTRIBS             = $8869;
+  GL_VERTEX_ATTRIB_ARRAY_NORMALIZED = $886A;
+  GL_MAX_TEXTURE_COORDS             = $8871;
+  GL_MAX_TEXTURE_IMAGE_UNITS        = $8872;
+  GL_FRAGMENT_SHADER                = $8B30;
+  GL_VERTEX_SHADER                  = $8B31;
+  GL_MAX_FRAGMENT_UNIFORM_COMPONENTS = $8B49;
+  GL_MAX_VERTEX_UNIFORM_COMPONENTS  = $8B4A;
+  GL_MAX_VARYING_FLOATS             = $8B4B;
+  GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS = $8B4C;
+  GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS = $8B4D;
+  GL_SHADER_TYPE                    = $8B4F;
+  GL_FLOAT_VEC2                     = $8B50;
+  GL_FLOAT_VEC3                     = $8B51;
+  GL_FLOAT_VEC4                     = $8B52;
+  GL_INT_VEC2                       = $8B53;
+  GL_INT_VEC3                       = $8B54;
+  GL_INT_VEC4                       = $8B55;
+  GL_BOOL                           = $8B56;
+  GL_BOOL_VEC2                      = $8B57;
+  GL_BOOL_VEC3                      = $8B58;
+  GL_BOOL_VEC4                      = $8B59;
+  GL_FLOAT_MAT2                     = $8B5A;
+  GL_FLOAT_MAT3                     = $8B5B;
+  GL_FLOAT_MAT4                     = $8B5C;
+  GL_SAMPLER_1D                     = $8B5D;
+  GL_SAMPLER_2D                     = $8B5E;
+  GL_SAMPLER_3D                     = $8B5F;
+  GL_SAMPLER_CUBE                   = $8B60;
+  GL_SAMPLER_1D_SHADOW              = $8B61;
+  GL_SAMPLER_2D_SHADOW              = $8B62;
+  GL_DELETE_STATUS                  = $8B80;
+  GL_COMPILE_STATUS                 = $8B81;
+  GL_LINK_STATUS                    = $8B82;
+  GL_VALIDATE_STATUS                = $8B83;
+  GL_INFO_LOG_LENGTH                = $8B84;
+  GL_ATTACHED_SHADERS               = $8B85;
+  GL_ACTIVE_UNIFORMS                = $8B86;
+  GL_ACTIVE_UNIFORM_MAX_LENGTH      = $8B87;
+  GL_SHADER_SOURCE_LENGTH           = $8B88;
+  GL_ACTIVE_ATTRIBUTES              = $8B89;
+  GL_ACTIVE_ATTRIBUTE_MAX_LENGTH    = $8B8A;
+  GL_FRAGMENT_SHADER_DERIVATIVE_HINT = $8B8B;
+  GL_SHADING_LANGUAGE_VERSION       = $8B8C;
+  GL_CURRENT_PROGRAM                = $8B8D;
+  GL_POINT_SPRITE_COORD_ORIGIN      = $8CA0;
+  GL_LOWER_LEFT                     = $8CA1;
+  GL_UPPER_LEFT                     = $8CA2;
+  GL_STENCIL_BACK_REF               = $8CA3;
+  GL_STENCIL_BACK_VALUE_MASK        = $8CA4;
+  GL_STENCIL_BACK_WRITEMASK         = $8CA5;
+
+  // GL_3DFX_multisample
+  GL_MULTISAMPLE_3DFX = $86B2;
+  GL_SAMPLE_BUFFERS_3DFX = $86B3;
+  GL_SAMPLES_3DFX = $86B4;
+  GL_MULTISAMPLE_BIT_3DFX = $20000000;
+
+  // GL_3DFX_texture_compression_FXT1
+  GL_COMPRESSED_RGB_FXT1_3DFX = $86B0;
+  GL_COMPRESSED_RGBA_FXT1_3DFX = $86B1;
+
+  // GL_APPLE_client_storage
+  GL_UNPACK_CLIENT_STORAGE_APPLE = $85B2;
+
+  // GL_APPLE_element_array
+  GL_ELEMENT_ARRAY_APPLE = $8768;
+  GL_ELEMENT_ARRAY_TYPE_APPLE = $8769;
+  GL_ELEMENT_ARRAY_POINTER_APPLE = $876A;
+
+  // GL_APPLE_fence
+  GL_DRAW_PIXELS_APPLE = $8A0A;
+  GL_FENCE_APPLE = $8A0B;
+
+  // GL_APPLE_specular_vector
+  GL_LIGHT_MODEL_SPECULAR_VECTOR_APPLE = $85B0;
+
+  // GL_APPLE_transform_hint
+  GL_TRANSFORM_HINT_APPLE = $85B1;
+
+  // GL_APPLE_vertex_array_object
+  GL_VERTEX_ARRAY_BINDING_APPLE = $85B5;
+
+  // GL_APPLE_vertex_array_range
+  GL_VERTEX_ARRAY_RANGE_APPLE = $851D;
+  GL_VERTEX_ARRAY_RANGE_LENGTH_APPLE = $851E;
+  GL_VERTEX_ARRAY_STORAGE_HINT_APPLE = $851F;
+  GL_VERTEX_ARRAY_RANGE_POINTER_APPLE = $8521;
+  GL_STORAGE_CACHED_APPLE = $85BE;
+  GL_STORAGE_SHARED_APPLE = $85BF;
+
+  // GL_APPLE_ycbcr_422
+  GL_YCBCR_422_APPLE = $85B9;
+  GL_UNSIGNED_SHORT_8_8_APPLE = $85BA;
+  GL_UNSIGNED_SHORT_8_8_REV_APPLE = $85BB;
+
+  // GL_ARB_depth_texture
+  GL_DEPTH_COMPONENT16_ARB = $81A5;
+  GL_DEPTH_COMPONENT24_ARB = $81A6;
+  GL_DEPTH_COMPONENT32_ARB = $81A7;
+  GL_TEXTURE_DEPTH_SIZE_ARB = $884A;
+  GL_DEPTH_TEXTURE_MODE_ARB = $884B;
+
+  // GL_ARB_fragment_program
+  GL_FRAGMENT_PROGRAM_ARB = $8804;
+  GL_PROGRAM_ALU_INSTRUCTIONS_ARB = $8805;
+  GL_PROGRAM_TEX_INSTRUCTIONS_ARB = $8806;
+  GL_PROGRAM_TEX_INDIRECTIONS_ARB = $8807;
+  GL_PROGRAM_NATIVE_ALU_INSTRUCTIONS_ARB = $8808;
+  GL_PROGRAM_NATIVE_TEX_INSTRUCTIONS_ARB = $8809;
+  GL_PROGRAM_NATIVE_TEX_INDIRECTIONS_ARB = $880A;
+  GL_MAX_PROGRAM_ALU_INSTRUCTIONS_ARB = $880B;
+  GL_MAX_PROGRAM_TEX_INSTRUCTIONS_ARB = $880C;
+  GL_MAX_PROGRAM_TEX_INDIRECTIONS_ARB = $880D;
+  GL_MAX_PROGRAM_NATIVE_ALU_INSTRUCTIONS_ARB = $880E;
+  GL_MAX_PROGRAM_NATIVE_TEX_INSTRUCTIONS_ARB = $880F;
+  GL_MAX_PROGRAM_NATIVE_TEX_INDIRECTIONS_ARB = $8810;
+  GL_MAX_TEXTURE_COORDS_ARB = $8871;
+  GL_MAX_TEXTURE_IMAGE_UNITS_ARB = $8872;
+
+  // GL_ARB_imaging
+  GL_CONSTANT_COLOR_ARB = $8001;
+  GL_ONE_MINUS_CONSTANT_COLOR = $8002;
+  GL_CONSTANT_ALPHA = $8003;
+  GL_ONE_MINUS_CONSTANT_ALPHA = $8004;
+  GL_BLEND_COLOR = $8005;
+  GL_FUNC_ADD = $8006;
+  GL_MIN = $8007;
+  GL_MAX = $8008;
+  GL_BLEND_EQUATION = $8009;
+  GL_FUNC_SUBTRACT = $800A;
+  GL_FUNC_REVERSE_SUBTRACT = $800B;
+  GL_CONVOLUTION_1D = $8010;
+  GL_CONVOLUTION_2D = $8011;
+  GL_SEPARABLE_2D = $8012;
+  GL_CONVOLUTION_BORDER_MODE = $8013;
+  GL_CONVOLUTION_FILTER_SCALE = $8014;
+  GL_CONVOLUTION_FILTER_BIAS = $8015;
+  GL_REDUCE = $8016;
+  GL_CONVOLUTION_FORMAT = $8017;
+  GL_CONVOLUTION_WIDTH = $8018;
+  GL_CONVOLUTION_HEIGHT = $8019;
+  GL_MAX_CONVOLUTION_WIDTH = $801A;
+  GL_MAX_CONVOLUTION_HEIGHT = $801B;
+  GL_POST_CONVOLUTION_RED_SCALE = $801C;
+  GL_POST_CONVOLUTION_GREEN_SCALE = $801D;
+  GL_POST_CONVOLUTION_BLUE_SCALE = $801E;
+  GL_POST_CONVOLUTION_ALPHA_SCALE = $801F;
+  GL_POST_CONVOLUTION_RED_BIAS = $8020;
+  GL_POST_CONVOLUTION_GREEN_BIAS = $8021;
+  GL_POST_CONVOLUTION_BLUE_BIAS = $8022;
+  GL_POST_CONVOLUTION_ALPHA_BIAS = $8023;
+  GL_HISTOGRAM = $8024;
+  GL_PROXY_HISTOGRAM = $8025;
+  GL_HISTOGRAM_WIDTH = $8026;
+  GL_HISTOGRAM_FORMAT = $8027;
+  GL_HISTOGRAM_RED_SIZE = $8028;
+  GL_HISTOGRAM_GREEN_SIZE = $8029;
+  GL_HISTOGRAM_BLUE_SIZE = $802A;
+  GL_HISTOGRAM_ALPHA_SIZE = $802B;
+  GL_HISTOGRAM_LUMINANCE_SIZE = $802C;
+  GL_HISTOGRAM_SINK = $802D;
+  GL_MINMAX = $802E;
+  GL_MINMAX_FORMAT = $802F;
+  GL_MINMAX_SINK = $8030;
+  GL_TABLE_TOO_LARGE = $8031;
+  GL_COLOR_MATRIX = $80B1;
+  GL_COLOR_MATRIX_STACK_DEPTH = $80B2;
+  GL_MAX_COLOR_MATRIX_STACK_DEPTH = $80B3;
+  GL_POST_COLOR_MATRIX_RED_SCALE = $80B4;
+  GL_POST_COLOR_MATRIX_GREEN_SCALE = $80B5;
+  GL_POST_COLOR_MATRIX_BLUE_SCALE = $80B6;
+  GL_POST_COLOR_MATRIX_ALPHA_SCALE = $80B7;
+  GL_POST_COLOR_MATRIX_RED_BIAS = $80B8;
+  GL_POST_COLOR_MATRIX_GREEN_BIAS = $80B9;
+  GL_POST_COLOR_MATRIX_BLUE_BIAS = $80BA;
+  GL_POST_COLOR_MATRIX_ALPHA_BIAS = $80BB;
+  GL_COLOR_TABLE = $80D0;
+  GL_POST_CONVOLUTION_COLOR_TABLE = $80D1;
+  GL_POST_COLOR_MATRIX_COLOR_TABLE = $80D2;
+  GL_PROXY_COLOR_TABLE = $80D3;
+  GL_PROXY_POST_CONVOLUTION_COLOR_TABLE = $80D4;
+  GL_PROXY_POST_COLOR_MATRIX_COLOR_TABLE = $80D5;
+  GL_COLOR_TABLE_SCALE = $80D6;
+  GL_COLOR_TABLE_BIAS = $80D7;
+  GL_COLOR_TABLE_FORMAT = $80D8;
+  GL_COLOR_TABLE_WIDTH = $80D9;
+  GL_COLOR_TABLE_RED_SIZE = $80DA;
+  GL_COLOR_TABLE_GREEN_SIZE = $80DB;
+  GL_COLOR_TABLE_BLUE_SIZE = $80DC;
+  GL_COLOR_TABLE_ALPHA_SIZE = $80DD;
+  GL_COLOR_TABLE_LUMINANCE_SIZE = $80DE;
+  GL_COLOR_TABLE_INTENSITY_SIZE = $80DF;
+  GL_CONSTANT_BORDER = $8151;
+  GL_REPLICATE_BORDER = $8153;
+  GL_CONVOLUTION_BORDER_COLOR = $8154;
+
+  // GL_ARB_matrix_palette
+  GL_MATRIX_PALETTE_ARB = $8840;
+  GL_MAX_MATRIX_PALETTE_STACK_DEPTH_ARB = $8841;
+  GL_MAX_PALETTE_MATRICES_ARB = $8842;
+  GL_CURRENT_PALETTE_MATRIX_ARB = $8843;
+  GL_MATRIX_INDEX_ARRAY_ARB = $8844;
+  GL_CURRENT_MATRIX_INDEX_ARB = $8845;
+  GL_MATRIX_INDEX_ARRAY_SIZE_ARB = $8846;
+  GL_MATRIX_INDEX_ARRAY_TYPE_ARB = $8847;
+  GL_MATRIX_INDEX_ARRAY_STRIDE_ARB = $8848;
+  GL_MATRIX_INDEX_ARRAY_POINTER_ARB = $8849;
+
+  // GL_ARB_multisample
+  GL_MULTISAMPLE_ARB = $809D;
+  GL_SAMPLE_ALPHA_TO_COVERAGE_ARB = $809E;
+  GL_SAMPLE_ALPHA_TO_ONE_ARB = $809F;
+  GL_SAMPLE_COVERAGE_ARB = $80A0;
+  GL_SAMPLE_BUFFERS_ARB = $80A8;
+  GL_SAMPLES_ARB = $80A9;
+  GL_SAMPLE_COVERAGE_VALUE_ARB = $80AA;
+  GL_SAMPLE_COVERAGE_INVERT_ARB = $80AB;
+  GL_MULTISAMPLE_BIT_ARB = $20000000;
+
+  // GL_ARB_multitexture
+  GL_TEXTURE0_ARB = $84C0;
+  GL_TEXTURE1_ARB = $84C1;
+  GL_TEXTURE2_ARB = $84C2;
+  GL_TEXTURE3_ARB = $84C3;
+  GL_TEXTURE4_ARB = $84C4;
+  GL_TEXTURE5_ARB = $84C5;
+  GL_TEXTURE6_ARB = $84C6;
+  GL_TEXTURE7_ARB = $84C7;
+  GL_TEXTURE8_ARB = $84C8;
+  GL_TEXTURE9_ARB = $84C9;
+  GL_TEXTURE10_ARB = $84CA;
+  GL_TEXTURE11_ARB = $84CB;
+  GL_TEXTURE12_ARB = $84CC;
+  GL_TEXTURE13_ARB = $84CD;
+  GL_TEXTURE14_ARB = $84CE;
+  GL_TEXTURE15_ARB = $84CF;
+  GL_TEXTURE16_ARB = $84D0;
+  GL_TEXTURE17_ARB = $84D1;
+  GL_TEXTURE18_ARB = $84D2;
+  GL_TEXTURE19_ARB = $84D3;
+  GL_TEXTURE20_ARB = $84D4;
+  GL_TEXTURE21_ARB = $84D5;
+  GL_TEXTURE22_ARB = $84D6;
+  GL_TEXTURE23_ARB = $84D7;
+  GL_TEXTURE24_ARB = $84D8;
+  GL_TEXTURE25_ARB = $84D9;
+  GL_TEXTURE26_ARB = $84DA;
+  GL_TEXTURE27_ARB = $84DB;
+  GL_TEXTURE28_ARB = $84DC;
+  GL_TEXTURE29_ARB = $84DD;
+  GL_TEXTURE30_ARB = $84DE;
+  GL_TEXTURE31_ARB = $84DF;
+  GL_ACTIVE_TEXTURE_ARB = $84E0;
+  GL_CLIENT_ACTIVE_TEXTURE_ARB = $84E1;
+  GL_MAX_TEXTURE_UNITS_ARB = $84E2;
+
+  // GL_ARB_point_parameters
+  GL_POINT_SIZE_MIN_ARB = $8126;
+  GL_POINT_SIZE_MAX_ARB = $8127;
+  GL_POINT_FADE_THRESHOLD_SIZE_ARB = $8128;
+  GL_POINT_DISTANCE_ATTENUATION_ARB = $8129;
+
+  // GL_ARB_shadow
+  GL_TEXTURE_COMPARE_MODE_ARB = $884C;
+  GL_TEXTURE_COMPARE_FUNC_ARB = $884D;
+  GL_COMPARE_R_TO_TEXTURE_ARB = $884E;
+
+  // GL_ARB_shadow_ambient
+  GL_TEXTURE_COMPARE_FAIL_VALUE_ARB = $80BF;
+
+  // GL_ARB_texture_border_clamp
+  GL_CLAMP_TO_BORDER_ARB = $812D;
+
+  // GL_ARB_texture_compression
+  GL_COMPRESSED_ALPHA_ARB = $84E9;
+  GL_COMPRESSED_LUMINANCE_ARB = $84EA;
+  GL_COMPRESSED_LUMINANCE_ALPHA_ARB = $84EB;
+  GL_COMPRESSED_INTENSITY_ARB = $84EC;
+  GL_COMPRESSED_RGB_ARB = $84ED;
+  GL_COMPRESSED_RGBA_ARB = $84EE;
+  GL_TEXTURE_COMPRESSION_HINT_ARB = $84EF;
+  GL_TEXTURE_COMPRESSED_IMAGE_SIZE_ARB = $86A0;
+  GL_TEXTURE_COMPRESSED_ARB = $86A1;
+  GL_NUM_COMPRESSED_TEXTURE_FORMATS_ARB = $86A2;
+  GL_COMPRESSED_TEXTURE_FORMATS_ARB = $86A3;
+
+  // GL_ARB_texture_cube_map
+  GL_NORMAL_MAP_ARB = $8511;
+  GL_REFLECTION_MAP_ARB = $8512;
+  GL_TEXTURE_CUBE_MAP_ARB = $8513;
+  GL_TEXTURE_BINDING_CUBE_MAP_ARB = $8514;
+  GL_TEXTURE_CUBE_MAP_POSITIVE_X_ARB = $8515;
+  GL_TEXTURE_CUBE_MAP_NEGATIVE_X_ARB = $8516;
+  GL_TEXTURE_CUBE_MAP_POSITIVE_Y_ARB = $8517;
+  GL_TEXTURE_CUBE_MAP_NEGATIVE_Y_ARB = $8518;
+  GL_TEXTURE_CUBE_MAP_POSITIVE_Z_ARB = $8519;
+  GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_ARB = $851A;
+  GL_PROXY_TEXTURE_CUBE_MAP_ARB = $851B;
+  GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB = $851C;
+
+  // GL_ARB_texture_env_combine
+  GL_COMBINE_ARB = $8570;
+  GL_COMBINE_RGB_ARB = $8571;
+  GL_COMBINE_ALPHA_ARB = $8572;
+  GL_SOURCE0_RGB_ARB = $8580;
+  GL_SOURCE1_RGB_ARB = $8581;
+  GL_SOURCE2_RGB_ARB = $8582;
+  GL_SOURCE0_ALPHA_ARB = $8588;
+  GL_SOURCE1_ALPHA_ARB = $8589;
+  GL_SOURCE2_ALPHA_ARB = $858A;
+  GL_OPERAND0_RGB_ARB = $8590;
+  GL_OPERAND1_RGB_ARB = $8591;
+  GL_OPERAND2_RGB_ARB = $8592;
+  GL_OPERAND0_ALPHA_ARB = $8598;
+  GL_OPERAND1_ALPHA_ARB = $8599;
+  GL_OPERAND2_ALPHA_ARB = $859A;
+  GL_RGB_SCALE_ARB = $8573;
+  GL_ADD_SIGNED_ARB = $8574;
+  GL_INTERPOLATE_ARB = $8575;
+  GL_SUBTRACT_ARB = $84E7;
+  GL_CONSTANT_ARB = $8576;
+  GL_PRIMARY_COLOR_ARB = $8577;
+  GL_PREVIOUS_ARB = $8578;
+
+  // GL_ARB_texture_env_dot3
+  GL_DOT3_RGB_ARB = $86AE;
+  GL_DOT3_RGBA_ARB = $86AF;
+
+  // GL_ARB_texture_mirrored_repeat
+  GL_MIRRORED_REPEAT_ARB = $8370;
+
+  // GL_ARB_transpose_matrix
+  GL_TRANSPOSE_MODELVIEW_MATRIX_ARB = $84E3;
+  GL_TRANSPOSE_PROJECTION_MATRIX_ARB = $84E4;
+  GL_TRANSPOSE_TEXTURE_MATRIX_ARB = $84E5;
+  GL_TRANSPOSE_COLOR_MATRIX_ARB = $84E6;
+
+  // GL_ARB_vertex_blend
+  GL_MAX_VERTEX_UNITS_ARB = $86A4;
+  GL_ACTIVE_VERTEX_UNITS_ARB = $86A5;
+  GL_WEIGHT_SUM_UNITY_ARB = $86A6;
+  GL_VERTEX_BLEND_ARB = $86A7;
+  GL_CURRENT_WEIGHT_ARB = $86A8;
+  GL_WEIGHT_ARRAY_TYPE_ARB = $86A9;
+  GL_WEIGHT_ARRAY_STRIDE_ARB = $86AA;
+  GL_WEIGHT_ARRAY_SIZE_ARB = $86AB;
+  GL_WEIGHT_ARRAY_POINTER_ARB = $86AC;
+  GL_WEIGHT_ARRAY_ARB = $86AD;
+  GL_MODELVIEW0_ARB = $1700;
+  GL_MODELVIEW1_ARB = $850A;
+  GL_MODELVIEW2_ARB = $8722;
+  GL_MODELVIEW3_ARB = $8723;
+  GL_MODELVIEW4_ARB = $8724;
+  GL_MODELVIEW5_ARB = $8725;
+  GL_MODELVIEW6_ARB = $8726;
+  GL_MODELVIEW7_ARB = $8727;
+  GL_MODELVIEW8_ARB = $8728;
+  GL_MODELVIEW9_ARB = $8729;
+  GL_MODELVIEW10_ARB = $872A;
+  GL_MODELVIEW11_ARB = $872B;
+  GL_MODELVIEW12_ARB = $872C;
+  GL_MODELVIEW13_ARB = $872D;
+  GL_MODELVIEW14_ARB = $872E;
+  GL_MODELVIEW15_ARB = $872F;
+  GL_MODELVIEW16_ARB = $8730;
+  GL_MODELVIEW17_ARB = $8731;
+  GL_MODELVIEW18_ARB = $8732;
+  GL_MODELVIEW19_ARB = $8733;
+  GL_MODELVIEW20_ARB = $8734;
+  GL_MODELVIEW21_ARB = $8735;
+  GL_MODELVIEW22_ARB = $8736;
+  GL_MODELVIEW23_ARB = $8737;
+  GL_MODELVIEW24_ARB = $8738;
+  GL_MODELVIEW25_ARB = $8739;
+  GL_MODELVIEW26_ARB = $873A;
+  GL_MODELVIEW27_ARB = $873B;
+  GL_MODELVIEW28_ARB = $873C;
+  GL_MODELVIEW29_ARB = $873D;
+  GL_MODELVIEW30_ARB = $873E;
+  GL_MODELVIEW31_ARB = $873F;
+
+  // GL_ARB_vertex_buffer_object
+  GL_BUFFER_SIZE_ARB = $8764;
+  GL_BUFFER_USAGE_ARB = $8765;
+  GL_ARRAY_BUFFER_ARB = $8892;
+  GL_ELEMENT_ARRAY_BUFFER_ARB = $8893;
+  GL_ARRAY_BUFFER_BINDING_ARB = $8894;
+  GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB = $8895;
+  GL_VERTEX_ARRAY_BUFFER_BINDING_ARB = $8896;
+  GL_NORMAL_ARRAY_BUFFER_BINDING_ARB = $8897;
+  GL_COLOR_ARRAY_BUFFER_BINDING_ARB = $8898;
+  GL_INDEX_ARRAY_BUFFER_BINDING_ARB = $8899;
+  GL_TEXTURE_COORD_ARRAY_BUFFER_BINDING_ARB = $889A;
+  GL_EDGE_FLAG_ARRAY_BUFFER_BINDING_ARB = $889B;
+  GL_SECONDARY_COLOR_ARRAY_BUFFER_BINDING_ARB = $889C;
+  GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING_ARB = $889D;
+  GL_WEIGHT_ARRAY_BUFFER_BINDING_ARB = $889E;
+  GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING_ARB = $889F;
+  GL_READ_ONLY_ARB = $88B8;
+  GL_WRITE_ONLY_ARB = $88B9;
+  GL_READ_WRITE_ARB = $88BA;
+  GL_BUFFER_ACCESS_ARB = $88BB;
+  GL_BUFFER_MAPPED_ARB = $88BC;
+  GL_BUFFER_MAP_POINTER_ARB = $88BD;
+  GL_STREAM_DRAW_ARB = $88E0;
+  GL_STREAM_READ_ARB = $88E1;
+  GL_STREAM_COPY_ARB = $88E2;
+  GL_STATIC_DRAW_ARB = $88E4;
+  GL_STATIC_READ_ARB = $88E5;
+  GL_STATIC_COPY_ARB = $88E6;
+  GL_DYNAMIC_DRAW_ARB = $88E8;
+  GL_DYNAMIC_READ_ARB = $88E9;
+  GL_DYNAMIC_COPY_ARB = $88EA;
+
+  // GL_ARB_vertex_program
+  GL_COLOR_SUM_ARB = $8458;
+  GL_VERTEX_PROGRAM_ARB = $8620;
+  GL_VERTEX_ATTRIB_ARRAY_ENABLED_ARB = $8622;
+  GL_VERTEX_ATTRIB_ARRAY_SIZE_ARB = $8623;
+  GL_VERTEX_ATTRIB_ARRAY_STRIDE_ARB = $8624;
+  GL_VERTEX_ATTRIB_ARRAY_TYPE_ARB = $8625;
+  GL_CURRENT_VERTEX_ATTRIB_ARB = $8626;
+  GL_PROGRAM_LENGTH_ARB = $8627;
+  GL_PROGRAM_STRING_ARB = $8628;
+  GL_MAX_PROGRAM_MATRIX_STACK_DEPTH_ARB = $862E;
+  GL_MAX_PROGRAM_MATRICES_ARB = $862F;
+  GL_CURRENT_MATRIX_STACK_DEPTH_ARB = $8640;
+  GL_CURRENT_MATRIX_ARB = $8641;
+  GL_VERTEX_PROGRAM_POINT_SIZE_ARB = $8642;
+  GL_VERTEX_PROGRAM_TWO_SIDE_ARB = $8643;
+  GL_VERTEX_ATTRIB_ARRAY_POINTER_ARB = $8645;
+  GL_PROGRAM_ERROR_POSITION_ARB = $864B;
+  GL_PROGRAM_BINDING_ARB = $8677;
+  GL_MAX_VERTEX_ATTRIBS_ARB = $8869;
+  GL_VERTEX_ATTRIB_ARRAY_NORMALIZED_ARB = $886A;
+  GL_PROGRAM_ERROR_STRING_ARB = $8874;
+  GL_PROGRAM_FORMAT_ASCII_ARB = $8875;
+  GL_PROGRAM_FORMAT_ARB = $8876;
+  GL_PROGRAM_INSTRUCTIONS_ARB = $88A0;
+  GL_MAX_PROGRAM_INSTRUCTIONS_ARB = $88A1;
+  GL_PROGRAM_NATIVE_INSTRUCTIONS_ARB = $88A2;
+  GL_MAX_PROGRAM_NATIVE_INSTRUCTIONS_ARB = $88A3;
+  GL_PROGRAM_TEMPORARIES_ARB = $88A4;
+  GL_MAX_PROGRAM_TEMPORARIES_ARB = $88A5;
+  GL_PROGRAM_NATIVE_TEMPORARIES_ARB = $88A6;
+  GL_MAX_PROGRAM_NATIVE_TEMPORARIES_ARB = $88A7;
+  GL_PROGRAM_PARAMETERS_ARB = $88A8;
+  GL_MAX_PROGRAM_PARAMETERS_ARB = $88A9;
+  GL_PROGRAM_NATIVE_PARAMETERS_ARB = $88AA;
+  GL_MAX_PROGRAM_NATIVE_PARAMETERS_ARB = $88AB;
+  GL_PROGRAM_ATTRIBS_ARB = $88AC;
+  GL_MAX_PROGRAM_ATTRIBS_ARB = $88AD;
+  GL_PROGRAM_NATIVE_ATTRIBS_ARB = $88AE;
+  GL_MAX_PROGRAM_NATIVE_ATTRIBS_ARB = $88AF;
+  GL_PROGRAM_ADDRESS_REGISTERS_ARB = $88B0;
+  GL_MAX_PROGRAM_ADDRESS_REGISTERS_ARB = $88B1;
+  GL_PROGRAM_NATIVE_ADDRESS_REGISTERS_ARB = $88B2;
+  GL_MAX_PROGRAM_NATIVE_ADDRESS_REGISTERS_ARB = $88B3;
+  GL_MAX_PROGRAM_LOCAL_PARAMETERS_ARB = $88B4;
+  GL_MAX_PROGRAM_ENV_PARAMETERS_ARB = $88B5;
+  GL_PROGRAM_UNDER_NATIVE_LIMITS_ARB = $88B6;
+  GL_TRANSPOSE_CURRENT_MATRIX_ARB = $88B7;
+  GL_MATRIX0_ARB = $88C0;
+  GL_MATRIX1_ARB = $88C1;
+  GL_MATRIX2_ARB = $88C2;
+  GL_MATRIX3_ARB = $88C3;
+  GL_MATRIX4_ARB = $88C4;
+  GL_MATRIX5_ARB = $88C5;
+  GL_MATRIX6_ARB = $88C6;
+  GL_MATRIX7_ARB = $88C7;
+  GL_MATRIX8_ARB = $88C8;
+  GL_MATRIX9_ARB = $88C9;
+  GL_MATRIX10_ARB = $88CA;
+  GL_MATRIX11_ARB = $88CB;
+  GL_MATRIX12_ARB = $88CC;
+  GL_MATRIX13_ARB = $88CD;
+  GL_MATRIX14_ARB = $88CE;
+  GL_MATRIX15_ARB = $88CF;
+  GL_MATRIX16_ARB = $88D0;
+  GL_MATRIX17_ARB = $88D1;
+  GL_MATRIX18_ARB = $88D2;
+  GL_MATRIX19_ARB = $88D3;
+  GL_MATRIX20_ARB = $88D4;
+  GL_MATRIX21_ARB = $88D5;
+  GL_MATRIX22_ARB = $88D6;
+  GL_MATRIX23_ARB = $88D7;
+  GL_MATRIX24_ARB = $88D8;
+  GL_MATRIX25_ARB = $88D9;
+  GL_MATRIX26_ARB = $88DA;
+  GL_MATRIX27_ARB = $88DB;
+  GL_MATRIX28_ARB = $88DC;
+  GL_MATRIX29_ARB = $88DD;
+  GL_MATRIX30_ARB = $88DE;
+  GL_MATRIX31_ARB = $88DF;
+
+  // GL_ARB_draw_buffers
+  GL_MAX_DRAW_BUFFERS_ARB = $8824;
+  GL_DRAW_BUFFER0_ARB = $8825;
+  GL_DRAW_BUFFER1_ARB = $8826;
+  GL_DRAW_BUFFER2_ARB = $8827;
+  GL_DRAW_BUFFER3_ARB = $8828;
+  GL_DRAW_BUFFER4_ARB = $8829;
+  GL_DRAW_BUFFER5_ARB = $882A;
+  GL_DRAW_BUFFER6_ARB = $882B;
+  GL_DRAW_BUFFER7_ARB = $882C;
+  GL_DRAW_BUFFER8_ARB = $882D;
+  GL_DRAW_BUFFER9_ARB = $882E;
+  GL_DRAW_BUFFER10_ARB = $882F;
+  GL_DRAW_BUFFER11_ARB = $8830;
+  GL_DRAW_BUFFER12_ARB = $8831;
+  GL_DRAW_BUFFER13_ARB = $8832;
+  GL_DRAW_BUFFER14_ARB = $8833;
+  GL_DRAW_BUFFER15_ARB = $8834;
+
+  // GL_ARB_texture_rectangle
+  GL_TEXTURE_RECTANGLE_ARB = $84F5;
+  GL_TEXTURE_BINDING_RECTANGLE_ARB = $84F6;
+  GL_PROXY_TEXTURE_RECTANGLE_ARB = $84F7;
+  GL_MAX_RECTANGLE_TEXTURE_SIZE_ARB = $84F8;
+
+  // GL_ARB_color_buffer_float
+  GL_RGBA_FLOAT_MODE_ARB = $8820;
+  GL_CLAMP_VERTEX_COLOR_ARB = $891A;
+  GL_CLAMP_FRAGMENT_COLOR_ARB = $891B;
+  GL_CLAMP_READ_COLOR_ARB = $891C;
+  GL_FIXED_ONLY_ARB = $891D;
+  WGL_TYPE_RGBA_FLOAT_ARB = $21A0;
+  GLX_RGBA_FLOAT_TYPE = $20B9;
+  GLX_RGBA_FLOAT_BIT = $00000004;
+
+  // GL_ARB_half_float_pixel
+  GL_HALF_FLOAT_ARB = $140B;
+
+  // GL_ARB_texture_float
+  GL_TEXTURE_RED_TYPE_ARB = $8C10;
+  GL_TEXTURE_GREEN_TYPE_ARB = $8C11;
+  GL_TEXTURE_BLUE_TYPE_ARB = $8C12;
+  GL_TEXTURE_ALPHA_TYPE_ARB = $8C13;
+  GL_TEXTURE_LUMINANCE_TYPE_ARB = $8C14;
+  GL_TEXTURE_INTENSITY_TYPE_ARB = $8C15;
+  GL_TEXTURE_DEPTH_TYPE_ARB = $8C16;
+  GL_UNSIGNED_NORMALIZED_ARB = $8C17;
+  GL_RGBA32F_ARB = $8814;
+  GL_RGB32F_ARB = $8815;
+  GL_ALPHA32F_ARB = $8816;
+  GL_INTENSITY32F_ARB = $8817;
+  GL_LUMINANCE32F_ARB = $8818;
+  GL_LUMINANCE_ALPHA32F_ARB = $8819;
+  GL_RGBA16F_ARB = $881A;
+  GL_RGB16F_ARB = $881B;
+  GL_ALPHA16F_ARB = $881C;
+  GL_INTENSITY16F_ARB = $881D;
+  GL_LUMINANCE16F_ARB = $881E;
+  GL_LUMINANCE_ALPHA16F_ARB = $881F;
+
+  // GL_ARB_pixel_buffer_object
+  GL_PIXEL_PACK_BUFFER_ARB = $88EB;
+  GL_PIXEL_UNPACK_BUFFER_ARB = $88EC;
+  GL_PIXEL_PACK_BUFFER_BINDING_ARB = $88ED;
+  GL_PIXEL_UNPACK_BUFFER_BINDING_ARB = $88EF;
+
+  // GL_ATI_draw_buffers
+  GL_MAX_DRAW_BUFFERS_ATI = $8824;
+  GL_DRAW_BUFFER0_ATI = $8825;
+  GL_DRAW_BUFFER1_ATI = $8826;
+  GL_DRAW_BUFFER2_ATI = $8827;
+  GL_DRAW_BUFFER3_ATI = $8828;
+  GL_DRAW_BUFFER4_ATI = $8829;
+  GL_DRAW_BUFFER5_ATI = $882A;
+  GL_DRAW_BUFFER6_ATI = $882B;
+  GL_DRAW_BUFFER7_ATI = $882C;
+  GL_DRAW_BUFFER8_ATI = $882D;
+  GL_DRAW_BUFFER9_ATI = $882E;
+  GL_DRAW_BUFFER10_ATI = $882F;
+  GL_DRAW_BUFFER11_ATI = $8830;
+  GL_DRAW_BUFFER12_ATI = $8831;
+  GL_DRAW_BUFFER13_ATI = $8832;
+  GL_DRAW_BUFFER14_ATI = $8833;
+  GL_DRAW_BUFFER15_ATI = $8834;
+
+  // GL_ATI_element_array
+  GL_ELEMENT_ARRAY_ATI = $8768;
+  GL_ELEMENT_ARRAY_TYPE_ATI = $8769;
+  GL_ELEMENT_ARRAY_POINTER_ATI = $876A;
+
+  // GL_ATI_envmap_bumpmap
+  GL_BUMP_ROT_MATRIX_ATI = $8775;
+  GL_BUMP_ROT_MATRIX_SIZE_ATI = $8776;
+  GL_BUMP_NUM_TEX_UNITS_ATI = $8777;
+  GL_BUMP_TEX_UNITS_ATI = $8778;
+  GL_DUDV_ATI = $8779;
+  GL_DU8DV8_ATI = $877A;
+  GL_BUMP_ENVMAP_ATI = $877B;
+  GL_BUMP_TARGET_ATI = $877C;
+
+  // GL_ATI_fragment_shader
+  GL_FRAGMENT_SHADER_ATI = $8920;
+  GL_REG_0_ATI = $8921;
+  GL_REG_1_ATI = $8922;
+  GL_REG_2_ATI = $8923;
+  GL_REG_3_ATI = $8924;
+  GL_REG_4_ATI = $8925;
+  GL_REG_5_ATI = $8926;
+  GL_REG_6_ATI = $8927;
+  GL_REG_7_ATI = $8928;
+  GL_REG_8_ATI = $8929;
+  GL_REG_9_ATI = $892A;
+  GL_REG_10_ATI = $892B;
+  GL_REG_11_ATI = $892C;
+  GL_REG_12_ATI = $892D;
+  GL_REG_13_ATI = $892E;
+  GL_REG_14_ATI = $892F;
+  GL_REG_15_ATI = $8930;
+  GL_REG_16_ATI = $8931;
+  GL_REG_17_ATI = $8932;
+  GL_REG_18_ATI = $8933;
+  GL_REG_19_ATI = $8934;
+  GL_REG_20_ATI = $8935;
+  GL_REG_21_ATI = $8936;
+  GL_REG_22_ATI = $8937;
+  GL_REG_23_ATI = $8938;
+  GL_REG_24_ATI = $8939;
+  GL_REG_25_ATI = $893A;
+  GL_REG_26_ATI = $893B;
+  GL_REG_27_ATI = $893C;
+  GL_REG_28_ATI = $893D;
+  GL_REG_29_ATI = $893E;
+  GL_REG_30_ATI = $893F;
+  GL_REG_31_ATI = $8940;
+  GL_CON_0_ATI = $8941;
+  GL_CON_1_ATI = $8942;
+  GL_CON_2_ATI = $8943;
+  GL_CON_3_ATI = $8944;
+  GL_CON_4_ATI = $8945;
+  GL_CON_5_ATI = $8946;
+  GL_CON_6_ATI = $8947;
+  GL_CON_7_ATI = $8948;
+  GL_CON_8_ATI = $8949;
+  GL_CON_9_ATI = $894A;
+  GL_CON_10_ATI = $894B;
+  GL_CON_11_ATI = $894C;
+  GL_CON_12_ATI = $894D;
+  GL_CON_13_ATI = $894E;
+  GL_CON_14_ATI = $894F;
+  GL_CON_15_ATI = $8950;
+  GL_CON_16_ATI = $8951;
+  GL_CON_17_ATI = $8952;
+  GL_CON_18_ATI = $8953;
+  GL_CON_19_ATI = $8954;
+  GL_CON_20_ATI = $8955;
+  GL_CON_21_ATI = $8956;
+  GL_CON_22_ATI = $8957;
+  GL_CON_23_ATI = $8958;
+  GL_CON_24_ATI = $8959;
+  GL_CON_25_ATI = $895A;
+  GL_CON_26_ATI = $895B;
+  GL_CON_27_ATI = $895C;
+  GL_CON_28_ATI = $895D;
+  GL_CON_29_ATI = $895E;
+  GL_CON_30_ATI = $895F;
+  GL_CON_31_ATI = $8960;
+  GL_MOV_ATI = $8961;
+  GL_ADD_ATI = $8963;
+  GL_MUL_ATI = $8964;
+  GL_SUB_ATI = $8965;
+  GL_DOT3_ATI = $8966;
+  GL_DOT4_ATI = $8967;
+  GL_MAD_ATI = $8968;
+  GL_LERP_ATI = $8969;
+  GL_CND_ATI = $896A;
+  GL_CND0_ATI = $896B;
+  GL_DOT2_ADD_ATI = $896C;
+  GL_SECONDARY_INTERPOLATOR_ATI = $896D;
+  GL_NUM_FRAGMENT_REGISTERS_ATI = $896E;
+  GL_NUM_FRAGMENT_CONSTANTS_ATI = $896F;
+  GL_NUM_PASSES_ATI = $8970;
+  GL_NUM_INSTRUCTIONS_PER_PASS_ATI = $8971;
+  GL_NUM_INSTRUCTIONS_TOTAL_ATI = $8972;
+  GL_NUM_INPUT_INTERPOLATOR_COMPONENTS_ATI = $8973;
+  GL_NUM_LOOPBACK_COMPONENTS_ATI = $8974;
+  GL_COLOR_ALPHA_PAIRING_ATI = $8975;
+  GL_SWIZZLE_STR_ATI = $8976;
+  GL_SWIZZLE_STQ_ATI = $8977;
+  GL_SWIZZLE_STR_DR_ATI = $8978;
+  GL_SWIZZLE_STQ_DQ_ATI = $8979;
+  GL_SWIZZLE_STRQ_ATI = $897A;
+  GL_SWIZZLE_STRQ_DQ_ATI = $897B;
+  GL_RED_BIT_ATI = $00000001;
+  GL_GREEN_BIT_ATI = $00000002;
+  GL_BLUE_BIT_ATI = $00000004;
+  GL_2X_BIT_ATI = $00000001;
+  GL_4X_BIT_ATI = $00000002;
+  GL_8X_BIT_ATI = $00000004;
+  GL_HALF_BIT_ATI = $00000008;
+  GL_QUARTER_BIT_ATI = $00000010;
+  GL_EIGHTH_BIT_ATI = $00000020;
+  GL_SATURATE_BIT_ATI = $00000040;
+  GL_COMP_BIT_ATI = $00000002;
+  GL_NEGATE_BIT_ATI = $00000004;
+  GL_BIAS_BIT_ATI = $00000008;
+
+  // GL_ATI_pn_triangles
+  GL_PN_TRIANGLES_ATI = $87F0;
+  GL_MAX_PN_TRIANGLES_TESSELATION_LEVEL_ATI = $87F1;
+  GL_PN_TRIANGLES_POINT_MODE_ATI = $87F2;
+  GL_PN_TRIANGLES_NORMAL_MODE_ATI = $87F3;
+  GL_PN_TRIANGLES_TESSELATION_LEVEL_ATI = $87F4;
+  GL_PN_TRIANGLES_POINT_MODE_LINEAR_ATI = $87F5;
+  GL_PN_TRIANGLES_POINT_MODE_CUBIC_ATI = $87F6;
+  GL_PN_TRIANGLES_NORMAL_MODE_LINEAR_ATI = $87F7;
+  GL_PN_TRIANGLES_NORMAL_MODE_QUADRATIC_ATI = $87F8;
+
+  // GL_ATI_separate_stencil
+  GL_STENCIL_BACK_FUNC_ATI = $8800;
+  GL_STENCIL_BACK_FAIL_ATI = $8801;
+  GL_STENCIL_BACK_PASS_DEPTH_FAIL_ATI = $8802;
+  GL_STENCIL_BACK_PASS_DEPTH_PASS_ATI = $8803;
+
+  // GL_ATI_text_fragment_shader
+  GL_TEXT_FRAGMENT_SHADER_ATI = $8200;
+
+  // GL_ATI_texture_env_combine3
+  GL_MODULATE_ADD_ATI = $8744;
+  GL_MODULATE_SIGNED_ADD_ATI = $8745;
+  GL_MODULATE_SUBTRACT_ATI = $8746;
+
+  // GL_ATI_texture_float
+  GL_RGBA_FLOAT32_ATI = $8814;
+  GL_RGB_FLOAT32_ATI = $8815;
+  GL_ALPHA_FLOAT32_ATI = $8816;
+  GL_INTENSITY_FLOAT32_ATI = $8817;
+  GL_LUMINANCE_FLOAT32_ATI = $8818;
+  GL_LUMINANCE_ALPHA_FLOAT32_ATI = $8819;
+  GL_RGBA_FLOAT16_ATI = $881A;
+  GL_RGB_FLOAT16_ATI = $881B;
+  GL_ALPHA_FLOAT16_ATI = $881C;
+  GL_INTENSITY_FLOAT16_ATI = $881D;
+  GL_LUMINANCE_FLOAT16_ATI = $881E;
+  GL_LUMINANCE_ALPHA_FLOAT16_ATI = $881F;
+
+  // GL_ATI_texture_mirror_once
+  GL_MIRROR_CLAMP_ATI = $8742;
+  GL_MIRROR_CLAMP_TO_EDGE_ATI = $8743;
+
+  // GL_ATI_vertex_array_object
+  GL_STATIC_ATI = $8760;
+  GL_DYNAMIC_ATI = $8761;
+  GL_PRESERVE_ATI = $8762;
+  GL_DISCARD_ATI = $8763;
+  GL_OBJECT_BUFFER_SIZE_ATI = $8764;
+  GL_OBJECT_BUFFER_USAGE_ATI = $8765;
+  GL_ARRAY_OBJECT_BUFFER_ATI = $8766;
+  GL_ARRAY_OBJECT_OFFSET_ATI = $8767;
+
+  // GL_ATI_vertex_streams
+  GL_MAX_VERTEX_STREAMS_ATI = $876B;
+  GL_VERTEX_STREAM0_ATI = $876C;
+  GL_VERTEX_STREAM1_ATI = $876D;
+  GL_VERTEX_STREAM2_ATI = $876E;
+  GL_VERTEX_STREAM3_ATI = $876F;
+  GL_VERTEX_STREAM4_ATI = $8770;
+  GL_VERTEX_STREAM5_ATI = $8771;
+  GL_VERTEX_STREAM6_ATI = $8772;
+  GL_VERTEX_STREAM7_ATI = $8773;
+  GL_VERTEX_SOURCE_ATI = $8774;
+
+  // GL_EXT_422_pixels
+  GL_422_EXT = $80CC;
+  GL_422_REV_EXT = $80CD;
+  GL_422_AVERAGE_EXT = $80CE;
+  GL_422_REV_AVERAGE_EXT = $80CF;
+
+  // GL_EXT_abgr
+  GL_ABGR_EXT = $8000;
+
+  // GL_EXT_bgra
+  GL_BGR_EXT = $80E0;
+  GL_BGRA_EXT = $80E1;
+
+  // GL_EXT_blend_color
+  GL_CONSTANT_COLOR_EXT = $8001;
+  GL_ONE_MINUS_CONSTANT_COLOR_EXT = $8002;
+  GL_CONSTANT_ALPHA_EXT = $8003;
+  GL_ONE_MINUS_CONSTANT_ALPHA_EXT = $8004;
+  GL_BLEND_COLOR_EXT = $8005;
+
+  // GL_EXT_blend_func_separate
+  GL_BLEND_DST_RGB_EXT = $80C8;
+  GL_BLEND_SRC_RGB_EXT = $80C9;
+  GL_BLEND_DST_ALPHA_EXT = $80CA;
+  GL_BLEND_SRC_ALPHA_EXT = $80CB;
+
+  // GL_EXT_blend_minmax
+  GL_FUNC_ADD_EXT = $8006;
+  GL_MIN_EXT = $8007;
+  GL_MAX_EXT = $8008;
+  GL_BLEND_EQUATION_EXT = $8009;
+
+  // GL_EXT_blend_subtract
+  GL_FUNC_SUBTRACT_EXT = $800A;
+  GL_FUNC_REVERSE_SUBTRACT_EXT = $800B;
+
+  // GL_EXT_clip_volume_hint
+  GL_CLIP_VOLUME_CLIPPING_HINT_EXT = $80F0;
+
+  // GL_EXT_cmyka
+  GL_CMYK_EXT = $800C;
+  GL_CMYKA_EXT = $800D;
+  GL_PACK_CMYK_HINT_EXT = $800E;
+  GL_UNPACK_CMYK_HINT_EXT = $800F;
+
+  // GL_EXT_compiled_vertex_array
+  GL_ARRAY_ELEMENT_LOCK_FIRST_EXT = $81A8;
+  GL_ARRAY_ELEMENT_LOCK_COUNT_EXT = $81A9;
+
+  // GL_EXT_convolution
+  GL_CONVOLUTION_1D_EXT = $8010;
+  GL_CONVOLUTION_2D_EXT = $8011;
+  GL_SEPARABLE_2D_EXT = $8012;
+  GL_CONVOLUTION_BORDER_MODE_EXT = $8013;
+  GL_CONVOLUTION_FILTER_SCALE_EXT = $8014;
+  GL_CONVOLUTION_FILTER_BIAS_EXT = $8015;
+  GL_REDUCE_EXT = $8016;
+  GL_CONVOLUTION_FORMAT_EXT = $8017;
+  GL_CONVOLUTION_WIDTH_EXT = $8018;
+  GL_CONVOLUTION_HEIGHT_EXT = $8019;
+  GL_MAX_CONVOLUTION_WIDTH_EXT = $801A;
+  GL_MAX_CONVOLUTION_HEIGHT_EXT = $801B;
+  GL_POST_CONVOLUTION_RED_SCALE_EXT = $801C;
+  GL_POST_CONVOLUTION_GREEN_SCALE_EXT = $801D;
+  GL_POST_CONVOLUTION_BLUE_SCALE_EXT = $801E;
+  GL_POST_CONVOLUTION_ALPHA_SCALE_EXT = $801F;
+  GL_POST_CONVOLUTION_RED_BIAS_EXT = $8020;
+  GL_POST_CONVOLUTION_GREEN_BIAS_EXT = $8021;
+  GL_POST_CONVOLUTION_BLUE_BIAS_EXT = $8022;
+  GL_POST_CONVOLUTION_ALPHA_BIAS_EXT = $8023;
+
+  // GL_EXT_coordinate_frame
+  GL_TANGENT_ARRAY_EXT = $8439;
+  GL_BINORMAL_ARRAY_EXT = $843A;
+  GL_CURRENT_TANGENT_EXT = $843B;
+  GL_CURRENT_BINORMAL_EXT = $843C;
+  GL_TANGENT_ARRAY_TYPE_EXT = $843E;
+  GL_TANGENT_ARRAY_STRIDE_EXT = $843F;
+  GL_BINORMAL_ARRAY_TYPE_EXT = $8440;
+  GL_BINORMAL_ARRAY_STRIDE_EXT = $8441;
+  GL_TANGENT_ARRAY_POINTER_EXT = $8442;
+  GL_BINORMAL_ARRAY_POINTER_EXT = $8443;
+  GL_MAP1_TANGENT_EXT = $8444;
+  GL_MAP2_TANGENT_EXT = $8445;
+  GL_MAP1_BINORMAL_EXT = $8446;
+  GL_MAP2_BINORMAL_EXT = $8447;
+
+  // GL_EXT_cull_vertex
+  GL_CULL_VERTEX_EXT = $81AA;
+  GL_CULL_VERTEX_EYE_POSITION_EXT = $81AB;
+  GL_CULL_VERTEX_OBJECT_POSITION_EXT = $81AC;
+
+  // GL_EXT_draw_range_elements
+  GL_MAX_ELEMENTS_VERTICES_EXT = $80E8;
+  GL_MAX_ELEMENTS_INDICES_EXT = $80E9;
+
+  // GL_EXT_fog_coord
+  GL_FOG_COORDINATE_SOURCE_EXT = $8450;
+  GL_FOG_COORDINATE_EXT = $8451;
+  GL_FRAGMENT_DEPTH_EXT = $8452;
+  GL_CURRENT_FOG_COORDINATE_EXT = $8453;
+  GL_FOG_COORDINATE_ARRAY_TYPE_EXT = $8454;
+  GL_FOG_COORDINATE_ARRAY_STRIDE_EXT = $8455;
+  GL_FOG_COORDINATE_ARRAY_POINTER_EXT = $8456;
+  GL_FOG_COORDINATE_ARRAY_EXT = $8457;
+
+  // GL_EXT_framebuffer_object
+  GL_FRAMEBUFFER_EXT = $8D40;
+  GL_RENDERBUFFER_EXT = $8D41;
+  GL_STENCIL_INDEX_EXT = $8D45;
+  GL_STENCIL_INDEX1_EXT = $8D46;
+  GL_STENCIL_INDEX4_EXT = $8D47;
+  GL_STENCIL_INDEX8_EXT = $8D48;
+  GL_STENCIL_INDEX16_EXT = $8D49;
+  GL_RENDERBUFFER_WIDTH_EXT = $8D42;
+  GL_RENDERBUFFER_HEIGHT_EXT = $8D43;
+  GL_RENDERBUFFER_INTERNAL_FORMAT_EXT = $8D44;
+  GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE_EXT = $8CD0;
+  GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME_EXT = $8CD1;
+  GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL_EXT = $8CD2;
+  GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE_EXT = $8CD3;
+  GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_3D_ZOFFSET_EXT = $8CD4;
+  GL_COLOR_ATTACHMENT0_EXT = $8CE0;
+  GL_COLOR_ATTACHMENT1_EXT = $8CE1;
+  GL_COLOR_ATTACHMENT2_EXT = $8CE2;
+  GL_COLOR_ATTACHMENT3_EXT = $8CE3;
+  GL_COLOR_ATTACHMENT4_EXT = $8CE4;
+  GL_COLOR_ATTACHMENT5_EXT = $8CE5;
+  GL_COLOR_ATTACHMENT6_EXT = $8CE6;
+  GL_COLOR_ATTACHMENT7_EXT = $8CE7;
+  GL_COLOR_ATTACHMENT8_EXT = $8CE8;
+  GL_COLOR_ATTACHMENT9_EXT = $8CE9;
+  GL_COLOR_ATTACHMENT10_EXT = $8CEA;
+  GL_COLOR_ATTACHMENT11_EXT = $8CEB;
+  GL_COLOR_ATTACHMENT12_EXT = $8CEC;
+  GL_COLOR_ATTACHMENT13_EXT = $8CED;
+  GL_COLOR_ATTACHMENT14_EXT = $8CEE;
+  GL_COLOR_ATTACHMENT15_EXT = $8CEF;
+  GL_DEPTH_ATTACHMENT_EXT = $8D00;
+  GL_STENCIL_ATTACHMENT_EXT = $8D20;
+  GL_FRAMEBUFFER_COMPLETE_EXT = $8CD5;
+  GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT = $8CD6;
+  GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT = $8CD7;
+  GL_FRAMEBUFFER_INCOMPLETE_DUPLICATE_ATTACHMENT_EXT = $8CD8;
+  GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT = $8CD9;
+  GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT = $8CDA;
+  GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT = $8CDB;
+  GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT = $8CDC;
+  GL_FRAMEBUFFER_UNSUPPORTED_EXT = $8CDD;
+  GL_FRAMEBUFFER_STATUS_ERROR_EXT = $8CDE;
+  GL_FRAMEBUFFER_BINDING_EXT = $8CA6;
+  GL_RENDERBUFFER_BINDING_EXT = $8CA7;
+  GL_MAX_COLOR_ATTACHMENTS_EXT = $8CDF;
+  GL_MAX_RENDERBUFFER_SIZE_EXT = $84E8;
+  GL_INVALID_FRAMEBUFFER_OPERATION_EXT = $0506;
+
+  // GL_EXT_histogram
+  GL_HISTOGRAM_EXT = $8024;
+  GL_PROXY_HISTOGRAM_EXT = $8025;
+  GL_HISTOGRAM_WIDTH_EXT = $8026;
+  GL_HISTOGRAM_FORMAT_EXT = $8027;
+  GL_HISTOGRAM_RED_SIZE_EXT = $8028;
+  GL_HISTOGRAM_GREEN_SIZE_EXT = $8029;
+  GL_HISTOGRAM_BLUE_SIZE_EXT = $802A;
+  GL_HISTOGRAM_ALPHA_SIZE_EXT = $802B;
+  GL_HISTOGRAM_LUMINANCE_SIZE_EXT = $802C;
+  GL_HISTOGRAM_SINK_EXT = $802D;
+  GL_MINMAX_EXT = $802E;
+  GL_MINMAX_FORMAT_EXT = $802F;
+  GL_MINMAX_SINK_EXT = $8030;
+  GL_TABLE_TOO_LARGE_EXT = $8031;
+
+  // GL_EXT_index_array_formats
+  GL_IUI_V2F_EXT = $81AD;
+  GL_IUI_V3F_EXT = $81AE;
+  GL_IUI_N3F_V2F_EXT = $81AF;
+  GL_IUI_N3F_V3F_EXT = $81B0;
+  GL_T2F_IUI_V2F_EXT = $81B1;
+  GL_T2F_IUI_V3F_EXT = $81B2;
+  GL_T2F_IUI_N3F_V2F_EXT = $81B3;
+  GL_T2F_IUI_N3F_V3F_EXT = $81B4;
+
+  // GL_EXT_index_func
+  GL_INDEX_TEST_EXT = $81B5;
+  GL_INDEX_TEST_FUNC_EXT = $81B6;
+  GL_INDEX_TEST_REF_EXT = $81B7;
+
+  // GL_EXT_index_material
+  GL_INDEX_MATERIAL_EXT = $81B8;
+  GL_INDEX_MATERIAL_PARAMETER_EXT = $81B9;
+  GL_INDEX_MATERIAL_FACE_EXT = $81BA;
+
+  // GL_EXT_light_texture
+  GL_FRAGMENT_MATERIAL_EXT = $8349;
+  GL_FRAGMENT_NORMAL_EXT = $834A;
+  GL_FRAGMENT_COLOR_EXT = $834C;
+  GL_ATTENUATION_EXT = $834D;
+  GL_SHADOW_ATTENUATION_EXT = $834E;
+  GL_TEXTURE_APPLICATION_MODE_EXT = $834F;
+  GL_TEXTURE_LIGHT_EXT = $8350;
+  GL_TEXTURE_MATERIAL_FACE_EXT = $8351;
+  GL_TEXTURE_MATERIAL_PARAMETER_EXT = $8352;
+
+  // GL_EXT_multisample
+  GL_MULTISAMPLE_EXT = $809D;
+  GL_SAMPLE_ALPHA_TO_MASK_EXT = $809E;
+  GL_SAMPLE_ALPHA_TO_ONE_EXT = $809F;
+  GL_SAMPLE_MASK_EXT = $80A0;
+  GL_1PASS_EXT = $80A1;
+  GL_2PASS_0_EXT = $80A2;
+  GL_2PASS_1_EXT = $80A3;
+  GL_4PASS_0_EXT = $80A4;
+  GL_4PASS_1_EXT = $80A5;
+  GL_4PASS_2_EXT = $80A6;
+  GL_4PASS_3_EXT = $80A7;
+  GL_SAMPLE_BUFFERS_EXT = $80A8;
+  GL_SAMPLES_EXT = $80A9;
+  GL_SAMPLE_MASK_VALUE_EXT = $80AA;
+  GL_SAMPLE_MASK_INVERT_EXT = $80AB;
+  GL_SAMPLE_PATTERN_EXT = $80AC;
+  GL_MULTISAMPLE_BIT_EXT = $20000000;
+
+  // GL_EXT_packed_pixels
+  GL_UNSIGNED_BYTE_3_3_2_EXT = $8032;
+  GL_UNSIGNED_SHORT_4_4_4_4_EXT = $8033;
+  GL_UNSIGNED_SHORT_5_5_5_1_EXT = $8034;
+  GL_UNSIGNED_INT_8_8_8_8_EXT = $8035;
+  GL_UNSIGNED_INT_10_10_10_2_EXT = $8036;
+
+  // GL_EXT_paletted_texture
+  GL_COLOR_INDEX1_EXT = $80E2;
+  GL_COLOR_INDEX2_EXT = $80E3;
+  GL_COLOR_INDEX4_EXT = $80E4;
+  GL_COLOR_INDEX8_EXT = $80E5;
+  GL_COLOR_INDEX12_EXT = $80E6;
+  GL_COLOR_INDEX16_EXT = $80E7;
+  GL_TEXTURE_INDEX_SIZE_EXT = $80ED;
+
+  // GL_EXT_pixel_transform
+  GL_PIXEL_TRANSFORM_2D_EXT = $8330;
+  GL_PIXEL_MAG_FILTER_EXT = $8331;
+  GL_PIXEL_MIN_FILTER_EXT = $8332;
+  GL_PIXEL_CUBIC_WEIGHT_EXT = $8333;
+  GL_CUBIC_EXT = $8334;
+  GL_AVERAGE_EXT = $8335;
+  GL_PIXEL_TRANSFORM_2D_STACK_DEPTH_EXT = $8336;
+  GL_MAX_PIXEL_TRANSFORM_2D_STACK_DEPTH_EXT = $8337;
+  GL_PIXEL_TRANSFORM_2D_MATRIX_EXT = $8338;
+
+  // GL_EXT_point_parameters
+  GL_POINT_SIZE_MIN_EXT = $8126;
+  GL_POINT_SIZE_MAX_EXT = $8127;
+  GL_POINT_FADE_THRESHOLD_SIZE_EXT = $8128;
+  GL_DISTANCE_ATTENUATION_EXT = $8129;
+
+  // GL_EXT_polygon_offset
+  GL_POLYGON_OFFSET_EXT = $8037;
+  GL_POLYGON_OFFSET_FACTOR_EXT = $8038;
+  GL_POLYGON_OFFSET_BIAS_EXT = $8039;
+
+  // GL_EXT_rescale_normal
+  GL_RESCALE_NORMAL_EXT = $803A;
+
+  // GL_EXT_secondary_color
+  GL_COLOR_SUM_EXT = $8458;
+  GL_CURRENT_SECONDARY_COLOR_EXT = $8459;
+  GL_SECONDARY_COLOR_ARRAY_SIZE_EXT = $845A;
+  GL_SECONDARY_COLOR_ARRAY_TYPE_EXT = $845B;
+  GL_SECONDARY_COLOR_ARRAY_STRIDE_EXT = $845C;
+  GL_SECONDARY_COLOR_ARRAY_POINTER_EXT = $845D;
+  GL_SECONDARY_COLOR_ARRAY_EXT = $845E;
+
+  // GL_EXT_separate_specular_color
+  GL_LIGHT_MODEL_COLOR_CONTROL_EXT = $81F8;
+  GL_SINGLE_COLOR_EXT = $81F9;
+  GL_SEPARATE_SPECULAR_COLOR_EXT = $81FA;
+
+  // GL_EXT_shared_texture_palette
+  GL_SHARED_TEXTURE_PALETTE_EXT = $81FB;
+
+  // GL_EXT_stencil_two_side
+  GL_STENCIL_TEST_TWO_SIDE_EXT = $8910;
+  GL_ACTIVE_STENCIL_FACE_EXT = $8911;
+
+  // GL_EXT_stencil_wrap
+  GL_INCR_WRAP_EXT = $8507;
+  GL_DECR_WRAP_EXT = $8508;
+
+  // GL_EXT_texture
+  GL_ALPHA4_EXT = $803B;
+  GL_ALPHA8_EXT = $803C;
+  GL_ALPHA12_EXT = $803D;
+  GL_ALPHA16_EXT = $803E;
+  GL_LUMINANCE4_EXT = $803F;
+  GL_LUMINANCE8_EXT = $8040;
+  GL_LUMINANCE12_EXT = $8041;
+  GL_LUMINANCE16_EXT = $8042;
+  GL_LUMINANCE4_ALPHA4_EXT = $8043;
+  GL_LUMINANCE6_ALPHA2_EXT = $8044;
+  GL_LUMINANCE8_ALPHA8_EXT = $8045;
+  GL_LUMINANCE12_ALPHA4_EXT = $8046;
+  GL_LUMINANCE12_ALPHA12_EXT = $8047;
+  GL_LUMINANCE16_ALPHA16_EXT = $8048;
+  GL_INTENSITY_EXT = $8049;
+  GL_INTENSITY4_EXT = $804A;
+  GL_INTENSITY8_EXT = $804B;
+  GL_INTENSITY12_EXT = $804C;
+  GL_INTENSITY16_EXT = $804D;
+  GL_RGB2_EXT = $804E;
+  GL_RGB4_EXT = $804F;
+  GL_RGB5_EXT = $8050;
+  GL_RGB8_EXT = $8051;
+  GL_RGB10_EXT = $8052;
+  GL_RGB12_EXT = $8053;
+  GL_RGB16_EXT = $8054;
+  GL_RGBA2_EXT = $8055;
+  GL_RGBA4_EXT = $8056;
+  GL_RGB5_A1_EXT = $8057;
+  GL_RGBA8_EXT = $8058;
+  GL_RGB10_A2_EXT = $8059;
+  GL_RGBA12_EXT = $805A;
+  GL_RGBA16_EXT = $805B;
+  GL_TEXTURE_RED_SIZE_EXT = $805C;
+  GL_TEXTURE_GREEN_SIZE_EXT = $805D;
+  GL_TEXTURE_BLUE_SIZE_EXT = $805E;
+  GL_TEXTURE_ALPHA_SIZE_EXT = $805F;
+  GL_TEXTURE_LUMINANCE_SIZE_EXT = $8060;
+  GL_TEXTURE_INTENSITY_SIZE_EXT = $8061;
+  GL_REPLACE_EXT = $8062;
+  GL_PROXY_TEXTURE_1D_EXT = $8063;
+  GL_PROXY_TEXTURE_2D_EXT = $8064;
+  GL_TEXTURE_TOO_LARGE_EXT = $8065;
+
+  // GL_EXT_texture3D
+  GL_PACK_SKIP_IMAGES_EXT = $806B;
+  GL_PACK_IMAGE_HEIGHT_EXT = $806C;
+  GL_UNPACK_SKIP_IMAGES_EXT = $806D;
+  GL_UNPACK_IMAGE_HEIGHT_EXT = $806E;
+  GL_TEXTURE_3D_EXT = $806F;
+  GL_PROXY_TEXTURE_3D_EXT = $8070;
+  GL_TEXTURE_DEPTH_EXT = $8071;
+  GL_TEXTURE_WRAP_R_EXT = $8072;
+  GL_MAX_3D_TEXTURE_SIZE_EXT = $8073;
+
+  // GL_EXT_texture_compression_s3tc
+  GL_COMPRESSED_RGB_S3TC_DXT1_EXT = $83F0;
+  GL_COMPRESSED_RGBA_S3TC_DXT1_EXT = $83F1;
+  GL_COMPRESSED_RGBA_S3TC_DXT3_EXT = $83F2;
+  GL_COMPRESSED_RGBA_S3TC_DXT5_EXT = $83F3;
+
+  // GL_EXT_texture_cube_map
+  GL_NORMAL_MAP_EXT = $8511;
+  GL_REFLECTION_MAP_EXT = $8512;
+  GL_TEXTURE_CUBE_MAP_EXT = $8513;
+  GL_TEXTURE_BINDING_CUBE_MAP_EXT = $8514;
+  GL_TEXTURE_CUBE_MAP_POSITIVE_X_EXT = $8515;
+  GL_TEXTURE_CUBE_MAP_NEGATIVE_X_EXT = $8516;
+  GL_TEXTURE_CUBE_MAP_POSITIVE_Y_EXT = $8517;
+  GL_TEXTURE_CUBE_MAP_NEGATIVE_Y_EXT = $8518;
+  GL_TEXTURE_CUBE_MAP_POSITIVE_Z_EXT = $8519;
+  GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_EXT = $851A;
+  GL_PROXY_TEXTURE_CUBE_MAP_EXT = $851B;
+  GL_MAX_CUBE_MAP_TEXTURE_SIZE_EXT = $851C;
+
+  // GL_EXT_texture_edge_clamp
+  GL_CLAMP_TO_EDGE_EXT = $812F;
+
+  // GL_EXT_texture_env_combine
+  GL_COMBINE_EXT = $8570;
+  GL_COMBINE_RGB_EXT = $8571;
+  GL_COMBINE_ALPHA_EXT = $8572;
+  GL_RGB_SCALE_EXT = $8573;
+  GL_ADD_SIGNED_EXT = $8574;
+  GL_INTERPOLATE_EXT = $8575;
+  GL_CONSTANT_EXT = $8576;
+  GL_PRIMARY_COLOR_EXT = $8577;
+  GL_PREVIOUS_EXT = $8578;
+  GL_SOURCE0_RGB_EXT = $8580;
+  GL_SOURCE1_RGB_EXT = $8581;
+  GL_SOURCE2_RGB_EXT = $8582;
+  GL_SOURCE0_ALPHA_EXT = $8588;
+  GL_SOURCE1_ALPHA_EXT = $8589;
+  GL_SOURCE2_ALPHA_EXT = $858A;
+  GL_OPERAND0_RGB_EXT = $8590;
+  GL_OPERAND1_RGB_EXT = $8591;
+  GL_OPERAND2_RGB_EXT = $8592;
+  GL_OPERAND0_ALPHA_EXT = $8598;
+  GL_OPERAND1_ALPHA_EXT = $8599;
+  GL_OPERAND2_ALPHA_EXT = $859A;
+
+  // GL_EXT_texture_env_dot3
+  GL_DOT3_RGB_EXT = $8740;
+  GL_DOT3_RGBA_EXT = $8741;
+
+  // GL_EXT_texture_filter_anisotropic
+  GL_TEXTURE_MAX_ANISOTROPY_EXT = $84FE;
+  GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT = $84FF;
+
+  // GL_EXT_texture_lod_bias
+  GL_MAX_TEXTURE_LOD_BIAS_EXT = $84FD;
+  GL_TEXTURE_FILTER_CONTROL_EXT = $8500;
+  GL_TEXTURE_LOD_BIAS_EXT = $8501;
+
+  // GL_EXT_texture_object
+  GL_TEXTURE_PRIORITY_EXT = $8066;
+  GL_TEXTURE_RESIDENT_EXT = $8067;
+  GL_TEXTURE_1D_BINDING_EXT = $8068;
+  GL_TEXTURE_2D_BINDING_EXT = $8069;
+  GL_TEXTURE_3D_BINDING_EXT = $806A;
+
+  // GL_EXT_texture_perturb_normal
+  GL_PERTURB_EXT = $85AE;
+  GL_TEXTURE_NORMAL_EXT = $85AF;
+
+  // GL_EXT_texture_rectangle
+  GL_TEXTURE_RECTANGLE_EXT = $84F5;
+  GL_TEXTURE_BINDING_RECTANGLE_EXT = $84F6;
+  GL_PROXY_TEXTURE_RECTANGLE_EXT = $84F7;
+  GL_MAX_RECTANGLE_TEXTURE_SIZE_EXT = $84F8;
+
+  // GL_EXT_vertex_array
+  GL_VERTEX_ARRAY_EXT = $8074;
+  GL_NORMAL_ARRAY_EXT = $8075;
+  GL_COLOR_ARRAY_EXT = $8076;
+  GL_INDEX_ARRAY_EXT = $8077;
+  GL_TEXTURE_COORD_ARRAY_EXT = $8078;
+  GL_EDGE_FLAG_ARRAY_EXT = $8079;
+  GL_VERTEX_ARRAY_SIZE_EXT = $807A;
+  GL_VERTEX_ARRAY_TYPE_EXT = $807B;
+  GL_VERTEX_ARRAY_STRIDE_EXT = $807C;
+  GL_VERTEX_ARRAY_COUNT_EXT = $807D;
+  GL_NORMAL_ARRAY_TYPE_EXT = $807E;
+  GL_NORMAL_ARRAY_STRIDE_EXT = $807F;
+  GL_NORMAL_ARRAY_COUNT_EXT = $8080;
+  GL_COLOR_ARRAY_SIZE_EXT = $8081;
+  GL_COLOR_ARRAY_TYPE_EXT = $8082;
+  GL_COLOR_ARRAY_STRIDE_EXT = $8083;
+  GL_COLOR_ARRAY_COUNT_EXT = $8084;
+  GL_INDEX_ARRAY_TYPE_EXT = $8085;
+  GL_INDEX_ARRAY_STRIDE_EXT = $8086;
+  GL_INDEX_ARRAY_COUNT_EXT = $8087;
+  GL_TEXTURE_COORD_ARRAY_SIZE_EXT = $8088;
+  GL_TEXTURE_COORD_ARRAY_TYPE_EXT = $8089;
   GL_TEXTURE_COORD_ARRAY_STRIDE_EXT = $808A;
-  GL_TEXTURE_COORD_ARRAY_COUNT_EXT  = $808B;
-  GL_EDGE_FLAG_ARRAY_STRIDE_EXT     = $808C;
-  GL_EDGE_FLAG_ARRAY_COUNT_EXT      = $808D;
-  GL_VERTEX_ARRAY_POINTER_EXT       = $808E;
-  GL_NORMAL_ARRAY_POINTER_EXT       = $808F;
-  GL_COLOR_ARRAY_POINTER_EXT        = $8090;
-  GL_INDEX_ARRAY_POINTER_EXT        = $8091;
+  GL_TEXTURE_COORD_ARRAY_COUNT_EXT = $808B;
+  GL_EDGE_FLAG_ARRAY_STRIDE_EXT = $808C;
+  GL_EDGE_FLAG_ARRAY_COUNT_EXT = $808D;
+  GL_VERTEX_ARRAY_POINTER_EXT = $808E;
+  GL_NORMAL_ARRAY_POINTER_EXT = $808F;
+  GL_COLOR_ARRAY_POINTER_EXT = $8090;
+  GL_INDEX_ARRAY_POINTER_EXT = $8091;
   GL_TEXTURE_COORD_ARRAY_POINTER_EXT = $8092;
-  GL_EDGE_FLAG_ARRAY_POINTER_EXT    = $8093;
-
-
-type
-  PPointFloat = ^TPointFloat;
-  {$EXTERNALSYM _POINTFLOAT}
-  _POINTFLOAT = record
-    X,Y: Single;
-  end;
-  TPointFloat = _POINTFLOAT;
-  {$EXTERNALSYM POINTFLOAT}
-  POINTFLOAT = _POINTFLOAT;
-
-  PGlyphMetricsFloat = ^TGlyphMetricsFloat;
-  {$EXTERNALSYM _GLYPHMETRICSFLOAT}
-  _GLYPHMETRICSFLOAT = record
-    gmfBlackBoxX: Single;
-    gmfBlackBoxY: Single;
-    gmfptGlyphOrigin: TPointFloat;
-    gmfCellIncX: Single;
-    gmfCellIncY: Single;
-  end;
-  TGlyphMetricsFloat = _GLYPHMETRICSFLOAT;
-  {$EXTERNALSYM GLYPHMETRICSFLOAT}
-  GLYPHMETRICSFLOAT = _GLYPHMETRICSFLOAT;
-
-const
-  {$EXTERNALSYM WGL_FONT_LINES}
-  WGL_FONT_LINES      = 0;
-  {$EXTERNALSYM WGL_FONT_POLYGONS}
-  WGL_FONT_POLYGONS   = 1;
-
-{***********************************************************}
-
-procedure glAccum (op: GLenum; value: GLfloat); stdcall;
-procedure glAlphaFunc (func: GLenum; ref: GLclampf); stdcall;
-procedure glBegin (mode: GLenum); stdcall;
-procedure glBitmap (width, height: GLsizei; xorig, yorig: GLfloat;
-                    xmove, ymove: GLfloat; bitmap: Pointer); stdcall;
-procedure glBlendFunc (sfactor, dfactor: GLenum); stdcall;
-procedure glCallList (list: GLuint); stdcall;
-procedure glCallLists (n: GLsizei; cltype: GLenum; lists: Pointer); stdcall;
-procedure glClear (mask: GLbitfield); stdcall;
-procedure glClearAccum (red, green, blue, alpha: GLfloat); stdcall;
-procedure glClearColor (red, green, blue, alpha: GLclampf); stdcall;
-procedure glClearDepth (depth: GLclampd); stdcall;
-procedure glClearIndex (c: GLfloat); stdcall;
-procedure glClearStencil (s: GLint); stdcall;
-procedure glClipPlane (plane: GLenum; equation: PGLDouble); stdcall;
-procedure glColor3b (red, green, blue: GLbyte); stdcall;
-procedure glColor3bv (v: PGLByte); stdcall;
-procedure glColor3d (red, green, blue: GLdouble); stdcall;
-procedure glColor3dv (v: PGLdouble); stdcall;
-procedure glColor3f (red, green, blue: GLfloat); stdcall;
-procedure glColor3fv (v: PGLfloat); stdcall;
-procedure glColor3i (red, green, blue: GLint); stdcall;
-procedure glColor3iv (v: PGLint); stdcall;
-procedure glColor3s (red, green, blue: GLshort); stdcall;
-procedure glColor3sv (v: PGLshort); stdcall;
-procedure glColor3ub (red, green, blue: GLubyte); stdcall;
-procedure glColor3ubv (v: PGLubyte); stdcall;
-procedure glColor3ui (red, green, blue: GLuint); stdcall;
-procedure glColor3uiv (v: PGLuint); stdcall;
-procedure glColor3us (red, green, blue: GLushort); stdcall;
-procedure glColor3usv (v: PGLushort); stdcall;
-procedure glColor4b (red, green, blue, alpha: GLbyte); stdcall;
-procedure glColor4bv (v: PGLbyte); stdcall;
-procedure glColor4d (red, green, blue, alpha: GLdouble); stdcall;
-procedure glColor4dv (v: PGLdouble); stdcall;
-procedure glColor4f (red, green, blue, alpha: GLfloat); stdcall;
-procedure glColor4fv (v: PGLfloat); stdcall;
-procedure glColor4i (red, green, blue, alpha: GLint); stdcall;
-procedure glColor4iv (v: PGLint); stdcall;
-procedure glColor4s (red, green, blue, alpha: GLshort); stdcall;
-procedure glColor4sv (v: PGLshort); stdcall;
-procedure glColor4ub (red, green, blue, alpha: GLubyte); stdcall;
-procedure glColor4ubv (v: PGLubyte); stdcall;
-procedure glColor4ui (red, green, blue, alpha: GLuint); stdcall;
-procedure glColor4uiv (v: PGLuint); stdcall;
-procedure glColor4us (red, green, blue, alpha: GLushort); stdcall;
-procedure glColor4usv (v: PGLushort); stdcall;
-procedure glColorMask (red, green, blue, alpha: GLboolean); stdcall;
-procedure glColorMaterial (face, mode: GLenum); stdcall;
-procedure glCopyPixels (x,y: GLint; width, height: GLsizei; pixeltype: GLenum); stdcall;
-procedure glCullFace (mode: GLenum); stdcall;
-procedure glDeleteLists (list: GLuint; range: GLsizei); stdcall;
-procedure glDepthFunc (func: GLenum); stdcall;
-procedure glDepthMask (flag: GLboolean); stdcall;
-procedure glDepthRange (zNear, zFar: GLclampd); stdcall;
-procedure glDisable (cap: GLenum); stdcall;
-procedure glDrawBuffer (mode: GLenum); stdcall;
-procedure glDrawPixels (width, height: GLsizei; format, pixeltype: GLenum;
-             pixels: Pointer); stdcall;
-procedure glEdgeFlag (flag: GLboolean); stdcall;
-procedure glEdgeFlagv (flag: PGLboolean); stdcall;
-procedure glEnable (cap: GLenum); stdcall;
-procedure glEnd; stdcall;
-procedure glEndList; stdcall;
-procedure glEvalCoord1d (u: GLdouble); stdcall;
-procedure glEvalCoord1dv (u: PGLdouble); stdcall;
-procedure glEvalCoord1f (u: GLfloat); stdcall;
-procedure glEvalCoord1fv (u: PGLfloat); stdcall;
-procedure glEvalCoord2d (u,v: GLdouble); stdcall;
-procedure glEvalCoord2dv (u: PGLdouble); stdcall;
-procedure glEvalCoord2f (u,v: GLfloat); stdcall;
-procedure glEvalCoord2fv (u: PGLfloat); stdcall;
-procedure glEvalMesh1 (mode: GLenum; i1, i2: GLint); stdcall;
-procedure glEvalMesh2 (mode: GLenum; i1, i2, j1, j2: GLint); stdcall;
-procedure glEvalPoint1 (i: GLint); stdcall;
-procedure glEvalPoint2 (i,j: GLint); stdcall;
-procedure glFeedbackBuffer (size: GLsizei; buftype: GLenum; buffer: PGLFloat); stdcall;
-procedure glFinish; stdcall;
-procedure glFlush; stdcall;
-procedure glFogf (pname: GLenum; param: GLfloat); stdcall;
-procedure glFogfv (pname: GLenum; params: PGLfloat); stdcall;
-procedure glFogi (pname: GLenum; param: GLint); stdcall;
-procedure glFogiv (pname: GLenum; params: PGLint); stdcall;
-procedure glFrontFace (mode: GLenum); stdcall;
-procedure glFrustum (left, right, bottom, top, zNear, zFar: GLdouble); stdcall;
-function  glGenLists (range: GLsizei): GLuint; stdcall;
-procedure glGetBooleanv (pname: GLenum; params: PGLboolean); stdcall;
-procedure glGetClipPlane (plane: GLenum; equation: PGLdouble); stdcall;
-procedure glGetDoublev (pname: GLenum; params: PGLdouble); stdcall;
-function  glGetError: GLenum; stdcall;
-procedure glGetFloatv (pname: GLenum; params: PGLfloat); stdcall;
-procedure glGetIntegerv (pname: GLenum; params: PGLint); stdcall;
-procedure glGetLightfv (light: GLenum; pname: GLenum; params: PGLfloat); stdcall;
-procedure glGetLightiv (light: GLenum; pname: GLenum; params: PGLint); stdcall;
-procedure glGetMapdv (target: GLenum; query: GLenum; v: PGLdouble); stdcall;
-procedure glGetMapfv (target: GLenum; query: GLenum; v: PGLfloat); stdcall;
-procedure glGetMapiv (target: GLenum; query: GLenum; v: PGLint); stdcall;
-procedure glGetMaterialfv (face: GLenum; pname: GLenum; params: PGLfloat); stdcall;
-procedure glGetMaterialiv (face: GLenum; pname: GLenum; params: PGLint); stdcall;
-procedure glGetPixelMapfv (map: GLenum; values: PGLfloat); stdcall;
-procedure glGetPixelMapuiv (map: GLenum; values: PGLuint); stdcall;
-procedure glGetPixelMapusv (map: GLenum; values: PGLushort); stdcall;
-procedure glGetPolygonStipple (var mask: GLubyte); stdcall;
-function  glGetString (name: GLenum): PChar; stdcall;
-procedure glGetTexEnvfv (target: GLenum; pname: GLenum; params: PGLfloat); stdcall;
-procedure glGetTexEnviv (target: GLenum; pname: GLenum; params: PGLint); stdcall;
-procedure glGetTexGendv (coord: GLenum; pname: GLenum; params: PGLdouble); stdcall;
-procedure glGetTexGenfv (coord: GLenum; pname: GLenum; params: PGLfloat); stdcall;
-procedure glGetTexGeniv (coord: GLenum; pname: GLenum; params: PGLint); stdcall;
-procedure glGetTexImage (target: GLenum; level: GLint; format: GLenum; _type: GLenum; pixels: pointer); stdcall;
-procedure glGetTexLevelParameterfv (target: GLenum; level: GLint; pname: GLenum; params: PGLfloat); stdcall;
-procedure glGetTexLevelParameteriv (target: GLenum; level: GLint; pname: GLenum; params: PGLint); stdcall;
-procedure glGetTexParameterfv (target, pname: GLenum; params: PGLfloat); stdcall;
-procedure glGetTexParameteriv (target, pname: GLenum; params: PGLint); stdcall;
-procedure glHint (target, mode: GLenum); stdcall;
-procedure glIndexMask (mask: GLuint); stdcall;
-procedure glIndexd (c: GLdouble); stdcall;
-procedure glIndexdv (c: PGLdouble); stdcall;
-procedure glIndexf (c: GLfloat); stdcall;
-procedure glIndexfv (c: PGLfloat); stdcall;
-procedure glIndexi (c: GLint); stdcall;
-procedure glIndexiv (c: PGLint); stdcall;
-procedure glIndexs (c: GLshort); stdcall;
-procedure glIndexsv (c: PGLshort); stdcall;
-procedure glInitNames; stdcall;
-function  glIsEnabled (cap: GLenum): GLBoolean; stdcall;
-function  glIsList (list: GLuint): GLBoolean;   stdcall;
-procedure glLightModelf (pname: GLenum; param: GLfloat); stdcall;
-procedure glLightModelfv (pname: GLenum; params: PGLfloat); stdcall;
-procedure glLightModeli (pname: GLenum; param: GLint); stdcall;
-procedure glLightModeliv (pname: GLenum; params: PGLint); stdcall;
-procedure glLightf (light, pname: GLenum; param: GLfloat); stdcall;
-procedure glLightfv (light, pname: GLenum; params: PGLfloat); stdcall;
-procedure glLighti (light, pname: GLenum; param: GLint); stdcall;
-procedure glLightiv (light, pname: GLenum; params: PGLint); stdcall;
-procedure glLineStipple (factor: GLint; pattern: GLushort); stdcall;
-procedure glLineWidth (width: GLfloat); stdcall;
-procedure glListBase (base: GLuint); stdcall;
-procedure glLoadIdentity; stdcall;
-procedure glLoadMatrixd (m: PGLdouble); stdcall;
-procedure glLoadMatrixf (m: PGLfloat); stdcall;
-procedure glLoadName (name: GLuint); stdcall;
-procedure glLogicOp (opcode: GLenum); stdcall;
-procedure glMap1d (target: GLenum; u1,u2: GLdouble; stride, order: GLint;
-  Points: PGLdouble); stdcall;
-procedure glMap1f (target: GLenum; u1,u2: GLfloat; stride, order: GLint;
-  Points: PGLfloat); stdcall;
-procedure glMap2d (target: GLenum;
-  u1,u2: GLdouble; ustride, uorder: GLint;
-  v1,v2: GLdouble; vstride, vorder: GLint; Points: PGLdouble); stdcall;
-procedure glMap2f (target: GLenum;
-  u1,u2: GLfloat; ustride, uorder: GLint;
-  v1,v2: GLfloat; vstride, vorder: GLint; Points: PGLfloat); stdcall;
-procedure glMapGrid1d (un: GLint; u1, u2: GLdouble); stdcall;
-procedure glMapGrid1f (un: GLint; u1, u2: GLfloat); stdcall;
-procedure glMapGrid2d (un: GLint; u1, u2: GLdouble;
-                       vn: GLint; v1, v2: GLdouble); stdcall;
-procedure glMapGrid2f (un: GLint; u1, u2: GLfloat;
-                       vn: GLint; v1, v2: GLfloat); stdcall;
-procedure glMaterialf (face, pname: GLenum; param: GLfloat); stdcall;
-procedure glMaterialfv (face, pname: GLenum; params: PGLfloat); stdcall;
-procedure glMateriali (face, pname: GLenum; param: GLint); stdcall;
-procedure glMaterialiv (face, pname: GLenum; params: PGLint); stdcall;
-procedure glMatrixMode (mode: GLenum); stdcall;
-procedure glMultMatrixd (m: PGLdouble); stdcall;
-procedure glMultMatrixf (m: PGLfloat); stdcall;
-procedure glNewList (ListIndex: GLuint; mode: GLenum); stdcall;
-procedure glNormal3b (nx, ny, nz: GLbyte); stdcall;
-procedure glNormal3bv (v: PGLbyte); stdcall;
-procedure glNormal3d (nx, ny, nz: GLdouble); stdcall;
-procedure glNormal3dv (v: PGLdouble); stdcall;
-procedure glNormal3f (nx, ny, nz: GLFloat); stdcall;
-procedure glNormal3fv (v: PGLfloat); stdcall;
-procedure glNormal3i (nx, ny, nz: GLint); stdcall;
-procedure glNormal3iv (v: PGLint); stdcall;
-procedure glNormal3s (nx, ny, nz: GLshort); stdcall;
-procedure glNormal3sv (v: PGLshort); stdcall;
-procedure glOrtho (left, right, bottom, top, zNear, zFar: GLdouble); stdcall;
-procedure glPassThrough (token: GLfloat); stdcall;
-procedure glPixelMapfv (map: GLenum; mapsize: GLint; values: PGLfloat); stdcall;
-procedure glPixelMapuiv (map: GLenum; mapsize: GLint; values: PGLuint); stdcall;
-procedure glPixelMapusv (map: GLenum; mapsize: GLint; values: PGLushort); stdcall;
-procedure glPixelStoref (pname: GLenum; param: GLfloat); stdcall;
-procedure glPixelStorei (pname: GLenum; param: GLint); stdcall;
-procedure glPixelTransferf (pname: GLenum; param: GLfloat); stdcall;
-procedure glPixelTransferi (pname: GLenum; param: GLint); stdcall;
-procedure glPixelZoom (xfactor, yfactor: GLfloat); stdcall;
-procedure glPointSize (size: GLfloat); stdcall;
-procedure glPolygonMode (face, mode: GLenum); stdcall;
-procedure glPolygonStipple (mask: PGLubyte); stdcall;
-procedure glPopAttrib; stdcall;
-procedure glPopMatrix; stdcall;
-procedure glPopName; stdcall;
-procedure glPushAttrib(mask: GLbitfield); stdcall;
-procedure glPushMatrix; stdcall;
-procedure glPushName(name: GLuint); stdcall;
-procedure glRasterPos2d (x,y: GLdouble); stdcall;
-procedure glRasterPos2dv (v: PGLdouble); stdcall;
-procedure glRasterPos2f (x,y: GLfloat); stdcall;
-procedure glRasterPos2fv (v: PGLfloat); stdcall;
-procedure glRasterPos2i (x,y: GLint); stdcall;
-procedure glRasterPos2iv (v: PGLint); stdcall;
-procedure glRasterPos2s (x,y: GLshort); stdcall;
-procedure glRasterPos2sv (v: PGLshort); stdcall;
-procedure glRasterPos3d (x,y,z: GLdouble); stdcall;
-procedure glRasterPos3dv (v: PGLdouble); stdcall;
-procedure glRasterPos3f (x,y,z: GLfloat); stdcall;
-procedure glRasterPos3fv (v: PGLfloat); stdcall;
-procedure glRasterPos3i (x,y,z: GLint); stdcall;
-procedure glRasterPos3iv (v: PGLint); stdcall;
-procedure glRasterPos3s (x,y,z: GLshort); stdcall;
-procedure glRasterPos3sv (v: PGLshort); stdcall;
-procedure glRasterPos4d (x,y,z,w: GLdouble); stdcall;
-procedure glRasterPos4dv (v: PGLdouble); stdcall;
-procedure glRasterPos4f (x,y,z: GLfloat); stdcall;
-procedure glRasterPos4fv (v: PGLfloat); stdcall;
-procedure glRasterPos4i (x,y,z: GLint); stdcall;
-procedure glRasterPos4iv (v: PGLint); stdcall;
-procedure glRasterPos4s (x,y,z: GLshort); stdcall;
-procedure glRasterPos4sv (v: PGLshort); stdcall;
-procedure glReadBuffer (mode: GLenum); stdcall;
-procedure glReadPixels (x,y: GLint; width, height: GLsizei;
-  format, _type: GLenum; pixels: Pointer); stdcall;
-procedure glRectd (x1, y1, x2, y2: GLdouble); stdcall;
-procedure glRectdv (v1, v2: PGLdouble); stdcall;
-procedure glRectf (x1, y1, x2, y2: GLfloat); stdcall;
-procedure glRectfv (v1, v2: PGLfloat); stdcall;
-procedure glRecti (x1, y1, x2, y2: GLint); stdcall;
-procedure glRectiv (v1, v2: PGLint); stdcall;
-procedure glRects (x1, y1, x2, y2: GLshort); stdcall;
-procedure glRectsv (v1, v2: PGLshort); stdcall;
-function  glRenderMode (mode: GLenum): GLint; stdcall;
-procedure glRotated (angle, x,y,z: GLdouble); stdcall;
-procedure glRotatef (angle, x,y,z: GLfloat); stdcall;
-procedure glScaled (x,y,z: GLdouble); stdcall;
-procedure glScalef (x,y,z: GLfloat); stdcall;
-procedure glScissor (x,y: GLint; width, height: GLsizei); stdcall;
-procedure glSelectBuffer (size: GLsizei; buffer: PGLuint); stdcall;
-procedure glShadeModel (mode: GLenum); stdcall;
-procedure glStencilFunc (func: GLenum; ref: GLint; mask: GLuint); stdcall;
-procedure glStencilMask (mask: GLuint); stdcall;
-procedure glStencilOp (fail, zfail, zpass: GLenum); stdcall;
-procedure glTexCoord1d (s: GLdouble); stdcall;
-procedure glTexCoord1dv (v: PGLdouble); stdcall;
-procedure glTexCoord1f (s: GLfloat); stdcall;
-procedure glTexCoord1fv (v: PGLfloat); stdcall;
-procedure glTexCoord1i (s: GLint); stdcall;
-procedure glTexCoord1iv (v: PGLint); stdcall;
-procedure glTexCoord1s (s: GLshort); stdcall;
-procedure glTexCoord1sv (v: PGLshort); stdcall;
-procedure glTexCoord2d (s,t: GLdouble); stdcall;
-procedure glTexCoord2dv (v: PGLdouble); stdcall;
-procedure glTexCoord2f (s,t: GLfloat); stdcall;
-procedure glTexCoord2fv (v: PGLfloat); stdcall;
-procedure glTexCoord2i (s,t: GLint); stdcall;
-procedure glTexCoord2iv (v: PGLint); stdcall;
-procedure glTexCoord2s (s,t: GLshort); stdcall;
-procedure glTexCoord2sv (v: PGLshort); stdcall;
-procedure glTexCoord3d (s,t,r: GLdouble); stdcall;
-procedure glTexCoord3dv (v: PGLdouble); stdcall;
-procedure glTexCoord3f (s,t,r: GLfloat); stdcall;
-procedure glTexCoord3fv (v: PGLfloat); stdcall;
-procedure glTexCoord3i (s,t,r: GLint); stdcall;
-procedure glTexCoord3iv (v: PGLint); stdcall;
-procedure glTexCoord3s (s,t,r: GLshort); stdcall;
-procedure glTexCoord3sv (v: PGLshort); stdcall;
-procedure glTexCoord4d (s,t,r,q: GLdouble); stdcall;
-procedure glTexCoord4dv (v: PGLdouble); stdcall;
-procedure glTexCoord4f (s,t,r: GLfloat); stdcall;
-procedure glTexCoord4fv (v: PGLfloat); stdcall;
-procedure glTexCoord4i (s,t,r: GLint); stdcall;
-procedure glTexCoord4iv (v: PGLint); stdcall;
-procedure glTexCoord4s (s,t,r: GLshort); stdcall;
-procedure glTexCoord4sv (v: PGLshort); stdcall;
-procedure glTexEnvf (target, pname: GLenum; param: GLfloat); stdcall;
-procedure glTexEnvfv (target, pname: GLenum; params: PGLfloat); stdcall;
-procedure glTexEnvi (target, pname: GLenum; param: GLint); stdcall;
-procedure glTexEnviv (target, pname: GLenum; params: PGLint); stdcall;
-procedure glTexGend (coord, pname: GLenum; param: GLdouble); stdcall;
-procedure glTexGendv (coord, pname: GLenum; params: PGLdouble); stdcall;
-procedure glTexGenf (coord, pname: GLenum; param: GLfloat); stdcall;
-procedure glTexGenfv (coord, pname: GLenum; params: PGLfloat); stdcall;
-procedure glTexGeni (coord, pname: GLenum; param: GLint); stdcall;
-procedure glTexGeniv (coord, pname: GLenum; params: PGLint); stdcall;
-procedure glTexImage1D (target: GLenum; level, components: GLint;
-  width: GLsizei; border: GLint; format, _type: GLenum; pixels: Pointer); stdcall;
-procedure glTexImage2D (target: GLenum; level, components: GLint;
-  width, height: GLsizei; border: GLint; format, _type: GLenum; pixels: Pointer); stdcall;
-procedure glTexParameterf (target, pname: GLenum; param: GLfloat); stdcall;
-procedure glTexParameterfv (target, pname: GLenum; params: PGLfloat); stdcall;
-procedure glTexParameteri (target, pname: GLenum; param: GLint); stdcall;
-procedure glTexParameteriv (target, pname: GLenum; params: PGLint); stdcall;
-procedure glTranslated (x,y,z: GLdouble); stdcall;
-procedure glTranslatef (x,y,z: GLfloat); stdcall;
-procedure glVertex2d (x,y: GLdouble); stdcall;
-procedure glVertex2dv (v: PGLdouble); stdcall;
-procedure glVertex2f (x,y: GLfloat); stdcall;
-procedure glVertex2fv (v: PGLfloat); stdcall;
-procedure glVertex2i (x,y: GLint); stdcall;
-procedure glVertex2iv (v: PGLint); stdcall;
-procedure glVertex2s (x,y: GLshort); stdcall;
-procedure glVertex2sv (v: PGLshort); stdcall;
-procedure glVertex3d (x,y,z: GLdouble); stdcall;
-procedure glVertex3dv (v: PGLdouble); stdcall;
-procedure glVertex3f (x,y,z: GLfloat); stdcall;
-procedure glVertex3fv (v: PGLfloat); stdcall;
-procedure glVertex3i (x,y,z: GLint); stdcall;
-procedure glVertex3iv (v: PGLint); stdcall;
-procedure glVertex3s (x,y,z: GLshort); stdcall;
-procedure glVertex3sv (v: PGLshort); stdcall;
-procedure glVertex4d (x,y,z,w: GLdouble); stdcall;
-procedure glVertex4dv (v: PGLdouble); stdcall;
-procedure glVertex4f (x,y,z,w: GLfloat); stdcall;
-procedure glVertex4fv (v: PGLfloat); stdcall;
-procedure glVertex4i (x,y,z,w: GLint); stdcall;
-procedure glVertex4iv (v: PGLint); stdcall;
-procedure glVertex4s (x,y,z,w: GLshort); stdcall;
-procedure glVertex4sv (v: PGLshort); stdcall;
-procedure glViewport (x,y: GLint; width, height: GLsizei); stdcall;
-
-type
-
-// EXT_vertex_array
-  TGLARRAYELEMENTEXTPROC = procedure (i: GLint) stdcall;
-  TGLDRAWARRAYSEXTPROC = procedure (mode: GLenum; first: GLint; count: GLsizei) stdcall;
-  TGLVERTEXPOINTEREXTPROC = procedure (size: GLint; type_: GLenum;
-    stride, count: GLsizei; P: Pointer) stdcall;
-  TGLNORMALPOINTEREXTPROC = procedure (type_: GLenum; stride, count: GLsizei;
-    P: Pointer) stdcall;
-  TGLCOLORPOINTEREXTPROC = procedure (size: GLint; type_: GLenum;
-    stride, count: GLsizei; P: Pointer) stdcall;
-  TGLINDEXPOINTEREXTPROC = procedure (type_: GLenum; stride, count: GLsizei;
-    P: Pointer) stdcall;
-  TGLTEXCOORDPOINTEREXTPROC = procedure (size: GLint; type_: GLenum;
-    stride, count: GLsizei; P: Pointer) stdcall;
-  TGLEDGEFLAGPOINTEREXTPROC = procedure (stride, count: GLsizei;
-    P: PGLboolean) stdcall;
-  TGLGETPOINTERVEXTPROC = procedure (pname: GLenum; var Params) stdcall;
-
-// WIN_swap_hint
-
-  TGLADDSWAPHINTRECTWINPROC = procedure (x, y: GLint; width, height: GLsizei) stdcall;
-
-{ OpenGL Utility routines (glu.h) =======================================}
-
-function gluErrorString (errCode: GLenum): PChar; stdcall;
-function gluErrorUnicodeStringEXT (errCode: GLenum): PWChar; stdcall;
-function gluGetString (name: GLenum): PChar; stdcall;
-
-procedure gluLookAt(eyex, eyey, eyez,
-                    centerx, centery, centerz,
-                    upx, upy, upz: GLdouble); stdcall;
-procedure gluOrtho2D(left, right, bottom, top: GLdouble); stdcall;
-procedure gluPerspective(fovy, aspect, zNear, zFar: GLdouble); stdcall;
-procedure gluPickMatrix (x, y, width, height: GLdouble; viewport: PGLint); stdcall;
-function  gluProject (objx, objy, obyz: GLdouble;
-                      modelMatrix: PGLdouble;
-                      projMatrix: PGLdouble;
-                      viewport: PGLint;
-                      var winx, winy, winz: GLDouble): Integer; stdcall;
-function  gluUnProject(winx, winy, winz: GLdouble;
-                      modelMatrix: PGLdouble;
-                      projMatrix: PGLdouble;
-                      viewport: PGLint;
-                      var objx, objy, objz: GLdouble): Integer; stdcall;
-function  gluScaleImage(format: GLenum;
-   widthin, heightin: GLint; typein: GLenum; datain: Pointer;
-   widthout, heightout: GLint; typeout: GLenum; dataout: Pointer): Integer; stdcall;
-
-function  gluBuild1DMipmaps (target: GLenum; components, width: GLint;
-                             format, atype: GLenum; data: Pointer): Integer; stdcall;
-function  gluBuild2DMipmaps (target: GLenum; components, width, height: GLint;
-                             format, atype: GLenum; data: Pointer): Integer; stdcall;
-
-type
-  _GLUquadricObj = record end;
-  GLUquadricObj = ^_GLUquadricObj;
-
-  TGLUquadricErrorProc = procedure (error: GLenum) stdcall;
-
-function  gluNewQuadric: GLUquadricObj; stdcall;
-procedure gluDeleteQuadric (state: GLUquadricObj); stdcall;
-procedure gluQuadricNormals (quadObject: GLUquadricObj; normals: GLenum);  stdcall;
-procedure gluQuadricTexture (quadObject: GLUquadricObj; textureCoords: GLboolean );stdcall;
-procedure gluQuadricOrientation (quadObject: GLUquadricObj; orientation: GLenum); stdcall;
-procedure gluQuadricDrawStyle (quadObject: GLUquadricObj; drawStyle: GLenum); stdcall;
-procedure gluCylinder (quadObject: GLUquadricObj;
-  baseRadius, topRadius, height: GLdouble; slices, stacks: GLint); stdcall;
-procedure gluDisk (quadObject: GLUquadricObj;
-  innerRadius, outerRadius: GLdouble; slices, loops: GLint); stdcall;
-procedure gluPartialDisk (quadObject: GLUquadricObj;
-  innerRadius, outerRadius: GLdouble; slices, loops: GLint;
-  startAngle, sweepAngle: GLdouble); stdcall;
-procedure gluSphere (quadObject: GLUquadricObj; radius: GLdouble; slices, loops: GLint); stdcall;
-procedure gluQuadricCallback (quadObject: GLUquadricObj; which: GLenum;
-  callback: Pointer); stdcall;
-
-type
-  _GLUtesselator = record end;
-  GLUtesselator = ^_GLUtesselator;
-
-  // tesselator callback procedure types
-  TGLUtessBeginProc = procedure (a: GLenum) stdcall;
-  TGLUtessEdgeFlagProc = procedure (flag: GLboolean) stdcall;
-  TGLUtessVertexProc = procedure (p: Pointer) stdcall;
-  TGLUtessEndProc = procedure stdcall;
-  TGLUtessErrorProc = TGLUquadricErrorProc;
-  TGLUtessCombineProc = procedure (a: PGLdouble; b: Pointer;
-                                   c: PGLfloat; var d: Pointer) stdcall;
-
-function gluNewTess: GLUtesselator; stdcall;
-procedure gluDeleteTess( tess: GLUtesselator ); stdcall;
-procedure gluTessBeginPolygon( tess: GLUtesselator ); stdcall;
-procedure gluTessBeginContour( tess: GLUtesselator ); stdcall;
-procedure gluTessVertex( tess: GLUtesselator; coords: PGLdouble; data: Pointer ); stdcall;
-procedure gluTessEndContour( tess: GLUtesselator ); stdcall;
-procedure gluTessEndPolygon( tess: GLUtesselator ); stdcall;
-procedure gluTessProperty( tess: GLUtesselator; which: GLenum; value: GLdouble); stdcall;
-procedure gluTessNormal( tess: GLUtesselator; x,y,z: GLdouble); stdcall;
-procedure gluTessCallback( tess: GLUtesselator; which: GLenum; callback: pointer); stdcall;
-
-type
-  TGLUnurbsObj = record end;
-  GLUnurbsObj = ^TGLUnurbsObj;
-
-  TGLUnurbsErrorProc = TGLUquadricErrorProc;
-
-function gluNewNurbsRenderer: GLUnurbsObj; stdcall;
-procedure gluDeleteNurbsRenderer (nobj: GLUnurbsObj); stdcall;
-procedure gluBeginSurface (nobj: GLUnurbsObj); stdcall;
-procedure gluBeginCurve (nobj: GLUnurbsObj); stdcall;
-procedure gluEndCurve (nobj: GLUnurbsObj); stdcall;
-procedure gluEndSurface (nobj: GLUnurbsObj); stdcall;
-procedure gluBeginTrim (nobj: GLUnurbsObj); stdcall;
-procedure gluEndTrim (nobj: GLUnurbsObj); stdcall;
-procedure gluPwlCurve (nobj: GLUnurbsObj; count: GLint; points: PGLfloat;
-  stride: GLint; _type: GLenum); stdcall;
-procedure gluNurbsCurve (nobj: GLUnurbsObj; nknots: GLint; knot: PGLfloat;
-  stride: GLint; ctlpts: PGLfloat; order: GLint; _type: GLenum); stdcall;
-procedure gluNurbsSurface (nobj: GLUnurbsObj;
-  sknot_count: GLint; sknot: PGLfloat;
-  tknot_count: GLint; tknot: PGLfloat;
-  s_stride, t_stride: GLint;
-  ctlpts: PGLfloat; sorder, torder: GLint; _type: GLenum); stdcall;
-procedure gluLoadSamplingMatrices (nobj: GLUnurbsObj;
-  modelMatrix: PGLdouble; projMatrix: PGLdouble; viewport: PGLint); stdcall;
-procedure gluNurbsProperty (nobj: GLUnurbsObj; prop: GLenum; value: GLfloat); stdcall;
-procedure gluGetNurbsProperty (nobj: GLUnurbsObj; prop: GLenum; var value: GLfloat); stdcall;
-procedure gluNurbsCallback (nobj: GLUnurbsObj; which: GLenum; callback: pointer); stdcall;
-
-
-{****           Generic constants               ****}
-const
-  GLU_VERSION_1_1  =               1;
-
-{ Errors: (return value 0 = no error) }
-  GLU_INVALID_ENUM       = 100900;
-  GLU_INVALID_VALUE      = 100901;
-  GLU_OUT_OF_MEMORY      = 100902;
-  GLU_INCOMPATIBLE_GL_VERSION  =   100903;
-
-{ gets }
-  GLU_VERSION            = 100800;
-  GLU_EXTENSIONS         = 100801;
-
-{ For laughs: }
-  GLU_TRUE               = GL_TRUE;
-  GLU_FALSE              = GL_FALSE;
-
-
-{***           Quadric constants               ***}
-
-{ Types of normals: }
-  GLU_SMOOTH             = 100000;
-  GLU_FLAT               = 100001;
-  GLU_NONE               = 100002;
-
-{ DrawStyle types: }
-  GLU_POINT              = 100010;
-  GLU_LINE               = 100011;
-  GLU_FILL               = 100012;
-  GLU_SILHOUETTE         = 100013;
-
-{ Orientation types: }
-  GLU_OUTSIDE            = 100020;
-  GLU_INSIDE             = 100021;
-
-{ Callback types: }
-{      GLU_ERROR               100103 }
-
-
-{***           Tesselation constants           ***}
-
-  GLU_TESS_MAX_COORD     =         1.0e150;
-
-{ Property types: }
-  GLU_TESS_WINDING_RULE  =         100110;
-  GLU_TESS_BOUNDARY_ONLY =         100111;
-  GLU_TESS_TOLERANCE     =         100112;
-
-{ Possible winding rules: }
-  GLU_TESS_WINDING_ODD          =  100130;
-  GLU_TESS_WINDING_NONZERO      =  100131;
-  GLU_TESS_WINDING_POSITIVE     =  100132;
-  GLU_TESS_WINDING_NEGATIVE     =  100133;
-  GLU_TESS_WINDING_ABS_GEQ_TWO  =  100134;
-
-{ Callback types: }
-  GLU_TESS_BEGIN     = 100100 ;     { void (*)(GLenum    type)         }
-  GLU_TESS_VERTEX    = 100101 ;     { void (*)(void      *data)        }
-  GLU_TESS_END       = 100102 ;     { void (*)(void)                   }
-  GLU_TESS_ERROR     = 100103 ;     { void (*)(GLenum    errno)        }
-  GLU_TESS_EDGE_FLAG = 100104 ;     { void (*)(GLboolean boundaryEdge) }
-  GLU_TESS_COMBINE   = 100105 ;     { void (*)(GLdouble  coords[3],;
-                                                    void      *data[4],;
-                                                    GLfloat   weight[4],;
-                                                    void      **dataOut)    }
-
-{ Errors: }
-  GLU_TESS_ERROR1    = 100151;
-  GLU_TESS_ERROR2    = 100152;
-  GLU_TESS_ERROR3    = 100153;
-  GLU_TESS_ERROR4    = 100154;
-  GLU_TESS_ERROR5    = 100155;
-  GLU_TESS_ERROR6    = 100156;
-  GLU_TESS_ERROR7    = 100157;
-  GLU_TESS_ERROR8    = 100158;
-
-  GLU_TESS_MISSING_BEGIN_POLYGON  = GLU_TESS_ERROR1;
-  GLU_TESS_MISSING_BEGIN_CONTOUR  = GLU_TESS_ERROR2;
-  GLU_TESS_MISSING_END_POLYGON    = GLU_TESS_ERROR3;
-  GLU_TESS_MISSING_END_CONTOUR    = GLU_TESS_ERROR4;
-  GLU_TESS_COORD_TOO_LARGE        = GLU_TESS_ERROR5;
-  GLU_TESS_NEED_COMBINE_CALLBACK  = GLU_TESS_ERROR6;
-
-{***           NURBS constants                 ***}
-
-{ Properties: }
-  GLU_AUTO_LOAD_MATRIX          =  100200;
-  GLU_CULLING                   =  100201;
-  GLU_SAMPLING_TOLERANCE        =  100203;
-  GLU_DISPLAY_MODE              =  100204;
-  GLU_PARAMETRIC_TOLERANCE      =  100202;
-  GLU_SAMPLING_METHOD           =  100205;
-  GLU_U_STEP                    =  100206;
-  GLU_V_STEP                    =  100207;
-
-{ Sampling methods: }
-  GLU_PATH_LENGTH               =  100215;
-  GLU_PARAMETRIC_ERROR          =  100216;
-  GLU_DOMAIN_DISTANCE           =  100217;
-
-{ Trimming curve types }
-  GLU_MAP1_TRIM_2       =  100210;
-  GLU_MAP1_TRIM_3       =  100211;
-
-{ Display modes: }
-{      GLU_FILL                100012 }
-  GLU_OUTLINE_POLYGON    = 100240;
-  GLU_OUTLINE_PATCH      = 100241;
-
-{ Callbacks: }
-{      GLU_ERROR               100103 }
-
-{ Errors: }
-  GLU_NURBS_ERROR1       = 100251;
-  GLU_NURBS_ERROR2       = 100252;
-  GLU_NURBS_ERROR3       = 100253;
-  GLU_NURBS_ERROR4       = 100254;
-  GLU_NURBS_ERROR5       = 100255;
-  GLU_NURBS_ERROR6       = 100256;
-  GLU_NURBS_ERROR7       = 100257;
-  GLU_NURBS_ERROR8       = 100258;
-  GLU_NURBS_ERROR9       = 100259;
-  GLU_NURBS_ERROR10      = 100260;
-  GLU_NURBS_ERROR11      = 100261;
-  GLU_NURBS_ERROR12      = 100262;
-  GLU_NURBS_ERROR13      = 100263;
-  GLU_NURBS_ERROR14      = 100264;
-  GLU_NURBS_ERROR15      = 100265;
-  GLU_NURBS_ERROR16      = 100266;
-  GLU_NURBS_ERROR17      = 100267;
-  GLU_NURBS_ERROR18      = 100268;
-  GLU_NURBS_ERROR19      = 100269;
-  GLU_NURBS_ERROR20      = 100270;
-  GLU_NURBS_ERROR21      = 100271;
-  GLU_NURBS_ERROR22      = 100272;
-  GLU_NURBS_ERROR23      = 100273;
-  GLU_NURBS_ERROR24      = 100274;
-  GLU_NURBS_ERROR25      = 100275;
-  GLU_NURBS_ERROR26      = 100276;
-  GLU_NURBS_ERROR27      = 100277;
-  GLU_NURBS_ERROR28      = 100278;
-  GLU_NURBS_ERROR29      = 100279;
-  GLU_NURBS_ERROR30      = 100280;
-  GLU_NURBS_ERROR31      = 100281;
-  GLU_NURBS_ERROR32      = 100282;
-  GLU_NURBS_ERROR33      = 100283;
-  GLU_NURBS_ERROR34      = 100284;
-  GLU_NURBS_ERROR35      = 100285;
-  GLU_NURBS_ERROR36      = 100286;
-  GLU_NURBS_ERROR37      = 100287;
-
-{
-/****           Backwards compatibility for old tesselator           ****/
-
-typedef GLUtesselator GLUtriangulatorObj;
-
-procedure   gluBeginPolygon( tess: GLUtesselator );
-
-procedure   gluNextContour(  tess: GLUtesselator,
-                                 GLenum        type );
-
-procedure   gluEndPolygon(   tess: GLUtesselator );
-
-/* Contours types -- obsolete! */
-#define GLU_CW          100120
-#define GLU_CCW         100121
-#define GLU_INTERIOR    100122
-#define GLU_EXTERIOR    100123
-#define GLU_UNKNOWN     100124
-
-/* Names without "TESS_" prefix */
-#define GLU_BEGIN       GLU_TESS_BEGIN
-#define GLU_VERTEX      GLU_TESS_VERTEX
-#define GLU_END         GLU_TESS_END
-#define GLU_ERROR       GLU_TESS_ERROR
-#define GLU_EDGE_FLAG   GLU_TESS_EDGE_FLAG
-}
-
-{ GDI support routines for OpenGL ==========================================}
-
-function wglGetProcAddress(ProcName: PChar): Pointer;  stdcall;
-
-const
-  glu32 = 'glu32.dll';
-
-implementation
-
-procedure glAccum; external opengl32;
-procedure glAlphaFunc; external opengl32;
-procedure glBegin; external opengl32;
-procedure glBitmap; external opengl32;
-procedure glBlendFunc; external opengl32;
-procedure glCallList; external opengl32;
-procedure glCallLists; external opengl32;
-procedure glClear; external opengl32;
-procedure glClearAccum; external opengl32;
-procedure glClearColor; external opengl32;
-procedure glClearDepth; external opengl32;
-procedure glClearIndex; external opengl32;
-procedure glClearStencil; external opengl32;
-procedure glClipPlane; external opengl32;
-procedure glColor3b; external opengl32;
-procedure glColor3bv; external opengl32;
-procedure glColor3d; external opengl32;
-procedure glColor3dv; external opengl32;
-procedure glColor3f; external opengl32;
-procedure glColor3fv; external opengl32;
-procedure glColor3i; external opengl32;
-procedure glColor3iv; external opengl32;
-procedure glColor3s; external opengl32;
-procedure glColor3sv; external opengl32;
-procedure glColor3ub; external opengl32;
-procedure glColor3ubv; external opengl32;
-procedure glColor3ui; external opengl32;
-procedure glColor3uiv; external opengl32;
-procedure glColor3us; external opengl32;
-procedure glColor3usv; external opengl32;
-procedure glColor4b; external opengl32;
-procedure glColor4bv; external opengl32;
-procedure glColor4d; external opengl32;
-procedure glColor4dv; external opengl32;
-procedure glColor4f; external opengl32;
-procedure glColor4fv; external opengl32;
-procedure glColor4i; external opengl32;
-procedure glColor4iv; external opengl32;
-procedure glColor4s; external opengl32;
-procedure glColor4sv; external opengl32;
-procedure glColor4ub; external opengl32;
-procedure glColor4ubv; external opengl32;
-procedure glColor4ui; external opengl32;
-procedure glColor4uiv; external opengl32;
-procedure glColor4us; external opengl32;
-procedure glColor4usv; external opengl32;
-procedure glColorMask; external opengl32;
-procedure glColorMaterial; external opengl32;
-procedure glCopyPixels; external opengl32;
-procedure glCullFace; external opengl32;
-procedure glDeleteLists; external opengl32;
-procedure glDepthFunc; external opengl32;
-procedure glDepthMask; external opengl32;
-procedure glDepthRange; external opengl32;
-procedure glDisable; external opengl32;
-procedure glDrawBuffer; external opengl32;
-procedure glDrawPixels; external opengl32;
-procedure glEdgeFlag; external opengl32;
-procedure glEdgeFlagv; external opengl32;
-procedure glEnable; external opengl32;
-procedure glEnd; external opengl32;
-procedure glEndList; external opengl32;
-procedure glEvalCoord1d; external opengl32;
-procedure glEvalCoord1dv; external opengl32;
-procedure glEvalCoord1f; external opengl32;
-procedure glEvalCoord1fv; external opengl32;
-procedure glEvalCoord2d; external opengl32;
-procedure glEvalCoord2dv; external opengl32;
-procedure glEvalCoord2f; external opengl32;
-procedure glEvalCoord2fv; external opengl32;
-procedure glEvalMesh1; external opengl32;
-procedure glEvalMesh2; external opengl32;
-procedure glEvalPoint1; external opengl32;
-procedure glEvalPoint2; external opengl32;
-procedure glFeedbackBuffer; external opengl32;
-procedure glFinish; external opengl32;
-procedure glFlush; external opengl32;
-procedure glFogf; external opengl32;
-procedure glFogfv; external opengl32;
-procedure glFogi; external opengl32;
-procedure glFogiv; external opengl32;
-procedure glFrontFace; external opengl32;
-procedure glFrustum; external opengl32;
-function  glGenLists; external opengl32;
-procedure glGetBooleanv; external opengl32;
-procedure glGetClipPlane; external opengl32;
-procedure glGetDoublev; external opengl32;
-function  glGetError: GLenum; external opengl32;
-procedure glGetFloatv; external opengl32;
-procedure glGetIntegerv; external opengl32;
-procedure glGetLightfv; external opengl32;
-procedure glGetLightiv; external opengl32;
-procedure glGetMapdv; external opengl32;
-procedure glGetMapfv; external opengl32;
-procedure glGetMapiv; external opengl32;
-procedure glGetMaterialfv; external opengl32;
-procedure glGetMaterialiv; external opengl32;
-procedure glGetPixelMapfv; external opengl32;
-procedure glGetPixelMapuiv; external opengl32;
-procedure glGetPixelMapusv; external opengl32;
-procedure glGetPolygonStipple; external opengl32;
-function  glGetString; external opengl32;
-procedure glGetTexEnvfv; external opengl32;
-procedure glGetTexEnviv; external opengl32;
-procedure glGetTexGendv; external opengl32;
-procedure glGetTexGenfv; external opengl32;
-procedure glGetTexGeniv; external opengl32;
-procedure glGetTexImage; external opengl32;
-procedure glGetTexLevelParameterfv; external opengl32;
-procedure glGetTexLevelParameteriv; external opengl32;
-procedure glGetTexParameterfv; external opengl32;
-procedure glGetTexParameteriv; external opengl32;
-procedure glHint; external opengl32;
-procedure glIndexMask; external opengl32;
-procedure glIndexd; external opengl32;
-procedure glIndexdv; external opengl32;
-procedure glIndexf; external opengl32;
-procedure glIndexfv; external opengl32;
-procedure glIndexi; external opengl32;
-procedure glIndexiv; external opengl32;
-procedure glIndexs; external opengl32;
-procedure glIndexsv; external opengl32;
-procedure glInitNames; external opengl32;
-function  glIsEnabled; external opengl32;
-function  glIsList; external opengl32;
-procedure glLightModelf; external opengl32;
-procedure glLightModelfv; external opengl32;
-procedure glLightModeli; external opengl32;
-procedure glLightModeliv; external opengl32;
-procedure glLightf; external opengl32;
-procedure glLightfv; external opengl32;
-procedure glLighti; external opengl32;
-procedure glLightiv; external opengl32;
-procedure glLineStipple; external opengl32;
-procedure glLineWidth; external opengl32;
-procedure glListBase; external opengl32;
-procedure glLoadIdentity; external opengl32;
-procedure glLoadMatrixd; external opengl32;
-procedure glLoadMatrixf; external opengl32;
-procedure glLoadName; external opengl32;
-procedure glLogicOp; external opengl32;
-procedure glMap1d; external opengl32;
-procedure glMap1f; external opengl32;
-procedure glMap2d; external opengl32;
-procedure glMap2f; external opengl32;
-procedure glMapGrid1d; external opengl32;
-procedure glMapGrid1f; external opengl32;
-procedure glMapGrid2d; external opengl32;
-procedure glMapGrid2f; external opengl32;
-procedure glMaterialf; external opengl32;
-procedure glMaterialfv; external opengl32;
-procedure glMateriali; external opengl32;
-procedure glMaterialiv; external opengl32;
-procedure glMatrixMode; external opengl32;
-procedure glMultMatrixd; external opengl32;
-procedure glMultMatrixf; external opengl32;
-procedure glNewList; external opengl32;
-procedure glNormal3b; external opengl32;
-procedure glNormal3bv; external opengl32;
-procedure glNormal3d; external opengl32;
-procedure glNormal3dv; external opengl32;
-procedure glNormal3f; external opengl32;
-procedure glNormal3fv; external opengl32;
-procedure glNormal3i; external opengl32;
-procedure glNormal3iv; external opengl32;
-procedure glNormal3s; external opengl32;
-procedure glNormal3sv; external opengl32;
-procedure glOrtho; external opengl32;
-procedure glPassThrough; external opengl32;
-procedure glPixelMapfv; external opengl32;
-procedure glPixelMapuiv; external opengl32;
-procedure glPixelMapusv; external opengl32;
-procedure glPixelStoref; external opengl32;
-procedure glPixelStorei; external opengl32;
-procedure glPixelTransferf; external opengl32;
-procedure glPixelTransferi; external opengl32;
-procedure glPixelZoom; external opengl32;
-procedure glPointSize; external opengl32;
-procedure glPolygonMode; external opengl32;
-procedure glPolygonStipple; external opengl32;
-procedure glPopAttrib; external opengl32;
-procedure glPopMatrix; external opengl32;
-procedure glPopName; external opengl32;
-procedure glPushAttrib; external opengl32;
-procedure glPushMatrix; external opengl32;
-procedure glPushName; external opengl32;
-procedure glRasterPos2d; external opengl32;
-procedure glRasterPos2dv; external opengl32;
-procedure glRasterPos2f; external opengl32;
-procedure glRasterPos2fv; external opengl32;
-procedure glRasterPos2i; external opengl32;
-procedure glRasterPos2iv; external opengl32;
-procedure glRasterPos2s; external opengl32;
-procedure glRasterPos2sv; external opengl32;
-procedure glRasterPos3d; external opengl32;
-procedure glRasterPos3dv; external opengl32;
-procedure glRasterPos3f; external opengl32;
-procedure glRasterPos3fv; external opengl32;
-procedure glRasterPos3i; external opengl32;
-procedure glRasterPos3iv; external opengl32;
-procedure glRasterPos3s; external opengl32;
-procedure glRasterPos3sv; external opengl32;
-procedure glRasterPos4d; external opengl32;
-procedure glRasterPos4dv; external opengl32;
-procedure glRasterPos4f; external opengl32;
-procedure glRasterPos4fv; external opengl32;
-procedure glRasterPos4i; external opengl32;
-procedure glRasterPos4iv; external opengl32;
-procedure glRasterPos4s; external opengl32;
-procedure glRasterPos4sv; external opengl32;
-procedure glReadBuffer; external opengl32;
-procedure glReadPixels; external opengl32;
-procedure glRectd; external opengl32;
-procedure glRectdv; external opengl32;
-procedure glRectf; external opengl32;
-procedure glRectfv; external opengl32;
-procedure glRecti; external opengl32;
-procedure glRectiv; external opengl32;
-procedure glRects; external opengl32;
-procedure glRectsv; external opengl32;
-function  glRenderMode; external opengl32;
-procedure glRotated; external opengl32;
-procedure glRotatef; external opengl32;
-procedure glScaled; external opengl32;
-procedure glScalef; external opengl32;
-procedure glScissor; external opengl32;
-procedure glSelectBuffer; external opengl32;
-procedure glShadeModel; external opengl32;
-procedure glStencilFunc; external opengl32;
-procedure glStencilMask; external opengl32;
-procedure glStencilOp; external opengl32;
-procedure glTexCoord1d; external opengl32;
-procedure glTexCoord1dv; external opengl32;
-procedure glTexCoord1f; external opengl32;
-procedure glTexCoord1fv; external opengl32;
-procedure glTexCoord1i; external opengl32;
-procedure glTexCoord1iv; external opengl32;
-procedure glTexCoord1s; external opengl32;
-procedure glTexCoord1sv; external opengl32;
-procedure glTexCoord2d; external opengl32;
-procedure glTexCoord2dv; external opengl32;
-procedure glTexCoord2f; external opengl32;
-procedure glTexCoord2fv; external opengl32;
-procedure glTexCoord2i; external opengl32;
-procedure glTexCoord2iv; external opengl32;
-procedure glTexCoord2s; external opengl32;
-procedure glTexCoord2sv; external opengl32;
-procedure glTexCoord3d; external opengl32;
-procedure glTexCoord3dv; external opengl32;
-procedure glTexCoord3f; external opengl32;
-procedure glTexCoord3fv; external opengl32;
-procedure glTexCoord3i; external opengl32;
-procedure glTexCoord3iv; external opengl32;
-procedure glTexCoord3s; external opengl32;
-procedure glTexCoord3sv; external opengl32;
-procedure glTexCoord4d; external opengl32;
-procedure glTexCoord4dv; external opengl32;
-procedure glTexCoord4f; external opengl32;
-procedure glTexCoord4fv; external opengl32;
-procedure glTexCoord4i; external opengl32;
-procedure glTexCoord4iv; external opengl32;
-procedure glTexCoord4s; external opengl32;
-procedure glTexCoord4sv; external opengl32;
-procedure glTexEnvf; external opengl32;
-procedure glTexEnvfv; external opengl32;
-procedure glTexEnvi; external opengl32;
-procedure glTexEnviv; external opengl32;
-procedure glTexGend; external opengl32;
-procedure glTexGendv; external opengl32;
-procedure glTexGenf; external opengl32;
-procedure glTexGenfv; external opengl32;
-procedure glTexGeni; external opengl32;
-procedure glTexGeniv; external opengl32;
-procedure glTexImage1D; external opengl32;
-procedure glTexImage2D; external opengl32;
-procedure glTexParameterf; external opengl32;
-procedure glTexParameterfv; external opengl32;
-procedure glTexParameteri; external opengl32;
-procedure glTexParameteriv; external opengl32;
-procedure glTranslated; external opengl32;
-procedure glTranslatef; external opengl32;
-procedure glVertex2d; external opengl32;
-procedure glVertex2dv; external opengl32;
-procedure glVertex2f; external opengl32;
-procedure glVertex2fv; external opengl32;
-procedure glVertex2i; external opengl32;
-procedure glVertex2iv; external opengl32;
-procedure glVertex2s; external opengl32;
-procedure glVertex2sv; external opengl32;
-procedure glVertex3d; external opengl32;
-procedure glVertex3dv; external opengl32;
-procedure glVertex3f; external opengl32;
-procedure glVertex3fv; external opengl32;
-procedure glVertex3i; external opengl32;
-procedure glVertex3iv; external opengl32;
-procedure glVertex3s; external opengl32;
-procedure glVertex3sv; external opengl32;
-procedure glVertex4d; external opengl32;
-procedure glVertex4dv; external opengl32;
-procedure glVertex4f; external opengl32;
-procedure glVertex4fv; external opengl32;
-procedure glVertex4i; external opengl32;
-procedure glVertex4iv; external opengl32;
-procedure glVertex4s; external opengl32;
-procedure glVertex4sv; external opengl32;
-procedure glViewport; external opengl32;
-
-function wglGetProcAddress;    external opengl32;
-
-{ OpenGL Utility routines (glu.h) =======================================}
-
-function gluErrorString;                     external glu32;
-function gluErrorUnicodeStringEXT;           external glu32;
-function gluGetString;                       external glu32;
-procedure gluLookAt;                         external glu32;
-procedure gluOrtho2D;                        external glu32;
-procedure gluPerspective;                    external glu32;
-procedure gluPickMatrix;                     external glu32;
-function  gluProject;                        external glu32;
-function  gluUnProject;                      external glu32;
-function  gluScaleImage;                     external glu32;
-function  gluBuild1DMipmaps;                 external glu32;
-function  gluBuild2DMipmaps;                 external glu32;
-function  gluNewQuadric;                     external glu32;
-procedure gluDeleteQuadric;                  external glu32;
-procedure gluQuadricNormals;                 external glu32;
-procedure gluQuadricTexture;                 external glu32;
-procedure gluQuadricOrientation;             external glu32;
-procedure gluQuadricDrawStyle;               external glu32;
-procedure gluCylinder;                       external glu32;
-procedure gluDisk;                           external glu32;
-procedure gluPartialDisk;                    external glu32;
-procedure gluSphere;                         external glu32;
-procedure gluQuadricCallback;                external glu32;
-
-function gluNewTess                         ;external glu32;
-procedure gluDeleteTess                     ;external glu32;
-procedure gluTessBeginPolygon               ;external glu32;
-procedure gluTessBeginContour               ;external glu32;
-procedure gluTessVertex                     ;external glu32;
-procedure gluTessEndContour                 ;external glu32;
-procedure gluTessEndPolygon                 ;external glu32;
-procedure gluTessProperty                   ;external glu32;
-procedure gluTessNormal                     ;external glu32;
-procedure gluTessCallback                   ;external glu32;
-
-function gluNewNurbsRenderer                ;external glu32;
-procedure gluDeleteNurbsRenderer            ;external glu32;
-procedure gluBeginSurface                   ;external glu32;
-procedure gluBeginCurve                     ;external glu32;
-procedure gluEndCurve                       ;external glu32;
-procedure gluEndSurface                     ;external glu32;
-procedure gluBeginTrim                      ;external glu32;
-procedure gluEndTrim                        ;external glu32;
-procedure gluPwlCurve                       ;external glu32;
-procedure gluNurbsCurve                     ;external glu32;
-procedure gluNurbsSurface                   ;external glu32;
-procedure gluLoadSamplingMatrices           ;external glu32;
-procedure gluNurbsProperty                  ;external glu32;
-procedure gluGetNurbsProperty               ;external glu32;
-procedure gluNurbsCallback                  ;external glu32;
-
-
-begin
-  Set8087CW($133F);
+  GL_EDGE_FLAG_ARRAY_POINTER_EXT = $8093;
+
+  // GL_EXT_vertex_shader
+  GL_VERTEX_SHADER_EXT = $8780;
+  GL_VERTEX_SHADER_BINDING_EXT = $8781;
+  GL_OP_INDEX_EXT = $8782;
+  GL_OP_NEGATE_EXT = $8783;
+  GL_OP_DOT3_EXT = $8784;
+  GL_OP_DOT4_EXT = $8785;
+  GL_OP_MUL_EXT = $8786;
+  GL_OP_ADD_EXT = $8787;
+  GL_OP_MADD_EXT = $8788;
+  GL_OP_FRAC_EXT = $8789;
+  GL_OP_MAX_EXT = $878A;
+  GL_OP_MIN_EXT = $878B;
+  GL_OP_SET_GE_EXT = $878C;
+  GL_OP_SET_LT_EXT = $878D;
+  GL_OP_CLAMP_EXT = $878E;
+  GL_OP_FLOOR_EXT = $878F;
+  GL_OP_ROUND_EXT = $8790;
+  GL_OP_EXP_BASE_2_EXT = $8791;
+  GL_OP_LOG_BASE_2_EXT = $8792;
+  GL_OP_POWER_EXT = $8793;
+  GL_OP_RECIP_EXT = $8794;
+  GL_OP_RECIP_SQRT_EXT = $8795;
+  GL_OP_SUB_EXT = $8796;
+  GL_OP_CROSS_PRODUCT_EXT = $8797;
+  GL_OP_MULTIPLY_MATRIX_EXT = $8798;
+  GL_OP_MOV_EXT = $8799;
+  GL_OUTPUT_VERTEX_EXT = $879A;
+  GL_OUTPUT_COLOR0_EXT = $879B;
+  GL_OUTPUT_COLOR1_EXT = $879C;
+  GL_OUTPUT_TEXTURE_COORD0_EXT = $879D;
+  GL_OUTPUT_TEXTURE_COORD1_EXT = $879E;
+  GL_OUTPUT_TEXTURE_COORD2_EXT = $879F;
+  GL_OUTPUT_TEXTURE_COORD3_EXT = $87A0;
+  GL_OUTPUT_TEXTURE_COORD4_EXT = $87A1;
+  GL_OUTPUT_TEXTURE_COORD5_EXT = $87A2;
+  GL_OUTPUT_TEXTURE_COORD6_EXT = $87A3;
+  GL_OUTPUT_TEXTURE_COORD7_EXT = $87A4;
+  GL_OUTPUT_TEXTURE_COORD8_EXT = $87A5;
+  GL_OUTPUT_TEXTURE_COORD9_EXT = $87A6;
+  GL_OUTPUT_TEXTURE_COORD10_EXT = $87A7;
+  GL_OUTPUT_TEXTURE_COORD11_EXT = $87A8;
+  GL_OUTPUT_TEXTURE_COORD12_EXT = $87A9;
+  GL_OUTPUT_TEXTURE_COORD13_EXT = $87AA;
+  GL_OUTPUT_TEXTURE_COORD14_EXT = $87AB;
+  GL_OUTPUT_TEXTURE_COORD15_EXT = $87AC;
+  GL_OUTPUT_TEXTURE_COORD16_EXT = $87AD;
+  GL_OUTPUT_TEXTURE_COORD17_EXT = $87AE;
+  GL_OUTPUT_TEXTURE_COORD18_EXT = $87AF;
+  GL_OUTPUT_TEXTURE_COORD19_EXT = $87B0;
+  GL_OUTPUT_TEXTURE_COORD20_EXT = $87B1;
+  GL_OUTPUT_TEXTURE_COORD21_EXT = $87B2;
+  GL_OUTPUT_TEXTURE_COORD22_EXT = $87B3;
+  GL_OUTPUT_TEXTURE_COORD23_EXT = $87B4;
+  GL_OUTPUT_TEXTURE_COORD24_EXT = $87B5;
+  GL_OUTPUT_TEXTURE_COORD25_EXT = $87B6;
+  GL_OUTPUT_TEXTURE_COORD26_EXT = $87B7;
+  GL_OUTPUT_TEXTURE_COORD27_EXT = $87B8;
+  GL_OUTPUT_TEXTURE_COORD28_EXT = $87B9;
+  GL_OUTPUT_TEXTURE_COORD29_EXT = $87BA;
+  GL_OUTPUT_TEXTURE_COORD30_EXT = $87BB;
+  GL_OUTPUT_TEXTURE_COORD31_EXT = $87BC;
+  GL_OUTPUT_FOG_EXT = $87BD;
+  GL_SCALAR_EXT = $87BE;
+  GL_VECTOR_EXT = $87BF;
+  GL_MATRIX_EXT = $87C0;
+  GL_VARIANT_EXT = $87C1;
+  GL_INVARIANT_EXT = $87C2;
+  GL_LOCAL_CONSTANT_EXT = $87C3;
+  GL_LOCAL_EXT = $87C4;
+  GL_MAX_VERTEX_SHADER_INSTRUCTIONS_EXT = $87C5;
+  GL_MAX_VERTEX_SHADER_VARIANTS_EXT = $87C6;
+  GL_MAX_VERTEX_SHADER_INVARIANTS_EXT = $87C7;
+  GL_MAX_VERTEX_SHADER_LOCAL_CONSTANTS_EXT = $87C8;
+  GL_MAX_VERTEX_SHADER_LOCALS_EXT = $87C9;
+  GL_MAX_OPTIMIZED_VERTEX_SHADER_INSTRUCTIONS_EXT = $87CA;
+  GL_MAX_OPTIMIZED_VERTEX_SHADER_VARIANTS_EXT = $87CB;
+  GL_MAX_OPTIMIZED_VERTEX_SHADER_LOCAL_CONSTANTS_EXT = $87CC;
+  GL_MAX_OPTIMIZED_VERTEX_SHADER_INVARIANTS_EXT = $87CD;
+  GL_MAX_OPTIMIZED_VERTEX_SHADER_LOCALS_EXT = $87CE;
+  GL_VERTEX_SHADER_INSTRUCTIONS_EXT = $87CF;
+  GL_VERTEX_SHADER_VARIANTS_EXT = $87D0;
+  GL_VERTEX_SHADER_INVARIANTS_EXT = $87D1;
+  GL_VERTEX_SHADER_LOCAL_CONSTANTS_EXT = $87D2;
+  GL_VERTEX_SHADER_LOCALS_EXT = $87D3;
+  GL_VERTEX_SHADER_OPTIMIZED_EXT = $87D4;
+  GL_X_EXT = $87D5;
+  GL_Y_EXT = $87D6;
+  GL_Z_EXT = $87D7;
+  GL_W_EXT = $87D8;
+  GL_NEGATIVE_X_EXT = $87D9;
+  GL_NEGATIVE_Y_EXT = $87DA;
+  GL_NEGATIVE_Z_EXT = $87DB;
+  GL_NEGATIVE_W_EXT = $87DC;
+  GL_ZERO_EXT = $87DD;
+  GL_ONE_EXT = $87DE;
+  GL_NEGATIVE_ONE_EXT = $87DF;
+  GL_NORMALIZED_RANGE_EXT = $87E0;
+  GL_FULL_RANGE_EXT = $87E1;
+  GL_CURRENT_VERTEX_EXT = $87E2;
+  GL_MVP_MATRIX_EXT = $87E3;
+  GL_VARIANT_VALUE_EXT = $87E4;
+  GL_VARIANT_DATATYPE_EXT = $87E5;
+  GL_VARIANT_ARRAY_STRIDE_EXT = $87E6;
+  GL_VARIANT_ARRAY_TYPE_EXT = $87E7;
+  GL_VARIANT_ARRAY_EXT = $87E8;
+  GL_VARIANT_ARRAY_POINTER_EXT = $87E9;
+  GL_INVARIANT_VALUE_EXT = $87EA;
+  GL_INVARIANT_DATATYPE_EXT = $87EB;
+  GL_LOCAL_CONSTANT_VALUE_EXT = $87EC;
+  GL_LOCAL_CONSTANT_DATATYPE_EXT = $87ED;
+
+  // GL_EXT_vertex_weighting
+  GL_MODELVIEW0_STACK_DEPTH_EXT = GL_MODELVIEW_STACK_DEPTH;
+  GL_MODELVIEW1_STACK_DEPTH_EXT = $8502;
+  GL_MODELVIEW0_MATRIX_EXT = GL_MODELVIEW_MATRIX;
+  GL_MODELVIEW1_MATRIX_EXT = $8506;
+  GL_VERTEX_WEIGHTING_EXT = $8509;
+  GL_MODELVIEW0_EXT = GL_MODELVIEW;
+  GL_MODELVIEW1_EXT = $850A;
+  GL_CURRENT_VERTEX_WEIGHT_EXT = $850B;
+  GL_VERTEX_WEIGHT_ARRAY_EXT = $850C;
+  GL_VERTEX_WEIGHT_ARRAY_SIZE_EXT = $850D;
+  GL_VERTEX_WEIGHT_ARRAY_TYPE_EXT = $850E;
+  GL_VERTEX_WEIGHT_ARRAY_STRIDE_EXT = $850F;
+  GL_VERTEX_WEIGHT_ARRAY_POINTER_EXT = $8510;
+
+  // GL_EXT_depth_bounds_test
+  GL_DEPTH_BOUNDS_TEST_EXT = $8890;
+  GL_DEPTH_BOUNDS_EXT = $8891;
+
+  // GL_EXT_texture_mirror_clamp
+  GL_MIRROR_CLAMP_EXT = $8742; // (same value as MIRROR_CLAMP_ATI)
+  GL_MIRROR_CLAMP_TO_EDGE_EXT = $8743; // (same value as MIRROR_CLAMP_TO_EDGE_ATI)
+  GL_MIRROR_CLAMP_TO_BORDER_EXT = $8912;
+
+  // GL_EXT_blend_equation_separate
+  GL_BLEND_EQUATION_RGB_EXT = $8009; // (same as BLEND_EQUATION)
+  GL_BLEND_EQUATION_ALPHA_EXT = $883D;
+
+  // GL_EXT_pixel_buffer_object
+  GL_PIXEL_PACK_BUFFER_EXT = $88EB;
+  GL_PIXEL_UNPACK_BUFFER_EXT = $88EC;
+  GL_PIXEL_PACK_BUFFER_BINDING_EXT = $88ED;
+  GL_PIXEL_UNPACK_BUFFER_BINDING_EXT = $88EF;
+
+  // GL_EXT_stencil_clear_tag
+  GL_STENCIL_TAG_BITS_EXT = $88F2;
+  GL_STENCIL_CLEAR_TAG_VALUE_EXT = $88F3;
+
+  // GL_FfdMaskSGIX
+  GL_TEXTURE_DEFORMATION_BIT_SGIX = $00000001;
+  GL_GEOMETRY_DEFORMATION_BIT_SGIX = $00000002;
+
+  // GL_HP_convolution_border_modes
+  GL_IGNORE_BORDER_HP = $8150;
+  GL_CONSTANT_BORDER_HP = $8151;
+  GL_REPLICATE_BORDER_HP = $8153;
+  GL_CONVOLUTION_BORDER_COLOR_HP = $8154;
+
+  // GL_HP_image_transform
+  GL_IMAGE_SCALE_X_HP = $8155;
+  GL_IMAGE_SCALE_Y_HP = $8156;
+  GL_IMAGE_TRANSLATE_X_HP = $8157;
+  GL_IMAGE_TRANSLATE_Y_HP = $8158;
+  GL_IMAGE_ROTATE_ANGLE_HP = $8159;
+  GL_IMAGE_ROTATE_ORIGIN_X_HP = $815A;
+  GL_IMAGE_ROTATE_ORIGIN_Y_HP = $815B;
+  GL_IMAGE_MAG_FILTER_HP = $815C;
+  GL_IMAGE_MIN_FILTER_HP = $815D;
+  GL_IMAGE_CUBIC_WEIGHT_HP = $815E;
+  GL_CUBIC_HP = $815F;
+  GL_AVERAGE_HP = $8160;
+  GL_IMAGE_TRANSFORM_2D_HP = $8161;
+  GL_POST_IMAGE_TRANSFORM_COLOR_TABLE_HP = $8162;
+  GL_PROXY_POST_IMAGE_TRANSFORM_COLOR_TABLE_HP = $8163;
+
+  // GL_HP_occlusion_test
+  GL_OCCLUSION_TEST_HP = $8165;
+  GL_OCCLUSION_TEST_RESULT_HP = $8166;
+
+  // GL_HP_texture_lighting
+  GL_TEXTURE_LIGHTING_MODE_HP = $8167;
+  GL_TEXTURE_POST_SPECULAR_HP = $8168;
+  GL_TEXTURE_PRE_SPECULAR_HP = $8169;
+
+  // GL_IBM_cull_vertex
+  GL_CULL_VERTEX_IBM = 103050;
+
+  // GL_IBM_rasterpos_clip
+  GL_RASTER_POSITION_UNCLIPPED_IBM = $19262;
+
+  // GL_IBM_texture_mirrored_repeat
+  GL_MIRRORED_REPEAT_IBM = $8370;
+
+  // GL_IBM_vertex_array_lists
+  GL_VERTEX_ARRAY_LIST_IBM = 103070;
+  GL_NORMAL_ARRAY_LIST_IBM = 103071;
+  GL_COLOR_ARRAY_LIST_IBM = 103072;
+  GL_INDEX_ARRAY_LIST_IBM = 103073;
+  GL_TEXTURE_COORD_ARRAY_LIST_IBM = 103074;
+  GL_EDGE_FLAG_ARRAY_LIST_IBM = 103075;
+  GL_FOG_COORDINATE_ARRAY_LIST_IBM = 103076;
+  GL_SECONDARY_COLOR_ARRAY_LIST_IBM = 103077;
+  GL_VERTEX_ARRAY_LIST_STRIDE_IBM = 103080;
+  GL_NORMAL_ARRAY_LIST_STRIDE_IBM = 103081;
+  GL_COLOR_ARRAY_LIST_STRIDE_IBM = 103082;
+  GL_INDEX_ARRAY_LIST_STRIDE_IBM = 103083;
+  GL_TEXTURE_COORD_ARRAY_LIST_STRIDE_IBM = 103084;
+  GL_EDGE_FLAG_ARRAY_LIST_STRIDE_IBM = 103085;
+  GL_FOG_COORDINATE_ARRAY_LIST_STRIDE_IBM = 103086;
+  GL_SECONDARY_COLOR_ARRAY_LIST_STRIDE_IBM = 103087;
+
+  // GL_INGR_color_clamp
+  GL_RED_MIN_CLAMP_INGR = $8560;
+  GL_GREEN_MIN_CLAMP_INGR = $8561;
+  GL_BLUE_MIN_CLAMP_INGR = $8562;
+  GL_ALPHA_MIN_CLAMP_INGR = $8563;
+  GL_RED_MAX_CLAMP_INGR = $8564;
+  GL_GREEN_MAX_CLAMP_INGR = $8565;
+  GL_BLUE_MAX_CLAMP_INGR = $8566;
+  GL_ALPHA_MAX_CLAMP_INGR = $8567;
+
+  // GL_INGR_interlace_read
+  GL_INTERLACE_READ_INGR = $8568;
+
+  // GL_INTEL_parallel_arrays
+  GL_PARALLEL_ARRAYS_INTEL = $83F4;
+  GL_VERTEX_ARRAY_PARALLEL_POINTERS_INTEL = $83F5;
+  GL_NORMAL_ARRAY_PARALLEL_POINTERS_INTEL = $83F6;
+  GL_COLOR_ARRAY_PARALLEL_POINTERS_INTEL = $83F7;
+  GL_TEXTURE_COORD_ARRAY_PARALLEL_POINTERS_INTEL = $83F8;
+
+  // GL_NV_copy_depth_to_color
+  GL_DEPTH_STENCIL_TO_RGBA_NV = $886E;
+  GL_DEPTH_STENCIL_TO_BGRA_NV = $886F;
+
+  // GL_NV_depth_clamp
+  GL_DEPTH_CLAMP_NV = $864F;
+
+  // GL_NV_evaluators
+  GL_EVAL_2D_NV = $86C0;
+  GL_EVAL_TRIANGULAR_2D_NV = $86C1;
+  GL_MAP_TESSELLATION_NV = $86C2;
+  GL_MAP_ATTRIB_U_ORDER_NV = $86C3;
+  GL_MAP_ATTRIB_V_ORDER_NV = $86C4;
+  GL_EVAL_FRACTIONAL_TESSELLATION_NV = $86C5;
+  GL_EVAL_VERTEX_ATTRIB0_NV = $86C6;
+  GL_EVAL_VERTEX_ATTRIB1_NV = $86C7;
+  GL_EVAL_VERTEX_ATTRIB2_NV = $86C8;
+  GL_EVAL_VERTEX_ATTRIB3_NV = $86C9;
+  GL_EVAL_VERTEX_ATTRIB4_NV = $86CA;
+  GL_EVAL_VERTEX_ATTRIB5_NV = $86CB;
+  GL_EVAL_VERTEX_ATTRIB6_NV = $86CC;
+  GL_EVAL_VERTEX_ATTRIB7_NV = $86CD;
+  GL_EVAL_VERTEX_ATTRIB8_NV = $86CE;
+  GL_EVAL_VERTEX_ATTRIB9_NV = $86CF;
+  GL_EVAL_VERTEX_ATTRIB10_NV = $86D0;
+  GL_EVAL_VERTEX_ATTRIB11_NV = $86D1;
+  GL_EVAL_VERTEX_ATTRIB12_NV = $86D2;
+  GL_EVAL_VERTEX_ATTRIB13_NV = $86D3;
+  GL_EVAL_VERTEX_ATTRIB14_NV = $86D4;
+  GL_EVAL_VERTEX_ATTRIB15_NV = $86D5;
+  GL_MAX_MAP_TESSELLATION_NV = $86D6;
+  GL_MAX_RATIONAL_EVAL_ORDER_NV = $86D7;
+
+  // GL_NV_fence
+  GL_ALL_COMPLETED_NV = $84F2;
+  GL_FENCE_STATUS_NV = $84F3;
+  GL_FENCE_CONDITION_NV = $84F4;
+
+  // GL_NV_float_buffer
+  GL_FLOAT_R_NV = $8880;
+  GL_FLOAT_RG_NV = $8881;
+  GL_FLOAT_RGB_NV = $8882;
+  GL_FLOAT_RGBA_NV = $8883;
+  GL_FLOAT_R16_NV = $8884;
+  GL_FLOAT_R32_NV = $8885;
+  GL_FLOAT_RG16_NV = $8886;
+  GL_FLOAT_RG32_NV = $8887;
+  GL_FLOAT_RGB16_NV = $8888;
+  GL_FLOAT_RGB32_NV = $8889;
+  GL_FLOAT_RGBA16_NV = $888A;
+  GL_FLOAT_RGBA32_NV = $888B;
+  GL_TEXTURE_FLOAT_COMPONENTS_NV = $888C;
+  GL_FLOAT_CLEAR_COLOR_VALUE_NV = $888D;
+  GL_FLOAT_RGBA_MODE_NV = $888E;
+
+  // GL_NV_fog_distance
+  GL_FOG_DISTANCE_MODE_NV = $855A;
+  GL_EYE_RADIAL_NV = $855B;
+  GL_EYE_PLANE_ABSOLUTE_NV = $855C;
+
+  // GL_NV_fragment_program
+  GL_MAX_FRAGMENT_PROGRAM_LOCAL_PARAMETERS_NV = $8868;
+  GL_FRAGMENT_PROGRAM_NV = $8870;
+  GL_MAX_TEXTURE_COORDS_NV = $8871;
+  GL_MAX_TEXTURE_IMAGE_UNITS_NV = $8872;
+  GL_FRAGMENT_PROGRAM_BINDING_NV = $8873;
+  GL_PROGRAM_ERROR_STRING_NV = $8874;
+
+  // GL_NV_half_float
+  GL_HALF_FLOAT_NV = $140B;
+
+  // GL_NV_light_max_exponent
+  GL_MAX_SHININESS_NV = $8504;
+  GL_MAX_SPOT_EXPONENT_NV = $8505;
+
+  // GL_NV_multisample_filter_hint
+  GL_MULTISAMPLE_FILTER_HINT_NV = $8534;
+
+  // GL_NV_occlusion_query
+  GL_PIXEL_COUNTER_BITS_NV = $8864;
+  GL_CURRENT_OCCLUSION_QUERY_ID_NV = $8865;
+  GL_PIXEL_COUNT_NV = $8866;
+  GL_PIXEL_COUNT_AVAILABLE_NV = $8867;
+
+  // GL_NV_packed_depth_stencil
+  GL_DEPTH_STENCIL_NV = $84F9;
+  GL_UNSIGNED_INT_24_8_NV = $84FA;
+
+  // GL_NV_pixel_data_range
+  GL_WRITE_PIXEL_DATA_RANGE_NV = $8878;
+  GL_READ_PIXEL_DATA_RANGE_NV = $8879;
+  GL_WRITE_PIXEL_DATA_RANGE_LENGTH_NV = $887A;
+  GL_READ_PIXEL_DATA_RANGE_LENGTH_NV = $887B;
+  GL_WRITE_PIXEL_DATA_RANGE_POINTER_NV = $887C;
+  GL_READ_PIXEL_DATA_RANGE_POINTER_NV = $887D;
+
+  // GL_NV_point_sprite
+  GL_POINT_SPRITE_NV = $8861;
+  GL_COORD_REPLACE_NV = $8862;
+  GL_POINT_SPRITE_R_MODE_NV = $8863;
+
+  // GL_NV_primitive_restart
+  GL_PRIMITIVE_RESTART_NV = $8558;
+  GL_PRIMITIVE_RESTART_INDEX_NV = $8559;
+
+  // GL_NV_register_combiners
+  GL_REGISTER_COMBINERS_NV = $8522;
+  GL_VARIABLE_A_NV = $8523;
+  GL_VARIABLE_B_NV = $8524;
+  GL_VARIABLE_C_NV = $8525;
+  GL_VARIABLE_D_NV = $8526;
+  GL_VARIABLE_E_NV = $8527;
+  GL_VARIABLE_F_NV = $8528;
+  GL_VARIABLE_G_NV = $8529;
+  GL_CONSTANT_COLOR0_NV = $852A;
+  GL_CONSTANT_COLOR1_NV = $852B;
+  GL_PRIMARY_COLOR_NV = $852C;
+  GL_SECONDARY_COLOR_NV = $852D;
+  GL_SPARE0_NV = $852E;
+  GL_SPARE1_NV = $852F;
+  GL_DISCARD_NV = $8530;
+  GL_E_TIMES_F_NV = $8531;
+  GL_SPARE0_PLUS_SECONDARY_COLOR_NV = $8532;
+  GL_UNSIGNED_IDENTITY_NV = $8536;
+  GL_UNSIGNED_INVERT_NV = $8537;
+  GL_EXPAND_NORMAL_NV = $8538;
+  GL_EXPAND_NEGATE_NV = $8539;
+  GL_HALF_BIAS_NORMAL_NV = $853A;
+  GL_HALF_BIAS_NEGATE_NV = $853B;
+  GL_SIGNED_IDENTITY_NV = $853C;
+  GL_SIGNED_NEGATE_NV = $853D;
+  GL_SCALE_BY_TWO_NV = $853E;
+  GL_SCALE_BY_FOUR_NV = $853F;
+  GL_SCALE_BY_ONE_HALF_NV = $8540;
+  GL_BIAS_BY_NEGATIVE_ONE_HALF_NV = $8541;
+  GL_COMBINER_INPUT_NV = $8542;
+  GL_COMBINER_MAPPING_NV = $8543;
+  GL_COMBINER_COMPONENT_USAGE_NV = $8544;
+  GL_COMBINER_AB_DOT_PRODUCT_NV = $8545;
+  GL_COMBINER_CD_DOT_PRODUCT_NV = $8546;
+  GL_COMBINER_MUX_SUM_NV = $8547;
+  GL_COMBINER_SCALE_NV = $8548;
+  GL_COMBINER_BIAS_NV = $8549;
+  GL_COMBINER_AB_OUTPUT_NV = $854A;
+  GL_COMBINER_CD_OUTPUT_NV = $854B;
+  GL_COMBINER_SUM_OUTPUT_NV = $854C;
+  GL_MAX_GENERAL_COMBINERS_NV = $854D;
+  GL_NUM_GENERAL_COMBINERS_NV = $854E;
+  GL_COLOR_SUM_CLAMP_NV = $854F;
+  GL_COMBINER0_NV = $8550;
+  GL_COMBINER1_NV = $8551;
+  GL_COMBINER2_NV = $8552;
+  GL_COMBINER3_NV = $8553;
+  GL_COMBINER4_NV = $8554;
+  GL_COMBINER5_NV = $8555;
+  GL_COMBINER6_NV = $8556;
+  GL_COMBINER7_NV = $8557;
+
+  // GL_NV_register_combiners2
+  GL_PER_STAGE_CONSTANTS_NV = $8535;
+
+  // GL_NV_texgen_emboss
+  GL_EMBOSS_LIGHT_NV = $855D;
+  GL_EMBOSS_CONSTANT_NV = $855E;
+  GL_EMBOSS_MAP_NV = $855F;
+
+  // GL_NV_texgen_reflection
+  GL_NORMAL_MAP_NV = $8511;
+  GL_REFLECTION_MAP_NV = $8512;
+
+  // GL_NV_texture_env_combine4
+  GL_COMBINE4_NV = $8503;
+  GL_SOURCE3_RGB_NV = $8583;
+  GL_SOURCE3_ALPHA_NV = $858B;
+  GL_OPERAND3_RGB_NV = $8593;
+  GL_OPERAND3_ALPHA_NV = $859B;
+
+  // GL_NV_texture_expand_normal
+  GL_TEXTURE_UNSIGNED_REMAP_MODE_NV = $888F;
+
+  // GL_NV_texture_rectangle
+  GL_TEXTURE_RECTANGLE_NV = $84F5;
+  GL_TEXTURE_BINDING_RECTANGLE_NV = $84F6;
+  GL_PROXY_TEXTURE_RECTANGLE_NV = $84F7;
+  GL_MAX_RECTANGLE_TEXTURE_SIZE_NV = $84F8;
+
+  // GL_NV_texture_shader
+  GL_OFFSET_TEXTURE_RECTANGLE_NV = $864C;
+  GL_OFFSET_TEXTURE_RECTANGLE_SCALE_NV = $864D;
+  GL_DOT_PRODUCT_TEXTURE_RECTANGLE_NV = $864E;
+  GL_RGBA_UNSIGNED_DOT_PRODUCT_MAPPING_NV = $86D9;
+  GL_UNSIGNED_INT_S8_S8_8_8_NV = $86DA;
+  GL_UNSIGNED_INT_8_8_S8_S8_REV_NV = $86DB;
+  GL_DSDT_MAG_INTENSITY_NV = $86DC;
+  GL_SHADER_CONSISTENT_NV = $86DD;
+  GL_TEXTURE_SHADER_NV = $86DE;
+  GL_SHADER_OPERATION_NV = $86DF;
+  GL_CULL_MODES_NV = $86E0;
+  GL_OFFSET_TEXTURE_MATRIX_NV = $86E1;
+  GL_OFFSET_TEXTURE_SCALE_NV = $86E2;
+  GL_OFFSET_TEXTURE_BIAS_NV = $86E3;
+  GL_OFFSET_TEXTURE_2D_MATRIX_NV = GL_OFFSET_TEXTURE_MATRIX_NV;
+  GL_OFFSET_TEXTURE_2D_SCALE_NV = GL_OFFSET_TEXTURE_SCALE_NV;
+  GL_OFFSET_TEXTURE_2D_BIAS_NV = GL_OFFSET_TEXTURE_BIAS_NV;
+  GL_PREVIOUS_TEXTURE_INPUT_NV = $86E4;
+  GL_CONST_EYE_NV = $86E5;
+  GL_PASS_THROUGH_NV = $86E6;
+  GL_CULL_FRAGMENT_NV = $86E7;
+  GL_OFFSET_TEXTURE_2D_NV = $86E8;
+  GL_DEPENDENT_AR_TEXTURE_2D_NV = $86E9;
+  GL_DEPENDENT_GB_TEXTURE_2D_NV = $86EA;
+  GL_DOT_PRODUCT_NV = $86EC;
+  GL_DOT_PRODUCT_DEPTH_REPLACE_NV = $86ED;
+  GL_DOT_PRODUCT_TEXTURE_2D_NV = $86EE;
+  GL_DOT_PRODUCT_TEXTURE_CUBE_MAP_NV = $86F0;
+  GL_DOT_PRODUCT_DIFFUSE_CUBE_MAP_NV = $86F1;
+  GL_DOT_PRODUCT_REFLECT_CUBE_MAP_NV = $86F2;
+  GL_DOT_PRODUCT_CONST_EYE_REFLECT_CUBE_MAP_NV = $86F3;
+  GL_HILO_NV = $86F4;
+  GL_DSDT_NV = $86F5;
+  GL_DSDT_MAG_NV = $86F6;
+  GL_DSDT_MAG_VIB_NV = $86F7;
+  GL_HILO16_NV = $86F8;
+  GL_SIGNED_HILO_NV = $86F9;
+  GL_SIGNED_HILO16_NV = $86FA;
+  GL_SIGNED_RGBA_NV = $86FB;
+  GL_SIGNED_RGBA8_NV = $86FC;
+  GL_SIGNED_RGB_NV = $86FE;
+  GL_SIGNED_RGB8_NV = $86FF;
+  GL_SIGNED_LUMINANCE_NV = $8701;
+  GL_SIGNED_LUMINANCE8_NV = $8702;
+  GL_SIGNED_LUMINANCE_ALPHA_NV = $8703;
+  GL_SIGNED_LUMINANCE8_ALPHA8_NV = $8704;
+  GL_SIGNED_ALPHA_NV = $8705;
+  GL_SIGNED_ALPHA8_NV = $8706;
+  GL_SIGNED_INTENSITY_NV = $8707;
+  GL_SIGNED_INTENSITY8_NV = $8708;
+  GL_DSDT8_NV = $8709;
+  GL_DSDT8_MAG8_NV = $870A;
+  GL_DSDT8_MAG8_INTENSITY8_NV = $870B;
+  GL_SIGNED_RGB_UNSIGNED_ALPHA_NV = $870C;
+  GL_SIGNED_RGB8_UNSIGNED_ALPHA8_NV = $870D;
+  GL_HI_SCALE_NV = $870E;
+  GL_LO_SCALE_NV = $870F;
+  GL_DS_SCALE_NV = $8710;
+  GL_DT_SCALE_NV = $8711;
+  GL_MAGNITUDE_SCALE_NV = $8712;
+  GL_VIBRANCE_SCALE_NV = $8713;
+  GL_HI_BIAS_NV = $8714;
+  GL_LO_BIAS_NV = $8715;
+  GL_DS_BIAS_NV = $8716;
+  GL_DT_BIAS_NV = $8717;
+  GL_MAGNITUDE_BIAS_NV = $8718;
+  GL_VIBRANCE_BIAS_NV = $8719;
+  GL_TEXTURE_BORDER_VALUES_NV = $871A;
+  GL_TEXTURE_HI_SIZE_NV = $871B;
+  GL_TEXTURE_LO_SIZE_NV = $871C;
+  GL_TEXTURE_DS_SIZE_NV = $871D;
+  GL_TEXTURE_DT_SIZE_NV = $871E;
+  GL_TEXTURE_MAG_SIZE_NV = $871F;
+
+  // GL_NV_texture_shader2
+  GL_DOT_PRODUCT_TEXTURE_3D_NV = $86EF;
+
+  // GL_NV_texture_shader3
+  GL_OFFSET_PROJECTIVE_TEXTURE_2D_NV = $8850;
+  GL_OFFSET_PROJECTIVE_TEXTURE_2D_SCALE_NV = $8851;
+  GL_OFFSET_PROJECTIVE_TEXTURE_RECTANGLE_NV = $8852;
+  GL_OFFSET_PROJECTIVE_TEXTURE_RECTANGLE_SCALE_NV = $8853;
+  GL_OFFSET_HILO_TEXTURE_2D_NV = $8854;
+  GL_OFFSET_HILO_TEXTURE_RECTANGLE_NV = $8855;
+  GL_OFFSET_HILO_PROJECTIVE_TEXTURE_2D_NV = $8856;
+  GL_OFFSET_HILO_PROJECTIVE_TEXTURE_RECTANGLE_NV = $8857;
+  GL_DEPENDENT_HILO_TEXTURE_2D_NV = $8858;
+  GL_DEPENDENT_RGB_TEXTURE_3D_NV = $8859;
+  GL_DEPENDENT_RGB_TEXTURE_CUBE_MAP_NV = $885A;
+  GL_DOT_PRODUCT_PASS_THROUGH_NV = $885B;
+  GL_DOT_PRODUCT_TEXTURE_1D_NV = $885C;
+  GL_DOT_PRODUCT_AFFINE_DEPTH_REPLACE_NV = $885D;
+  GL_HILO8_NV = $885E;
+  GL_SIGNED_HILO8_NV = $885F;
+  GL_FORCE_BLUE_TO_ONE_NV = $8860;
+
+  // GL_NV_vertex_array_range
+  GL_VERTEX_ARRAY_RANGE_NV = $851D;
+  GL_VERTEX_ARRAY_RANGE_LENGTH_NV = $851E;
+  GL_VERTEX_ARRAY_RANGE_VALID_NV = $851F;
+  GL_MAX_VERTEX_ARRAY_RANGE_ELEMENT_NV = $8520;
+  GL_VERTEX_ARRAY_RANGE_POINTER_NV = $8521;
+
+  // GL_NV_vertex_array_range2
+  GL_VERTEX_ARRAY_RANGE_WITHOUT_FLUSH_NV = $8533;
+
+  // GL_NV_vertex_program
+  GL_VERTEX_PROGRAM_NV = $8620;
+  GL_VERTEX_STATE_PROGRAM_NV = $8621;
+  GL_ATTRIB_ARRAY_SIZE_NV = $8623;
+  GL_ATTRIB_ARRAY_STRIDE_NV = $8624;
+  GL_ATTRIB_ARRAY_TYPE_NV = $8625;
+  GL_CURRENT_ATTRIB_NV = $8626;
+  GL_PROGRAM_LENGTH_NV = $8627;
+  GL_PROGRAM_STRING_NV = $8628;
+  GL_MODELVIEW_PROJECTION_NV = $8629;
+  GL_IDENTITY_NV = $862A;
+  GL_INVERSE_NV = $862B;
+  GL_TRANSPOSE_NV = $862C;
+  GL_INVERSE_TRANSPOSE_NV = $862D;
+  GL_MAX_TRACK_MATRIX_STACK_DEPTH_NV = $862E;
+  GL_MAX_TRACK_MATRICES_NV = $862F;
+  GL_MATRIX0_NV = $8630;
+  GL_MATRIX1_NV = $8631;
+  GL_MATRIX2_NV = $8632;
+  GL_MATRIX3_NV = $8633;
+  GL_MATRIX4_NV = $8634;
+  GL_MATRIX5_NV = $8635;
+  GL_MATRIX6_NV = $8636;
+  GL_MATRIX7_NV = $8637;
+  GL_CURRENT_MATRIX_STACK_DEPTH_NV = $8640;
+  GL_CURRENT_MATRIX_NV = $8641;
+  GL_VERTEX_PROGRAM_POINT_SIZE_NV = $8642;
+  GL_VERTEX_PROGRAM_TWO_SIDE_NV = $8643;
+  GL_PROGRAM_PARAMETER_NV = $8644;
+  GL_ATTRIB_ARRAY_POINTER_NV = $8645;
+  GL_PROGRAM_TARGET_NV = $8646;
+  GL_PROGRAM_RESIDENT_NV = $8647;
+  GL_TRACK_MATRIX_NV = $8648;
+  GL_TRACK_MATRIX_TRANSFORM_NV = $8649;
+  GL_VERTEX_PROGRAM_BINDING_NV = $864A;
+  GL_PROGRAM_ERROR_POSITION_NV = $864B;
+  GL_VERTEX_ATTRIB_ARRAY0_NV = $8650;
+  GL_VERTEX_ATTRIB_ARRAY1_NV = $8651;
+  GL_VERTEX_ATTRIB_ARRAY2_NV = $8652;
+  GL_VERTEX_ATTRIB_ARRAY3_NV = $8653;
+  GL_VERTEX_ATTRIB_ARRAY4_NV = $8654;
+  GL_VERTEX_ATTRIB_ARRAY5_NV = $8655;
+  GL_VERTEX_ATTRIB_ARRAY6_NV = $8656;
+  GL_VERTEX_ATTRIB_ARRAY7_NV = $8657;
+  GL_VERTEX_ATTRIB_ARRAY8_NV = $8658;
+  GL_VERTEX_ATTRIB_ARRAY9_NV = $8659;
+  GL_VERTEX_ATTRIB_ARRAY10_NV = $865A;
+  GL_VERTEX_ATTRIB_ARRAY11_NV = $865B;
+  GL_VERTEX_ATTRIB_ARRAY12_NV = $865C;
+  GL_VERTEX_ATTRIB_ARRAY13_NV = $865D;
+  GL_VERTEX_ATTRIB_ARRAY14_NV = $865E;
+  GL_VERTEX_ATTRIB_ARRAY15_NV = $865F;
+  GL_MAP1_VERTEX_ATTRIB0_4_NV = $8660;
+  GL_MAP1_VERTEX_ATTRIB1_4_NV = $8661;
+  GL_MAP1_VERTEX_ATTRIB2_4_NV = $8662;
+  GL_MAP1_VERTEX_ATTRIB3_4_NV = $8663;
+  GL_MAP1_VERTEX_ATTRIB4_4_NV = $8664;
+  GL_MAP1_VERTEX_ATTRIB5_4_NV = $8665;
+  GL_MAP1_VERTEX_ATTRIB6_4_NV = $8666;
+  GL_MAP1_VERTEX_ATTRIB7_4_NV = $8667;
+  GL_MAP1_VERTEX_ATTRIB8_4_NV = $8668;
+  GL_MAP1_VERTEX_ATTRIB9_4_NV = $8669;
+  GL_MAP1_VERTEX_ATTRIB10_4_NV = $866A;
+  GL_MAP1_VERTEX_ATTRIB11_4_NV = $866B;
+  GL_MAP1_VERTEX_ATTRIB12_4_NV = $866C;
+  GL_MAP1_VERTEX_ATTRIB13_4_NV = $866D;
+  GL_MAP1_VERTEX_ATTRIB14_4_NV = $866E;
+  GL_MAP1_VERTEX_ATTRIB15_4_NV = $866F;
+  GL_MAP2_VERTEX_ATTRIB0_4_NV = $8670;
+  GL_MAP2_VERTEX_ATTRIB1_4_NV = $8671;
+  GL_MAP2_VERTEX_ATTRIB2_4_NV = $8672;
+  GL_MAP2_VERTEX_ATTRIB3_4_NV = $8673;
+  GL_MAP2_VERTEX_ATTRIB4_4_NV = $8674;
+  GL_MAP2_VERTEX_ATTRIB5_4_NV = $8675;
+  GL_MAP2_VERTEX_ATTRIB6_4_NV = $8676;
+  GL_MAP2_VERTEX_ATTRIB7_4_NV = $8677;
+  GL_MAP2_VERTEX_ATTRIB8_4_NV = $8678;
+  GL_MAP2_VERTEX_ATTRIB9_4_NV = $8679;
+  GL_MAP2_VERTEX_ATTRIB10_4_NV = $867A;
+  GL_MAP2_VERTEX_ATTRIB11_4_NV = $867B;
+  GL_MAP2_VERTEX_ATTRIB12_4_NV = $867C;
+  GL_MAP2_VERTEX_ATTRIB13_4_NV = $867D;
+  GL_MAP2_VERTEX_ATTRIB14_4_NV = $867E;
+  GL_MAP2_VERTEX_ATTRIB15_4_NV = $867F;
+
+  // GL_NV_fragment_program2 and GL_NV_vertex_program2_option
+  GL_MAX_PROGRAM_EXEC_INSTRUCTIONS_NV = $88F4;
+  GL_MAX_PROGRAM_CALL_DEPTH_NV = $88F5;
+
+  // GL_NV_fragment_program2
+  GL_MAX_PROGRAM_IF_DEPTH_NV = $88F6;
+  GL_MAX_PROGRAM_LOOP_DEPTH_NV = $88F7;
+  GL_MAX_PROGRAM_LOOP_COUNT_NV = $88F8;
+
+  // GL_NV_vertex_program3
+  MAX_VERTEX_TEXTURE_IMAGE_UNITS_ARB = $8B4C;
+
+  // GL_OML_interlace
+  GL_INTERLACE_OML = $8980;
+  GL_INTERLACE_READ_OML = $8981;
+
+  // GL_OML_resample
+  GL_PACK_RESAMPLE_OML = $8984;
+  GL_UNPACK_RESAMPLE_OML = $8985;
+  GL_RESAMPLE_REPLICATE_OML = $8986;
+  GL_RESAMPLE_ZERO_FILL_OML = $8987;
+  GL_RESAMPLE_AVERAGE_OML = $8988;
+  GL_RESAMPLE_DECIMATE_OML = $8989;
+
+  // GL_OML_subsample
+  GL_FORMAT_SUBSAMPLE_24_24_OML = $8982;
+  GL_FORMAT_SUBSAMPLE_244_244_OML = $8983;
+
+  // GL_PGI_misc_hints
+  GL_PREFER_DOUBLEBUFFER_HINT_PGI = $1A1F8;
+  GL_CONSERVE_MEMORY_HINT_PGI = $1A1FD;
+  GL_RECLAIM_MEMORY_HINT_PGI = $1A1FE;
+  GL_NATIVE_GRAPHICS_HANDLE_PGI = $1A202;
+  GL_NATIVE_GRAPHICS_BEGIN_HINT_PGI = $1A203;
+  GL_NATIVE_GRAPHICS_END_HINT_PGI = $1A204;
+  GL_ALWAYS_FAST_HINT_PGI = $1A20C;
+  GL_ALWAYS_SOFT_HINT_PGI = $1A20D;
+  GL_ALLOW_DRAW_OBJ_HINT_PGI = $1A20E;
+  GL_ALLOW_DRAW_WIN_HINT_PGI = $1A20F;
+  GL_ALLOW_DRAW_FRG_HINT_PGI = $1A210;
+  GL_ALLOW_DRAW_MEM_HINT_PGI = $1A211;
+  GL_STRICT_DEPTHFUNC_HINT_PGI = $1A216;
+  GL_STRICT_LIGHTING_HINT_PGI = $1A217;
+  GL_STRICT_SCISSOR_HINT_PGI = $1A218;
+  GL_FULL_STIPPLE_HINT_PGI = $1A219;
+  GL_CLIP_NEAR_HINT_PGI = $1A220;
+  GL_CLIP_FAR_HINT_PGI = $1A221;
+  GL_WIDE_LINE_HINT_PGI = $1A222;
+  GL_BACK_NORMALS_HINT_PGI = $1A223;
+
+  // GL_PGI_vertex_hints
+  GL_VERTEX_DATA_HINT_PGI = $1A22A;
+  GL_VERTEX_CONSISTENT_HINT_PGI = $1A22B;
+  GL_MATERIAL_SIDE_HINT_PGI = $1A22C;
+  GL_MAX_VERTEX_HINT_PGI = $1A22D;
+  GL_COLOR3_BIT_PGI = $00010000;
+  GL_COLOR4_BIT_PGI = $00020000;
+  GL_EDGEFLAG_BIT_PGI = $00040000;
+  GL_INDEX_BIT_PGI = $00080000;
+  GL_MAT_AMBIENT_BIT_PGI = $00100000;
+  GL_MAT_AMBIENT_AND_DIFFUSE_BIT_PGI = $00200000;
+  GL_MAT_DIFFUSE_BIT_PGI = $00400000;
+  GL_MAT_EMISSION_BIT_PGI = $00800000;
+  GL_MAT_COLOR_INDEXES_BIT_PGI = $01000000;
+  GL_MAT_SHININESS_BIT_PGI = $02000000;
+  GL_MAT_SPECULAR_BIT_PGI = $04000000;
+  GL_NORMAL_BIT_PGI = $08000000;
+  GL_TEXCOORD1_BIT_PGI = $10000000;
+  GL_TEXCOORD2_BIT_PGI = $20000000;
+  GL_TEXCOORD3_BIT_PGI = $40000000;
+  GL_TEXCOORD4_BIT_PGI = $80000000;
+  GL_VERTEX23_BIT_PGI = $00000004;
+  GL_VERTEX4_BIT_PGI = $00000008;
+
+  // GL_REND_screen_coordinates
+  GL_SCREEN_COORDINATES_REND = $8490;
+  GL_INVERTED_SCREEN_W_REND = $8491;
+
+  // GL_S3_s3tc
+  GL_RGB_S3TC = $83A0;
+  GL_RGB4_S3TC = $83A1;
+  GL_RGBA_S3TC = $83A2;
+  GL_RGBA4_S3TC = $83A3;
+
+  // GL_SGIS_detail_texture
+  GL_DETAIL_TEXTURE_2D_SGIS = $8095;
+  GL_DETAIL_TEXTURE_2D_BINDING_SGIS = $8096;
+  GL_LINEAR_DETAIL_SGIS = $8097;
+  GL_LINEAR_DETAIL_ALPHA_SGIS = $8098;
+  GL_LINEAR_DETAIL_COLOR_SGIS = $8099;
+  GL_DETAIL_TEXTURE_LEVEL_SGIS = $809A;
+  GL_DETAIL_TEXTURE_MODE_SGIS = $809B;
+  GL_DETAIL_TEXTURE_FUNC_POINTS_SGIS = $809C;
+
+  // GL_SGIS_fog_function
+  GL_FOG_FUNC_SGIS = $812A;
+  GL_FOG_FUNC_POINTS_SGIS = $812B;
+  GL_MAX_FOG_FUNC_POINTS_SGIS = $812C;
+
+  // GL_SGIS_generate_mipmap
+  GL_GENERATE_MIPMAP_SGIS = $8191;
+  GL_GENERATE_MIPMAP_HINT_SGIS = $8192;
+
+  // GL_SGIS_multisample
+  GL_MULTISAMPLE_SGIS = $809D;
+  GL_SAMPLE_ALPHA_TO_MASK_SGIS = $809E;
+  GL_SAMPLE_ALPHA_TO_ONE_SGIS = $809F;
+  GL_SAMPLE_MASK_SGIS = $80A0;
+  GL_1PASS_SGIS = $80A1;
+  GL_2PASS_0_SGIS = $80A2;
+  GL_2PASS_1_SGIS = $80A3;
+  GL_4PASS_0_SGIS = $80A4;
+  GL_4PASS_1_SGIS = $80A5;
+  GL_4PASS_2_SGIS = $80A6;
+  GL_4PASS_3_SGIS = $80A7;
+  GL_SAMPLE_BUFFERS_SGIS = $80A8;
+  GL_SAMPLES_SGIS = $80A9;
+  GL_SAMPLE_MASK_VALUE_SGIS = $80AA;
+  GL_SAMPLE_MASK_INVERT_SGIS = $80AB;
+  GL_SAMPLE_PATTERN_SGIS = $80AC;
+
+  // GL_SGIS_pixel_texture
+  GL_PIXEL_TEXTURE_SGIS = $8353;
+  GL_PIXEL_FRAGMENT_RGB_SOURCE_SGIS = $8354;
+  GL_PIXEL_FRAGMENT_ALPHA_SOURCE_SGIS = $8355;
+  GL_PIXEL_GROUP_COLOR_SGIS = $8356;
+
+  // GL_SGIS_point_line_texgen
+  GL_EYE_DISTANCE_TO_POINT_SGIS = $81F0;
+  GL_OBJECT_DISTANCE_TO_POINT_SGIS = $81F1;
+  GL_EYE_DISTANCE_TO_LINE_SGIS = $81F2;
+  GL_OBJECT_DISTANCE_TO_LINE_SGIS = $81F3;
+  GL_EYE_POINT_SGIS = $81F4;
+  GL_OBJECT_POINT_SGIS = $81F5;
+  GL_EYE_LINE_SGIS = $81F6;
+  GL_OBJECT_LINE_SGIS = $81F7;
+
+  // GL_SGIS_point_parameters
+  GL_POINT_SIZE_MIN_SGIS = $8126;
+  GL_POINT_SIZE_MAX_SGIS = $8127;
+  GL_POINT_FADE_THRESHOLD_SIZE_SGIS = $8128;
+  GL_DISTANCE_ATTENUATION_SGIS = $8129;
+
+  // GL_SGIS_sharpen_texture
+  GL_LINEAR_SHARPEN_SGIS = $80AD;
+  GL_LINEAR_SHARPEN_ALPHA_SGIS = $80AE;
+  GL_LINEAR_SHARPEN_COLOR_SGIS = $80AF;
+  GL_SHARPEN_TEXTURE_FUNC_POINTS_SGIS = $80B0;
+
+  // GL_SGIS_texture4D
+  GL_PACK_SKIP_VOLUMES_SGIS = $8130;
+  GL_PACK_IMAGE_DEPTH_SGIS = $8131;
+  GL_UNPACK_SKIP_VOLUMES_SGIS = $8132;
+  GL_UNPACK_IMAGE_DEPTH_SGIS = $8133;
+  GL_TEXTURE_4D_SGIS = $8134;
+  GL_PROXY_TEXTURE_4D_SGIS = $8135;
+  GL_TEXTURE_4DSIZE_SGIS = $8136;
+  GL_TEXTURE_WRAP_Q_SGIS = $8137;
+  GL_MAX_4D_TEXTURE_SIZE_SGIS = $8138;
+  GL_TEXTURE_4D_BINDING_SGIS = $814F;
+
+  // GL_SGIS_texture_color_mask
+  GL_TEXTURE_COLOR_WRITEMASK_SGIS = $81EF;
+
+  // GL_SGIS_texture_edge_clamp
+  GL_CLAMP_TO_EDGE_SGIS = $812F;
+
+  // GL_SGIS_texture_filter4
+  GL_FILTER4_SGIS = $8146;
+  GL_TEXTURE_FILTER4_SIZE_SGIS = $8147;
+
+  // GL_SGIS_texture_lod
+  GL_TEXTURE_MIN_LOD_SGIS = $813A;
+  GL_TEXTURE_MAX_LOD_SGIS = $813B;
+  GL_TEXTURE_BASE_LEVEL_SGIS = $813C;
+  GL_TEXTURE_MAX_LEVEL_SGIS = $813D;
+
+  // GL_SGIS_texture_select
+  GL_DUAL_ALPHA4_SGIS = $8110;
+  GL_DUAL_ALPHA8_SGIS = $8111;
+  GL_DUAL_ALPHA12_SGIS = $8112;
+  GL_DUAL_ALPHA16_SGIS = $8113;
+  GL_DUAL_LUMINANCE4_SGIS = $8114;
+  GL_DUAL_LUMINANCE8_SGIS = $8115;
+  GL_DUAL_LUMINANCE12_SGIS = $8116;
+  GL_DUAL_LUMINANCE16_SGIS = $8117;
+  GL_DUAL_INTENSITY4_SGIS = $8118;
+  GL_DUAL_INTENSITY8_SGIS = $8119;
+  GL_DUAL_INTENSITY12_SGIS = $811A;
+  GL_DUAL_INTENSITY16_SGIS = $811B;
+  GL_DUAL_LUMINANCE_ALPHA4_SGIS = $811C;
+  GL_DUAL_LUMINANCE_ALPHA8_SGIS = $811D;
+  GL_QUAD_ALPHA4_SGIS = $811E;
+  GL_QUAD_ALPHA8_SGIS = $811F;
+  GL_QUAD_LUMINANCE4_SGIS = $8120;
+  GL_QUAD_LUMINANCE8_SGIS = $8121;
+  GL_QUAD_INTENSITY4_SGIS = $8122;
+  GL_QUAD_INTENSITY8_SGIS = $8123;
+  GL_DUAL_TEXTURE_SELECT_SGIS = $8124;
+  GL_QUAD_TEXTURE_SELECT_SGIS = $8125;
+
+  // GL_SGIX_async
+  GL_ASYNC_MARKER_SGIX = $8329;
+
+  // GL_SGIX_async_histogram
+  GL_ASYNC_HISTOGRAM_SGIX = $832C;
+  GL_MAX_ASYNC_HISTOGRAM_SGIX = $832D;
+
+  // GL_SGIX_async_pixel
+  GL_ASYNC_TEX_IMAGE_SGIX = $835C;
+  GL_ASYNC_DRAW_PIXELS_SGIX = $835D;
+  GL_ASYNC_READ_PIXELS_SGIX = $835E;
+  GL_MAX_ASYNC_TEX_IMAGE_SGIX = $835F;
+  GL_MAX_ASYNC_DRAW_PIXELS_SGIX = $8360;
+  GL_MAX_ASYNC_READ_PIXELS_SGIX = $8361;
+
+  // GL_SGIX_blend_alpha_minmax
+  GL_ALPHA_MIN_SGIX = $8320;
+  GL_ALPHA_MAX_SGIX = $8321;
+
+  // GL_SGIX_calligraphic_fragment
+  GL_CALLIGRAPHIC_FRAGMENT_SGIX = $8183;
+
+  // GL_SGIX_clipmap
+  GL_LINEAR_CLIPMAP_LINEAR_SGIX = $8170;
+  GL_TEXTURE_CLIPMAP_CENTER_SGIX = $8171;
+  GL_TEXTURE_CLIPMAP_FRAME_SGIX = $8172;
+  GL_TEXTURE_CLIPMAP_OFFSET_SGIX = $8173;
+  GL_TEXTURE_CLIPMAP_VIRTUAL_DEPTH_SGIX = $8174;
+  GL_TEXTURE_CLIPMAP_LOD_OFFSET_SGIX = $8175;
+  GL_TEXTURE_CLIPMAP_DEPTH_SGIX = $8176;
+  GL_MAX_CLIPMAP_DEPTH_SGIX = $8177;
+  GL_MAX_CLIPMAP_VIRTUAL_DEPTH_SGIX = $8178;
+  GL_NEAREST_CLIPMAP_NEAREST_SGIX = $844D;
+  GL_NEAREST_CLIPMAP_LINEAR_SGIX = $844E;
+  GL_LINEAR_CLIPMAP_NEAREST_SGIX = $844F;
+
+  // GL_SGIX_convolution_accuracy
+  GL_CONVOLUTION_HINT_SGIX = $8316;
+
+  // GL_SGIX_depth_texture
+  GL_DEPTH_COMPONENT16_SGIX = $81A5;
+  GL_DEPTH_COMPONENT24_SGIX = $81A6;
+  GL_DEPTH_COMPONENT32_SGIX = $81A7;
+
+  // GL_SGIX_fog_offset
+  GL_FOG_OFFSET_SGIX = $8198;
+  GL_FOG_OFFSET_VALUE_SGIX = $8199;
+
+  // GL_SGIX_fog_scale
+  GL_FOG_SCALE_SGIX = $81FC;
+  GL_FOG_SCALE_VALUE_SGIX = $81FD;
+
+  // GL_SGIX_fragment_lighting
+  GL_FRAGMENT_LIGHTING_SGIX = $8400;
+  GL_FRAGMENT_COLOR_MATERIAL_SGIX = $8401;
+  GL_FRAGMENT_COLOR_MATERIAL_FACE_SGIX = $8402;
+  GL_FRAGMENT_COLOR_MATERIAL_PARAMETER_SGIX = $8403;
+  GL_MAX_FRAGMENT_LIGHTS_SGIX = $8404;
+  GL_MAX_ACTIVE_LIGHTS_SGIX = $8405;
+  GL_CURRENT_RASTER_NORMAL_SGIX = $8406;
+  GL_LIGHT_ENV_MODE_SGIX = $8407;
+  GL_FRAGMENT_LIGHT_MODEL_LOCAL_VIEWER_SGIX = $8408;
+  GL_FRAGMENT_LIGHT_MODEL_TWO_SIDE_SGIX = $8409;
+  GL_FRAGMENT_LIGHT_MODEL_AMBIENT_SGIX = $840A;
+  GL_FRAGMENT_LIGHT_MODEL_NORMAL_INTERPOLATION_SGIX = $840B;
+  GL_FRAGMENT_LIGHT0_SGIX = $840C;
+  GL_FRAGMENT_LIGHT1_SGIX = $840D;
+  GL_FRAGMENT_LIGHT2_SGIX = $840E;
+  GL_FRAGMENT_LIGHT3_SGIX = $840F;
+  GL_FRAGMENT_LIGHT4_SGIX = $8410;
+  GL_FRAGMENT_LIGHT5_SGIX = $8411;
+  GL_FRAGMENT_LIGHT6_SGIX = $8412;
+  GL_FRAGMENT_LIGHT7_SGIX = $8413;
+
+  // GL_SGIX_framezoom
+  GL_FRAMEZOOM_SGIX = $818B;
+  GL_FRAMEZOOM_FACTOR_SGIX = $818C;
+  GL_MAX_FRAMEZOOM_FACTOR_SGIX = $818D;
+
+  // GL_SGIX_impact_pixel_texture
+  GL_PIXEL_TEX_GEN_Q_CEILING_SGIX = $8184;
+  GL_PIXEL_TEX_GEN_Q_ROUND_SGIX = $8185;
+  GL_PIXEL_TEX_GEN_Q_FLOOR_SGIX = $8186;
+  GL_PIXEL_TEX_GEN_ALPHA_REPLACE_SGIX = $8187;
+  GL_PIXEL_TEX_GEN_ALPHA_NO_REPLACE_SGIX = $8188;
+  GL_PIXEL_TEX_GEN_ALPHA_LS_SGIX = $8189;
+  GL_PIXEL_TEX_GEN_ALPHA_MS_SGIX = $818A;
+
+  // GL_SGIX_instruments
+  GL_INSTRUMENT_BUFFER_POINTER_SGIX = $8180;
+  GL_INSTRUMENT_MEASUREMENTS_SGIX = $8181;
+
+  // GL_SGIX_interlace
+  GL_INTERLACE_SGIX = $8094;
+
+  // GL_SGIX_ir_instrument1
+  GL_IR_INSTRUMENT1_SGIX = $817F;
+
+  // GL_SGIX_list_priority
+  GL_LIST_PRIORITY_SGIX = $8182;
+
+  // GL_SGIX_pixel_texture
+  GL_PIXEL_TEX_GEN_SGIX = $8139;
+  GL_PIXEL_TEX_GEN_MODE_SGIX = $832B;
+
+  // GL_SGIX_pixel_tiles
+  GL_PIXEL_TILE_BEST_ALIGNMENT_SGIX = $813E;
+  GL_PIXEL_TILE_CACHE_INCREMENT_SGIX = $813F;
+  GL_PIXEL_TILE_WIDTH_SGIX = $8140;
+  GL_PIXEL_TILE_HEIGHT_SGIX = $8141;
+  GL_PIXEL_TILE_GRID_WIDTH_SGIX = $8142;
+  GL_PIXEL_TILE_GRID_HEIGHT_SGIX = $8143;
+  GL_PIXEL_TILE_GRID_DEPTH_SGIX = $8144;
+  GL_PIXEL_TILE_CACHE_SIZE_SGIX = $8145;
+
+  // GL_SGIX_polynomial_ffd
+  GL_GEOMETRY_DEFORMATION_SGIX = $8194;
+  GL_TEXTURE_DEFORMATION_SGIX = $8195;
+  GL_DEFORMATIONS_MASK_SGIX = $8196;
+  GL_MAX_DEFORMATION_ORDER_SGIX = $8197;
+
+  // GL_SGIX_reference_plane
+  GL_REFERENCE_PLANE_SGIX = $817D;
+  GL_REFERENCE_PLANE_EQUATION_SGIX = $817E;
+
+  // GL_SGIX_resample
+  GL_PACK_RESAMPLE_SGIX = $842C;
+  GL_UNPACK_RESAMPLE_SGIX = $842D;
+  GL_RESAMPLE_REPLICATE_SGIX = $842E;
+  GL_RESAMPLE_ZERO_FILL_SGIX = $842F;
+  GL_RESAMPLE_DECIMATE_SGIX = $8430;
+
+  // GL_SGIX_scalebias_hint
+  GL_SCALEBIAS_HINT_SGIX = $8322;
+
+  // GL_SGIX_shadow
+  GL_TEXTURE_COMPARE_SGIX = $819A;
+  GL_TEXTURE_COMPARE_OPERATOR_SGIX = $819B;
+  GL_TEXTURE_LEQUAL_R_SGIX = $819C;
+  GL_TEXTURE_GEQUAL_R_SGIX = $819D;
+
+  // GL_SGIX_shadow_ambient
+  GL_SHADOW_AMBIENT_SGIX = $80BF;
+
+  // GL_SGIX_sprite
+  GL_SPRITE_SGIX = $8148;
+  GL_SPRITE_MODE_SGIX = $8149;
+  GL_SPRITE_AXIS_SGIX = $814A;
+  GL_SPRITE_TRANSLATION_SGIX = $814B;
+  GL_SPRITE_AXIAL_SGIX = $814C;
+  GL_SPRITE_OBJECT_ALIGNED_SGIX = $814D;
+  GL_SPRITE_EYE_ALIGNED_SGIX = $814E;
+
+  // GL_SGIX_subsample
+  GL_PACK_SUBSAMPLE_RATE_SGIX = $85A0;
+  GL_UNPACK_SUBSAMPLE_RATE_SGIX = $85A1;
+  GL_PIXEL_SUBSAMPLE_4444_SGIX = $85A2;
+  GL_PIXEL_SUBSAMPLE_2424_SGIX = $85A3;
+  GL_PIXEL_SUBSAMPLE_4242_SGIX = $85A4;
+
+  // GL_SGIX_texture_add_env
+  GL_TEXTURE_ENV_BIAS_SGIX = $80BE;
+
+  // GL_SGIX_texture_coordinate_clamp
+  GL_TEXTURE_MAX_CLAMP_S_SGIX = $8369;
+  GL_TEXTURE_MAX_CLAMP_T_SGIX = $836A;
+  GL_TEXTURE_MAX_CLAMP_R_SGIX = $836B;
+
+  // GL_SGIX_texture_lod_bias
+  GL_TEXTURE_LOD_BIAS_S_SGIX = $818E;
+  GL_TEXTURE_LOD_BIAS_T_SGIX = $818F;
+  GL_TEXTURE_LOD_BIAS_R_SGIX = $8190;
+
+  // GL_SGIX_texture_multi_buffer
+  GL_TEXTURE_MULTI_BUFFER_HINT_SGIX = $812E;
+
+  // GL_SGIX_texture_scale_bias
+  GL_POST_TEXTURE_FILTER_BIAS_SGIX = $8179;
+  GL_POST_TEXTURE_FILTER_SCALE_SGIX = $817A;
+  GL_POST_TEXTURE_FILTER_BIAS_RANGE_SGIX = $817B;
+  GL_POST_TEXTURE_FILTER_SCALE_RANGE_SGIX = $817C;
+
+  // GL_SGIX_vertex_preclip
+  GL_VERTEX_PRECLIP_SGIX = $83EE;
+  GL_VERTEX_PRECLIP_HINT_SGIX = $83EF;
+
+  // GL_SGIX_ycrcb
+  GL_YCRCB_422_SGIX = $81BB;
+  GL_YCRCB_444_SGIX = $81BC;
+
+  // GL_SGIX_ycrcba
+  GL_YCRCB_SGIX = $8318;
+  GL_YCRCBA_SGIX = $8319;
+
+  // GL_SGI_color_matrix
+  GL_COLOR_MATRIX_SGI = $80B1;
+  GL_COLOR_MATRIX_STACK_DEPTH_SGI = $80B2;
+  GL_MAX_COLOR_MATRIX_STACK_DEPTH_SGI = $80B3;
+  GL_POST_COLOR_MATRIX_RED_SCALE_SGI = $80B4;
+  GL_POST_COLOR_MATRIX_GREEN_SCALE_SGI = $80B5;
+  GL_POST_COLOR_MATRIX_BLUE_SCALE_SGI = $80B6;
+  GL_POST_COLOR_MATRIX_ALPHA_SCALE_SGI = $80B7;
+  GL_POST_COLOR_MATRIX_RED_BIAS_SGI = $80B8;
+  GL_POST_COLOR_MATRIX_GREEN_BIAS_SGI = $80B9;
+  GL_POST_COLOR_MATRIX_BLUE_BIAS_SGI = $80BA;
+  GL_POST_COLOR_MATRIX_ALPHA_BIAS_SGI = $80BB;
+
+  // GL_SGI_color_table
+  GL_COLOR_TABLE_SGI = $80D0;
+  GL_POST_CONVOLUTION_COLOR_TABLE_SGI = $80D1;
+  GL_POST_COLOR_MATRIX_COLOR_TABLE_SGI = $80D2;
+  GL_PROXY_COLOR_TABLE_SGI = $80D3;
+  GL_PROXY_POST_CONVOLUTION_COLOR_TABLE_SGI = $80D4;
+  GL_PROXY_POST_COLOR_MATRIX_COLOR_TABLE_SGI = $80D5;
+  GL_COLOR_TABLE_SCALE_SGI = $80D6;
+  GL_COLOR_TABLE_BIAS_SGI = $80D7;
+  GL_COLOR_TABLE_FORMAT_SGI = $80D8;
+  GL_COLOR_TABLE_WIDTH_SGI = $80D9;
+  GL_COLOR_TABLE_RED_SIZE_SGI = $80DA;
+  GL_COLOR_TABLE_GREEN_SIZE_SGI = $80DB;
+  GL_COLOR_TABLE_BLUE_SIZE_SGI = $80DC;
+  GL_COLOR_TABLE_ALPHA_SIZE_SGI = $80DD;
+  GL_COLOR_TABLE_LUMINANCE_SIZE_SGI = $80DE;
+  GL_COLOR_TABLE_INTENSITY_SIZE_SGI = $80DF;
+
+  // GL_SGI_depth_pass_instrument
+  GL_DEPTH_PASS_INSTRUMENT_SGIX = $8310;
+  GL_DEPTH_PASS_INSTRUMENT_COUNTERS_SGIX = $8311;
+  GL_DEPTH_PASS_INSTRUMENT_MAX_SGIX = $8312;
+
+  // GL_SGI_texture_color_table
+  GL_TEXTURE_COLOR_TABLE_SGI = $80BC;
+  GL_PROXY_TEXTURE_COLOR_TABLE_SGI = $80BD;
+
+  // GL_SUNX_constant_data
+  GL_UNPACK_CONSTANT_DATA_SUNX = $81D5;
+  GL_TEXTURE_CONSTANT_DATA_SUNX = $81D6;
+
+  // GL_SUN_convolution_border_modes
+  GL_WRAP_BORDER_SUN = $81D4;
+
+  // GL_SUN_global_alpha
+  GL_GLOBAL_ALPHA_SUN = $81D9;
+  GL_GLOBAL_ALPHA_FACTOR_SUN = $81DA;
+
+  // GL_SUN_mesh_array
+  GL_QUAD_MESH_SUN = $8614;
+  GL_TRIANGLE_MESH_SUN = $8615;
+
+  // GL_SUN_slice_accum
+  GL_SLICE_ACCUM_SUN = $85CC;
+
+  // GL_SUN_triangle_list
+  GL_RESTART_SUN = $0001;
+  GL_REPLACE_MIDDLE_SUN = $0002;
+  GL_REPLACE_OLDEST_SUN = $0003;
+  GL_TRIANGLE_LIST_SUN = $81D7;
+  GL_REPLACEMENT_CODE_SUN = $81D8;
+  GL_REPLACEMENT_CODE_ARRAY_SUN = $85C0;
+  GL_REPLACEMENT_CODE_ARRAY_TYPE_SUN = $85C1;
+  GL_REPLACEMENT_CODE_ARRAY_STRIDE_SUN = $85C2;
+  GL_REPLACEMENT_CODE_ARRAY_POINTER_SUN = $85C3;
+  GL_R1UI_V3F_SUN = $85C4;
+  GL_R1UI_C4UB_V3F_SUN = $85C5;
+  GL_R1UI_C3F_V3F_SUN = $85C6;
+  GL_R1UI_N3F_V3F_SUN = $85C7;
+  GL_R1UI_C4F_N3F_V3F_SUN = $85C8;
+  GL_R1UI_T2F_V3F_SUN = $85C9;
+  GL_R1UI_T2F_N3F_V3F_SUN = $85CA;
+  GL_R1UI_T2F_C4F_N3F_V3F_SUN = $85CB;
+
+  // GL_WIN_phong_shading
+  GL_PHONG_WIN = $80EA;
+  GL_PHONG_HINT_WIN = $80EB;
+
+  // GL_WIN_specular_fog
+  GL_FOG_SPECULAR_TEXTURE_WIN = $80EC;
+
+   // GL_ARB_vertex_shader
+  GL_VERTEX_SHADER_ARB = $8B31;
+  GL_MAX_VERTEX_UNIFORM_COMPONENTS_ARB = $8B4A;
+  GL_MAX_VARYING_FLOATS_ARB = $8B4B;
+  GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS_ARB = $8B4C;
+  GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS_ARB = $8B4D;
+  GL_OBJECT_ACTIVE_ATTRIBUTES_ARB = $8B89;
+  GL_OBJECT_ACTIVE_ATTRIBUTE_MAX_LENGTH_ARB = $8B8A;
+
+  // GL_ARB_fragment_shader
+  GL_FRAGMENT_SHADER_ARB = $8B30;
+  GL_MAX_FRAGMENT_UNIFORM_COMPONENTS_ARB = $8B49; // 1.4
+  GL_FRAGMENT_SHADER_DERIVATIVE_HINT_ARB = $8B8B; // 1.4
+
+  // GL_ARB_occlusion_query
+  GL_SAMPLES_PASSED_ARB = $8914;
+  GL_QUERY_COUNTER_BITS_ARB = $8864;
+  GL_CURRENT_QUERY_ARB = $8865;
+  GL_QUERY_RESULT_ARB = $8866;
+  GL_QUERY_RESULT_AVAILABLE_ARB = $8867;
+
+  // GL_ARB_point_sprite
+  GL_POINT_SPRITE_ARB = $8861;
+  GL_COORD_REPLACE_ARB = $8862;
+
+  // GL_ARB_shading_language_100
+  GL_SHADING_LANGUAGE_VERSION_ARB = $8B8C; // 1.4
+
+  // GL_ARB_shader_objects
+  GL_PROGRAM_OBJECT_ARB = $8B40;
+
+  GL_OBJECT_TYPE_ARB = $8B4E;
+  GL_OBJECT_SUBTYPE_ARB = $8B4F;
+  GL_OBJECT_DELETE_STATUS_ARB = $8B80;
+  GL_OBJECT_COMPILE_STATUS_ARB = $8B81;
+  GL_OBJECT_LINK_STATUS_ARB = $8B82;
+  GL_OBJECT_VALIDATE_STATUS_ARB = $8B83;
+  GL_OBJECT_INFO_LOG_LENGTH_ARB = $8B84;
+  GL_OBJECT_ATTACHED_OBJECTS_ARB = $8B85;
+  GL_OBJECT_ACTIVE_UNIFORMS_ARB = $8B86;
+  GL_OBJECT_ACTIVE_UNIFORM_MAX_LENGTH_ARB = $8B87;
+  GL_OBJECT_SHADER_SOURCE_LENGTH_ARB = $8B88;
+
+  GL_SHADER_OBJECT_ARB = $8B48;
+
+  GL_FLOAT_VEC2_ARB = $8B50;
+  GL_FLOAT_VEC3_ARB = $8B51;
+  GL_FLOAT_VEC4_ARB = $8B52;
+  GL_INT_VEC2_ARB = $8B53;
+  GL_INT_VEC3_ARB = $8B54;
+  GL_INT_VEC4_ARB = $8B55;
+  GL_BOOL_ARB = $8B56;
+  GL_BOOL_VEC2_ARB = $8B57;
+  GL_BOOL_VEC3_ARB = $8B58;
+  GL_BOOL_VEC4_ARB = $8B59;
+  GL_FLOAT_MAT2_ARB = $8B5A;
+  GL_FLOAT_MAT3_ARB = $8B5B;
+  GL_FLOAT_MAT4_ARB = $8B5C;
+
+  // Update for glsl-specification 1.10
+  GL_SAMPLER_1D_ARB = $8B5D; // 1.4
+  GL_SAMPLER_2D_ARB = $8B5E; // 1.4
+  GL_SAMPLER_3D_ARB = $8B5F; // 1.4
+  GL_SAMPLER_CUBE_ARB = $8B60; // 1.4
+  GL_SAMPLER_1D_SHADOW_ARB = $8B61; // 1.4
+  GL_SAMPLER_2D_SHADOW_ARB = $8B62; // 1.4
+  GL_SAMPLER_2D_RECT_ARB = $8B63; // 1.4
+  GL_SAMPLER_2D_RECT_SHADOW_ARB = $8B64; // 1.4
+
+  // WGL_3DFX_multisample
+  WGL_SAMPLE_BUFFERS_3DFX = $2060;
+  WGL_SAMPLES_3DFX = $2061;
+
+  // WGL_ARB_buffer_region
+  WGL_FRONT_COLOR_BUFFER_BIT_ARB = $00000001;
+  WGL_BACK_COLOR_BUFFER_BIT_ARB = $00000002;
+  WGL_DEPTH_BUFFER_BIT_ARB = $00000004;
+  WGL_STENCIL_BUFFER_BIT_ARB = $00000008;
+
+  // WGL_ARB_make_current_read
+  ERROR_INVALID_PIXEL_TYPE_ARB = $2043;
+  ERROR_INCOMPATIBLE_DEVICE_CONTEXTS_ARB = $2054;
+
+  // WGL_ARB_multisample
+  WGL_SAMPLE_BUFFERS_ARB = $2041;
+  WGL_SAMPLES_ARB = $2042;
+
+  // WGL_ARB_pbuffer
+  WGL_DRAW_TO_PBUFFER_ARB = $202D;
+  WGL_MAX_PBUFFER_PIXELS_ARB = $202E;
+  WGL_MAX_PBUFFER_WIDTH_ARB = $202F;
+  WGL_MAX_PBUFFER_HEIGHT_ARB = $2030;
+  WGL_PBUFFER_LARGEST_ARB = $2033;
+  WGL_PBUFFER_WIDTH_ARB = $2034;
+  WGL_PBUFFER_HEIGHT_ARB = $2035;
+  WGL_PBUFFER_LOST_ARB = $2036;
+
+  // WGL_ARB_pixel_format
+  WGL_NUMBER_PIXEL_FORMATS_ARB = $2000;
+  WGL_DRAW_TO_WINDOW_ARB = $2001;
+  WGL_DRAW_TO_BITMAP_ARB = $2002;
+  WGL_ACCELERATION_ARB = $2003;
+  WGL_NEED_PALETTE_ARB = $2004;
+  WGL_NEED_SYSTEM_PALETTE_ARB = $2005;
+  WGL_SWAP_LAYER_BUFFERS_ARB = $2006;
+  WGL_SWAP_METHOD_ARB = $2007;
+  WGL_NUMBER_OVERLAYS_ARB = $2008;
+  WGL_NUMBER_UNDERLAYS_ARB = $2009;
+  WGL_TRANSPARENT_ARB = $200A;
+  WGL_TRANSPARENT_RED_VALUE_ARB = $2037;
+  WGL_TRANSPARENT_GREEN_VALUE_ARB = $2038;
+  WGL_TRANSPARENT_BLUE_VALUE_ARB = $2039;
+  WGL_TRANSPARENT_ALPHA_VALUE_ARB = $203A;
+  WGL_TRANSPARENT_INDEX_VALUE_ARB = $203B;
+  WGL_SHARE_DEPTH_ARB = $200C;
+  WGL_SHARE_STENCIL_ARB = $200D;
+  WGL_SHARE_ACCUM_ARB = $200E;
+  WGL_SUPPORT_GDI_ARB = $200F;
+  WGL_SUPPORT_OPENGL_ARB = $2010;
+  WGL_DOUBLE_BUFFER_ARB = $2011;
+  WGL_STEREO_ARB = $2012;
+  WGL_PIXEL_TYPE_ARB = $2013;
+  WGL_COLOR_BITS_ARB = $2014;
+  WGL_RED_BITS_ARB = $2015;
+  WGL_RED_SHIFT_ARB = $2016;
+  WGL_GREEN_BITS_ARB = $2017;
+  WGL_GREEN_SHIFT_ARB = $2018;
+  WGL_BLUE_BITS_ARB = $2019;
+  WGL_BLUE_SHIFT_ARB = $201A;
+  WGL_ALPHA_BITS_ARB = $201B;
+  WGL_ALPHA_SHIFT_ARB = $201C;
+  WGL_ACCUM_BITS_ARB = $201D;
+  WGL_ACCUM_RED_BITS_ARB = $201E;
+  WGL_ACCUM_GREEN_BITS_ARB = $201F;
+  WGL_ACCUM_BLUE_BITS_ARB = $2020;
+  WGL_ACCUM_ALPHA_BITS_ARB = $2021;
+  WGL_DEPTH_BITS_ARB = $2022;
+  WGL_STENCIL_BITS_ARB = $2023;
+  WGL_AUX_BUFFERS_ARB = $2024;
+  WGL_NO_ACCELERATION_ARB = $2025;
+  WGL_GENERIC_ACCELERATION_ARB = $2026;
+  WGL_FULL_ACCELERATION_ARB = $2027;
+  WGL_SWAP_EXCHANGE_ARB = $2028;
+  WGL_SWAP_COPY_ARB = $2029;
+  WGL_SWAP_UNDEFINED_ARB = $202A;
+  WGL_TYPE_RGBA_ARB = $202B;
+  WGL_TYPE_COLORINDEX_ARB = $202C;
+
+  // WGL_ARB_pixel_format_float
+  WGL_RGBA_FLOAT_MODE_ARB = $8820;
+  WGL_CLAMP_VERTEX_COLOR_ARB = $891A;
+  WGL_CLAMP_FRAGMENT_COLOR_ARB = $891B;
+  WGL_CLAMP_READ_COLOR_ARB = $891C;
+  WGL_FIXED_ONLY_ARB = $891D;
+
+  // WGL_ARB_render_texture
+  WGL_BIND_TO_TEXTURE_RGB_ARB = $2070;
+  WGL_BIND_TO_TEXTURE_RGBA_ARB = $2071;
+  WGL_TEXTURE_FORMAT_ARB = $2072;
+  WGL_TEXTURE_TARGET_ARB = $2073;
+  WGL_MIPMAP_TEXTURE_ARB = $2074;
+  WGL_TEXTURE_RGB_ARB = $2075;
+  WGL_TEXTURE_RGBA_ARB = $2076;
+  WGL_NO_TEXTURE_ARB = $2077;
+  WGL_TEXTURE_CUBE_MAP_ARB = $2078;
+  WGL_TEXTURE_1D_ARB = $2079;
+  WGL_TEXTURE_2D_ARB = $207A;
+  WGL_MIPMAP_LEVEL_ARB = $207B;
+  WGL_CUBE_MAP_FACE_ARB = $207C;
+  WGL_TEXTURE_CUBE_MAP_POSITIVE_X_ARB = $207D;
+  WGL_TEXTURE_CUBE_MAP_NEGATIVE_X_ARB = $207E;
+  WGL_TEXTURE_CUBE_MAP_POSITIVE_Y_ARB = $207F;
+  WGL_TEXTURE_CUBE_MAP_NEGATIVE_Y_ARB = $2080;
+  WGL_TEXTURE_CUBE_MAP_POSITIVE_Z_ARB = $2081;
+  WGL_TEXTURE_CUBE_MAP_NEGATIVE_Z_ARB = $2082;
+  WGL_FRONT_LEFT_ARB = $2083;
+  WGL_FRONT_RIGHT_ARB = $2084;
+  WGL_BACK_LEFT_ARB = $2085;
+  WGL_BACK_RIGHT_ARB = $2086;
+  WGL_AUX0_ARB = $2087;
+  WGL_AUX1_ARB = $2088;
+  WGL_AUX2_ARB = $2089;
+  WGL_AUX3_ARB = $208A;
+  WGL_AUX4_ARB = $208B;
+  WGL_AUX5_ARB = $208C;
+  WGL_AUX6_ARB = $208D;
+  WGL_AUX7_ARB = $208E;
+  WGL_AUX8_ARB = $208F;
+  WGL_AUX9_ARB = $2090;
+
+  // WGL_ATI_pixel_format_float
+  WGL_TYPE_RGBA_FLOAT_ATI = $21A0;
+  GL_TYPE_RGBA_FLOAT_ATI = $8820;
+  GL_COLOR_CLEAR_UNCLAMPED_VALUE_ATI = $8835;
+
+  // WGL_EXT_depth_float
+  WGL_DEPTH_FLOAT_EXT = $2040;
+
+  // WGL_EXT_make_current_read
+  ERROR_INVALID_PIXEL_TYPE_EXT = $2043;
+
+  // WGL_EXT_multisample
+  WGL_SAMPLE_BUFFERS_EXT = $2041;
+  WGL_SAMPLES_EXT = $2042;
+
+  // WGL_EXT_pbuffer
+  WGL_DRAW_TO_PBUFFER_EXT = $202D;
+  WGL_MAX_PBUFFER_PIXELS_EXT = $202E;
+  WGL_MAX_PBUFFER_WIDTH_EXT = $202F;
+  WGL_MAX_PBUFFER_HEIGHT_EXT = $2030;
+  WGL_OPTIMAL_PBUFFER_WIDTH_EXT = $2031;
+  WGL_OPTIMAL_PBUFFER_HEIGHT_EXT = $2032;
+  WGL_PBUFFER_LARGEST_EXT = $2033;
+  WGL_PBUFFER_WIDTH_EXT = $2034;
+  WGL_PBUFFER_HEIGHT_EXT = $2035;
+
+  // WGL_EXT_pixel_format
+  WGL_NUMBER_PIXEL_FORMATS_EXT = $2000;
+  WGL_DRAW_TO_WINDOW_EXT = $2001;
+  WGL_DRAW_TO_BITMAP_EXT = $2002;
+  WGL_ACCELERATION_EXT = $2003;
+  WGL_NEED_PALETTE_EXT = $2004;
+  WGL_NEED_SYSTEM_PALETTE_EXT = $2005;
+  WGL_SWAP_LAYER_BUFFERS_EXT = $2006;
+  WGL_SWAP_METHOD_EXT = $2007;
+  WGL_NUMBER_OVERLAYS_EXT = $2008;
+  WGL_NUMBER_UNDERLAYS_EXT = $2009;
+  WGL_TRANSPARENT_EXT = $200A;
+  WGL_TRANSPARENT_VALUE_EXT = $200B;
+  WGL_SHARE_DEPTH_EXT = $200C;
+  WGL_SHARE_STENCIL_EXT = $200D;
+  WGL_SHARE_ACCUM_EXT = $200E;
+  WGL_SUPPORT_GDI_EXT = $200F;
+  WGL_SUPPORT_OPENGL_EXT = $2010;
+  WGL_DOUBLE_BUFFER_EXT = $2011;
+  WGL_STEREO_EXT = $2012;
+  WGL_PIXEL_TYPE_EXT = $2013;
+  WGL_COLOR_BITS_EXT = $2014;
+  WGL_RED_BITS_EXT = $2015;
+  WGL_RED_SHIFT_EXT = $2016;
+  WGL_GREEN_BITS_EXT = $2017;
+  WGL_GREEN_SHIFT_EXT = $2018;
+  WGL_BLUE_BITS_EXT = $2019;
+  WGL_BLUE_SHIFT_EXT = $201A;
+  WGL_ALPHA_BITS_EXT = $201B;
+  WGL_ALPHA_SHIFT_EXT = $201C;
+  WGL_ACCUM_BITS_EXT = $201D;
+  WGL_ACCUM_RED_BITS_EXT = $201E;
+  WGL_ACCUM_GREEN_BITS_EXT = $201F;
+  WGL_ACCUM_BLUE_BITS_EXT = $2020;
+  WGL_ACCUM_ALPHA_BITS_EXT = $2021;
+  WGL_DEPTH_BITS_EXT = $2022;
+  WGL_STENCIL_BITS_EXT = $2023;
+  WGL_AUX_BUFFERS_EXT = $2024;
+  WGL_NO_ACCELERATION_EXT = $2025;
+  WGL_GENERIC_ACCELERATION_EXT = $2026;
+  WGL_FULL_ACCELERATION_EXT = $2027;
+  WGL_SWAP_EXCHANGE_EXT = $2028;
+  WGL_SWAP_COPY_EXT = $2029;
+  WGL_SWAP_UNDEFINED_EXT = $202A;
+  WGL_TYPE_RGBA_EXT = $202B;
+  WGL_TYPE_COLORINDEX_EXT = $202C;
+
+  // WGL_I3D_digital_video_control
+  WGL_DIGITAL_VIDEO_CURSOR_ALPHA_FRAMEBUFFER_I3D = $2050;
+  WGL_DIGITAL_VIDEO_CURSOR_ALPHA_VALUE_I3D = $2051;
+  WGL_DIGITAL_VIDEO_CURSOR_INCLUDED_I3D = $2052;
+  WGL_DIGITAL_VIDEO_GAMMA_CORRECTED_I3D = $2053;
+
+  // WGL_I3D_gamma
+  WGL_GAMMA_TABLE_SIZE_I3D = $204E;
+  WGL_GAMMA_EXCLUDE_DESKTOP_I3D = $204F;
+
+  // WGL_I3D_genlock
+  WGL_GENLOCK_SOURCE_MULTIVIEW_I3D = $2044;
+  WGL_GENLOCK_SOURCE_EXTENAL_SYNC_I3D = $2045;
+  WGL_GENLOCK_SOURCE_EXTENAL_FIELD_I3D = $2046;
+  WGL_GENLOCK_SOURCE_EXTENAL_TTL_I3D = $2047;
+  WGL_GENLOCK_SOURCE_DIGITAL_SYNC_I3D = $2048;
+  WGL_GENLOCK_SOURCE_DIGITAL_FIELD_I3D = $2049;
+  WGL_GENLOCK_SOURCE_EDGE_FALLING_I3D = $204A;
+  WGL_GENLOCK_SOURCE_EDGE_RISING_I3D = $204B;
+  WGL_GENLOCK_SOURCE_EDGE_BOTH_I3D = $204C;
+
+  // WGL_I3D_image_buffer
+  WGL_IMAGE_BUFFER_MIN_ACCESS_I3D = $00000001;
+  WGL_IMAGE_BUFFER_LOCK_I3D = $00000002;
+
+  // WGL_NV_float_buffer
+  WGL_FLOAT_COMPONENTS_NV = $20B0;
+  WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_R_NV = $20B1;
+  WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_RG_NV = $20B2;
+  WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_RGB_NV = $20B3;
+  WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_RGBA_NV = $20B4;
+  WGL_TEXTURE_FLOAT_R_NV = $20B5;
+  WGL_TEXTURE_FLOAT_RG_NV = $20B6;
+  WGL_TEXTURE_FLOAT_RGB_NV = $20B7;
+  WGL_TEXTURE_FLOAT_RGBA_NV = $20B8;
+
+  // WGL_NV_render_depth_texture
+  WGL_BIND_TO_TEXTURE_DEPTH_NV = $20A3;
+  WGL_BIND_TO_TEXTURE_RECTANGLE_DEPTH_NV = $20A4;
+  WGL_DEPTH_TEXTURE_FORMAT_NV = $20A5;
+  WGL_TEXTURE_DEPTH_COMPONENT_NV = $20A6;
+  WGL_DEPTH_COMPONENT_NV = $20A7;
+
+  // WGL_NV_render_texture_rectangle
+  WGL_BIND_TO_TEXTURE_RECTANGLE_RGB_NV = $20A0;
+  WGL_BIND_TO_TEXTURE_RECTANGLE_RGBA_NV = $20A1;
+  WGL_TEXTURE_RECTANGLE_NV = $20A2;
+
+  // WIN_draw_range_elements
+  GL_MAX_ELEMENTS_VERTICES_WIN = $80E8;
+  GL_MAX_ELEMENTS_INDICES_WIN = $80E9;
+
+  // GLU
+  GLU_INVALID_ENUM = 100900;
+  GLU_INVALID_VALUE = 100901;
+  GLU_OUT_OF_MEMORY = 100902;
+  GLU_INCOMPATIBLE_GL_VERSION = 100903;
+  GLU_VERSION = 100800;
+  GLU_EXTENSIONS = 100801;
+  GLU_TRUE = GL_TRUE;
+  GLU_FALSE = GL_FALSE;
+  GLU_SMOOTH = 100000;
+  GLU_FLAT = 100001;
+  GLU_NONE = 100002;
+  GLU_POINT = 100010;
+  GLU_LINE = 100011;
+  GLU_FILL = 100012;
+  GLU_SILHOUETTE = 100013;
+  GLU_OUTSIDE = 100020;
+  GLU_INSIDE = 100021;
+  GLU_TESS_MAX_COORD = 1.0E150;
+  GLU_TESS_WINDING_RULE = 100140;
+  GLU_TESS_BOUNDARY_ONLY = 100141;
+  GLU_TESS_TOLERANCE = 100142;
+  GLU_TESS_WINDING_ODD = 100130;
+  GLU_TESS_WINDING_NONZERO = 100131;
+  GLU_TESS_WINDING_POSITIVE = 100132;
+  GLU_TESS_WINDING_NEGATIVE = 100133;
+  GLU_TESS_WINDING_ABS_GEQ_TWO = 100134;
+  GLU_TESS_BEGIN = 100100; // TGLUTessBeginProc
+  GLU_TESS_VERTEX = 100101; // TGLUTessVertexProc
+  GLU_TESS_END = 100102; // TGLUTessEndProc
+  GLU_TESS_ERROR = 100103; // TGLUTessErrorProc
+  GLU_TESS_EDGE_FLAG = 100104; // TGLUTessEdgeFlagProc
+  GLU_TESS_COMBINE = 100105; // TGLUTessCombineProc
+  GLU_TESS_BEGIN_DATA = 100106; // TGLUTessBeginDataProc
+  GLU_TESS_VERTEX_DATA = 100107; // TGLUTessVertexDataProc
+  GLU_TESS_END_DATA = 100108; // TGLUTessEndDataProc
+  GLU_TESS_ERROR_DATA = 100109; // TGLUTessErrorDataProc
+  GLU_TESS_EDGE_FLAG_DATA = 100110; // TGLUTessEdgeFlagDataProc
+  GLU_TESS_COMBINE_DATA = 100111; // TGLUTessCombineDataProc
+  GLU_TESS_ERROR1 = 100151;
+  GLU_TESS_ERROR2 = 100152;
+  GLU_TESS_ERROR3 = 100153;
+  GLU_TESS_ERROR4 = 100154;
+  GLU_TESS_ERROR5 = 100155;
+  GLU_TESS_ERROR6 = 100156;
+  GLU_TESS_ERROR7 = 100157;
+  GLU_TESS_ERROR8 = 100158;
+  GLU_TESS_MISSING_BEGIN_POLYGON = GLU_TESS_ERROR1;
+  GLU_TESS_MISSING_BEGIN_CONTOUR = GLU_TESS_ERROR2;
+  GLU_TESS_MISSING_END_POLYGON = GLU_TESS_ERROR3;
+  GLU_TESS_MISSING_END_CONTOUR = GLU_TESS_ERROR4;
+  GLU_TESS_COORD_TOO_LARGE = GLU_TESS_ERROR5;
+  GLU_TESS_NEED_COMBINE_CALLBACK = GLU_TESS_ERROR6;
+  GLU_AUTO_LOAD_MATRIX = 100200;
+  GLU_CULLING = 100201;
+  GLU_SAMPLING_TOLERANCE = 100203;
+  GLU_DISPLAY_MODE = 100204;
+  GLU_PARAMETRIC_TOLERANCE = 100202;
+  GLU_SAMPLING_METHOD = 100205;
+  GLU_U_STEP = 100206;
+  GLU_V_STEP = 100207;
+  GLU_PATH_LENGTH = 100215;
+  GLU_PARAMETRIC_ERROR = 100216;
+  GLU_DOMAIN_DISTANCE = 100217;
+  GLU_MAP1_TRIM_2 = 100210;
+  GLU_MAP1_TRIM_3 = 100211;
+  GLU_OUTLINE_POLYGON = 100240;
+  GLU_OUTLINE_PATCH = 100241;
+  GLU_NURBS_ERROR1 = 100251;
+  GLU_NURBS_ERROR2 = 100252;
+  GLU_NURBS_ERROR3 = 100253;
+  GLU_NURBS_ERROR4 = 100254;
+  GLU_NURBS_ERROR5 = 100255;
+  GLU_NURBS_ERROR6 = 100256;
+  GLU_NURBS_ERROR7 = 100257;
+  GLU_NURBS_ERROR8 = 100258;
+  GLU_NURBS_ERROR9 = 100259;
+  GLU_NURBS_ERROR10 = 100260;
+  GLU_NURBS_ERROR11 = 100261;
+  GLU_NURBS_ERROR12 = 100262;
+  GLU_NURBS_ERROR13 = 100263;
+  GLU_NURBS_ERROR14 = 100264;
+  GLU_NURBS_ERROR15 = 100265;
+  GLU_NURBS_ERROR16 = 100266;
+  GLU_NURBS_ERROR17 = 100267;
+  GLU_NURBS_ERROR18 = 100268;
+  GLU_NURBS_ERROR19 = 100269;
+  GLU_NURBS_ERROR20 = 100270;
+  GLU_NURBS_ERROR21 = 100271;
+  GLU_NURBS_ERROR22 = 100272;
+  GLU_NURBS_ERROR23 = 100273;
+  GLU_NURBS_ERROR24 = 100274;
+  GLU_NURBS_ERROR25 = 100275;
+  GLU_NURBS_ERROR26 = 100276;
+  GLU_NURBS_ERROR27 = 100277;
+  GLU_NURBS_ERROR28 = 100278;
+  GLU_NURBS_ERROR29 = 100279;
+  GLU_NURBS_ERROR30 = 100280;
+  GLU_NURBS_ERROR31 = 100281;
+  GLU_NURBS_ERROR32 = 100282;
+  GLU_NURBS_ERROR33 = 100283;
+  GLU_NURBS_ERROR34 = 100284;
+  GLU_NURBS_ERROR35 = 100285;
+  GLU_NURBS_ERROR36 = 100286;
+  GLU_NURBS_ERROR37 = 100287;
+  GLU_CW = 100120;
+  GLU_CCW = 100121;
+  GLU_INTERIOR = 100122;
+  GLU_EXTERIOR = 100123;
+  GLU_UNKNOWN = 100124;
+  GLU_BEGIN = GLU_TESS_BEGIN;
+  GLU_VERTEX = GLU_TESS_VERTEX;
+  GLU_END = GLU_TESS_END;
+  GLU_ERROR = GLU_TESS_ERROR;
+  GLU_EDGE_FLAG = GLU_TESS_EDGE_FLAG;
+
+// GL_VERSION_1_1
+procedure   glAccum(op: TGLenum; value: TGLfloat);  stdcall; external opengl32;
+procedure   glAlphaFunc(func: TGLenum; ref: TGLclampf);  stdcall; external opengl32;
+function    glAreTexturesResident(n: TGLsizei; const textures: PGLuint; residences: PGLboolean): TGLboolean;  stdcall; external opengl32;
+procedure   glArrayElement(i: TGLint);  stdcall; external opengl32;
+procedure   glBegin(mode: TGLenum);  stdcall; external opengl32;
+procedure   glBindTexture(target: TGLenum; texture: TGLuint);  stdcall; external opengl32;
+procedure   glBitmap(width: TGLsizei; height: TGLsizei; xorig: TGLfloat; yorig: TGLfloat; xmove: TGLfloat; ymove: TGLfloat; const bitmap: PGLubyte);  stdcall; external opengl32;
+procedure   glBlendFunc(sfactor: TGLenum; dfactor: TGLenum);  stdcall; external opengl32;
+procedure   glCallList(list: TGLuint);  stdcall; external opengl32;
+procedure   glCallLists(n: TGLsizei; _type: TGLenum; const lists: PGLvoid);  stdcall; external opengl32;
+procedure   glClear(mask: TGLbitfield);  stdcall; external opengl32;
+procedure   glClearAccum(red: TGLfloat; green: TGLfloat; blue: TGLfloat; alpha: TGLfloat);  stdcall; external opengl32;
+procedure   glClearColor(red: TGLclampf; green: TGLclampf; blue: TGLclampf; alpha: TGLclampf);  stdcall; external opengl32;
+procedure   glClearDepth(depth: TGLclampd);  stdcall; external opengl32;
+procedure   glClearIndex(c: TGLfloat);  stdcall; external opengl32;
+procedure   glClearStencil(s: TGLint);  stdcall; external opengl32;
+procedure   glClipPlane(plane: TGLenum; const equation: PGLdouble);  stdcall; external opengl32;
+procedure   glColor3b(red: TGLbyte; green: TGLbyte; blue: TGLbyte);  stdcall; external opengl32;
+procedure   glColor3bv(const v: PGLbyte);  stdcall; external opengl32;
+procedure   glColor3d(red: TGLdouble; green: TGLdouble; blue: TGLdouble);  stdcall; external opengl32;
+procedure   glColor3dv(const v: PGLdouble);  stdcall; external opengl32;
+procedure   glColor3f(red: TGLfloat; green: TGLfloat; blue: TGLfloat);  stdcall; external opengl32;
+procedure   glColor3fv(const v: PGLfloat);  stdcall; external opengl32;
+procedure   glColor3i(red: TGLint; green: TGLint; blue: TGLint);  stdcall; external opengl32;
+procedure   glColor3iv(const v: PGLint);  stdcall; external opengl32;
+procedure   glColor3s(red: TGLshort; green: TGLshort; blue: TGLshort);  stdcall; external opengl32;
+procedure   glColor3sv(const v: PGLshort);  stdcall; external opengl32;
+procedure   glColor3ub(red: TGLubyte; green: TGLubyte; blue: TGLubyte);  stdcall; external opengl32;
+procedure   glColor3ubv(const v: PGLubyte);  stdcall; external opengl32;
+procedure   glColor3ui(red: TGLuint; green: TGLuint; blue: TGLuint);  stdcall; external opengl32;
+procedure   glColor3uiv(const v: PGLuint);  stdcall; external opengl32;
+procedure   glColor3us(red: TGLushort; green: TGLushort; blue: TGLushort);  stdcall; external opengl32;
+procedure   glColor3usv(const v: PGLushort);  stdcall; external opengl32;
+procedure   glColor4b(red: TGLbyte; green: TGLbyte; blue: TGLbyte; alpha: TGLbyte);  stdcall; external opengl32;
+procedure   glColor4bv(const v: PGLbyte);  stdcall; external opengl32;
+procedure   glColor4d(red: TGLdouble; green: TGLdouble; blue: TGLdouble; alpha: TGLdouble);  stdcall; external opengl32;
+procedure   glColor4dv(const v: PGLdouble);  stdcall; external opengl32;
+procedure   glColor4f(red: TGLfloat; green: TGLfloat; blue: TGLfloat; alpha: TGLfloat);  stdcall; external opengl32;
+procedure   glColor4fv(const v: PGLfloat);  stdcall; external opengl32;
+procedure   glColor4i(red: TGLint; green: TGLint; blue: TGLint; alpha: TGLint);  stdcall; external opengl32;
+procedure   glColor4iv(const v: PGLint);  stdcall; external opengl32;
+procedure   glColor4s(red: TGLshort; green: TGLshort; blue: TGLshort; alpha: TGLshort);  stdcall; external opengl32;
+procedure   glColor4sv(const v: PGLshort);  stdcall; external opengl32;
+procedure   glColor4ub(red: TGLubyte; green: TGLubyte; blue: TGLubyte; alpha: TGLubyte);  stdcall; external opengl32;
+procedure   glColor4ubv(const v: PGLubyte);  stdcall; external opengl32;
+procedure   glColor4ui(red: TGLuint; green: TGLuint; blue: TGLuint; alpha: TGLuint);  stdcall; external opengl32;
+procedure   glColor4uiv(const v: PGLuint);  stdcall; external opengl32;
+procedure   glColor4us(red: TGLushort; green: TGLushort; blue: TGLushort; alpha: TGLushort);  stdcall; external opengl32;
+procedure   glColor4usv(const v: PGLushort);  stdcall; external opengl32;
+procedure   glColorMask(red: TGLboolean; green: TGLboolean; blue: TGLboolean; alpha: TGLboolean);  stdcall; external opengl32;
+procedure   glColorMaterial(face: TGLenum; mode: TGLenum);  stdcall; external opengl32;
+procedure   glColorPointer(size: TGLint; _type: TGLenum; stride: TGLsizei; const _pointer: PGLvoid);  stdcall; external opengl32;
+procedure   glCopyPixels(x: TGLint; y: TGLint; width: TGLsizei; height: TGLsizei; _type: TGLenum);  stdcall; external opengl32;
+procedure   glCopyTexImage1D(target: TGLenum; level: TGLint; internalFormat: TGLenum; x: TGLint; y: TGLint; width: TGLsizei; border: TGLint);  stdcall; external opengl32;
+procedure   glCopyTexImage2D(target: TGLenum; level: TGLint; internalFormat: TGLenum; x: TGLint; y: TGLint; width: TGLsizei; height: TGLsizei; border: TGLint);  stdcall; external opengl32;
+procedure   glCopyTexSubImage1D(target: TGLenum; level: TGLint; xoffset: TGLint; x: TGLint; y: TGLint; width: TGLsizei);  stdcall; external opengl32;
+procedure   glCopyTexSubImage2D(target: TGLenum; level: TGLint; xoffset: TGLint; yoffset: TGLint; x: TGLint; y: TGLint; width: TGLsizei; height: TGLsizei);  stdcall; external opengl32;
+procedure   glCullFace(mode: TGLenum);  stdcall; external opengl32;
+procedure   glDeleteLists(list: TGLuint; range: TGLsizei);  stdcall; external opengl32;
+procedure   glDeleteTextures(n: TGLsizei; const textures: PGLuint);  stdcall; external opengl32;
+procedure   glDepthFunc(func: TGLenum);  stdcall; external opengl32;
+procedure   glDepthMask(flag: TGLboolean);  stdcall; external opengl32;
+procedure   glDepthRange(zNear: TGLclampd; zFar: TGLclampd);  stdcall; external opengl32;
+procedure   glDisable(cap: TGLenum);  stdcall; external opengl32;
+procedure   glDisableClientState(_array: TGLenum);  stdcall; external opengl32;
+procedure   glDrawArrays(mode: TGLenum; first: TGLint; count: TGLsizei);  stdcall; external opengl32;
+procedure   glDrawBuffer(mode: TGLenum);  stdcall; external opengl32;
+procedure   glDrawElements(mode: TGLenum; count: TGLsizei; _type: TGLenum; const indices: PGLvoid);  stdcall; external opengl32;
+procedure   glDrawPixels(width: TGLsizei; height: TGLsizei; format: TGLenum; _type: TGLenum; const pixels: PGLvoid);  stdcall; external opengl32;
+procedure   glEdgeFlag(flag: TGLboolean);  stdcall; external opengl32;
+procedure   glEdgeFlagPointer(stride: TGLsizei; const _pointer: PGLvoid);  stdcall; external opengl32;
+procedure   glEdgeFlagv(const flag: PGLboolean);  stdcall; external opengl32;
+procedure   glEnable(cap: TGLenum);  stdcall; external opengl32;
+procedure   glEnableClientState(_array: TGLenum);  stdcall; external opengl32;
+procedure   glEnd();  stdcall; external opengl32;
+procedure   glEndList();  stdcall; external opengl32;
+procedure   glEvalCoord1d(u: TGLdouble);  stdcall; external opengl32;
+procedure   glEvalCoord1dv(const u: PGLdouble);  stdcall; external opengl32;
+procedure   glEvalCoord1f(u: TGLfloat);  stdcall; external opengl32;
+procedure   glEvalCoord1fv(const u: PGLfloat);  stdcall; external opengl32;
+procedure   glEvalCoord2d(u: TGLdouble; v: TGLdouble);  stdcall; external opengl32;
+procedure   glEvalCoord2dv(const u: PGLdouble);  stdcall; external opengl32;
+procedure   glEvalCoord2f(u: TGLfloat; v: TGLfloat);  stdcall; external opengl32;
+procedure   glEvalCoord2fv(const u: PGLfloat);  stdcall; external opengl32;
+procedure   glEvalMesh1(mode: TGLenum; i1: TGLint; i2: TGLint);  stdcall; external opengl32;
+procedure   glEvalMesh2(mode: TGLenum; i1: TGLint; i2: TGLint; j1: TGLint; j2: TGLint);  stdcall; external opengl32;
+procedure   glEvalPoint1(i: TGLint);  stdcall; external opengl32;
+procedure   glEvalPoint2(i: TGLint; j: TGLint);  stdcall; external opengl32;
+procedure   glFeedbackBuffer(size: TGLsizei; _type: TGLenum; buffer: PGLfloat);  stdcall; external opengl32;
+procedure   glFinish();  stdcall; external opengl32;
+procedure   glFlush();  stdcall; external opengl32;
+procedure   glFogf(pname: TGLenum; param: TGLfloat);  stdcall; external opengl32;
+procedure   glFogfv(pname: TGLenum; const params: PGLfloat);  stdcall; external opengl32;
+procedure   glFogi(pname: TGLenum; param: TGLint);  stdcall; external opengl32;
+procedure   glFogiv(pname: TGLenum; const params: PGLint);  stdcall; external opengl32;
+procedure   glFrontFace(mode: TGLenum);  stdcall; external opengl32;
+procedure   glFrustum(left: TGLdouble; right: TGLdouble; bottom: TGLdouble; top: TGLdouble; zNear: TGLdouble; zFar: TGLdouble);  stdcall; external opengl32;
+function    glGenLists(range: TGLsizei): TGLuint;  stdcall; external opengl32;
+procedure   glGenTextures(n: TGLsizei; textures: PGLuint);  stdcall; external opengl32;
+procedure   glGetBooleanv(pname: TGLenum; params: PGLboolean);  stdcall; external opengl32;
+procedure   glGetClipPlane(plane: TGLenum; equation: PGLdouble);  stdcall; external opengl32;
+procedure   glGetDoublev(pname: TGLenum; params: PGLdouble);  stdcall; external opengl32;
+function    glGetError(): TGLenum;  stdcall; external opengl32;
+procedure   glGetFloatv(pname: TGLenum; params: PGLfloat);  stdcall; external opengl32;
+procedure   glGetIntegerv(pname: TGLenum; params: PGLint);  stdcall; external opengl32;
+procedure   glGetLightfv(light: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall; external opengl32;
+procedure   glGetLightiv(light: TGLenum; pname: TGLenum; params: PGLint);  stdcall; external opengl32;
+procedure   glGetMapdv(target: TGLenum; query: TGLenum; v: PGLdouble);  stdcall; external opengl32;
+procedure   glGetMapfv(target: TGLenum; query: TGLenum; v: PGLfloat);  stdcall; external opengl32;
+procedure   glGetMapiv(target: TGLenum; query: TGLenum; v: PGLint);  stdcall; external opengl32;
+procedure   glGetMaterialfv(face: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall; external opengl32;
+procedure   glGetMaterialiv(face: TGLenum; pname: TGLenum; params: PGLint);  stdcall; external opengl32;
+procedure   glGetPixelMapfv(map: TGLenum; values: PGLfloat);  stdcall; external opengl32;
+procedure   glGetPixelMapuiv(map: TGLenum; values: PGLuint);  stdcall; external opengl32;
+procedure   glGetPixelMapusv(map: TGLenum; values: PGLushort);  stdcall; external opengl32;
+procedure   glGetPointerv(pname: TGLenum; params: PGLvoid);  stdcall; external opengl32;
+procedure   glGetPolygonStipple(mask: PGLubyte);  stdcall; external opengl32;
+function    glGetString(name: TGLenum): PChar;  stdcall; external opengl32;
+procedure   glGetTexEnvfv(target: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall; external opengl32;
+procedure   glGetTexEnviv(target: TGLenum; pname: TGLenum; params: PGLint);  stdcall; external opengl32;
+procedure   glGetTexGendv(coord: TGLenum; pname: TGLenum; params: PGLdouble);  stdcall; external opengl32;
+procedure   glGetTexGenfv(coord: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall; external opengl32;
+procedure   glGetTexGeniv(coord: TGLenum; pname: TGLenum; params: PGLint);  stdcall; external opengl32;
+procedure   glGetTexImage(target: TGLenum; level: TGLint; format: TGLenum; _type: TGLenum; pixels: PGLvoid);  stdcall; external opengl32;
+procedure   glGetTexLevelParameterfv(target: TGLenum; level: TGLint; pname: TGLenum; params: PGLfloat);  stdcall; external opengl32;
+procedure   glGetTexLevelParameteriv(target: TGLenum; level: TGLint; pname: TGLenum; params: PGLint);  stdcall; external opengl32;
+procedure   glGetTexParameterfv(target: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall; external opengl32;
+procedure   glGetTexParameteriv(target: TGLenum; pname: TGLenum; params: PGLint);  stdcall; external opengl32;
+procedure   glHint(target: TGLenum; mode: TGLenum);  stdcall; external opengl32;
+procedure   glIndexMask(mask: TGLuint);  stdcall; external opengl32;
+procedure   glIndexPointer(_type: TGLenum; stride: TGLsizei; const _pointer: PGLvoid);  stdcall; external opengl32;
+procedure   glIndexd(c: TGLdouble);  stdcall; external opengl32;
+procedure   glIndexdv(const c: PGLdouble);  stdcall; external opengl32;
+procedure   glIndexf(c: TGLfloat);  stdcall; external opengl32;
+procedure   glIndexfv(const c: PGLfloat);  stdcall; external opengl32;
+procedure   glIndexi(c: TGLint);  stdcall; external opengl32;
+procedure   glIndexiv(const c: PGLint);  stdcall; external opengl32;
+procedure   glIndexs(c: TGLshort);  stdcall; external opengl32;
+procedure   glIndexsv(const c: PGLshort);  stdcall; external opengl32;
+procedure   glIndexub(c: TGLubyte);  stdcall; external opengl32;
+procedure   glIndexubv(const c: PGLubyte);  stdcall; external opengl32;
+procedure   glInitNames();  stdcall; external opengl32;
+procedure   glInterleavedArrays(format: TGLenum; stride: TGLsizei; const _pointer: PGLvoid);  stdcall; external opengl32;
+function    glIsEnabled(cap: TGLenum): TGLboolean;  stdcall; external opengl32;
+function    glIsList(list: TGLuint): TGLboolean;  stdcall; external opengl32;
+function    glIsTexture(texture: TGLuint): TGLboolean;  stdcall; external opengl32;
+procedure   glLightModelf(pname: TGLenum; param: TGLfloat);  stdcall; external opengl32;
+procedure   glLightModelfv(pname: TGLenum; const params: PGLfloat);  stdcall; external opengl32;
+procedure   glLightModeli(pname: TGLenum; param: TGLint);  stdcall; external opengl32;
+procedure   glLightModeliv(pname: TGLenum; const params: PGLint);  stdcall; external opengl32;
+procedure   glLightf(light: TGLenum; pname: TGLenum; param: TGLfloat);  stdcall; external opengl32;
+procedure   glLightfv(light: TGLenum; pname: TGLenum; const params: PGLfloat);  stdcall; external opengl32;
+procedure   glLighti(light: TGLenum; pname: TGLenum; param: TGLint);  stdcall; external opengl32;
+procedure   glLightiv(light: TGLenum; pname: TGLenum; const params: PGLint);  stdcall; external opengl32;
+procedure   glLineStipple(factor: TGLint; pattern: TGLushort);  stdcall; external opengl32;
+procedure   glLineWidth(width: TGLfloat);  stdcall; external opengl32;
+procedure   glListBase(base: TGLuint);  stdcall; external opengl32;
+procedure   glLoadIdentity();  stdcall; external opengl32;
+procedure   glLoadMatrixd(const m: PGLdouble);  stdcall; external opengl32;
+procedure   glLoadMatrixf(const m: PGLfloat);  stdcall; external opengl32;
+procedure   glLoadName(name: TGLuint);  stdcall; external opengl32;
+procedure   glLogicOp(opcode: TGLenum);  stdcall; external opengl32;
+procedure   glMap1d(target: TGLenum; u1: TGLdouble; u2: TGLdouble; stride: TGLint; order: TGLint; const points: PGLdouble);  stdcall; external opengl32;
+procedure   glMap1f(target: TGLenum; u1: TGLfloat; u2: TGLfloat; stride: TGLint; order: TGLint; const points: PGLfloat);  stdcall; external opengl32;
+procedure   glMap2d(target: TGLenum; u1: TGLdouble; u2: TGLdouble; ustride: TGLint; uorder: TGLint; v1: TGLdouble; v2: TGLdouble; vstride: TGLint; vorder: TGLint; const points: PGLdouble);  stdcall; external opengl32;
+procedure   glMap2f(target: TGLenum; u1: TGLfloat; u2: TGLfloat; ustride: TGLint; uorder: TGLint; v1: TGLfloat; v2: TGLfloat; vstride: TGLint; vorder: TGLint; const points: PGLfloat);  stdcall; external opengl32;
+procedure   glMapGrid1d(un: TGLint; u1: TGLdouble; u2: TGLdouble);  stdcall; external opengl32;
+procedure   glMapGrid1f(un: TGLint; u1: TGLfloat; u2: TGLfloat);  stdcall; external opengl32;
+procedure   glMapGrid2d(un: TGLint; u1: TGLdouble; u2: TGLdouble; vn: TGLint; v1: TGLdouble; v2: TGLdouble);  stdcall; external opengl32;
+procedure   glMapGrid2f(un: TGLint; u1: TGLfloat; u2: TGLfloat; vn: TGLint; v1: TGLfloat; v2: TGLfloat);  stdcall; external opengl32;
+procedure   glMaterialf(face: TGLenum; pname: TGLenum; param: TGLfloat);  stdcall; external opengl32;
+procedure   glMaterialfv(face: TGLenum; pname: TGLenum; const params: PGLfloat);  stdcall; external opengl32;
+procedure   glMateriali(face: TGLenum; pname: TGLenum; param: TGLint);  stdcall; external opengl32;
+procedure   glMaterialiv(face: TGLenum; pname: TGLenum; const params: PGLint);  stdcall; external opengl32;
+procedure   glMatrixMode(mode: TGLenum);  stdcall; external opengl32;
+procedure   glMultMatrixd(const m: PGLdouble);  stdcall; external opengl32;
+procedure   glMultMatrixf(const m: PGLfloat);  stdcall; external opengl32;
+procedure   glNewList(list: TGLuint; mode: TGLenum);  stdcall; external opengl32;
+procedure   glNormal3b(nx: TGLbyte; ny: TGLbyte; nz: TGLbyte);  stdcall; external opengl32;
+procedure   glNormal3bv(const v: PGLbyte);  stdcall; external opengl32;
+procedure   glNormal3d(nx: TGLdouble; ny: TGLdouble; nz: TGLdouble);  stdcall; external opengl32;
+procedure   glNormal3dv(const v: PGLdouble);  stdcall; external opengl32;
+procedure   glNormal3f(nx: TGLfloat; ny: TGLfloat; nz: TGLfloat);  stdcall; external opengl32;
+procedure   glNormal3fv(const v: PGLfloat);  stdcall; external opengl32;
+procedure   glNormal3i(nx: TGLint; ny: TGLint; nz: TGLint);  stdcall; external opengl32;
+procedure   glNormal3iv(const v: PGLint);  stdcall; external opengl32;
+procedure   glNormal3s(nx: TGLshort; ny: TGLshort; nz: TGLshort);  stdcall; external opengl32;
+procedure   glNormal3sv(const v: PGLshort);  stdcall; external opengl32;
+procedure   glNormalPointer(_type: TGLenum; stride: TGLsizei; const _pointer: PGLvoid);  stdcall; external opengl32;
+procedure   glOrtho(left: TGLdouble; right: TGLdouble; bottom: TGLdouble; top: TGLdouble; zNear: TGLdouble; zFar: TGLdouble);  stdcall; external opengl32;
+procedure   glPassThrough(token: TGLfloat);  stdcall; external opengl32;
+procedure   glPixelMapfv(map: TGLenum; mapsize: TGLsizei; const values: PGLfloat);  stdcall; external opengl32;
+procedure   glPixelMapuiv(map: TGLenum; mapsize: TGLsizei; const values: PGLuint);  stdcall; external opengl32;
+procedure   glPixelMapusv(map: TGLenum; mapsize: TGLsizei; const values: PGLushort);  stdcall; external opengl32;
+procedure   glPixelStoref(pname: TGLenum; param: TGLfloat);  stdcall; external opengl32;
+procedure   glPixelStorei(pname: TGLenum; param: TGLint);  stdcall; external opengl32;
+procedure   glPixelTransferf(pname: TGLenum; param: TGLfloat);  stdcall; external opengl32;
+procedure   glPixelTransferi(pname: TGLenum; param: TGLint);  stdcall; external opengl32;
+procedure   glPixelZoom(xfactor: TGLfloat; yfactor: TGLfloat);  stdcall; external opengl32;
+procedure   glPointSize(size: TGLfloat);  stdcall; external opengl32;
+procedure   glPolygonMode(face: TGLenum; mode: TGLenum);  stdcall; external opengl32;
+procedure   glPolygonOffset(factor: TGLfloat; units: TGLfloat);  stdcall; external opengl32;
+procedure   glPolygonStipple(const mask: PGLubyte);  stdcall; external opengl32;
+procedure   glPopAttrib();  stdcall; external opengl32;
+procedure   glPopClientAttrib();  stdcall; external opengl32;
+procedure   glPopMatrix();  stdcall; external opengl32;
+procedure   glPopName();  stdcall; external opengl32;
+procedure   glPrioritizeTextures(n: TGLsizei; const textures: PGLuint; const priorities: PGLclampf);  stdcall; external opengl32;
+procedure   glPushAttrib(mask: TGLbitfield);  stdcall; external opengl32;
+procedure   glPushClientAttrib(mask: TGLbitfield);  stdcall; external opengl32;
+procedure   glPushMatrix();  stdcall; external opengl32;
+procedure   glPushName(name: TGLuint);  stdcall; external opengl32;
+procedure   glRasterPos2d(x: TGLdouble; y: TGLdouble);  stdcall; external opengl32;
+procedure   glRasterPos2dv(const v: PGLdouble);  stdcall; external opengl32;
+procedure   glRasterPos2f(x: TGLfloat; y: TGLfloat);  stdcall; external opengl32;
+procedure   glRasterPos2fv(const v: PGLfloat);  stdcall; external opengl32;
+procedure   glRasterPos2i(x: TGLint; y: TGLint);  stdcall; external opengl32;
+procedure   glRasterPos2iv(const v: PGLint);  stdcall; external opengl32;
+procedure   glRasterPos2s(x: TGLshort; y: TGLshort);  stdcall; external opengl32;
+procedure   glRasterPos2sv(const v: PGLshort);  stdcall; external opengl32;
+procedure   glRasterPos3d(x: TGLdouble; y: TGLdouble; z: TGLdouble);  stdcall; external opengl32;
+procedure   glRasterPos3dv(const v: PGLdouble);  stdcall; external opengl32;
+procedure   glRasterPos3f(x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall; external opengl32;
+procedure   glRasterPos3fv(const v: PGLfloat);  stdcall; external opengl32;
+procedure   glRasterPos3i(x: TGLint; y: TGLint; z: TGLint);  stdcall; external opengl32;
+procedure   glRasterPos3iv(const v: PGLint);  stdcall; external opengl32;
+procedure   glRasterPos3s(x: TGLshort; y: TGLshort; z: TGLshort);  stdcall; external opengl32;
+procedure   glRasterPos3sv(const v: PGLshort);  stdcall; external opengl32;
+procedure   glRasterPos4d(x: TGLdouble; y: TGLdouble; z: TGLdouble; w: TGLdouble);  stdcall; external opengl32;
+procedure   glRasterPos4dv(const v: PGLdouble);  stdcall; external opengl32;
+procedure   glRasterPos4f(x: TGLfloat; y: TGLfloat; z: TGLfloat; w: TGLfloat);  stdcall; external opengl32;
+procedure   glRasterPos4fv(const v: PGLfloat);  stdcall; external opengl32;
+procedure   glRasterPos4i(x: TGLint; y: TGLint; z: TGLint; w: TGLint);  stdcall; external opengl32;
+procedure   glRasterPos4iv(const v: PGLint);  stdcall; external opengl32;
+procedure   glRasterPos4s(x: TGLshort; y: TGLshort; z: TGLshort; w: TGLshort);  stdcall; external opengl32;
+procedure   glRasterPos4sv(const v: PGLshort);  stdcall; external opengl32;
+procedure   glReadBuffer(mode: TGLenum);  stdcall; external opengl32;
+procedure   glReadPixels(x: TGLint; y: TGLint; width: TGLsizei; height: TGLsizei; format: TGLenum; _type: TGLenum; pixels: PGLvoid);  stdcall; external opengl32;
+procedure   glRectd(x1: TGLdouble; y1: TGLdouble; x2: TGLdouble; y2: TGLdouble);  stdcall; external opengl32;
+procedure   glRectdv(const v1: PGLdouble; const v2: PGLdouble);  stdcall; external opengl32;
+procedure   glRectf(x1: TGLfloat; y1: TGLfloat; x2: TGLfloat; y2: TGLfloat);  stdcall; external opengl32;
+procedure   glRectfv(const v1: PGLfloat; const v2: PGLfloat);  stdcall; external opengl32;
+procedure   glRecti(x1: TGLint; y1: TGLint; x2: TGLint; y2: TGLint);  stdcall; external opengl32;
+procedure   glRectiv(const v1: PGLint; const v2: PGLint);  stdcall; external opengl32;
+procedure   glRects(x1: TGLshort; y1: TGLshort; x2: TGLshort; y2: TGLshort);  stdcall; external opengl32;
+procedure   glRectsv(const v1: PGLshort; const v2: PGLshort);  stdcall; external opengl32;
+function    glRenderMode(mode: TGLenum): TGLint;  stdcall; external opengl32;
+procedure   glRotated(angle: TGLdouble; x: TGLdouble; y: TGLdouble; z: TGLdouble);  stdcall; external opengl32;
+procedure   glRotatef(angle: TGLfloat; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall; external opengl32;
+procedure   glScaled(x: TGLdouble; y: TGLdouble; z: TGLdouble);  stdcall; external opengl32;
+procedure   glScalef(x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall; external opengl32;
+procedure   glScissor(x: TGLint; y: TGLint; width: TGLsizei; height: TGLsizei);  stdcall; external opengl32;
+procedure   glSelectBuffer(size: TGLsizei; buffer: PGLuint);  stdcall; external opengl32;
+procedure   glShadeModel(mode: TGLenum);  stdcall; external opengl32;
+procedure   glStencilFunc(func: TGLenum; ref: TGLint; mask: TGLuint);  stdcall; external opengl32;
+procedure   glStencilMask(mask: TGLuint);  stdcall; external opengl32;
+procedure   glStencilOp(fail: TGLenum; zfail: TGLenum; zpass: TGLenum);  stdcall; external opengl32;
+procedure   glTexCoord1d(s: TGLdouble);  stdcall; external opengl32;
+procedure   glTexCoord1dv(const v: PGLdouble);  stdcall; external opengl32;
+procedure   glTexCoord1f(s: TGLfloat);  stdcall; external opengl32;
+procedure   glTexCoord1fv(const v: PGLfloat);  stdcall; external opengl32;
+procedure   glTexCoord1i(s: TGLint);  stdcall; external opengl32;
+procedure   glTexCoord1iv(const v: PGLint);  stdcall; external opengl32;
+procedure   glTexCoord1s(s: TGLshort);  stdcall; external opengl32;
+procedure   glTexCoord1sv(const v: PGLshort);  stdcall; external opengl32;
+procedure   glTexCoord2d(s: TGLdouble; t: TGLdouble);  stdcall; external opengl32;
+procedure   glTexCoord2dv(const v: PGLdouble);  stdcall; external opengl32;
+procedure   glTexCoord2f(s: TGLfloat; t: TGLfloat);  stdcall; external opengl32;
+procedure   glTexCoord2fv(const v: PGLfloat);  stdcall; external opengl32;
+procedure   glTexCoord2i(s: TGLint; t: TGLint);  stdcall; external opengl32;
+procedure   glTexCoord2iv(const v: PGLint);  stdcall; external opengl32;
+procedure   glTexCoord2s(s: TGLshort; t: TGLshort);  stdcall; external opengl32;
+procedure   glTexCoord2sv(const v: PGLshort);  stdcall; external opengl32;
+procedure   glTexCoord3d(s: TGLdouble; t: TGLdouble; r: TGLdouble);  stdcall; external opengl32;
+procedure   glTexCoord3dv(const v: PGLdouble);  stdcall; external opengl32;
+procedure   glTexCoord3f(s: TGLfloat; t: TGLfloat; r: TGLfloat);  stdcall; external opengl32;
+procedure   glTexCoord3fv(const v: PGLfloat);  stdcall; external opengl32;
+procedure   glTexCoord3i(s: TGLint; t: TGLint; r: TGLint);  stdcall; external opengl32;
+procedure   glTexCoord3iv(const v: PGLint);  stdcall; external opengl32;
+procedure   glTexCoord3s(s: TGLshort; t: TGLshort; r: TGLshort);  stdcall; external opengl32;
+procedure   glTexCoord3sv(const v: PGLshort);  stdcall; external opengl32;
+procedure   glTexCoord4d(s: TGLdouble; t: TGLdouble; r: TGLdouble; q: TGLdouble);  stdcall; external opengl32;
+procedure   glTexCoord4dv(const v: PGLdouble);  stdcall; external opengl32;
+procedure   glTexCoord4f(s: TGLfloat; t: TGLfloat; r: TGLfloat; q: TGLfloat);  stdcall; external opengl32;
+procedure   glTexCoord4fv(const v: PGLfloat);  stdcall; external opengl32;
+procedure   glTexCoord4i(s: TGLint; t: TGLint; r: TGLint; q: TGLint);  stdcall; external opengl32;
+procedure   glTexCoord4iv(const v: PGLint);  stdcall; external opengl32;
+procedure   glTexCoord4s(s: TGLshort; t: TGLshort; r: TGLshort; q: TGLshort);  stdcall; external opengl32;
+procedure   glTexCoord4sv(const v: PGLshort);  stdcall; external opengl32;
+procedure   glTexCoordPointer(size: TGLint; _type: TGLenum; stride: TGLsizei; const _pointer: PGLvoid);  stdcall; external opengl32;
+procedure   glTexEnvf(target: TGLenum; pname: TGLenum; param: TGLfloat);  stdcall; external opengl32;
+procedure   glTexEnvfv(target: TGLenum; pname: TGLenum; const params: PGLfloat);  stdcall; external opengl32;
+procedure   glTexEnvi(target: TGLenum; pname: TGLenum; param: TGLint);  stdcall; external opengl32;
+procedure   glTexEnviv(target: TGLenum; pname: TGLenum; const params: PGLint);  stdcall; external opengl32;
+procedure   glTexGend(coord: TGLenum; pname: TGLenum; param: TGLdouble);  stdcall; external opengl32;
+procedure   glTexGendv(coord: TGLenum; pname: TGLenum; const params: PGLdouble);  stdcall; external opengl32;
+procedure   glTexGenf(coord: TGLenum; pname: TGLenum; param: TGLfloat);  stdcall; external opengl32;
+procedure   glTexGenfv(coord: TGLenum; pname: TGLenum; const params: PGLfloat);  stdcall; external opengl32;
+procedure   glTexGeni(coord: TGLenum; pname: TGLenum; param: TGLint);  stdcall; external opengl32;
+procedure   glTexGeniv(coord: TGLenum; pname: TGLenum; const params: PGLint);  stdcall; external opengl32;
+procedure   glTexImage1D(target: TGLenum; level: TGLint; internalformat: TGLint; width: TGLsizei; border: TGLint; format: TGLenum; _type: TGLenum; const pixels: PGLvoid);  stdcall; external opengl32;
+procedure   glTexImage2D(target: TGLenum; level: TGLint; internalformat: TGLint; width: TGLsizei; height: TGLsizei; border: TGLint; format: TGLenum; _type: TGLenum; const pixels: PGLvoid);  stdcall; external opengl32;
+procedure   glTexParameterf(target: TGLenum; pname: TGLenum; param: TGLfloat);  stdcall; external opengl32;
+procedure   glTexParameterfv(target: TGLenum; pname: TGLenum; const params: PGLfloat);  stdcall; external opengl32;
+procedure   glTexParameteri(target: TGLenum; pname: TGLenum; param: TGLint);  stdcall; external opengl32;
+procedure   glTexParameteriv(target: TGLenum; pname: TGLenum; const params: PGLint);  stdcall; external opengl32;
+procedure   glTexSubImage1D(target: TGLenum; level: TGLint; xoffset: TGLint; width: TGLsizei; format: TGLenum; _type: TGLenum; const pixels: PGLvoid);  stdcall; external opengl32;
+procedure   glTexSubImage2D(target: TGLenum; level: TGLint; xoffset: TGLint; yoffset: TGLint; width: TGLsizei; height: TGLsizei; format: TGLenum; _type: TGLenum; const pixels: PGLvoid);  stdcall; external opengl32;
+procedure   glTranslated(x: TGLdouble; y: TGLdouble; z: TGLdouble);  stdcall; external opengl32;
+procedure   glTranslatef(x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall; external opengl32;
+procedure   glVertex2d(x: TGLdouble; y: TGLdouble);  stdcall; external opengl32;
+procedure   glVertex2dv(const v: PGLdouble);  stdcall; external opengl32;
+procedure   glVertex2f(x: TGLfloat; y: TGLfloat);  stdcall; external opengl32;
+procedure   glVertex2fv(const v: PGLfloat);  stdcall; external opengl32;
+procedure   glVertex2i(x: TGLint; y: TGLint);  stdcall; external opengl32;
+procedure   glVertex2iv(const v: PGLint);  stdcall; external opengl32;
+procedure   glVertex2s(x: TGLshort; y: TGLshort);  stdcall; external opengl32;
+procedure   glVertex2sv(const v: PGLshort);  stdcall; external opengl32;
+procedure   glVertex3d(x: TGLdouble; y: TGLdouble; z: TGLdouble);  stdcall; external opengl32;
+procedure   glVertex3dv(const v: PGLdouble);  stdcall; external opengl32;
+procedure   glVertex3f(x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall; external opengl32;
+procedure   glVertex3fv(const v: PGLfloat);  stdcall; external opengl32;
+procedure   glVertex3i(x: TGLint; y: TGLint; z: TGLint);  stdcall; external opengl32;
+procedure   glVertex3iv(const v: PGLint);  stdcall; external opengl32;
+procedure   glVertex3s(x: TGLshort; y: TGLshort; z: TGLshort);  stdcall; external opengl32;
+procedure   glVertex3sv(const v: PGLshort);  stdcall; external opengl32;
+procedure   glVertex4d(x: TGLdouble; y: TGLdouble; z: TGLdouble; w: TGLdouble);  stdcall; external opengl32;
+procedure   glVertex4dv(const v: PGLdouble);  stdcall; external opengl32;
+procedure   glVertex4f(x: TGLfloat; y: TGLfloat; z: TGLfloat; w: TGLfloat);  stdcall; external opengl32;
+procedure   glVertex4fv(const v: PGLfloat);  stdcall; external opengl32;
+procedure   glVertex4i(x: TGLint; y: TGLint; z: TGLint; w: TGLint);  stdcall; external opengl32;
+procedure   glVertex4iv(const v: PGLint);  stdcall; external opengl32;
+procedure   glVertex4s(x: TGLshort; y: TGLshort; z: TGLshort; w: TGLshort);  stdcall; external opengl32;
+procedure   glVertex4sv(const v: PGLshort);  stdcall; external opengl32;
+procedure   glVertexPointer(size: TGLint; _type: TGLenum; stride: TGLsizei; const _pointer: PGLvoid);  stdcall; external opengl32;
+procedure   glViewport(x: TGLint; y: TGLint; width: TGLsizei; height: TGLsizei);  stdcall; external opengl32;
+
+// GL_VERSION_1_2
+procedure   glBlendColor(red: TGLclampf; green: TGLclampf; blue: TGLclampf; alpha: TGLclampf);  stdcall; external opengl32;
+procedure   glBlendEquation(mode: TGLenum);  stdcall; external opengl32;
+procedure   glDrawRangeElements(mode: TGLenum; start: TGLuint; _end: TGLuint; count: TGLsizei; _type: TGLenum; const indices: PGLvoid);  stdcall; external opengl32;
+procedure   glColorTable(target: TGLenum; internalformat: TGLenum; width: TGLsizei; format: TGLenum; _type: TGLenum; const table: PGLvoid);  stdcall; external opengl32;
+procedure   glColorTableParameterfv(target: TGLenum; pname: TGLenum; const params: PGLfloat);  stdcall; external opengl32;
+procedure   glColorTableParameteriv(target: TGLenum; pname: TGLenum; const params: PGLint);  stdcall; external opengl32;
+procedure   glCopyColorTable(target: TGLenum; internalformat: TGLenum; x: TGLint; y: TGLint; width: TGLsizei);  stdcall; external opengl32;
+procedure   glGetColorTable(target: TGLenum; format: TGLenum; _type: TGLenum; table: PGLvoid);  stdcall; external opengl32;
+procedure   glGetColorTableParameterfv(target: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall; external opengl32;
+procedure   glGetColorTableParameteriv(target: TGLenum; pname: TGLenum; params: PGLint);  stdcall; external opengl32;
+procedure   glColorSubTable(target: TGLenum; start: TGLsizei; count: TGLsizei; format: TGLenum; _type: TGLenum; const data: PGLvoid);  stdcall; external opengl32;
+procedure   glCopyColorSubTable(target: TGLenum; start: TGLsizei; x: TGLint; y: TGLint; width: TGLsizei);  stdcall; external opengl32;
+procedure   glConvolutionFilter1D(target: TGLenum; internalformat: TGLenum; width: TGLsizei; format: TGLenum; _type: TGLenum; const image: PGLvoid);  stdcall; external opengl32;
+procedure   glConvolutionFilter2D(target: TGLenum; internalformat: TGLenum; width: TGLsizei; height: TGLsizei; format: TGLenum; _type: TGLenum; const image: PGLvoid);  stdcall; external opengl32;
+procedure   glConvolutionParameterf(target: TGLenum; pname: TGLenum; params: TGLfloat);  stdcall; external opengl32;
+procedure   glConvolutionParameterfv(target: TGLenum; pname: TGLenum; const params: PGLfloat);  stdcall; external opengl32;
+procedure   glConvolutionParameteri(target: TGLenum; pname: TGLenum; params: TGLint);  stdcall; external opengl32;
+procedure   glConvolutionParameteriv(target: TGLenum; pname: TGLenum; const params: PGLint);  stdcall; external opengl32;
+procedure   glCopyConvolutionFilter1D(target: TGLenum; internalformat: TGLenum; x: TGLint; y: TGLint; width: TGLsizei);  stdcall; external opengl32;
+procedure   glCopyConvolutionFilter2D(target: TGLenum; internalformat: TGLenum; x: TGLint; y: TGLint; width: TGLsizei; height: TGLsizei);  stdcall; external opengl32;
+procedure   glGetConvolutionFilter(target: TGLenum; format: TGLenum; _type: TGLenum; image: PGLvoid);  stdcall; external opengl32;
+procedure   glGetConvolutionParameterfv(target: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall; external opengl32;
+procedure   glGetConvolutionParameteriv(target: TGLenum; pname: TGLenum; params: PGLint);  stdcall; external opengl32;
+procedure   glGetSeparableFilter(target: TGLenum; format: TGLenum; _type: TGLenum; row: PGLvoid; column: PGLvoid; span: PGLvoid);  stdcall; external opengl32;
+procedure   glSeparableFilter2D(target: TGLenum; internalformat: TGLenum; width: TGLsizei; height: TGLsizei; format: TGLenum; _type: TGLenum; const row: PGLvoid; const column: PGLvoid);  stdcall; external opengl32;
+procedure   glGetHistogram(target: TGLenum; reset: TGLboolean; format: TGLenum; _type: TGLenum; values: PGLvoid);  stdcall; external opengl32;
+procedure   glGetHistogramParameterfv(target: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall; external opengl32;
+procedure   glGetHistogramParameteriv(target: TGLenum; pname: TGLenum; params: PGLint);  stdcall; external opengl32;
+procedure   glGetMinmax(target: TGLenum; reset: TGLboolean; format: TGLenum; _type: TGLenum; values: PGLvoid);  stdcall; external opengl32;
+procedure   glGetMinmaxParameterfv(target: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall; external opengl32;
+procedure   glGetMinmaxParameteriv(target: TGLenum; pname: TGLenum; params: PGLint);  stdcall; external opengl32;
+procedure   glHistogram(target: TGLenum; width: TGLsizei; internalformat: TGLenum; sink: TGLboolean);  stdcall; external opengl32;
+procedure   glMinmax(target: TGLenum; internalformat: TGLenum; sink: TGLboolean);  stdcall; external opengl32;
+procedure   glResetHistogram(target: TGLenum);  stdcall; external opengl32;
+procedure   glResetMinmax(target: TGLenum);  stdcall; external opengl32;
+procedure   glTexImage3D(target: TGLenum; level: TGLint; internalformat: TGLint; width: TGLsizei; height: TGLsizei; depth: TGLsizei; border: TGLint; format: TGLenum; _type: TGLenum; const pixels: PGLvoid);  stdcall; external opengl32;
+procedure   glTexSubImage3D(target: TGLenum; level: TGLint; xoffset: TGLint; yoffset: TGLint; zoffset: TGLint; width: TGLsizei; height: TGLsizei; depth: TGLsizei; format: TGLenum; _type: TGLenum; const pixels: PGLvoid);  stdcall; external opengl32;
+procedure   glCopyTexSubImage3D(target: TGLenum; level: TGLint; xoffset: TGLint; yoffset: TGLint; zoffset: TGLint; x: TGLint; y: TGLint; width: TGLsizei; height: TGLsizei);  stdcall; external opengl32;
+
+// GL_VERSION_1_3
+procedure   glActiveTexture(texture: TGLenum);  stdcall; external opengl32;
+procedure   glClientActiveTexture(texture: TGLenum);  stdcall; external opengl32;
+procedure   glMultiTexCoord1d(target: TGLenum; s: TGLdouble);  stdcall; external opengl32;
+procedure   glMultiTexCoord1dv(target: TGLenum; const v: PGLdouble);  stdcall; external opengl32;
+procedure   glMultiTexCoord1f(target: TGLenum; s: TGLfloat);  stdcall; external opengl32;
+procedure   glMultiTexCoord1fv(target: TGLenum; const v: PGLfloat);  stdcall; external opengl32;
+procedure   glMultiTexCoord1i(target: TGLenum; s: TGLint);  stdcall; external opengl32;
+procedure   glMultiTexCoord1iv(target: TGLenum; const v: PGLint);  stdcall; external opengl32;
+procedure   glMultiTexCoord1s(target: TGLenum; s: TGLshort);  stdcall; external opengl32;
+procedure   glMultiTexCoord1sv(target: TGLenum; const v: PGLshort);  stdcall; external opengl32;
+procedure   glMultiTexCoord2d(target: TGLenum; s: TGLdouble; t: TGLdouble);  stdcall; external opengl32;
+procedure   glMultiTexCoord2dv(target: TGLenum; const v: PGLdouble);  stdcall; external opengl32;
+procedure   glMultiTexCoord2f(target: TGLenum; s: TGLfloat; t: TGLfloat);  stdcall; external opengl32;
+procedure   glMultiTexCoord2fv(target: TGLenum; const v: PGLfloat);  stdcall; external opengl32;
+procedure   glMultiTexCoord2i(target: TGLenum; s: TGLint; t: TGLint);  stdcall; external opengl32;
+procedure   glMultiTexCoord2iv(target: TGLenum; const v: PGLint);  stdcall; external opengl32;
+procedure   glMultiTexCoord2s(target: TGLenum; s: TGLshort; t: TGLshort);  stdcall; external opengl32;
+procedure   glMultiTexCoord2sv(target: TGLenum; const v: PGLshort);  stdcall; external opengl32;
+procedure   glMultiTexCoord3d(target: TGLenum; s: TGLdouble; t: TGLdouble; r: TGLdouble);  stdcall; external opengl32;
+procedure   glMultiTexCoord3dv(target: TGLenum; const v: PGLdouble);  stdcall; external opengl32;
+procedure   glMultiTexCoord3f(target: TGLenum; s: TGLfloat; t: TGLfloat; r: TGLfloat);  stdcall; external opengl32;
+procedure   glMultiTexCoord3fv(target: TGLenum; const v: PGLfloat);  stdcall; external opengl32;
+procedure   glMultiTexCoord3i(target: TGLenum; s: TGLint; t: TGLint; r: TGLint);  stdcall; external opengl32;
+procedure   glMultiTexCoord3iv(target: TGLenum; const v: PGLint);  stdcall; external opengl32;
+procedure   glMultiTexCoord3s(target: TGLenum; s: TGLshort; t: TGLshort; r: TGLshort);  stdcall; external opengl32;
+procedure   glMultiTexCoord3sv(target: TGLenum; const v: PGLshort);  stdcall; external opengl32;
+procedure   glMultiTexCoord4d(target: TGLenum; s: TGLdouble; t: TGLdouble; r: TGLdouble; q: TGLdouble);  stdcall; external opengl32;
+procedure   glMultiTexCoord4dv(target: TGLenum; const v: PGLdouble);  stdcall; external opengl32;
+procedure   glMultiTexCoord4f(target: TGLenum; s: TGLfloat; t: TGLfloat; r: TGLfloat; q: TGLfloat);  stdcall; external opengl32;
+procedure   glMultiTexCoord4fv(target: TGLenum; const v: PGLfloat);  stdcall; external opengl32;
+procedure   glMultiTexCoord4i(target: TGLenum; s: TGLint; t: TGLint; r: TGLint; q: TGLint);  stdcall; external opengl32;
+procedure   glMultiTexCoord4iv(target: TGLenum; const v: PGLint);  stdcall; external opengl32;
+procedure   glMultiTexCoord4s(target: TGLenum; s: TGLshort; t: TGLshort; r: TGLshort; q: TGLshort);  stdcall; external opengl32;
+procedure   glMultiTexCoord4sv(target: TGLenum; const v: PGLshort);  stdcall; external opengl32;
+procedure   glLoadTransposeMatrixf(const m: PGLfloat);  stdcall; external opengl32;
+procedure   glLoadTransposeMatrixd(const m: PGLdouble);  stdcall; external opengl32;
+procedure   glMultTransposeMatrixf(const m: PGLfloat);  stdcall; external opengl32;
+procedure   glMultTransposeMatrixd(const m: PGLdouble);  stdcall; external opengl32;
+procedure   glSampleCoverage(value: TGLclampf; invert: TGLboolean);  stdcall; external opengl32;
+procedure   glCompressedTexImage3D(target: TGLenum; level: TGLint; internalformat: TGLenum; width: TGLsizei; height: TGLsizei; depth: TGLsizei; border: TGLint; imageSize: TGLsizei; const data: PGLvoid);  stdcall; external opengl32;
+procedure   glCompressedTexImage2D(target: TGLenum; level: TGLint; internalformat: TGLenum; width: TGLsizei; height: TGLsizei; border: TGLint; imageSize: TGLsizei; const data: PGLvoid);  stdcall; external opengl32;
+procedure   glCompressedTexImage1D(target: TGLenum; level: TGLint; internalformat: TGLenum; width: TGLsizei; border: TGLint; imageSize: TGLsizei; const data: PGLvoid);  stdcall; external opengl32;
+procedure   glCompressedTexSubImage3D(target: TGLenum; level: TGLint; xoffset: TGLint; yoffset: TGLint; zoffset: TGLint; width: TGLsizei; height: TGLsizei; depth: TGLsizei; format: TGLenum; imageSize: TGLsizei; const data: PGLvoid);  stdcall; external opengl32;
+procedure   glCompressedTexSubImage2D(target: TGLenum; level: TGLint; xoffset: TGLint; yoffset: TGLint; width: TGLsizei; height: TGLsizei; format: TGLenum; imageSize: TGLsizei; const data: PGLvoid);  stdcall; external opengl32;
+procedure   glCompressedTexSubImage1D(target: TGLenum; level: TGLint; xoffset: TGLint; width: TGLsizei; format: TGLenum; imageSize: TGLsizei; const data: PGLvoid);  stdcall; external opengl32;
+procedure   glGetCompressedTexImage(target: TGLenum; level: TGLint; img: PGLvoid);  stdcall; external opengl32;
+
+// GL_VERSION_1_4
+procedure   glBlendFuncSeparate(sfactorRGB: TGLenum; dfactorRGB: TGLenum; sfactorAlpha: TGLenum; dfactorAlpha: TGLenum);  stdcall; external opengl32;
+procedure   glFogCoordf(coord: TGLfloat);  stdcall; external opengl32;
+procedure   glFogCoordfv(const coord: PGLfloat);  stdcall; external opengl32;
+procedure   glFogCoordd(coord: TGLdouble);  stdcall; external opengl32;
+procedure   glFogCoorddv(const coord: PGLdouble);  stdcall; external opengl32;
+procedure   glFogCoordPointer(_type: TGLenum; stride: TGLsizei; const _pointer: PGLvoid);  stdcall; external opengl32;
+procedure   glMultiDrawArrays(mode: TGLenum; first: PGLint; count: PGLsizei; primcount: TGLsizei);  stdcall; external opengl32;
+procedure   glMultiDrawElements(mode: TGLenum; const count: PGLsizei; _type: TGLenum; const indices: PGLvoid; primcount: TGLsizei);  stdcall; external opengl32;
+procedure   glPointParameterf(pname: TGLenum; param: TGLfloat);  stdcall; external opengl32;
+procedure   glPointParameterfv(pname: TGLenum; const params: PGLfloat);  stdcall; external opengl32;
+procedure   glPointParameteri(pname: TGLenum; param: TGLint);  stdcall; external opengl32;
+procedure   glPointParameteriv(pname: TGLenum; const params: PGLint);  stdcall; external opengl32;
+procedure   glSecondaryColor3b(red: TGLbyte; green: TGLbyte; blue: TGLbyte);  stdcall; external opengl32;
+procedure   glSecondaryColor3bv(const v: PGLbyte);  stdcall; external opengl32;
+procedure   glSecondaryColor3d(red: TGLdouble; green: TGLdouble; blue: TGLdouble);  stdcall; external opengl32;
+procedure   glSecondaryColor3dv(const v: PGLdouble);  stdcall; external opengl32;
+procedure   glSecondaryColor3f(red: TGLfloat; green: TGLfloat; blue: TGLfloat);  stdcall; external opengl32;
+procedure   glSecondaryColor3fv(const v: PGLfloat);  stdcall; external opengl32;
+procedure   glSecondaryColor3i(red: TGLint; green: TGLint; blue: TGLint);  stdcall; external opengl32;
+procedure   glSecondaryColor3iv(const v: PGLint);  stdcall; external opengl32;
+procedure   glSecondaryColor3s(red: TGLshort; green: TGLshort; blue: TGLshort);  stdcall; external opengl32;
+procedure   glSecondaryColor3sv(const v: PGLshort);  stdcall; external opengl32;
+procedure   glSecondaryColor3ub(red: TGLubyte; green: TGLubyte; blue: TGLubyte);  stdcall; external opengl32;
+procedure   glSecondaryColor3ubv(const v: PGLubyte);  stdcall; external opengl32;
+procedure   glSecondaryColor3ui(red: TGLuint; green: TGLuint; blue: TGLuint);  stdcall; external opengl32;
+procedure   glSecondaryColor3uiv(const v: PGLuint);  stdcall; external opengl32;
+procedure   glSecondaryColor3us(red: TGLushort; green: TGLushort; blue: TGLushort);  stdcall; external opengl32;
+procedure   glSecondaryColor3usv(const v: PGLushort);  stdcall; external opengl32;
+procedure   glSecondaryColorPointer(size: TGLint; _type: TGLenum; stride: TGLsizei; const _pointer: PGLvoid);  stdcall; external opengl32;
+procedure   glWindowPos2d(x: TGLdouble; y: TGLdouble);  stdcall; external opengl32;
+procedure   glWindowPos2dv(const v: PGLdouble);  stdcall; external opengl32;
+procedure   glWindowPos2f(x: TGLfloat; y: TGLfloat);  stdcall; external opengl32;
+procedure   glWindowPos2fv(const v: PGLfloat);  stdcall; external opengl32;
+procedure   glWindowPos2i(x: TGLint; y: TGLint);  stdcall; external opengl32;
+procedure   glWindowPos2iv(const v: PGLint);  stdcall; external opengl32;
+procedure   glWindowPos2s(x: TGLshort; y: TGLshort);  stdcall; external opengl32;
+procedure   glWindowPos2sv(const v: PGLshort);  stdcall; external opengl32;
+procedure   glWindowPos3d(x: TGLdouble; y: TGLdouble; z: TGLdouble);  stdcall; external opengl32;
+procedure   glWindowPos3dv(const v: PGLdouble);  stdcall; external opengl32;
+procedure   glWindowPos3f(x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall; external opengl32;
+procedure   glWindowPos3fv(const v: PGLfloat);  stdcall; external opengl32;
+procedure   glWindowPos3i(x: TGLint; y: TGLint; z: TGLint);  stdcall; external opengl32;
+procedure   glWindowPos3iv(const v: PGLint);  stdcall; external opengl32;
+procedure   glWindowPos3s(x: TGLshort; y: TGLshort; z: TGLshort);  stdcall; external opengl32;
+procedure   glWindowPos3sv(const v: PGLshort);  stdcall; external opengl32;
+
+// GL utility functions and procedures
+function    gluErrorString(errCode: TGLEnum): PChar;  stdcall; external glu32;
+function    gluGetString(name: TGLEnum): PChar;  stdcall; external glu32;
+procedure   gluOrtho2D(left, right, bottom, top: TGLdouble);  stdcall; external glu32;
+procedure   gluPerspective(fovy, aspect, zNear, zFar: TGLdouble);  stdcall; external glu32;
+procedure   gluPickMatrix(x, y, width, height: TGLdouble; viewport: TVector4i);  stdcall; external glu32;
+procedure   gluLookAt(eyex, eyey, eyez, centerx, centery, centerz, upx, upy, upz: TGLdouble);  stdcall; external glu32;
+function    gluProject(objx, objy, objz: TGLdouble; modelMatrix: TGLMatrixd4; projMatrix: TGLMatrixd4; viewport: TVector4i; winx, winy, winz: PGLdouble): TGLint;  stdcall; external glu32;
+function    gluUnProject(winx, winy, winz: TGLdouble; modelMatrix: TGLMatrixd4; projMatrix: TGLMatrixd4; viewport: TVector4i;   objx, objy, objz: PGLdouble): TGLint;  stdcall; external glu32;
+function    gluScaleImage(format: TGLEnum; widthin, heightin: TGLint; typein: TGLEnum; datain: Pointer; widthout, heightout: TGLint; typeout: TGLEnum; dataout: Pointer): TGLint;  stdcall; external glu32;
+function    gluBuild1DMipmaps(target: TGLEnum; components, width: TGLint; format, atype: TGLEnum; data: Pointer): TGLint;  stdcall; external glu32;
+function    gluBuild2DMipmaps(target: TGLEnum; components, width, height: TGLint; format, atype: TGLEnum; Data: Pointer): TGLint;  stdcall; external glu32;
+function    gluNewQuadric: PGLUquadric; stdcall; external glu32;
+procedure   gluDeleteQuadric(state: PGLUquadric);  stdcall; external glu32;
+procedure   gluQuadricNormals(quadObject: PGLUquadric; normals: TGLEnum);  stdcall; external glu32;
+procedure   gluQuadricTexture(quadObject: PGLUquadric; textureCoords: TGLboolean);  stdcall; external glu32;
+procedure   gluQuadricOrientation(quadObject: PGLUquadric; orientation: TGLEnum);  stdcall; external glu32;
+procedure   gluQuadricDrawStyle(quadObject: PGLUquadric; drawStyle: TGLEnum);  stdcall; external glu32;
+procedure   gluCylinder(quadObject: PGLUquadric; baseRadius, topRadius, height: TGLdouble; slices, stacks: TGLint);  stdcall; external glu32;
+procedure   gluDisk(quadObject: PGLUquadric; innerRadius, outerRadius: TGLdouble; slices, loops: TGLint);  stdcall; external glu32;
+procedure   gluPartialDisk(quadObject: PGLUquadric; innerRadius, outerRadius: TGLdouble; slices, loops: TGLint; startAngle, sweepAngle: TGLdouble);  stdcall; external glu32;
+procedure   gluSphere(quadObject: PGLUquadric; radius: TGLdouble; slices, stacks: TGLint);  stdcall; external glu32;
+procedure   gluQuadricCallback(quadObject: PGLUquadric; which: TGLEnum; fn: TGLUQuadricErrorProc);  stdcall; external glu32;
+function    gluNewTess: PGLUtesselator; stdcall; external glu32;
+procedure   gluDeleteTess(tess: PGLUtesselator);  stdcall; external glu32;
+procedure   gluTessBeginPolygon(tess: PGLUtesselator; polygon_data: Pointer);  stdcall; external glu32;
+procedure   gluTessBeginContour(tess: PGLUtesselator);  stdcall; external glu32;
+procedure   gluTessVertex(tess: PGLUtesselator; coords: TGLArrayd3; data: Pointer);  stdcall; external glu32;
+procedure   gluTessEndContour(tess: PGLUtesselator);  stdcall; external glu32;
+procedure   gluTessEndPolygon(tess: PGLUtesselator);  stdcall; external glu32;
+procedure   gluTessProperty(tess: PGLUtesselator; which: TGLEnum; value: TGLdouble);  stdcall; external glu32;
+procedure   gluTessNormal(tess: PGLUtesselator; x, y, z: TGLdouble);  stdcall; external glu32;
+procedure   gluTessCallback(tess: PGLUtesselator; which: TGLEnum; fn: Pointer);  stdcall; external glu32;
+procedure   gluGetTessProperty(tess: PGLUtesselator; which: TGLEnum; value: PGLdouble);  stdcall; external glu32;
+function    gluNewNurbsRenderer: PGLUnurbs; stdcall; external glu32;
+procedure   gluDeleteNurbsRenderer(nobj: PGLUnurbs);  stdcall; external glu32;
+procedure   gluBeginSurface(nobj: PGLUnurbs);  stdcall; external glu32;
+procedure   gluBeginCurve(nobj: PGLUnurbs);  stdcall; external glu32;
+procedure   gluEndCurve(nobj: PGLUnurbs);  stdcall; external glu32;
+procedure   gluEndSurface(nobj: PGLUnurbs);  stdcall; external glu32;
+procedure   gluBeginTrim(nobj: PGLUnurbs);  stdcall; external glu32;
+procedure   gluEndTrim(nobj: PGLUnurbs);  stdcall; external glu32;
+procedure   gluPwlCurve(nobj: PGLUnurbs; count: TGLint; points: PGLfloat; stride: TGLint; atype: TGLEnum);  stdcall; external glu32;
+procedure   gluNurbsCurve(nobj: PGLUnurbs; nknots: TGLint; knot: PGLfloat; stride: TGLint; ctlarray: PGLfloat; order: TGLint; atype: TGLEnum);  stdcall; external glu32;
+procedure   gluNurbsSurface(nobj: PGLUnurbs; sknot_count: TGLint; sknot: PGLfloat; tknot_count: TGLint; tknot: PGLfloat; s_stride, t_stride: TGLint; ctlarray: PGLfloat; sorder, torder: TGLint; atype: TGLEnum);  stdcall; external glu32;
+procedure   gluLoadSamplingMatrices(nobj: PGLUnurbs; modelMatrix, projMatrix: TGLMatrixf4; viewport: TVector4i);  stdcall; external glu32;
+procedure   gluNurbsProperty(nobj: PGLUnurbs; aproperty: TGLEnum; value: TGLfloat);  stdcall; external glu32;
+procedure   gluGetNurbsProperty(nobj: PGLUnurbs; aproperty: TGLEnum; value: PGLfloat);  stdcall; external glu32;
+procedure   gluNurbsCallback(nobj: PGLUnurbs; which: TGLEnum; fn: TGLUNurbsErrorProc);  stdcall; external glu32;
+procedure   gluBeginPolygon(tess: PGLUtesselator);  stdcall; external glu32;
+procedure   gluNextContour(tess: PGLUtesselator; atype: TGLEnum);  stdcall; external glu32;
+procedure   gluEndPolygon(tess: PGLUtesselator);  stdcall; external glu32;
+
+// window support functions
+function   wglGetProcAddress(ProcName: PChar): Pointer; stdcall; external opengl32;
+function   wglCopyContext(p1: HGLRC; p2: HGLRC; p3: Cardinal): BOOL; stdcall; external opengl32;
+function   wglCreateContext(DC: HDC): HGLRC; stdcall; external opengl32;
+function   wglCreateLayerContext(p1: HDC; p2: Integer): HGLRC; stdcall; external opengl32;
+function   wglDeleteContext(p1: HGLRC): BOOL; stdcall; external opengl32;
+function   wglDescribeLayerPlane(p1: HDC; p2, p3: Integer; p4: Cardinal; var p5: TLayerPlaneDescriptor): BOOL; stdcall; external opengl32;
+function   wglGetCurrentContext: HGLRC; stdcall; external opengl32;
+function   wglGetCurrentDC: HDC; stdcall; external opengl32;
+function   wglGetLayerPaletteEntries(p1: HDC; p2, p3, p4: Integer; var pcr): Integer; stdcall; external opengl32;
+function   wglMakeCurrent(DC: HDC; p2: HGLRC): BOOL; stdcall; external opengl32;
+function   wglRealizeLayerPalette(p1: HDC; p2: Integer; p3: BOOL): BOOL; stdcall; external opengl32;
+function   wglSetLayerPaletteEntries(p1: HDC; p2, p3, p4: Integer; var pcr): Integer; stdcall; external opengl32;
+function   wglShareLists(p1, p2: HGLRC): BOOL; stdcall; external opengl32;
+function   wglSwapLayerBuffers(p1: HDC; p2: Cardinal): BOOL; stdcall; external opengl32;
+function   wglSwapMultipleBuffers(p1: UINT; const p2: PWGLSwap): DWORD; stdcall; external opengl32;
+function   wglUseFontBitmapsA(DC: HDC; p2, p3, p4: DWORD): BOOL; stdcall; external opengl32;
+function   wglUseFontOutlinesA(p1: HDC; p2, p3, p4: DWORD; p5, p6: Single; p7: Integer; p8: PGlyphMetricsFloat): BOOL; stdcall; external opengl32;
+function   wglUseFontBitmapsW(DC: HDC; p2, p3, p4: DWORD): BOOL; stdcall; external opengl32;
+function   wglUseFontOutlinesW(p1: HDC; p2, p3, p4: DWORD; p5, p6: Single; p7: Integer; p8: PGlyphMetricsFloat): BOOL; stdcall; external opengl32;
+function   wglUseFontBitmaps(DC: HDC; p2, p3, p4: DWORD): BOOL; stdcall; external opengl32;
+function   wglUseFontOutlines(p1: HDC; p2, p3, p4: DWORD; p5, p6: Single; p7: Integer; p8: PGlyphMetricsFloat): BOOL; stdcall; external opengl32;
+
+var
+
+   // GL_3DFX_tbuffer
+   glTbufferMask3DFX: procedure(mask: TGLuint);  stdcall;
+
+   // GL_APPLE_element_array
+   glElementPointerAPPLE: procedure(_type: TGLenum; const _pointer: PGLvoid);  stdcall;
+   glDrawElementArrayAPPLE: procedure(mode: TGLenum; first: TGLint; count: TGLsizei);  stdcall;
+   glDrawRangeElementArrayAPPLE: procedure(mode: TGLenum; start: TGLuint; _end: TGLuint; first: TGLint; count: TGLsizei);  stdcall;
+   glMultiDrawElementArrayAPPLE: procedure(mode: TGLenum; const first: PGLint; const count: PGLsizei; primcount: TGLsizei);  stdcall;
+   glMultiDrawRangeElementArrayAPPLE: procedure(mode: TGLenum; start: TGLuint; _end: TGLuint; const first: PGLint; const count: PGLsizei; primcount: TGLsizei);  stdcall;
+
+   // GL_APPLE_fence
+   glGenFencesAPPLE: procedure(n: TGLsizei; fences: PGLuint);  stdcall;
+   glDeleteFencesAPPLE: procedure(n: TGLsizei; const fences: PGLuint);  stdcall;
+   glSetFenceAPPLE: procedure(fence: TGLuint);  stdcall;
+   glIsFenceAPPLE: function(fence: TGLuint): TGLboolean;  stdcall;
+   glTestFenceAPPLE: function(fence: TGLuint): TGLboolean;  stdcall;
+   glFinishFenceAPPLE: procedure(fence: TGLuint);  stdcall;
+   glTestObjectAPPLE: function(_object: TGLenum; name: TGLuint): TGLboolean;  stdcall;
+   glFinishObjectAPPLE: procedure(_object: TGLenum; name: TGLint);  stdcall;
+
+   // GL_APPLE_vertex_array_object
+   glBindVertexArrayAPPLE: procedure(_array: TGLuint);  stdcall;
+   glDeleteVertexArraysAPPLE: procedure(n: TGLsizei; const arrays: PGLuint);  stdcall;
+   glGenVertexArraysAPPLE: procedure(n: TGLsizei; const arrays: PGLuint);  stdcall;
+   glIsVertexArrayAPPLE: function(_array: TGLuint): TGLboolean;  stdcall;
+
+   // GL_APPLE_vertex_array_range
+   glVertexArrayRangeAPPLE: procedure(length: TGLsizei; _pointer: PGLvoid);  stdcall;
+   glFlushVertexArrayRangeAPPLE: procedure(length: TGLsizei; _pointer: PGLvoid);  stdcall;
+   glVertexArrayParameteriAPPLE: procedure(pname: TGLenum; param: TGLint);  stdcall;
+
+   // GL_ARB_matrix_palette
+   glCurrentPaletteMatrixARB: procedure(index: TGLint);  stdcall;
+   glMatrixIndexubvARB: procedure(size: TGLint; const indices: PGLubyte);  stdcall;
+   glMatrixIndexusvARB: procedure(size: TGLint; const indices: PGLushort);  stdcall;
+   glMatrixIndexuivARB: procedure(size: TGLint; const indices: PGLuint);  stdcall;
+   glMatrixIndexPointerARB: procedure(size: TGLint; _type: TGLenum; stride: TGLsizei; const _pointer: PGLvoid);  stdcall;
+
+   // GL_ARB_multisample
+   glSampleCoverageARB: procedure(value: TGLclampf; invert: TGLboolean);  stdcall;
+
+   // GL_ARB_multitexture
+   glActiveTextureARB: procedure(texture: TGLenum);  stdcall;
+   glClientActiveTextureARB: procedure(texture: TGLenum);  stdcall;
+   glMultiTexCoord1dARB: procedure(target: TGLenum; s: TGLdouble);  stdcall;
+   glMultiTexCoord1dvARB: procedure(target: TGLenum; const v: PGLdouble);  stdcall;
+   glMultiTexCoord1fARB: procedure(target: TGLenum; s: TGLfloat);  stdcall;
+   glMultiTexCoord1fvARB: procedure(target: TGLenum; const v: PGLfloat);  stdcall;
+   glMultiTexCoord1iARB: procedure(target: TGLenum; s: TGLint);  stdcall;
+   glMultiTexCoord1ivARB: procedure(target: TGLenum; const v: PGLint);  stdcall;
+   glMultiTexCoord1sARB: procedure(target: TGLenum; s: TGLshort);  stdcall;
+   glMultiTexCoord1svARB: procedure(target: TGLenum; const v: PGLshort);  stdcall;
+   glMultiTexCoord2dARB: procedure(target: TGLenum; s: TGLdouble; t: TGLdouble);  stdcall;
+   glMultiTexCoord2dvARB: procedure(target: TGLenum; const v: PGLdouble);  stdcall;
+   glMultiTexCoord2fARB: procedure(target: TGLenum; s: TGLfloat; t: TGLfloat);  stdcall;
+   glMultiTexCoord2fvARB: procedure(target: TGLenum; const v: PGLfloat);  stdcall;
+   glMultiTexCoord2iARB: procedure(target: TGLenum; s: TGLint; t: TGLint);  stdcall;
+   glMultiTexCoord2ivARB: procedure(target: TGLenum; const v: PGLint);  stdcall;
+   glMultiTexCoord2sARB: procedure(target: TGLenum; s: TGLshort; t: TGLshort);  stdcall;
+   glMultiTexCoord2svARB: procedure(target: TGLenum; const v: PGLshort);  stdcall;
+   glMultiTexCoord3dARB: procedure(target: TGLenum; s: TGLdouble; t: TGLdouble; r: TGLdouble);  stdcall;
+   glMultiTexCoord3dvARB: procedure(target: TGLenum; const v: PGLdouble);  stdcall;
+   glMultiTexCoord3fARB: procedure(target: TGLenum; s: TGLfloat; t: TGLfloat; r: TGLfloat);  stdcall;
+   glMultiTexCoord3fvARB: procedure(target: TGLenum; const v: PGLfloat);  stdcall;
+   glMultiTexCoord3iARB: procedure(target: TGLenum; s: TGLint; t: TGLint; r: TGLint);  stdcall;
+   glMultiTexCoord3ivARB: procedure(target: TGLenum; const v: PGLint);  stdcall;
+   glMultiTexCoord3sARB: procedure(target: TGLenum; s: TGLshort; t: TGLshort; r: TGLshort);  stdcall;
+   glMultiTexCoord3svARB: procedure(target: TGLenum; const v: PGLshort);  stdcall;
+   glMultiTexCoord4dARB: procedure(target: TGLenum; s: TGLdouble; t: TGLdouble; r: TGLdouble; q: TGLdouble);  stdcall;
+   glMultiTexCoord4dvARB: procedure(target: TGLenum; const v: PGLdouble);  stdcall;
+   glMultiTexCoord4fARB: procedure(target: TGLenum; s: TGLfloat; t: TGLfloat; r: TGLfloat; q: TGLfloat);  stdcall;
+   glMultiTexCoord4fvARB: procedure(target: TGLenum; const v: PGLfloat);  stdcall;
+   glMultiTexCoord4iARB: procedure(target: TGLenum; s: TGLint; t: TGLint; r: TGLint; q: TGLint);  stdcall;
+   glMultiTexCoord4ivARB: procedure(target: TGLenum; const v: PGLint);  stdcall;
+   glMultiTexCoord4sARB: procedure(target: TGLenum; s: TGLshort; t: TGLshort; r: TGLshort; q: TGLshort);  stdcall;
+   glMultiTexCoord4svARB: procedure(target: TGLenum; const v: PGLshort);  stdcall;
+
+   // GL_ARB_point_parameters
+   glPointParameterfARB: procedure(pname: TGLenum; param: TGLfloat);  stdcall;
+   glPointParameterfvARB: procedure(pname: TGLenum; const params: PGLfloat);  stdcall;
+
+   // GL_ARB_texture_compression
+   glCompressedTexImage3DARB: procedure(target: TGLenum; level: TGLint; internalformat: TGLenum; width: TGLsizei; height: TGLsizei; depth: TGLsizei; border: TGLint; imageSize: TGLsizei; const data: PGLvoid);  stdcall;
+   glCompressedTexImage2DARB: procedure(target: TGLenum; level: TGLint; internalformat: TGLenum; width: TGLsizei; height: TGLsizei; border: TGLint; imageSize: TGLsizei; const data: PGLvoid);  stdcall;
+   glCompressedTexImage1DARB: procedure(target: TGLenum; level: TGLint; internalformat: TGLenum; width: TGLsizei; border: TGLint; imageSize: TGLsizei; const data: PGLvoid);  stdcall;
+   glCompressedTexSubImage3DARB: procedure(target: TGLenum; level: TGLint; xoffset: TGLint; yoffset: TGLint; zoffset: TGLint; width: TGLsizei; height: TGLsizei; depth: TGLsizei; format: TGLenum; imageSize: TGLsizei; const data: PGLvoid);  stdcall;
+   glCompressedTexSubImage2DARB: procedure(target: TGLenum; level: TGLint; xoffset: TGLint; yoffset: TGLint; width: TGLsizei; height: TGLsizei; format: TGLenum; imageSize: TGLsizei; const data: PGLvoid);  stdcall;
+   glCompressedTexSubImage1DARB: procedure(target: TGLenum; level: TGLint; xoffset: TGLint; width: TGLsizei; format: TGLenum; imageSize: TGLsizei; const data: PGLvoid);  stdcall;
+   glGetCompressedTexImageARB: procedure(target: TGLenum; level: TGLint; img: PGLvoid);  stdcall;
+
+   // GL_ARB_transpose_matrix
+   glLoadTransposeMatrixfARB: procedure(const m: PGLfloat);  stdcall;
+   glLoadTransposeMatrixdARB: procedure(const m: PGLdouble);  stdcall;
+   glMultTransposeMatrixfARB: procedure(const m: PGLfloat);  stdcall;
+   glMultTransposeMatrixdARB: procedure(const m: PGLdouble);  stdcall;
+
+   // GL_ARB_vertex_blend
+   glWeightbvARB: procedure(size: TGLint; const weights: PGLbyte);  stdcall;
+   glWeightsvARB: procedure(size: TGLint; const weights: PGLshort);  stdcall;
+   glWeightivARB: procedure(size: TGLint; const weights: PGLint);  stdcall;
+   glWeightfvARB: procedure(size: TGLint; const weights: PGLfloat);  stdcall;
+   glWeightdvARB: procedure(size: TGLint; const weights: PGLdouble);  stdcall;
+   glWeightubvARB: procedure(size: TGLint; const weights: PGLubyte);  stdcall;
+   glWeightusvARB: procedure(size: TGLint; const weights: PGLushort);  stdcall;
+   glWeightuivARB: procedure(size: TGLint; const weights: PGLuint);  stdcall;
+   glWeightPointerARB: procedure(size: TGLint; _type: TGLenum; stride: TGLsizei; const _pointer: PGLvoid);  stdcall;
+   glVertexBlendARB: procedure(count: TGLint);  stdcall;
+
+   // GL_ARB_vertex_buffer_object
+   glBindBufferARB: procedure(target: TGLenum; buffer: TGLuint);  stdcall;
+   glDeleteBuffersARB: procedure(n: TGLsizei; const buffers: PGLuint);  stdcall;
+   glGenBuffersARB: procedure(n: TGLsizei; buffers: PGLuint);  stdcall;
+   glIsBufferARB: function(buffer: TGLuint): TGLboolean;  stdcall;
+   glBufferDataARB: procedure(target: TGLenum; size: TGLsizei; const data: PGLvoid; usage: TGLenum);  stdcall;
+   glBufferSubDataARB: procedure(target: TGLenum; offset: TGLsizei; size: TGLsizei; const data: PGLvoid);  stdcall;
+   glGetBufferSubDataARB: procedure(target: TGLenum; offset: TGLsizei; size: TGLsizei; data: PGLvoid);  stdcall;
+   glMapBufferARB: function(target: TGLenum; access: TGLenum): PGLvoid;  stdcall;
+   glUnmapBufferARB: function(target: TGLenum): TGLboolean;  stdcall;
+   glGetBufferParameterivARB: procedure(target: TGLenum; pname: TGLenum; params: PGLint);  stdcall;
+   glGetBufferPointervARB: procedure(target: TGLenum; pname: TGLenum; params: PGLvoid);  stdcall;
+
+   // ARB less version fo GL 1.5
+   glBindBuffer: procedure(target: TGLenum; buffer: TGLuint);  stdcall;
+   glDeleteBuffers: procedure(n: TGLsizei; const buffers: PGLuint);  stdcall;
+   glGenBuffers: procedure(n: TGLsizei; buffers: PGLuint);  stdcall;
+   glIsBuffer: function(buffer: TGLuint): TGLboolean;  stdcall;
+   glBufferData: procedure(target: TGLenum; size: TGLsizei; const data: PGLvoid; usage: TGLenum);  stdcall;
+   glBufferSubData: procedure(target: TGLenum; offset: TGLsizei; size: TGLsizei; const data: PGLvoid);  stdcall;
+   glGetBufferSubData: procedure(target: TGLenum; offset: TGLsizei; size: TGLsizei; data: PGLvoid);  stdcall;
+   glMapBuffer: function(target: TGLenum; access: TGLenum): PGLvoid;  stdcall;
+   glUnmapBuffer: function(target: TGLenum): TGLboolean;  stdcall;
+   glGetBufferParameteriv: procedure(target: TGLenum; pname: TGLenum; params: PGLint);  stdcall;
+   glGetBufferPointerv: procedure(target: TGLenum; pname: TGLenum; params: PGLvoid);  stdcall;
+
+   // GL_ARB_vertex_program
+   glVertexAttrib1dARB: procedure(index: TGLuint; x: TGLdouble);  stdcall;
+   glVertexAttrib1dvARB: procedure(index: TGLuint; const v: PGLdouble);  stdcall;
+   glVertexAttrib1fARB: procedure(index: TGLuint; x: TGLfloat);  stdcall;
+   glVertexAttrib1fvARB: procedure(index: TGLuint; const v: PGLfloat);  stdcall;
+   glVertexAttrib1sARB: procedure(index: TGLuint; x: TGLshort);  stdcall;
+   glVertexAttrib1svARB: procedure(index: TGLuint; const v: PGLshort);  stdcall;
+   glVertexAttrib2dARB: procedure(index: TGLuint; x: TGLdouble; y: TGLdouble);  stdcall;
+   glVertexAttrib2dvARB: procedure(index: TGLuint; const v: PGLdouble);  stdcall;
+   glVertexAttrib2fARB: procedure(index: TGLuint; x: TGLfloat; y: TGLfloat);  stdcall;
+   glVertexAttrib2fvARB: procedure(index: TGLuint; const v: PGLfloat);  stdcall;
+   glVertexAttrib2sARB: procedure(index: TGLuint; x: TGLshort; y: TGLshort);  stdcall;
+   glVertexAttrib2svARB: procedure(index: TGLuint; const v: PGLshort);  stdcall;
+   glVertexAttrib3dARB: procedure(index: TGLuint; x: TGLdouble; y: TGLdouble; z: TGLdouble);  stdcall;
+   glVertexAttrib3dvARB: procedure(index: TGLuint; const v: PGLdouble);  stdcall;
+   glVertexAttrib3fARB: procedure(index: TGLuint; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glVertexAttrib3fvARB: procedure(index: TGLuint; const v: PGLfloat);  stdcall;
+   glVertexAttrib3sARB: procedure(index: TGLuint; x: TGLshort; y: TGLshort; z: TGLshort);  stdcall;
+   glVertexAttrib3svARB: procedure(index: TGLuint; const v: PGLshort);  stdcall;
+   glVertexAttrib4NbvARB: procedure(index: TGLuint; const v: PGLbyte);  stdcall;
+   glVertexAttrib4NivARB: procedure(index: TGLuint; const v: PGLint);  stdcall;
+   glVertexAttrib4NsvARB: procedure(index: TGLuint; const v: PGLshort);  stdcall;
+   glVertexAttrib4NubARB: procedure(index: TGLuint; x: TGLubyte; y: TGLubyte; z: TGLubyte; w: TGLubyte);  stdcall;
+   glVertexAttrib4NubvARB: procedure(index: TGLuint; const v: PGLubyte);  stdcall;
+   glVertexAttrib4NuivARB: procedure(index: TGLuint; const v: PGLuint);  stdcall;
+   glVertexAttrib4NusvARB: procedure(index: TGLuint; const v: PGLushort);  stdcall;
+   glVertexAttrib4bvARB: procedure(index: TGLuint; const v: PGLbyte);  stdcall;
+   glVertexAttrib4dARB: procedure(index: TGLuint; x: TGLdouble; y: TGLdouble; z: TGLdouble; w: TGLdouble);  stdcall;
+   glVertexAttrib4dvARB: procedure(index: TGLuint; const v: PGLdouble);  stdcall;
+   glVertexAttrib4fARB: procedure(index: TGLuint; x: TGLfloat; y: TGLfloat; z: TGLfloat; w: TGLfloat);  stdcall;
+   glVertexAttrib4fvARB: procedure(index: TGLuint; const v: PGLfloat);  stdcall;
+   glVertexAttrib4ivARB: procedure(index: TGLuint; const v: PGLint);  stdcall;
+   glVertexAttrib4sARB: procedure(index: TGLuint; x: TGLshort; y: TGLshort; z: TGLshort; w: TGLshort);  stdcall;
+   glVertexAttrib4svARB: procedure(index: TGLuint; const v: PGLshort);  stdcall;
+   glVertexAttrib4ubvARB: procedure(index: TGLuint; const v: PGLubyte);  stdcall;
+   glVertexAttrib4uivARB: procedure(index: TGLuint; const v: PGLuint);  stdcall;
+   glVertexAttrib4usvARB: procedure(index: TGLuint; const v: PGLushort);  stdcall;
+   glVertexAttribPointerARB: procedure(index: TGLuint; size: TGLint; _type: TGLenum; normalized: TGLboolean; stride: TGLsizei; const _pointer: PGLvoid);  stdcall;
+   glEnableVertexAttribArrayARB: procedure(index: TGLuint);  stdcall;
+   glDisableVertexAttribArrayARB: procedure(index: TGLuint);  stdcall;
+   glProgramStringARB: procedure(target: TGLenum; format: TGLenum; len: TGLsizei; const _string: PGLvoid);  stdcall;
+   glBindProgramARB: procedure(target: TGLenum; _program: TGLuint);  stdcall;
+   glDeleteProgramsARB: procedure(n: TGLsizei; const programs: PGLuint);  stdcall;
+   glGenProgramsARB: procedure(n: TGLsizei; programs: PGLuint);  stdcall;
+   glProgramEnvParameter4dARB: procedure(target: TGLenum; index: TGLuint; x: TGLdouble; y: TGLdouble; z: TGLdouble; w: TGLdouble);  stdcall;
+   glProgramEnvParameter4dvARB: procedure(target: TGLenum; index: TGLuint; const params: PGLdouble);  stdcall;
+   glProgramEnvParameter4fARB: procedure(target: TGLenum; index: TGLuint; x: TGLfloat; y: TGLfloat; z: TGLfloat; w: TGLfloat);  stdcall;
+   glProgramEnvParameter4fvARB: procedure(target: TGLenum; index: TGLuint; const params: PGLfloat);  stdcall;
+   glProgramLocalParameter4dARB: procedure(target: TGLenum; index: TGLuint; x: TGLdouble; y: TGLdouble; z: TGLdouble; w: TGLdouble);  stdcall;
+   glProgramLocalParameter4dvARB: procedure(target: TGLenum; index: TGLuint; const params: PGLdouble);  stdcall;
+   glProgramLocalParameter4fARB: procedure(target: TGLenum; index: TGLuint; x: TGLfloat; y: TGLfloat; z: TGLfloat; w: TGLfloat);  stdcall;
+   glProgramLocalParameter4fvARB: procedure(target: TGLenum; index: TGLuint; const params: PGLfloat);  stdcall;
+   glGetProgramEnvParameterdvARB: procedure(target: TGLenum; index: TGLuint; params: PGLdouble);  stdcall;
+   glGetProgramEnvParameterfvARB: procedure(target: TGLenum; index: TGLuint; params: PGLfloat);  stdcall;
+   glGetProgramLocalParameterdvARB: procedure(target: TGLenum; index: TGLuint; params: PGLdouble);  stdcall;
+   glGetProgramLocalParameterfvARB: procedure(target: TGLenum; index: TGLuint; params: PGLfloat);  stdcall;
+   glGetProgramivARB: procedure(target: TGLenum; pname: TGLenum; params: PGLint);  stdcall;
+   glGetProgramStringARB: procedure(target: TGLenum; pname: TGLenum; _string: PGLvoid);  stdcall;
+   glGetVertexAttribdvARB: procedure(index: TGLuint; pname: TGLenum; params: PGLdouble);  stdcall;
+   glGetVertexAttribfvARB: procedure(index: TGLuint; pname: TGLenum; params: PGLfloat);  stdcall;
+   glGetVertexAttribivARB: procedure(index: TGLuint; pname: TGLenum; params: PGLint);  stdcall;
+   glGetVertexAttribPointervARB: procedure(index: TGLuint; pname: TGLenum; _pointer: PGLvoid);  stdcall;
+   glIsProgramARB: function(_program: TGLuint): TGLboolean;  stdcall;
+
+   // GL_ARB_window_pos
+   glWindowPos2dARB: procedure(x: TGLdouble; y: TGLdouble);  stdcall;
+   glWindowPos2dvARB: procedure(const v: PGLdouble);  stdcall;
+   glWindowPos2fARB: procedure(x: TGLfloat; y: TGLfloat);  stdcall;
+   glWindowPos2fvARB: procedure(const v: PGLfloat);  stdcall;
+   glWindowPos2iARB: procedure(x: TGLint; y: TGLint);  stdcall;
+   glWindowPos2ivARB: procedure(const v: PGLint);  stdcall;
+   glWindowPos2sARB: procedure(x: TGLshort; y: TGLshort);  stdcall;
+   glWindowPos2svARB: procedure(const v: PGLshort);  stdcall;
+   glWindowPos3dARB: procedure(x: TGLdouble; y: TGLdouble; z: TGLdouble);  stdcall;
+   glWindowPos3dvARB: procedure(const v: PGLdouble);  stdcall;
+   glWindowPos3fARB: procedure(x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glWindowPos3fvARB: procedure(const v: PGLfloat);  stdcall;
+   glWindowPos3iARB: procedure(x: TGLint; y: TGLint; z: TGLint);  stdcall;
+   glWindowPos3ivARB: procedure(const v: PGLint);  stdcall;
+   glWindowPos3sARB: procedure(x: TGLshort; y: TGLshort; z: TGLshort);  stdcall;
+   glWindowPos3svARB: procedure(const v: PGLshort);  stdcall;
+
+   // GL_ATI_draw_buffers
+   glDrawBuffersATI: procedure(n: TGLsizei; const bufs: PGLenum);  stdcall;
+
+   // GL_ATI_element_array
+   glElementPointerATI: procedure(_type: TGLenum; const _pointer: PGLvoid);  stdcall;
+   glDrawElementArrayATI: procedure(mode: TGLenum; count: TGLsizei);  stdcall;
+   glDrawRangeElementArrayATI: procedure(mode: TGLenum; start: TGLuint; _end: TGLuint; count: TGLsizei);  stdcall;
+
+   // GL_ATI_envmap_bumpmap
+   glTexBumpParameterivATI: procedure(pname: TGLenum; const param: PGLint);  stdcall;
+   glTexBumpParameterfvATI: procedure(pname: TGLenum; const param: PGLfloat);  stdcall;
+   glGetTexBumpParameterivATI: procedure(pname: TGLenum; param: PGLint);  stdcall;
+   glGetTexBumpParameterfvATI: procedure(pname: TGLenum; param: PGLfloat);  stdcall;
+
+   // GL_ATI_fragment_shader
+   glGenFragmentShadersATI: function(range: TGLuint): TGLuint;  stdcall;
+   glBindFragmentShaderATI: procedure(id: TGLuint);  stdcall;
+   glDeleteFragmentShaderATI: procedure(id: TGLuint);  stdcall;
+   glBeginFragmentShaderATI: procedure();  stdcall;
+   glEndFragmentShaderATI: procedure();  stdcall;
+   glPassTexCoordATI: procedure(dst: TGLuint; coord: TGLuint; swizzle: TGLenum);  stdcall;
+   glSampleMapATI: procedure(dst: TGLuint; interp: TGLuint; swizzle: TGLenum);  stdcall;
+   glColorFragmentOp1ATI: procedure(op: TGLenum; dst: TGLuint; dstMask: TGLuint; dstMod: TGLuint; arg1: TGLuint; arg1Rep: TGLuint; arg1Mod: TGLuint);  stdcall;
+   glColorFragmentOp2ATI: procedure(op: TGLenum; dst: TGLuint; dstMask: TGLuint; dstMod: TGLuint; arg1: TGLuint; arg1Rep: TGLuint; arg1Mod: TGLuint; arg2: TGLuint; arg2Rep: TGLuint; arg2Mod: TGLuint);  stdcall;
+   glColorFragmentOp3ATI: procedure(op: TGLenum; dst: TGLuint; dstMask: TGLuint; dstMod: TGLuint; arg1: TGLuint; arg1Rep: TGLuint; arg1Mod: TGLuint; arg2: TGLuint; arg2Rep: TGLuint; arg2Mod: TGLuint; arg3: TGLuint; arg3Rep: TGLuint; arg3Mod: TGLuint);  stdcall;
+   glAlphaFragmentOp1ATI: procedure(op: TGLenum; dst: TGLuint; dstMod: TGLuint; arg1: TGLuint; arg1Rep: TGLuint; arg1Mod: TGLuint);  stdcall;
+   glAlphaFragmentOp2ATI: procedure(op: TGLenum; dst: TGLuint; dstMod: TGLuint; arg1: TGLuint; arg1Rep: TGLuint; arg1Mod: TGLuint; arg2: TGLuint; arg2Rep: TGLuint; arg2Mod: TGLuint);  stdcall;
+   glAlphaFragmentOp3ATI: procedure(op: TGLenum; dst: TGLuint; dstMod: TGLuint; arg1: TGLuint; arg1Rep: TGLuint; arg1Mod: TGLuint; arg2: TGLuint; arg2Rep: TGLuint; arg2Mod: TGLuint; arg3: TGLuint; arg3Rep: TGLuint; arg3Mod: TGLuint);  stdcall;
+   glSetFragmentShaderConstantATI: procedure(dst: TGLuint; const value: PGLfloat);  stdcall;
+
+   // GL_ATI_map_object_buffer
+   glMapObjectBufferATI: function(buffer: TGLuint): PGLvoid;  stdcall;
+   glUnmapObjectBufferATI: procedure(buffer: TGLuint);  stdcall;
+
+   // GL_ATI_pn_triangles
+   glPNTrianglesiATI: procedure(pname: TGLenum; param: TGLint);  stdcall;
+   glPNTrianglesfATI: procedure(pname: TGLenum; param: TGLfloat);  stdcall;
+
+   // GL_ATI_separate_stencil
+   glStencilOpSeparateATI: procedure(face: TGLenum; sfail: TGLenum; dpfail: TGLenum; dppass: TGLenum);  stdcall;
+   glStencilFuncSeparateATI: procedure(frontfunc: TGLenum; backfunc: TGLenum; ref: TGLint; mask: TGLuint);  stdcall;
+
+   // GL_ATI_vertex_array_object
+   glNewObjectBufferATI: function(size: TGLsizei; const _pointer: PGLvoid; usage: TGLenum): TGLuint;  stdcall;
+   glIsObjectBufferATI: function(buffer: TGLuint): TGLboolean;  stdcall;
+   glUpdateObjectBufferATI: procedure(buffer: TGLuint; offset: TGLuint; size: TGLsizei; const _pointer: PGLvoid; preserve: TGLenum);  stdcall;
+   glGetObjectBufferfvATI: procedure(buffer: TGLuint; pname: TGLenum; params: PGLfloat);  stdcall;
+   glGetObjectBufferivATI: procedure(buffer: TGLuint; pname: TGLenum; params: PGLint);  stdcall;
+   glFreeObjectBufferATI: procedure(buffer: TGLuint);  stdcall;
+   glArrayObjectATI: procedure(_array: TGLenum; size: TGLint; _type: TGLenum; stride: TGLsizei; buffer: TGLuint; offset: TGLuint);  stdcall;
+   glGetArrayObjectfvATI: procedure(_array: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall;
+   glGetArrayObjectivATI: procedure(_array: TGLenum; pname: TGLenum; params: PGLint);  stdcall;
+   glVariantArrayObjectATI: procedure(id: TGLuint; _type: TGLenum; stride: TGLsizei; buffer: TGLuint; offset: TGLuint);  stdcall;
+   glGetVariantArrayObjectfvATI: procedure(id: TGLuint; pname: TGLenum; params: PGLfloat);  stdcall;
+   glGetVariantArrayObjectivATI: procedure(id: TGLuint; pname: TGLenum; params: PGLint);  stdcall;
+
+   // GL_ATI_vertex_attrib_array_object
+   glVertexAttribArrayObjectATI: procedure(index: TGLuint; size: TGLint; _type: TGLenum; normalized: TGLboolean; stride: TGLsizei; buffer: TGLuint; offset: TGLuint);  stdcall;
+   glGetVertexAttribArrayObjectfvATI: procedure(index: TGLuint; pname: TGLenum; params: PGLfloat);  stdcall;
+   glGetVertexAttribArrayObjectivATI: procedure(index: TGLuint; pname: TGLenum; params: PGLint);  stdcall;
+
+   // GL_ATI_vertex_streams
+   glVertexStream1sATI: procedure(stream: TGLenum; x: TGLshort);  stdcall;
+   glVertexStream1svATI: procedure(stream: TGLenum; const coords: PGLshort);  stdcall;
+   glVertexStream1iATI: procedure(stream: TGLenum; x: TGLint);  stdcall;
+   glVertexStream1ivATI: procedure(stream: TGLenum; const coords: PGLint);  stdcall;
+   glVertexStream1fATI: procedure(stream: TGLenum; x: TGLfloat);  stdcall;
+   glVertexStream1fvATI: procedure(stream: TGLenum; const coords: PGLfloat);  stdcall;
+   glVertexStream1dATI: procedure(stream: TGLenum; x: TGLdouble);  stdcall;
+   glVertexStream1dvATI: procedure(stream: TGLenum; const coords: PGLdouble);  stdcall;
+   glVertexStream2sATI: procedure(stream: TGLenum; x: TGLshort; y: TGLshort);  stdcall;
+   glVertexStream2svATI: procedure(stream: TGLenum; const coords: PGLshort);  stdcall;
+   glVertexStream2iATI: procedure(stream: TGLenum; x: TGLint; y: TGLint);  stdcall;
+   glVertexStream2ivATI: procedure(stream: TGLenum; const coords: PGLint);  stdcall;
+   glVertexStream2fATI: procedure(stream: TGLenum; x: TGLfloat; y: TGLfloat);  stdcall;
+   glVertexStream2fvATI: procedure(stream: TGLenum; const coords: PGLfloat);  stdcall;
+   glVertexStream2dATI: procedure(stream: TGLenum; x: TGLdouble; y: TGLdouble);  stdcall;
+   glVertexStream2dvATI: procedure(stream: TGLenum; const coords: PGLdouble);  stdcall;
+   glVertexStream3sATI: procedure(stream: TGLenum; x: TGLshort; y: TGLshort; z: TGLshort);  stdcall;
+   glVertexStream3svATI: procedure(stream: TGLenum; const coords: PGLshort);  stdcall;
+   glVertexStream3iATI: procedure(stream: TGLenum; x: TGLint; y: TGLint; z: TGLint);  stdcall;
+   glVertexStream3ivATI: procedure(stream: TGLenum; const coords: PGLint);  stdcall;
+   glVertexStream3fATI: procedure(stream: TGLenum; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glVertexStream3fvATI: procedure(stream: TGLenum; const coords: PGLfloat);  stdcall;
+   glVertexStream3dATI: procedure(stream: TGLenum; x: TGLdouble; y: TGLdouble; z: TGLdouble);  stdcall;
+   glVertexStream3dvATI: procedure(stream: TGLenum; const coords: PGLdouble);  stdcall;
+   glVertexStream4sATI: procedure(stream: TGLenum; x: TGLshort; y: TGLshort; z: TGLshort; w: TGLshort);  stdcall;
+   glVertexStream4svATI: procedure(stream: TGLenum; const coords: PGLshort);  stdcall;
+   glVertexStream4iATI: procedure(stream: TGLenum; x: TGLint; y: TGLint; z: TGLint; w: TGLint);  stdcall;
+   glVertexStream4ivATI: procedure(stream: TGLenum; const coords: PGLint);  stdcall;
+   glVertexStream4fATI: procedure(stream: TGLenum; x: TGLfloat; y: TGLfloat; z: TGLfloat; w: TGLfloat);  stdcall;
+   glVertexStream4fvATI: procedure(stream: TGLenum; const coords: PGLfloat);  stdcall;
+   glVertexStream4dATI: procedure(stream: TGLenum; x: TGLdouble; y: TGLdouble; z: TGLdouble; w: TGLdouble);  stdcall;
+   glVertexStream4dvATI: procedure(stream: TGLenum; const coords: PGLdouble);  stdcall;
+   glNormalStream3bATI: procedure(stream: TGLenum; nx: TGLbyte; ny: TGLbyte; nz: TGLbyte);  stdcall;
+   glNormalStream3bvATI: procedure(stream: TGLenum; const coords: PGLbyte);  stdcall;
+   glNormalStream3sATI: procedure(stream: TGLenum; nx: TGLshort; ny: TGLshort; nz: TGLshort);  stdcall;
+   glNormalStream3svATI: procedure(stream: TGLenum; const coords: PGLshort);  stdcall;
+   glNormalStream3iATI: procedure(stream: TGLenum; nx: TGLint; ny: TGLint; nz: TGLint);  stdcall;
+   glNormalStream3ivATI: procedure(stream: TGLenum; const coords: PGLint);  stdcall;
+   glNormalStream3fATI: procedure(stream: TGLenum; nx: TGLfloat; ny: TGLfloat; nz: TGLfloat);  stdcall;
+   glNormalStream3fvATI: procedure(stream: TGLenum; const coords: PGLfloat);  stdcall;
+   glNormalStream3dATI: procedure(stream: TGLenum; nx: TGLdouble; ny: TGLdouble; nz: TGLdouble);  stdcall;
+   glNormalStream3dvATI: procedure(stream: TGLenum; const coords: PGLdouble);  stdcall;
+   glClientActiveVertexStreamATI: procedure(stream: TGLenum);  stdcall;
+   glVertexBlendEnviATI: procedure(pname: TGLenum; param: TGLint);  stdcall;
+   glVertexBlendEnvfATI: procedure(pname: TGLenum; param: TGLfloat);  stdcall;
+
+   // GL_EXT_blend_color
+   glBlendColorEXT: procedure(red: TGLclampf; green: TGLclampf; blue: TGLclampf; alpha: TGLclampf);  stdcall;
+
+   // GL_EXT_blend_func_separate
+   glBlendFuncSeparateEXT: procedure(sfactorRGB: TGLenum; dfactorRGB: TGLenum; sfactorAlpha: TGLenum; dfactorAlpha: TGLenum);  stdcall;
+
+   // GL_EXT_blend_minmax
+   glBlendEquationEXT: procedure(mode: TGLenum);  stdcall;
+
+   // GL_EXT_color_subtable
+   glColorSubTableEXT: procedure(target: TGLenum; start: TGLsizei; count: TGLsizei; format: TGLenum; _type: TGLenum; const data: PGLvoid);  stdcall;
+   glCopyColorSubTableEXT: procedure(target: TGLenum; start: TGLsizei; x: TGLint; y: TGLint; width: TGLsizei);  stdcall;
+
+   // GL_EXT_compiled_vertex_array
+   glLockArraysEXT: procedure(first: TGLint; count: TGLsizei);  stdcall;
+   glUnlockArraysEXT: procedure();  stdcall;
+
+   // GL_EXT_convolution
+   glConvolutionFilter1DEXT: procedure(target: TGLenum; internalformat: TGLenum; width: TGLsizei; format: TGLenum; _type: TGLenum; const image: PGLvoid);  stdcall;
+   glConvolutionFilter2DEXT: procedure(target: TGLenum; internalformat: TGLenum; width: TGLsizei; height: TGLsizei; format: TGLenum; _type: TGLenum; const image: PGLvoid);  stdcall;
+   glConvolutionParameterfEXT: procedure(target: TGLenum; pname: TGLenum; params: TGLfloat);  stdcall;
+   glConvolutionParameterfvEXT: procedure(target: TGLenum; pname: TGLenum; const params: PGLfloat);  stdcall;
+   glConvolutionParameteriEXT: procedure(target: TGLenum; pname: TGLenum; params: TGLint);  stdcall;
+   glConvolutionParameterivEXT: procedure(target: TGLenum; pname: TGLenum; const params: PGLint);  stdcall;
+   glCopyConvolutionFilter1DEXT: procedure(target: TGLenum; internalformat: TGLenum; x: TGLint; y: TGLint; width: TGLsizei);  stdcall;
+   glCopyConvolutionFilter2DEXT: procedure(target: TGLenum; internalformat: TGLenum; x: TGLint; y: TGLint; width: TGLsizei; height: TGLsizei);  stdcall;
+   glGetConvolutionFilterEXT: procedure(target: TGLenum; format: TGLenum; _type: TGLenum; image: PGLvoid);  stdcall;
+   glGetConvolutionParameterfvEXT: procedure(target: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall;
+   glGetConvolutionParameterivEXT: procedure(target: TGLenum; pname: TGLenum; params: PGLint);  stdcall;
+   glGetSeparableFilterEXT: procedure(target: TGLenum; format: TGLenum; _type: TGLenum; row: PGLvoid; column: PGLvoid; span: PGLvoid);  stdcall;
+   glSeparableFilter2DEXT: procedure(target: TGLenum; internalformat: TGLenum; width: TGLsizei; height: TGLsizei; format: TGLenum; _type: TGLenum; const row: PGLvoid; const column: PGLvoid);  stdcall;
+
+   // GL_EXT_coordinate_frame
+   glTangent3bEXT: procedure(tx: TGLbyte; ty: TGLbyte; tz: TGLbyte);  stdcall;
+   glTangent3bvEXT: procedure(const v: PGLbyte);  stdcall;
+   glTangent3dEXT: procedure(tx: TGLdouble; ty: TGLdouble; tz: TGLdouble);  stdcall;
+   glTangent3dvEXT: procedure(const v: PGLdouble);  stdcall;
+   glTangent3fEXT: procedure(tx: TGLfloat; ty: TGLfloat; tz: TGLfloat);  stdcall;
+   glTangent3fvEXT: procedure(const v: PGLfloat);  stdcall;
+   glTangent3iEXT: procedure(tx: TGLint; ty: TGLint; tz: TGLint);  stdcall;
+   glTangent3ivEXT: procedure(const v: PGLint);  stdcall;
+   glTangent3sEXT: procedure(tx: TGLshort; ty: TGLshort; tz: TGLshort);  stdcall;
+   glTangent3svEXT: procedure(const v: PGLshort);  stdcall;
+   glBinormal3bEXT: procedure(bx: TGLbyte; by: TGLbyte; bz: TGLbyte);  stdcall;
+   glBinormal3bvEXT: procedure(const v: PGLbyte);  stdcall;
+   glBinormal3dEXT: procedure(bx: TGLdouble; by: TGLdouble; bz: TGLdouble);  stdcall;
+   glBinormal3dvEXT: procedure(const v: PGLdouble);  stdcall;
+   glBinormal3fEXT: procedure(bx: TGLfloat; by: TGLfloat; bz: TGLfloat);  stdcall;
+   glBinormal3fvEXT: procedure(const v: PGLfloat);  stdcall;
+   glBinormal3iEXT: procedure(bx: TGLint; by: TGLint; bz: TGLint);  stdcall;
+   glBinormal3ivEXT: procedure(const v: PGLint);  stdcall;
+   glBinormal3sEXT: procedure(bx: TGLshort; by: TGLshort; bz: TGLshort);  stdcall;
+   glBinormal3svEXT: procedure(const v: PGLshort);  stdcall;
+   glTangentPointerEXT: procedure(_type: TGLenum; stride: TGLsizei; const _pointer: PGLvoid);  stdcall;
+   glBinormalPointerEXT: procedure(_type: TGLenum; stride: TGLsizei; const _pointer: PGLvoid);  stdcall;
+
+   // GL_EXT_copy_texture
+   glCopyTexImage1DEXT: procedure(target: TGLenum; level: TGLint; internalformat: TGLenum; x: TGLint; y: TGLint; width: TGLsizei; border: TGLint);  stdcall;
+   glCopyTexImage2DEXT: procedure(target: TGLenum; level: TGLint; internalformat: TGLenum; x: TGLint; y: TGLint; width: TGLsizei; height: TGLsizei; border: TGLint);  stdcall;
+   glCopyTexSubImage1DEXT: procedure(target: TGLenum; level: TGLint; xoffset: TGLint; x: TGLint; y: TGLint; width: TGLsizei);  stdcall;
+   glCopyTexSubImage2DEXT: procedure(target: TGLenum; level: TGLint; xoffset: TGLint; yoffset: TGLint; x: TGLint; y: TGLint; width: TGLsizei; height: TGLsizei);  stdcall;
+   glCopyTexSubImage3DEXT: procedure(target: TGLenum; level: TGLint; xoffset: TGLint; yoffset: TGLint; zoffset: TGLint; x: TGLint; y: TGLint; width: TGLsizei; height: TGLsizei);  stdcall;
+
+   // GL_EXT_cull_vertex
+   glCullParameterdvEXT: procedure(pname: TGLenum; params: PGLdouble);  stdcall;
+   glCullParameterfvEXT: procedure(pname: TGLenum; params: PGLfloat);  stdcall;
+
+   // GL_EXT_draw_range_elements
+   glDrawRangeElementsEXT: procedure(mode: TGLenum; start: TGLuint; _end: TGLuint; count: TGLsizei; _type: TGLenum; const indices: PGLvoid);  stdcall;
+
+   // GL_EXT_fog_coord
+   glFogCoordfEXT: procedure(coord: TGLfloat);  stdcall;
+   glFogCoordfvEXT: procedure(const coord: PGLfloat);  stdcall;
+   glFogCoorddEXT: procedure(coord: TGLdouble);  stdcall;
+   glFogCoorddvEXT: procedure(const coord: PGLdouble);  stdcall;
+   glFogCoordPointerEXT: procedure(_type: TGLenum; stride: TGLsizei; const _pointer: PGLvoid);  stdcall;
+
+   // GL_EXT_histogram
+   glGetHistogramEXT: procedure(target: TGLenum; reset: TGLboolean; format: TGLenum; _type: TGLenum; values: PGLvoid);  stdcall;
+   glGetHistogramParameterfvEXT: procedure(target: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall;
+   glGetHistogramParameterivEXT: procedure(target: TGLenum; pname: TGLenum; params: PGLint);  stdcall;
+   glGetMinmaxEXT: procedure(target: TGLenum; reset: TGLboolean; format: TGLenum; _type: TGLenum; values: PGLvoid);  stdcall;
+   glGetMinmaxParameterfvEXT: procedure(target: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall;
+   glGetMinmaxParameterivEXT: procedure(target: TGLenum; pname: TGLenum; params: PGLint);  stdcall;
+   glHistogramEXT: procedure(target: TGLenum; width: TGLsizei; internalformat: TGLenum; sink: TGLboolean);  stdcall;
+   glMinmaxEXT: procedure(target: TGLenum; internalformat: TGLenum; sink: TGLboolean);  stdcall;
+   glResetHistogramEXT: procedure(target: TGLenum);  stdcall;
+   glResetMinmaxEXT: procedure(target: TGLenum);  stdcall;
+
+   // GL_EXT_index_func
+   glIndexFuncEXT: procedure(func: TGLenum; ref: TGLclampf);  stdcall;
+
+   // GL_EXT_index_material
+   glIndexMaterialEXT: procedure(face: TGLenum; mode: TGLenum);  stdcall;
+
+   // GL_EXT_light_texture
+   glApplyTextureEXT: procedure(mode: TGLenum);  stdcall;
+   glTextureLightEXT: procedure(pname: TGLenum);  stdcall;
+   glTextureMaterialEXT: procedure(face: TGLenum; mode: TGLenum);  stdcall;
+
+   // GL_EXT_multi_draw_arrays
+   glMultiDrawArraysEXT: procedure(mode: TGLenum; first: PGLint; count: PGLsizei; primcount: TGLsizei);  stdcall;
+   glMultiDrawElementsEXT: procedure(mode: TGLenum; const count: PGLsizei; _type: TGLenum; const indices: PGLvoid; primcount: TGLsizei);  stdcall;
+
+   // GL_EXT_multisample
+   glSampleMaskEXT: procedure(value: TGLclampf; invert: TGLboolean);  stdcall;
+   glSamplePatternEXT: procedure(pattern: TGLenum);  stdcall;
+
+   // GL_EXT_paletted_texture
+   glColorTableEXT: procedure(target: TGLenum; internalFormat: TGLenum; width: TGLsizei; format: TGLenum; _type: TGLenum; const table: PGLvoid);  stdcall;
+   glGetColorTableEXT: procedure(target: TGLenum; format: TGLenum; _type: TGLenum; data: PGLvoid);  stdcall;
+   glGetColorTableParameterivEXT: procedure(target: TGLenum; pname: TGLenum; params: PGLint);  stdcall;
+   glGetColorTableParameterfvEXT: procedure(target: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall;
+
+   // GL_EXT_pixel_transform
+   glPixelTransformParameteriEXT: procedure(target: TGLenum; pname: TGLenum; param: TGLint);  stdcall;
+   glPixelTransformParameterfEXT: procedure(target: TGLenum; pname: TGLenum; param: TGLfloat);  stdcall;
+   glPixelTransformParameterivEXT: procedure(target: TGLenum; pname: TGLenum; const params: PGLint);  stdcall;
+   glPixelTransformParameterfvEXT: procedure(target: TGLenum; pname: TGLenum; const params: PGLfloat);  stdcall;
+
+   // GL_EXT_point_parameters
+   glPointParameterfEXT: procedure(pname: TGLenum; param: TGLfloat);  stdcall;
+   glPointParameterfvEXT: procedure(pname: TGLenum; const params: PGLfloat);  stdcall;
+
+   // GL_EXT_polygon_offset
+   glPolygonOffsetEXT: procedure(factor: TGLfloat; bias: TGLfloat);  stdcall;
+
+   // GL_EXT_secondary_color
+   glSecondaryColor3bEXT: procedure(red: TGLbyte; green: TGLbyte; blue: TGLbyte);  stdcall;
+   glSecondaryColor3bvEXT: procedure(const v: PGLbyte);  stdcall;
+   glSecondaryColor3dEXT: procedure(red: TGLdouble; green: TGLdouble; blue: TGLdouble);  stdcall;
+   glSecondaryColor3dvEXT: procedure(const v: PGLdouble);  stdcall;
+   glSecondaryColor3fEXT: procedure(red: TGLfloat; green: TGLfloat; blue: TGLfloat);  stdcall;
+   glSecondaryColor3fvEXT: procedure(const v: PGLfloat);  stdcall;
+   glSecondaryColor3iEXT: procedure(red: TGLint; green: TGLint; blue: TGLint);  stdcall;
+   glSecondaryColor3ivEXT: procedure(const v: PGLint);  stdcall;
+   glSecondaryColor3sEXT: procedure(red: TGLshort; green: TGLshort; blue: TGLshort);  stdcall;
+   glSecondaryColor3svEXT: procedure(const v: PGLshort);  stdcall;
+   glSecondaryColor3ubEXT: procedure(red: TGLubyte; green: TGLubyte; blue: TGLubyte);  stdcall;
+   glSecondaryColor3ubvEXT: procedure(const v: PGLubyte);  stdcall;
+   glSecondaryColor3uiEXT: procedure(red: TGLuint; green: TGLuint; blue: TGLuint);  stdcall;
+   glSecondaryColor3uivEXT: procedure(const v: PGLuint);  stdcall;
+   glSecondaryColor3usEXT: procedure(red: TGLushort; green: TGLushort; blue: TGLushort);  stdcall;
+   glSecondaryColor3usvEXT: procedure(const v: PGLushort);  stdcall;
+   glSecondaryColorPointerEXT: procedure(size: TGLint; _type: TGLenum; stride: TGLsizei; const _pointer: PGLvoid);  stdcall;
+
+   // GL_EXT_stencil_two_side
+   glActiveStencilFaceEXT: procedure(face: TGLenum);  stdcall;
+
+   // GL_EXT_subtexture
+   glTexSubImage1DEXT: procedure(target: TGLenum; level: TGLint; xoffset: TGLint; width: TGLsizei; format: TGLenum; _type: TGLenum; const pixels: PGLvoid);  stdcall;
+   glTexSubImage2DEXT: procedure(target: TGLenum; level: TGLint; xoffset: TGLint; yoffset: TGLint; width: TGLsizei; height: TGLsizei; format: TGLenum; _type: TGLenum; const pixels: PGLvoid);  stdcall;
+
+   // GL_EXT_texture3D
+   glTexImage3DEXT: procedure(target: TGLenum; level: TGLint; internalformat: TGLenum; width: TGLsizei; height: TGLsizei; depth: TGLsizei; border: TGLint; format: TGLenum; _type: TGLenum; const pixels: PGLvoid);  stdcall;
+   glTexSubImage3DEXT: procedure(target: TGLenum; level: TGLint; xoffset: TGLint; yoffset: TGLint; zoffset: TGLint; width: TGLsizei; height: TGLsizei; depth: TGLsizei; format: TGLenum; _type: TGLenum; const pixels: PGLvoid);  stdcall;
+
+   // GL_EXT_texture_object
+   glAreTexturesResidentEXT: function(n: TGLsizei; const textures: PGLuint; residences: PGLboolean): TGLboolean;  stdcall;
+   glBindTextureEXT: procedure(target: TGLenum; texture: TGLuint);  stdcall;
+   glDeleteTexturesEXT: procedure(n: TGLsizei; const textures: PGLuint);  stdcall;
+   glGenTexturesEXT: procedure(n: TGLsizei; textures: PGLuint);  stdcall;
+   glIsTextureEXT: function(texture: TGLuint): TGLboolean;  stdcall;
+   glPrioritizeTexturesEXT: procedure(n: TGLsizei; const textures: PGLuint; const priorities: PGLclampf);  stdcall;
+
+   // GL_EXT_texture_perturb_normal
+   glTextureNormalEXT: procedure(mode: TGLenum);  stdcall;
+
+   // GL_EXT_vertex_array
+   glArrayElementEXT: procedure(i: TGLint);  stdcall;
+   glColorPointerEXT: procedure(size: TGLint; _type: TGLenum; stride: TGLsizei; count: TGLsizei; const _pointer: PGLvoid);  stdcall;
+   glDrawArraysEXT: procedure(mode: TGLenum; first: TGLint; count: TGLsizei);  stdcall;
+   glEdgeFlagPointerEXT: procedure(stride: TGLsizei; count: TGLsizei; const _pointer: PGLboolean);  stdcall;
+   glGetPointervEXT: procedure(pname: TGLenum; params: PGLvoid);  stdcall;
+   glIndexPointerEXT: procedure(_type: TGLenum; stride: TGLsizei; count: TGLsizei; const _pointer: PGLvoid);  stdcall;
+   glNormalPointerEXT: procedure(_type: TGLenum; stride: TGLsizei; count: TGLsizei; const _pointer: PGLvoid);  stdcall;
+   glTexCoordPointerEXT: procedure(size: TGLint; _type: TGLenum; stride: TGLsizei; count: TGLsizei; const _pointer: PGLvoid);  stdcall;
+   glVertexPointerEXT: procedure(size: TGLint; _type: TGLenum; stride: TGLsizei; count: TGLsizei; const _pointer: PGLvoid);  stdcall;
+
+   // GL_EXT_vertex_shader
+   glBeginVertexShaderEXT: procedure();  stdcall;
+   glEndVertexShaderEXT: procedure();  stdcall;
+   glBindVertexShaderEXT: procedure(id: TGLuint);  stdcall;
+   glGenVertexShadersEXT: function(range: TGLuint): TGLuint;  stdcall;
+   glDeleteVertexShaderEXT: procedure(id: TGLuint);  stdcall;
+   glShaderOp1EXT: procedure(op: TGLenum; res: TGLuint; arg1: TGLuint);  stdcall;
+   glShaderOp2EXT: procedure(op: TGLenum; res: TGLuint; arg1: TGLuint; arg2: TGLuint);  stdcall;
+   glShaderOp3EXT: procedure(op: TGLenum; res: TGLuint; arg1: TGLuint; arg2: TGLuint; arg3: TGLuint);  stdcall;
+   glSwizzleEXT: procedure(res: TGLuint; _in: TGLuint; outX: TGLenum; outY: TGLenum; outZ: TGLenum; outW: TGLenum);  stdcall;
+   glWriteMaskEXT: procedure(res: TGLuint; _in: TGLuint; outX: TGLenum; outY: TGLenum; outZ: TGLenum; outW: TGLenum);  stdcall;
+   glInsertComponentEXT: procedure(res: TGLuint; src: TGLuint; num: TGLuint);  stdcall;
+   glExtractComponentEXT: procedure(res: TGLuint; src: TGLuint; num: TGLuint);  stdcall;
+   glGenSymbolsEXT: function(datatype: TGLenum; storagetype: TGLenum; range: TGLenum; components: TGLuint): TGLuint;  stdcall;
+   glSetInvariantEXT: procedure(id: TGLuint; _type: TGLenum; const addr: PGLvoid);  stdcall;
+   glSetLocalConstantEXT: procedure(id: TGLuint; _type: TGLenum; const addr: PGLvoid);  stdcall;
+   glVariantbvEXT: procedure(id: TGLuint; const addr: PGLbyte);  stdcall;
+   glVariantsvEXT: procedure(id: TGLuint; const addr: PGLshort);  stdcall;
+   glVariantivEXT: procedure(id: TGLuint; const addr: PGLint);  stdcall;
+   glVariantfvEXT: procedure(id: TGLuint; const addr: PGLfloat);  stdcall;
+   glVariantdvEXT: procedure(id: TGLuint; const addr: PGLdouble);  stdcall;
+   glVariantubvEXT: procedure(id: TGLuint; const addr: PGLubyte);  stdcall;
+   glVariantusvEXT: procedure(id: TGLuint; const addr: PGLushort);  stdcall;
+   glVariantuivEXT: procedure(id: TGLuint; const addr: PGLuint);  stdcall;
+   glVariantPointerEXT: procedure(id: TGLuint; _type: TGLenum; stride: TGLuint; const addr: PGLvoid);  stdcall;
+   glEnableVariantClientStateEXT: procedure(id: TGLuint);  stdcall;
+   glDisableVariantClientStateEXT: procedure(id: TGLuint);  stdcall;
+   glBindLightParameterEXT: function(light: TGLenum; value: TGLenum): TGLuint;  stdcall;
+   glBindMaterialParameterEXT: function(face: TGLenum; value: TGLenum): TGLuint;  stdcall;
+   glBindTexGenParameterEXT: function(_unit: TGLenum; coord: TGLenum; value: TGLenum): TGLuint;  stdcall;
+   glBindTextureUnitParameterEXT: function(_unit: TGLenum; value: TGLenum): TGLuint;  stdcall;
+   glBindParameterEXT: function(value: TGLenum): TGLuint;  stdcall;
+   glIsVariantEnabledEXT: function(id: TGLuint; cap: TGLenum): TGLboolean;  stdcall;
+   glGetVariantBooleanvEXT: procedure(id: TGLuint; value: TGLenum; data: PGLboolean);  stdcall;
+   glGetVariantIntegervEXT: procedure(id: TGLuint; value: TGLenum; data: PGLint);  stdcall;
+   glGetVariantFloatvEXT: procedure(id: TGLuint; value: TGLenum; data: PGLfloat);  stdcall;
+   glGetVariantPointervEXT: procedure(id: TGLuint; value: TGLenum; data: PGLvoid);  stdcall;
+   glGetInvariantBooleanvEXT: procedure(id: TGLuint; value: TGLenum; data: PGLboolean);  stdcall;
+   glGetInvariantIntegervEXT: procedure(id: TGLuint; value: TGLenum; data: PGLint);  stdcall;
+   glGetInvariantFloatvEXT: procedure(id: TGLuint; value: TGLenum; data: PGLfloat);  stdcall;
+   glGetLocalConstantBooleanvEXT: procedure(id: TGLuint; value: TGLenum; data: PGLboolean);  stdcall;
+   glGetLocalConstantIntegervEXT: procedure(id: TGLuint; value: TGLenum; data: PGLint);  stdcall;
+   glGetLocalConstantFloatvEXT: procedure(id: TGLuint; value: TGLenum; data: PGLfloat);  stdcall;
+
+   // GL_EXT_vertex_weighting
+   glVertexWeightfEXT: procedure(weight: TGLfloat);  stdcall;
+   glVertexWeightfvEXT: procedure(const weight: PGLfloat);  stdcall;
+   glVertexWeightPointerEXT: procedure(size: TGLsizei; _type: TGLenum; stride: TGLsizei; const _pointer: PGLvoid);  stdcall;
+
+   // GL_HP_image_transform
+   glImageTransformParameteriHP: procedure(target: TGLenum; pname: TGLenum; param: TGLint);  stdcall;
+   glImageTransformParameterfHP: procedure(target: TGLenum; pname: TGLenum; param: TGLfloat);  stdcall;
+   glImageTransformParameterivHP: procedure(target: TGLenum; pname: TGLenum; const params: PGLint);  stdcall;
+   glImageTransformParameterfvHP: procedure(target: TGLenum; pname: TGLenum; const params: PGLfloat);  stdcall;
+   glGetImageTransformParameterivHP: procedure(target: TGLenum; pname: TGLenum; params: PGLint);  stdcall;
+   glGetImageTransformParameterfvHP: procedure(target: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall;
+
+   // GL_IBM_multimode_draw_arrays
+   glMultiModeDrawArraysIBM: procedure(mode: TGLenum; const first: PGLint; const count: PGLsizei; primcount: TGLsizei; modestride: TGLint);  stdcall;
+   glMultiModeDrawElementsIBM: procedure(const mode: PGLenum; const count: PGLsizei; _type: TGLenum; const indices: PGLvoid; primcount: TGLsizei; modestride: TGLint);  stdcall;
+
+   // GL_IBM_vertex_array_lists
+   glColorPointerListIBM: procedure(size: TGLint; _type: TGLenum; stride: TGLint; const _pointer: PGLvoid; ptrstride: TGLint);  stdcall;
+   glSecondaryColorPointerListIBM: procedure(size: TGLint; _type: TGLenum; stride: TGLint; const _pointer: PGLvoid; ptrstride: TGLint);  stdcall;
+   glEdgeFlagPointerListIBM: procedure(stride: TGLint; const _pointer: PGLboolean; ptrstride: TGLint);  stdcall;
+   glFogCoordPointerListIBM: procedure(_type: TGLenum; stride: TGLint; const _pointer: PGLvoid; ptrstride: TGLint);  stdcall;
+   glIndexPointerListIBM: procedure(_type: TGLenum; stride: TGLint; const _pointer: PGLvoid; ptrstride: TGLint);  stdcall;
+   glNormalPointerListIBM: procedure(_type: TGLenum; stride: TGLint; const _pointer: PGLvoid; ptrstride: TGLint);  stdcall;
+   glTexCoordPointerListIBM: procedure(size: TGLint; _type: TGLenum; stride: TGLint; const _pointer: PGLvoid; ptrstride: TGLint);  stdcall;
+   glVertexPointerListIBM: procedure(size: TGLint; _type: TGLenum; stride: TGLint; const _pointer: PGLvoid; ptrstride: TGLint);  stdcall;
+
+   // GL_INGR_blend_func_separate
+   glBlendFuncSeparateINGR: procedure(sfactorRGB: TGLenum; dfactorRGB: TGLenum; sfactorAlpha: TGLenum; dfactorAlpha: TGLenum);  stdcall;
+
+   // GL_INTEL_parallel_arrays
+   glVertexPointervINTEL: procedure(size: TGLint; _type: TGLenum; const _pointer: PGLvoid);  stdcall;
+   glNormalPointervINTEL: procedure(_type: TGLenum; const _pointer: PGLvoid);  stdcall;
+   glColorPointervINTEL: procedure(size: TGLint; _type: TGLenum; const _pointer: PGLvoid);  stdcall;
+   glTexCoordPointervINTEL: procedure(size: TGLint; _type: TGLenum; const _pointer: PGLvoid);  stdcall;
+
+   // GL_MESA_resize_buffers
+   glResizeBuffersMESA: procedure();  stdcall;
+
+   // GL_MESA_window_pos
+   glWindowPos2dMESA: procedure(x: TGLdouble; y: TGLdouble);  stdcall;
+   glWindowPos2dvMESA: procedure(const v: PGLdouble);  stdcall;
+   glWindowPos2fMESA: procedure(x: TGLfloat; y: TGLfloat);  stdcall;
+   glWindowPos2fvMESA: procedure(const v: PGLfloat);  stdcall;
+   glWindowPos2iMESA: procedure(x: TGLint; y: TGLint);  stdcall;
+   glWindowPos2ivMESA: procedure(const v: PGLint);  stdcall;
+   glWindowPos2sMESA: procedure(x: TGLshort; y: TGLshort);  stdcall;
+   glWindowPos2svMESA: procedure(const v: PGLshort);  stdcall;
+   glWindowPos3dMESA: procedure(x: TGLdouble; y: TGLdouble; z: TGLdouble);  stdcall;
+   glWindowPos3dvMESA: procedure(const v: PGLdouble);  stdcall;
+   glWindowPos3fMESA: procedure(x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glWindowPos3fvMESA: procedure(const v: PGLfloat);  stdcall;
+   glWindowPos3iMESA: procedure(x: TGLint; y: TGLint; z: TGLint);  stdcall;
+   glWindowPos3ivMESA: procedure(const v: PGLint);  stdcall;
+   glWindowPos3sMESA: procedure(x: TGLshort; y: TGLshort; z: TGLshort);  stdcall;
+   glWindowPos3svMESA: procedure(const v: PGLshort);  stdcall;
+   glWindowPos4dMESA: procedure(x: TGLdouble; y: TGLdouble; z: TGLdouble; w: TGLdouble);  stdcall;
+   glWindowPos4dvMESA: procedure(const v: PGLdouble);  stdcall;
+   glWindowPos4fMESA: procedure(x: TGLfloat; y: TGLfloat; z: TGLfloat; w: TGLfloat);  stdcall;
+   glWindowPos4fvMESA: procedure(const v: PGLfloat);  stdcall;
+   glWindowPos4iMESA: procedure(x: TGLint; y: TGLint; z: TGLint; w: TGLint);  stdcall;
+   glWindowPos4ivMESA: procedure(const v: PGLint);  stdcall;
+   glWindowPos4sMESA: procedure(x: TGLshort; y: TGLshort; z: TGLshort; w: TGLshort);  stdcall;
+   glWindowPos4svMESA: procedure(const v: PGLshort);  stdcall;
+
+   // GL_NV_evaluators
+   glMapControlPointsNV: procedure(target: TGLenum; index: TGLuint; _type: TGLenum; ustride: TGLsizei; vstride: TGLsizei; uorder: TGLint; vorder: TGLint; _packed: TGLboolean; const points: PGLvoid);  stdcall;
+   glMapParameterivNV: procedure(target: TGLenum; pname: TGLenum; const params: PGLint);  stdcall;
+   glMapParameterfvNV: procedure(target: TGLenum; pname: TGLenum; const params: PGLfloat);  stdcall;
+   glGetMapControlPointsNV: procedure(target: TGLenum; index: TGLuint; _type: TGLenum; ustride: TGLsizei; vstride: TGLsizei; _packed: TGLboolean; points: PGLvoid);  stdcall;
+   glGetMapParameterivNV: procedure(target: TGLenum; pname: TGLenum; params: PGLint);  stdcall;
+   glGetMapParameterfvNV: procedure(target: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall;
+   glGetMapAttribParameterivNV: procedure(target: TGLenum; index: TGLuint; pname: TGLenum; params: PGLint);  stdcall;
+   glGetMapAttribParameterfvNV: procedure(target: TGLenum; index: TGLuint; pname: TGLenum; params: PGLfloat);  stdcall;
+   glEvalMapsNV: procedure(target: TGLenum; mode: TGLenum);  stdcall;
+
+   // GL_NV_fence
+   glDeleteFencesNV: procedure(n: TGLsizei; const fences: PGLuint);  stdcall;
+   glGenFencesNV: procedure(n: TGLsizei; fences: PGLuint);  stdcall;
+   glIsFenceNV: function(fence: TGLuint): TGLboolean;  stdcall;
+   glTestFenceNV: function(fence: TGLuint): TGLboolean;  stdcall;
+   glGetFenceivNV: procedure(fence: TGLuint; pname: TGLenum; params: PGLint);  stdcall;
+   glFinishFenceNV: procedure(fence: TGLuint);  stdcall;
+   glSetFenceNV: procedure(fence: TGLuint; condition: TGLenum);  stdcall;
+
+   // GL_NV_fragment_program
+   glProgramNamedParameter4fNV: procedure(id: TGLuint; len: TGLsizei; const name: PGLubyte; x: TGLfloat; y: TGLfloat; z: TGLfloat; w: TGLfloat);  stdcall;
+   glProgramNamedParameter4dNV: procedure(id: TGLuint; len: TGLsizei; const name: PGLubyte; x: TGLdouble; y: TGLdouble; z: TGLdouble; w: TGLdouble);  stdcall;
+   glProgramNamedParameter4fvNV: procedure(id: TGLuint; len: TGLsizei; const name: PGLubyte; const v: PGLfloat);  stdcall;
+   glProgramNamedParameter4dvNV: procedure(id: TGLuint; len: TGLsizei; const name: PGLubyte; const v: PGLdouble);  stdcall;
+   glGetProgramNamedParameterfvNV: procedure(id: TGLuint; len: TGLsizei; const name: PGLubyte; params: PGLfloat);  stdcall;
+   glGetProgramNamedParameterdvNV: procedure(id: TGLuint; len: TGLsizei; const name: PGLubyte; params: PGLdouble);  stdcall;
+
+   // GL_NV_half_float
+   glVertex2hNV: procedure(x: TGLhalfNV; y: TGLhalfNV);  stdcall;
+   glVertex2hvNV: procedure(const v: PGLhalfNV);  stdcall;
+   glVertex3hNV: procedure(x: TGLhalfNV; y: TGLhalfNV; z: TGLhalfNV);  stdcall;
+   glVertex3hvNV: procedure(const v: PGLhalfNV);  stdcall;
+   glVertex4hNV: procedure(x: TGLhalfNV; y: TGLhalfNV; z: TGLhalfNV; w: TGLhalfNV);  stdcall;
+   glVertex4hvNV: procedure(const v: PGLhalfNV);  stdcall;
+   glNormal3hNV: procedure(nx: TGLhalfNV; ny: TGLhalfNV; nz: TGLhalfNV);  stdcall;
+   glNormal3hvNV: procedure(const v: PGLhalfNV);  stdcall;
+   glColor3hNV: procedure(red: TGLhalfNV; green: TGLhalfNV; blue: TGLhalfNV);  stdcall;
+   glColor3hvNV: procedure(const v: PGLhalfNV);  stdcall;
+   glColor4hNV: procedure(red: TGLhalfNV; green: TGLhalfNV; blue: TGLhalfNV; alpha: TGLhalfNV);  stdcall;
+   glColor4hvNV: procedure(const v: PGLhalfNV);  stdcall;
+   glTexCoord1hNV: procedure(s: TGLhalfNV);  stdcall;
+   glTexCoord1hvNV: procedure(const v: PGLhalfNV);  stdcall;
+   glTexCoord2hNV: procedure(s: TGLhalfNV; t: TGLhalfNV);  stdcall;
+   glTexCoord2hvNV: procedure(const v: PGLhalfNV);  stdcall;
+   glTexCoord3hNV: procedure(s: TGLhalfNV; t: TGLhalfNV; r: TGLhalfNV);  stdcall;
+   glTexCoord3hvNV: procedure(const v: PGLhalfNV);  stdcall;
+   glTexCoord4hNV: procedure(s: TGLhalfNV; t: TGLhalfNV; r: TGLhalfNV; q: TGLhalfNV);  stdcall;
+   glTexCoord4hvNV: procedure(const v: PGLhalfNV);  stdcall;
+   glMultiTexCoord1hNV: procedure(target: TGLenum; s: TGLhalfNV);  stdcall;
+   glMultiTexCoord1hvNV: procedure(target: TGLenum; const v: PGLhalfNV);  stdcall;
+   glMultiTexCoord2hNV: procedure(target: TGLenum; s: TGLhalfNV; t: TGLhalfNV);  stdcall;
+   glMultiTexCoord2hvNV: procedure(target: TGLenum; const v: PGLhalfNV);  stdcall;
+   glMultiTexCoord3hNV: procedure(target: TGLenum; s: TGLhalfNV; t: TGLhalfNV; r: TGLhalfNV);  stdcall;
+   glMultiTexCoord3hvNV: procedure(target: TGLenum; const v: PGLhalfNV);  stdcall;
+   glMultiTexCoord4hNV: procedure(target: TGLenum; s: TGLhalfNV; t: TGLhalfNV; r: TGLhalfNV; q: TGLhalfNV);  stdcall;
+   glMultiTexCoord4hvNV: procedure(target: TGLenum; const v: PGLhalfNV);  stdcall;
+   glFogCoordhNV: procedure(fog: TGLhalfNV);  stdcall;
+   glFogCoordhvNV: procedure(const fog: PGLhalfNV);  stdcall;
+   glSecondaryColor3hNV: procedure(red: TGLhalfNV; green: TGLhalfNV; blue: TGLhalfNV);  stdcall;
+   glSecondaryColor3hvNV: procedure(const v: PGLhalfNV);  stdcall;
+   glVertexWeighthNV: procedure(weight: TGLhalfNV);  stdcall;
+   glVertexWeighthvNV: procedure(const weight: PGLhalfNV);  stdcall;
+   glVertexAttrib1hNV: procedure(index: TGLuint; x: TGLhalfNV);  stdcall;
+   glVertexAttrib1hvNV: procedure(index: TGLuint; const v: PGLhalfNV);  stdcall;
+   glVertexAttrib2hNV: procedure(index: TGLuint; x: TGLhalfNV; y: TGLhalfNV);  stdcall;
+   glVertexAttrib2hvNV: procedure(index: TGLuint; const v: PGLhalfNV);  stdcall;
+   glVertexAttrib3hNV: procedure(index: TGLuint; x: TGLhalfNV; y: TGLhalfNV; z: TGLhalfNV);  stdcall;
+   glVertexAttrib3hvNV: procedure(index: TGLuint; const v: PGLhalfNV);  stdcall;
+   glVertexAttrib4hNV: procedure(index: TGLuint; x: TGLhalfNV; y: TGLhalfNV; z: TGLhalfNV; w: TGLhalfNV);  stdcall;
+   glVertexAttrib4hvNV: procedure(index: TGLuint; const v: PGLhalfNV);  stdcall;
+   glVertexAttribs1hvNV: procedure(index: TGLuint; n: TGLsizei; const v: PGLhalfNV);  stdcall;
+   glVertexAttribs2hvNV: procedure(index: TGLuint; n: TGLsizei; const v: PGLhalfNV);  stdcall;
+   glVertexAttribs3hvNV: procedure(index: TGLuint; n: TGLsizei; const v: PGLhalfNV);  stdcall;
+   glVertexAttribs4hvNV: procedure(index: TGLuint; n: TGLsizei; const v: PGLhalfNV);  stdcall;
+
+   // GL_NV_occlusion_query
+   glGenOcclusionQueriesNV: procedure(n: TGLsizei; ids: PGLuint);  stdcall;
+   glDeleteOcclusionQueriesNV: procedure(n: TGLsizei; const ids: PGLuint);  stdcall;
+   glIsOcclusionQueryNV: function(id: TGLuint): TGLboolean;  stdcall;
+   glBeginOcclusionQueryNV: procedure(id: TGLuint);  stdcall;
+   glEndOcclusionQueryNV: procedure();  stdcall;
+   glGetOcclusionQueryivNV: procedure(id: TGLuint; pname: TGLenum; params: PGLint);  stdcall;
+   glGetOcclusionQueryuivNV: procedure(id: TGLuint; pname: TGLenum; params: PGLuint);  stdcall;
+
+   // GL_NV_pixel_data_range
+   glPixelDataRangeNV: procedure(target: TGLenum; length: TGLsizei; _pointer: PGLvoid);  stdcall;
+   glFlushPixelDataRangeNV: procedure(target: TGLenum);  stdcall;
+
+   // GL_NV_point_sprite
+   glPointParameteriNV: procedure(pname: TGLenum; param: TGLint);  stdcall;
+   glPointParameterivNV: procedure(pname: TGLenum; const params: PGLint);  stdcall;
+
+   // GL_NV_primitive_restart
+   glPrimitiveRestartNV: procedure();  stdcall;
+   glPrimitiveRestartIndexNV: procedure(index: TGLuint);  stdcall;
+
+   // GL_NV_register_combiners
+   glCombinerParameterfvNV: procedure(pname: TGLenum; const params: PGLfloat);  stdcall;
+   glCombinerParameterfNV: procedure(pname: TGLenum; param: TGLfloat);  stdcall;
+   glCombinerParameterivNV: procedure(pname: TGLenum; const params: PGLint);  stdcall;
+   glCombinerParameteriNV: procedure(pname: TGLenum; param: TGLint);  stdcall;
+   glCombinerInputNV: procedure(stage: TGLenum; portion: TGLenum; variable: TGLenum; input: TGLenum; mapping: TGLenum; componentUsage: TGLenum);  stdcall;
+   glCombinerOutputNV: procedure(stage: TGLenum; portion: TGLenum; abOutput: TGLenum; cdOutput: TGLenum; sumOutput: TGLenum; scale: TGLenum; bias: TGLenum; abDotProduct: TGLboolean; cdDotProduct: TGLboolean; muxSum: TGLboolean);  stdcall;
+   glFinalCombinerInputNV: procedure(variable: TGLenum; input: TGLenum; mapping: TGLenum; componentUsage: TGLenum);  stdcall;
+   glGetCombinerInputParameterfvNV: procedure(stage: TGLenum; portion: TGLenum; variable: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall;
+   glGetCombinerInputParameterivNV: procedure(stage: TGLenum; portion: TGLenum; variable: TGLenum; pname: TGLenum; params: PGLint);  stdcall;
+   glGetCombinerOutputParameterfvNV: procedure(stage: TGLenum; portion: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall;
+   glGetCombinerOutputParameterivNV: procedure(stage: TGLenum; portion: TGLenum; pname: TGLenum; params: PGLint);  stdcall;
+   glGetFinalCombinerInputParameterfvNV: procedure(variable: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall;
+   glGetFinalCombinerInputParameterivNV: procedure(variable: TGLenum; pname: TGLenum; params: PGLint);  stdcall;
+
+   // GL_NV_register_combiners2
+   glCombinerStageParameterfvNV: procedure(stage: TGLenum; pname: TGLenum; const params: PGLfloat);  stdcall;
+   glGetCombinerStageParameterfvNV: procedure(stage: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall;
+
+   // GL_NV_vertex_array_range
+   glFlushVertexArrayRangeNV: procedure();  stdcall;
+   glVertexArrayRangeNV: procedure(length: TGLsizei; const _pointer: PGLvoid);  stdcall;
+
+   // GL_NV_vertex_program
+   glAreProgramsResidentNV: function(n: TGLsizei; const programs: PGLuint; residences: PGLboolean): TGLboolean;  stdcall;
+   glBindProgramNV: procedure(target: TGLenum; id: TGLuint);  stdcall;
+   glDeleteProgramsNV: procedure(n: TGLsizei; const programs: PGLuint);  stdcall;
+   glExecuteProgramNV: procedure(target: TGLenum; id: TGLuint; const params: PGLfloat);  stdcall;
+   glGenProgramsNV: procedure(n: TGLsizei; programs: PGLuint);  stdcall;
+   glGetProgramParameterdvNV: procedure(target: TGLenum; index: TGLuint; pname: TGLenum; params: PGLdouble);  stdcall;
+   glGetProgramParameterfvNV: procedure(target: TGLenum; index: TGLuint; pname: TGLenum; params: PGLfloat);  stdcall;
+   glGetProgramivNV: procedure(id: TGLuint; pname: TGLenum; params: PGLint);  stdcall;
+   glGetProgramStringNV: procedure(id: TGLuint; pname: TGLenum; _program: PGLubyte);  stdcall;
+   glGetTrackMatrixivNV: procedure(target: TGLenum; address: TGLuint; pname: TGLenum; params: PGLint);  stdcall;
+   glGetVertexAttribdvNV: procedure(index: TGLuint; pname: TGLenum; params: PGLdouble);  stdcall;
+   glGetVertexAttribfvNV: procedure(index: TGLuint; pname: TGLenum; params: PGLfloat);  stdcall;
+   glGetVertexAttribivNV: procedure(index: TGLuint; pname: TGLenum; params: PGLint);  stdcall;
+   glGetVertexAttribPointervNV: procedure(index: TGLuint; pname: TGLenum; _pointer: PGLvoid);  stdcall;
+   glIsProgramNV: function(id: TGLuint): TGLboolean;  stdcall;
+   glLoadProgramNV: procedure(target: TGLenum; id: TGLuint; len: TGLsizei; const _program: PGLubyte);  stdcall;
+   glProgramParameter4dNV: procedure(target: TGLenum; index: TGLuint; x: TGLdouble; y: TGLdouble; z: TGLdouble; w: TGLdouble);  stdcall;
+   glProgramParameter4dvNV: procedure(target: TGLenum; index: TGLuint; const v: PGLdouble);  stdcall;
+   glProgramParameter4fNV: procedure(target: TGLenum; index: TGLuint; x: TGLfloat; y: TGLfloat; z: TGLfloat; w: TGLfloat);  stdcall;
+   glProgramParameter4fvNV: procedure(target: TGLenum; index: TGLuint; const v: PGLfloat);  stdcall;
+   glProgramParameters4dvNV: procedure(target: TGLenum; index: TGLuint; count: TGLuint; const v: PGLdouble);  stdcall;
+   glProgramParameters4fvNV: procedure(target: TGLenum; index: TGLuint; count: TGLuint; const v: PGLfloat);  stdcall;
+   glRequestResidentProgramsNV: procedure(n: TGLsizei; const programs: PGLuint);  stdcall;
+   glTrackMatrixNV: procedure(target: TGLenum; address: TGLuint; matrix: TGLenum; transform: TGLenum);  stdcall;
+   glVertexAttribPointerNV: procedure(index: TGLuint; fsize: TGLint; _type: TGLenum; stride: TGLsizei; const _pointer: PGLvoid);  stdcall;
+   glVertexAttrib1dNV: procedure(index: TGLuint; x: TGLdouble);  stdcall;
+   glVertexAttrib1dvNV: procedure(index: TGLuint; const v: PGLdouble);  stdcall;
+   glVertexAttrib1fNV: procedure(index: TGLuint; x: TGLfloat);  stdcall;
+   glVertexAttrib1fvNV: procedure(index: TGLuint; const v: PGLfloat);  stdcall;
+   glVertexAttrib1sNV: procedure(index: TGLuint; x: TGLshort);  stdcall;
+   glVertexAttrib1svNV: procedure(index: TGLuint; const v: PGLshort);  stdcall;
+   glVertexAttrib2dNV: procedure(index: TGLuint; x: TGLdouble; y: TGLdouble);  stdcall;
+   glVertexAttrib2dvNV: procedure(index: TGLuint; const v: PGLdouble);  stdcall;
+   glVertexAttrib2fNV: procedure(index: TGLuint; x: TGLfloat; y: TGLfloat);  stdcall;
+   glVertexAttrib2fvNV: procedure(index: TGLuint; const v: PGLfloat);  stdcall;
+   glVertexAttrib2sNV: procedure(index: TGLuint; x: TGLshort; y: TGLshort);  stdcall;
+   glVertexAttrib2svNV: procedure(index: TGLuint; const v: PGLshort);  stdcall;
+   glVertexAttrib3dNV: procedure(index: TGLuint; x: TGLdouble; y: TGLdouble; z: TGLdouble);  stdcall;
+   glVertexAttrib3dvNV: procedure(index: TGLuint; const v: PGLdouble);  stdcall;
+   glVertexAttrib3fNV: procedure(index: TGLuint; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glVertexAttrib3fvNV: procedure(index: TGLuint; const v: PGLfloat);  stdcall;
+   glVertexAttrib3sNV: procedure(index: TGLuint; x: TGLshort; y: TGLshort; z: TGLshort);  stdcall;
+   glVertexAttrib3svNV: procedure(index: TGLuint; const v: PGLshort);  stdcall;
+   glVertexAttrib4dNV: procedure(index: TGLuint; x: TGLdouble; y: TGLdouble; z: TGLdouble; w: TGLdouble);  stdcall;
+   glVertexAttrib4dvNV: procedure(index: TGLuint; const v: PGLdouble);  stdcall;
+   glVertexAttrib4fNV: procedure(index: TGLuint; x: TGLfloat; y: TGLfloat; z: TGLfloat; w: TGLfloat);  stdcall;
+   glVertexAttrib4fvNV: procedure(index: TGLuint; const v: PGLfloat);  stdcall;
+   glVertexAttrib4sNV: procedure(index: TGLuint; x: TGLshort; y: TGLshort; z: TGLshort; w: TGLshort);  stdcall;
+   glVertexAttrib4svNV: procedure(index: TGLuint; const v: PGLshort);  stdcall;
+   glVertexAttrib4ubNV: procedure(index: TGLuint; x: TGLubyte; y: TGLubyte; z: TGLubyte; w: TGLubyte);  stdcall;
+   glVertexAttrib4ubvNV: procedure(index: TGLuint; const v: PGLubyte);  stdcall;
+   glVertexAttribs1dvNV: procedure(index: TGLuint; count: TGLsizei; const v: PGLdouble);  stdcall;
+   glVertexAttribs1fvNV: procedure(index: TGLuint; count: TGLsizei; const v: PGLfloat);  stdcall;
+   glVertexAttribs1svNV: procedure(index: TGLuint; count: TGLsizei; const v: PGLshort);  stdcall;
+   glVertexAttribs2dvNV: procedure(index: TGLuint; count: TGLsizei; const v: PGLdouble);  stdcall;
+   glVertexAttribs2fvNV: procedure(index: TGLuint; count: TGLsizei; const v: PGLfloat);  stdcall;
+   glVertexAttribs2svNV: procedure(index: TGLuint; count: TGLsizei; const v: PGLshort);  stdcall;
+   glVertexAttribs3dvNV: procedure(index: TGLuint; count: TGLsizei; const v: PGLdouble);  stdcall;
+   glVertexAttribs3fvNV: procedure(index: TGLuint; count: TGLsizei; const v: PGLfloat);  stdcall;
+   glVertexAttribs3svNV: procedure(index: TGLuint; count: TGLsizei; const v: PGLshort);  stdcall;
+   glVertexAttribs4dvNV: procedure(index: TGLuint; count: TGLsizei; const v: PGLdouble);  stdcall;
+   glVertexAttribs4fvNV: procedure(index: TGLuint; count: TGLsizei; const v: PGLfloat);  stdcall;
+   glVertexAttribs4svNV: procedure(index: TGLuint; count: TGLsizei; const v: PGLshort);  stdcall;
+   glVertexAttribs4ubvNV: procedure(index: TGLuint; count: TGLsizei; const v: PGLubyte);  stdcall;
+
+   // GL_PGI_misc_hints
+   glHintPGI: procedure(target: TGLenum; mode: TGLint);  stdcall;
+
+   // GL_SGIS_detail_texture
+   glDetailTexFuncSGIS: procedure(target: TGLenum; n: TGLsizei; const points: PGLfloat);  stdcall;
+   glGetDetailTexFuncSGIS: procedure(target: TGLenum; points: PGLfloat);  stdcall;
+
+   // GL_SGIS_fog_function
+   glFogFuncSGIS: procedure(n: TGLsizei; const points: PGLfloat);  stdcall;
+   glGetFogFuncSGIS: procedure(points: PGLfloat);  stdcall;
+
+   // GL_SGIS_multisample
+   glSampleMaskSGIS: procedure(value: TGLclampf; invert: TGLboolean);  stdcall;
+   glSamplePatternSGIS: procedure(pattern: TGLenum);  stdcall;
+
+   // GL_SGIS_pixel_texture
+   glPixelTexGenParameteriSGIS: procedure(pname: TGLenum; param: TGLint);  stdcall;
+   glPixelTexGenParameterivSGIS: procedure(pname: TGLenum; const params: PGLint);  stdcall;
+   glPixelTexGenParameterfSGIS: procedure(pname: TGLenum; param: TGLfloat);  stdcall;
+   glPixelTexGenParameterfvSGIS: procedure(pname: TGLenum; const params: PGLfloat);  stdcall;
+   glGetPixelTexGenParameterivSGIS: procedure(pname: TGLenum; params: PGLint);  stdcall;
+   glGetPixelTexGenParameterfvSGIS: procedure(pname: TGLenum; params: PGLfloat);  stdcall;
+
+   // GL_SGIS_point_parameters
+   glPointParameterfSGIS: procedure(pname: TGLenum; param: TGLfloat);  stdcall;
+   glPointParameterfvSGIS: procedure(pname: TGLenum; const params: PGLfloat);  stdcall;
+
+   // GL_SGIS_sharpen_texture
+   glSharpenTexFuncSGIS: procedure(target: TGLenum; n: TGLsizei; const points: PGLfloat);  stdcall;
+   glGetSharpenTexFuncSGIS: procedure(target: TGLenum; points: PGLfloat);  stdcall;
+
+   // GL_SGIS_texture4D
+   glTexImage4DSGIS: procedure(target: TGLenum; level: TGLint; internalformat: TGLenum; width: TGLsizei; height: TGLsizei; depth: TGLsizei; size4d: TGLsizei; border: TGLint; format: TGLenum; _type: TGLenum; const pixels: PGLvoid);  stdcall;
+   glTexSubImage4DSGIS: procedure(target: TGLenum; level: TGLint; xoffset: TGLint; yoffset: TGLint; zoffset: TGLint; woffset: TGLint; width: TGLsizei; height: TGLsizei; depth: TGLsizei; size4d: TGLsizei; format: TGLenum; _type: TGLenum; const pixels: PGLvoid);  stdcall;
+
+   // GL_SGIS_texture_color_mask
+   glTextureColorMaskSGIS: procedure(red: TGLboolean; green: TGLboolean; blue: TGLboolean; alpha: TGLboolean);  stdcall;
+
+   // GL_SGIS_texture_filter4
+   glGetTexFilterFuncSGIS: procedure(target: TGLenum; filter: TGLenum; weights: PGLfloat);  stdcall;
+   glTexFilterFuncSGIS: procedure(target: TGLenum; filter: TGLenum; n: TGLsizei; const weights: PGLfloat);  stdcall;
+
+   // GL_SGIX_async
+   glAsyncMarkerSGIX: procedure(marker: TGLuint);  stdcall;
+   glFinishAsyncSGIX: function(markerp: PGLuint): TGLint;  stdcall;
+   glPollAsyncSGIX: function(markerp: PGLuint): TGLint;  stdcall;
+   glGenAsyncMarkersSGIX: function(range: TGLsizei): TGLuint;  stdcall;
+   glDeleteAsyncMarkersSGIX: procedure(marker: TGLuint; range: TGLsizei);  stdcall;
+   glIsAsyncMarkerSGIX: function(marker: TGLuint): TGLboolean;  stdcall;
+
+   // GL_SGIX_flush_raster
+   glFlushRasterSGIX: procedure();  stdcall;
+
+   // GL_SGIX_fragment_lighting
+   glFragmentColorMaterialSGIX: procedure(face: TGLenum; mode: TGLenum);  stdcall;
+   glFragmentLightfSGIX: procedure(light: TGLenum; pname: TGLenum; param: TGLfloat);  stdcall;
+   glFragmentLightfvSGIX: procedure(light: TGLenum; pname: TGLenum; const params: PGLfloat);  stdcall;
+   glFragmentLightiSGIX: procedure(light: TGLenum; pname: TGLenum; param: TGLint);  stdcall;
+   glFragmentLightivSGIX: procedure(light: TGLenum; pname: TGLenum; const params: PGLint);  stdcall;
+   glFragmentLightModelfSGIX: procedure(pname: TGLenum; param: TGLfloat);  stdcall;
+   glFragmentLightModelfvSGIX: procedure(pname: TGLenum; const params: PGLfloat);  stdcall;
+   glFragmentLightModeliSGIX: procedure(pname: TGLenum; param: TGLint);  stdcall;
+   glFragmentLightModelivSGIX: procedure(pname: TGLenum; const params: PGLint);  stdcall;
+   glFragmentMaterialfSGIX: procedure(face: TGLenum; pname: TGLenum; param: TGLfloat);  stdcall;
+   glFragmentMaterialfvSGIX: procedure(face: TGLenum; pname: TGLenum; const params: PGLfloat);  stdcall;
+   glFragmentMaterialiSGIX: procedure(face: TGLenum; pname: TGLenum; param: TGLint);  stdcall;
+   glFragmentMaterialivSGIX: procedure(face: TGLenum; pname: TGLenum; const params: PGLint);  stdcall;
+   glGetFragmentLightfvSGIX: procedure(light: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall;
+   glGetFragmentLightivSGIX: procedure(light: TGLenum; pname: TGLenum; params: PGLint);  stdcall;
+   glGetFragmentMaterialfvSGIX: procedure(face: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall;
+   glGetFragmentMaterialivSGIX: procedure(face: TGLenum; pname: TGLenum; params: PGLint);  stdcall;
+   glLightEnviSGIX: procedure(pname: TGLenum; param: TGLint);  stdcall;
+
+   // GL_SGIX_framezoom
+   glFrameZoomSGIX: procedure(factor: TGLint);  stdcall;
+
+   // GL_SGIX_igloo_interface
+   glIglooInterfaceSGIX: procedure(pname: TGLenum; const params: PGLvoid);  stdcall;
+
+   // GL_SGIX_instruments
+   glGetInstrumentsSGIX: function(): TGLint;  stdcall;
+   glInstrumentsBufferSGIX: procedure(size: TGLsizei; buffer: PGLint);  stdcall;
+   glPollInstrumentsSGIX: function(marker_p: PGLint): TGLint;  stdcall;
+   glReadInstrumentsSGIX: procedure(marker: TGLint);  stdcall;
+   glStartInstrumentsSGIX: procedure();  stdcall;
+   glStopInstrumentsSGIX: procedure(marker: TGLint);  stdcall;
+
+   // GL_SGIX_list_priority
+   glGetListParameterfvSGIX: procedure(list: TGLuint; pname: TGLenum; params: PGLfloat);  stdcall;
+   glGetListParameterivSGIX: procedure(list: TGLuint; pname: TGLenum; params: PGLint);  stdcall;
+   glListParameterfSGIX: procedure(list: TGLuint; pname: TGLenum; param: TGLfloat);  stdcall;
+   glListParameterfvSGIX: procedure(list: TGLuint; pname: TGLenum; const params: PGLfloat);  stdcall;
+   glListParameteriSGIX: procedure(list: TGLuint; pname: TGLenum; param: TGLint);  stdcall;
+   glListParameterivSGIX: procedure(list: TGLuint; pname: TGLenum; const params: PGLint);  stdcall;
+
+   // GL_SGIX_pixel_texture
+   glPixelTexGenSGIX: procedure(mode: TGLenum);  stdcall;
+
+   // GL_SGIX_polynomial_ffd
+   glDeformationMap3dSGIX: procedure(target: TGLenum; u1: TGLdouble; u2: TGLdouble; ustride: TGLint; uorder: TGLint; v1: TGLdouble; v2: TGLdouble; vstride: TGLint; vorder: TGLint; w1: TGLdouble; w2: TGLdouble; wstride: TGLint; worder: TGLint; const points: PGLdouble);  stdcall;
+   glDeformationMap3fSGIX: procedure(target: TGLenum; u1: TGLfloat; u2: TGLfloat; ustride: TGLint; uorder: TGLint; v1: TGLfloat; v2: TGLfloat; vstride: TGLint; vorder: TGLint; w1: TGLfloat; w2: TGLfloat; wstride: TGLint; worder: TGLint; const points: PGLfloat);  stdcall;
+   glDeformSGIX: procedure(mask: TGLbitfield);  stdcall;
+   glLoadIdentityDeformationMapSGIX: procedure(mask: TGLbitfield);  stdcall;
+
+   // GL_SGIX_reference_plane
+   glReferencePlaneSGIX: procedure(const equation: PGLdouble);  stdcall;
+
+   // GL_SGIX_sprite
+   glSpriteParameterfSGIX: procedure(pname: TGLenum; param: TGLfloat);  stdcall;
+   glSpriteParameterfvSGIX: procedure(pname: TGLenum; const params: PGLfloat);  stdcall;
+   glSpriteParameteriSGIX: procedure(pname: TGLenum; param: TGLint);  stdcall;
+   glSpriteParameterivSGIX: procedure(pname: TGLenum; const params: PGLint);  stdcall;
+
+   // GL_SGIX_tag_sample_buffer
+   glTagSampleBufferSGIX: procedure();  stdcall;
+
+   // GL_SGI_color_table
+   glColorTableSGI: procedure(target: TGLenum; internalformat: TGLenum; width: TGLsizei; format: TGLenum; _type: TGLenum; const table: PGLvoid);  stdcall;
+   glColorTableParameterfvSGI: procedure(target: TGLenum; pname: TGLenum; const params: PGLfloat);  stdcall;
+   glColorTableParameterivSGI: procedure(target: TGLenum; pname: TGLenum; const params: PGLint);  stdcall;
+   glCopyColorTableSGI: procedure(target: TGLenum; internalformat: TGLenum; x: TGLint; y: TGLint; width: TGLsizei);  stdcall;
+   glGetColorTableSGI: procedure(target: TGLenum; format: TGLenum; _type: TGLenum; table: PGLvoid);  stdcall;
+   glGetColorTableParameterfvSGI: procedure(target: TGLenum; pname: TGLenum; params: PGLfloat);  stdcall;
+   glGetColorTableParameterivSGI: procedure(target: TGLenum; pname: TGLenum; params: PGLint);  stdcall;
+
+   // GL_SUNX_constant_data
+   glFinishTextureSUNX: procedure();  stdcall;
+
+   // GL_SUN_global_alpha
+   glGlobalAlphaFactorbSUN: procedure(factor: TGLbyte);  stdcall;
+   glGlobalAlphaFactorsSUN: procedure(factor: TGLshort);  stdcall;
+   glGlobalAlphaFactoriSUN: procedure(factor: TGLint);  stdcall;
+   glGlobalAlphaFactorfSUN: procedure(factor: TGLfloat);  stdcall;
+   glGlobalAlphaFactordSUN: procedure(factor: TGLdouble);  stdcall;
+   glGlobalAlphaFactorubSUN: procedure(factor: TGLubyte);  stdcall;
+   glGlobalAlphaFactorusSUN: procedure(factor: TGLushort);  stdcall;
+   glGlobalAlphaFactoruiSUN: procedure(factor: TGLuint);  stdcall;
+
+   // GL_SUN_mesh_array
+   glDrawMeshArraysSUN: procedure(mode: TGLenum; first: TGLint; count: TGLsizei; width: TGLsizei);  stdcall;
+
+   // GL_SUN_triangle_list
+   glReplacementCodeuiSUN: procedure(code: TGLuint);  stdcall;
+   glReplacementCodeusSUN: procedure(code: TGLushort);  stdcall;
+   glReplacementCodeubSUN: procedure(code: TGLubyte);  stdcall;
+   glReplacementCodeuivSUN: procedure(const code: PGLuint);  stdcall;
+   glReplacementCodeusvSUN: procedure(const code: PGLushort);  stdcall;
+   glReplacementCodeubvSUN: procedure(const code: PGLubyte);  stdcall;
+   glReplacementCodePointerSUN: procedure(_type: TGLenum; stride: TGLsizei; const _pointer: PGLvoid);  stdcall;
+
+   // GL_SUN_vertex
+   glColor4ubVertex2fSUN: procedure(r: TGLubyte; g: TGLubyte; b: TGLubyte; a: TGLubyte; x: TGLfloat; y: TGLfloat);  stdcall;
+   glColor4ubVertex2fvSUN: procedure(const c: PGLubyte; const v: PGLfloat);  stdcall;
+   glColor4ubVertex3fSUN: procedure(r: TGLubyte; g: TGLubyte; b: TGLubyte; a: TGLubyte; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glColor4ubVertex3fvSUN: procedure(const c: PGLubyte; const v: PGLfloat);  stdcall;
+   glColor3fVertex3fSUN: procedure(r: TGLfloat; g: TGLfloat; b: TGLfloat; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glColor3fVertex3fvSUN: procedure(const c: PGLfloat; const v: PGLfloat);  stdcall;
+   glNormal3fVertex3fSUN: procedure(nx: TGLfloat; ny: TGLfloat; nz: TGLfloat; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glNormal3fVertex3fvSUN: procedure(const n: PGLfloat; const v: PGLfloat);  stdcall;
+   glColor4fNormal3fVertex3fSUN: procedure(r: TGLfloat; g: TGLfloat; b: TGLfloat; a: TGLfloat; nx: TGLfloat; ny: TGLfloat; nz: TGLfloat; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glColor4fNormal3fVertex3fvSUN: procedure(const c: PGLfloat; const n: PGLfloat; const v: PGLfloat);  stdcall;
+   glTexCoord2fVertex3fSUN: procedure(s: TGLfloat; t: TGLfloat; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glTexCoord2fVertex3fvSUN: procedure(const tc: PGLfloat; const v: PGLfloat);  stdcall;
+   glTexCoord4fVertex4fSUN: procedure(s: TGLfloat; t: TGLfloat; p: TGLfloat; q: TGLfloat; x: TGLfloat; y: TGLfloat; z: TGLfloat; w: TGLfloat);  stdcall;
+   glTexCoord4fVertex4fvSUN: procedure(const tc: PGLfloat; const v: PGLfloat);  stdcall;
+   glTexCoord2fColor4ubVertex3fSUN: procedure(s: TGLfloat; t: TGLfloat; r: TGLubyte; g: TGLubyte; b: TGLubyte; a: TGLubyte; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glTexCoord2fColor4ubVertex3fvSUN: procedure(const tc: PGLfloat; const c: PGLubyte; const v: PGLfloat);  stdcall;
+   glTexCoord2fColor3fVertex3fSUN: procedure(s: TGLfloat; t: TGLfloat; r: TGLfloat; g: TGLfloat; b: TGLfloat; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glTexCoord2fColor3fVertex3fvSUN: procedure(const tc: PGLfloat; const c: PGLfloat; const v: PGLfloat);  stdcall;
+   glTexCoord2fNormal3fVertex3fSUN: procedure(s: TGLfloat; t: TGLfloat; nx: TGLfloat; ny: TGLfloat; nz: TGLfloat; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glTexCoord2fNormal3fVertex3fvSUN: procedure(const tc: PGLfloat; const n: PGLfloat; const v: PGLfloat);  stdcall;
+   glTexCoord2fColor4fNormal3fVertex3fSUN: procedure(s: TGLfloat; t: TGLfloat; r: TGLfloat; g: TGLfloat; b: TGLfloat; a: TGLfloat; nx: TGLfloat; ny: TGLfloat; nz: TGLfloat; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glTexCoord2fColor4fNormal3fVertex3fvSUN: procedure(const tc: PGLfloat; const c: PGLfloat; const n: PGLfloat; const v: PGLfloat);  stdcall;
+   glTexCoord4fColor4fNormal3fVertex4fSUN: procedure(s: TGLfloat; t: TGLfloat; p: TGLfloat; q: TGLfloat; r: TGLfloat; g: TGLfloat; b: TGLfloat; a: TGLfloat; nx: TGLfloat; ny: TGLfloat; nz: TGLfloat; x: TGLfloat; y: TGLfloat; z: TGLfloat; w: TGLfloat);  stdcall;
+   glTexCoord4fColor4fNormal3fVertex4fvSUN: procedure(const tc: PGLfloat; const c: PGLfloat; const n: PGLfloat; const v: PGLfloat);  stdcall;
+   glReplacementCodeuiVertex3fSUN: procedure(rc: TGLuint; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glReplacementCodeuiVertex3fvSUN: procedure(const rc: PGLuint; const v: PGLfloat);  stdcall;
+   glReplacementCodeuiColor4ubVertex3fSUN: procedure(rc: TGLuint; r: TGLubyte; g: TGLubyte; b: TGLubyte; a: TGLubyte; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glReplacementCodeuiColor4ubVertex3fvSUN: procedure(const rc: PGLuint; const c: PGLubyte; const v: PGLfloat);  stdcall;
+   glReplacementCodeuiColor3fVertex3fSUN: procedure(rc: TGLuint; r: TGLfloat; g: TGLfloat; b: TGLfloat; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glReplacementCodeuiColor3fVertex3fvSUN: procedure(const rc: PGLuint; const c: PGLfloat; const v: PGLfloat);  stdcall;
+   glReplacementCodeuiNormal3fVertex3fSUN: procedure(rc: TGLuint; nx: TGLfloat; ny: TGLfloat; nz: TGLfloat; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glReplacementCodeuiNormal3fVertex3fvSUN: procedure(const rc: PGLuint; const n: PGLfloat; const v: PGLfloat);  stdcall;
+   glReplacementCodeuiColor4fNormal3fVertex3fSUN: procedure(rc: TGLuint; r: TGLfloat; g: TGLfloat; b: TGLfloat; a: TGLfloat; nx: TGLfloat; ny: TGLfloat; nz: TGLfloat; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glReplacementCodeuiColor4fNormal3fVertex3fvSUN: procedure(const rc: PGLuint; const c: PGLfloat; const n: PGLfloat; const v: PGLfloat);  stdcall;
+   glReplacementCodeuiTexCoord2fVertex3fSUN: procedure(rc: TGLuint; s: TGLfloat; t: TGLfloat; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glReplacementCodeuiTexCoord2fVertex3fvSUN: procedure(const rc: PGLuint; const tc: PGLfloat; const v: PGLfloat);  stdcall;
+   glReplacementCodeuiTexCoord2fNormal3fVertex3fSUN: procedure(rc: TGLuint; s: TGLfloat; t: TGLfloat; nx: TGLfloat; ny: TGLfloat; nz: TGLfloat; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glReplacementCodeuiTexCoord2fNormal3fVertex3fvSUN: procedure(const rc: PGLuint; const tc: PGLfloat; const n: PGLfloat; const v: PGLfloat);  stdcall;
+   glReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fSUN: procedure(rc: TGLuint; s: TGLfloat; t: TGLfloat; r: TGLfloat; g: TGLfloat; b: TGLfloat; a: TGLfloat; nx: TGLfloat; ny: TGLfloat; nz: TGLfloat; x: TGLfloat; y: TGLfloat; z: TGLfloat);  stdcall;
+   glReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fvSUN: procedure(const rc: PGLuint; const tc: PGLfloat; const c: PGLfloat; const n: PGLfloat; const v: PGLfloat);  stdcall;
+
+   // WGL_ARB_buffer_region
+   wglCreateBufferRegionARB: function(hDC: HDC; iLayerPlane: TGLint; uType: TGLuint): THandle;  stdcall;
+   wglDeleteBufferRegionARB: procedure(hRegion: THandle);  stdcall;
+   wglSaveBufferRegionARB: function(hRegion: THandle; x: TGLint; y: TGLint; width: TGLint; height: TGLint): Boolean;  stdcall;
+   wglRestoreBufferRegionARB: function(hRegion: THandle; x: TGLint; y: TGLint; width: TGLint; height: TGLint; xSrc: TGLint; ySrc: TGLint): Boolean;  stdcall;
+
+   // WGL_ARB_extensions_string
+   wglGetExtensionsStringARB: function(hdc: HDC): PChar;  stdcall;
+
+   // WGL_ARB_make_current_read
+   wglMakeContextCurrentARB: function(hDrawDC: HDC; hReadDC: HDC; hglrc: HGLRC): Boolean;  stdcall;
+   wglGetCurrentReadDCARB: function(): HDC;  stdcall;
+
+   // WGL_ARB_pbuffer
+   wglCreatePbufferARB: function(hDC: HDC; iPixelFormat: TGLint; iWidth: TGLint; iHeight: TGLint; const piAttribList: PGLint): HPBUFFERARB;  stdcall;
+   wglGetPbufferDCARB: function(hPbuffer: HPBUFFERARB): HDC;  stdcall;
+   wglReleasePbufferDCARB: function(hPbuffer: HPBUFFERARB; hDC: HDC): TGLint;  stdcall;
+   wglDestroyPbufferARB: function(hPbuffer: HPBUFFERARB): Boolean;  stdcall;
+   wglQueryPbufferARB: function(hPbuffer: HPBUFFERARB; iAttribute: TGLint; piValue: PGLint): Boolean;  stdcall;
+
+   // WGL_ARB_pixel_format
+   wglGetPixelFormatAttribivARB: function(hdc: HDC; iPixelFormat: TGLint; iLayerPlane: TGLint; nAttributes: TGLuint; const piAttributes: PGLint; piValues: PGLint): Boolean;  stdcall;
+   wglGetPixelFormatAttribfvARB: function(hdc: HDC; iPixelFormat: TGLint; iLayerPlane: TGLint; nAttributes: TGLuint; const piAttributes: PGLint; pfValues: PGLfloat): Boolean;  stdcall;
+   wglChoosePixelFormatARB: function(hdc: HDC; const piAttribIList: PGLint; const pfAttribFList: PGLfloat; nMaxFormats: TGLuint; piFormats: PGLint; nNumFormats: PGLuint): BOOL;  stdcall;
+
+   // WGL_ARB_render_texture
+   wglBindTexImageARB: function(hPbuffer: HPBUFFERARB; iBuffer: TGLint): Boolean;  stdcall;
+   wglReleaseTexImageARB: function(hPbuffer: HPBUFFERARB; iBuffer: TGLint): Boolean;  stdcall;
+   wglSetPbufferAttribARB: function(hPbuffer: HPBUFFERARB; const piAttribList: PGLint): Boolean;  stdcall;
+
+   // WGL_EXT_display_color_table
+   wglCreateDisplayColorTableEXT: function(id: TGLushort): TGLboolean;  stdcall;
+   wglLoadDisplayColorTableEXT: function(const table: PGLushort; length: TGLuint): TGLboolean;  stdcall;
+   wglBindDisplayColorTableEXT: function(id: TGLushort): TGLboolean;  stdcall;
+   wglDestroyDisplayColorTableEXT: procedure(id: TGLushort);  stdcall;
+
+   // WGL_EXT_extensions_string
+   wglGetExtensionsStringEXT: function(): PChar;  stdcall;
+
+   // WGL_EXT_make_current_read
+   wglMakeContextCurrentEXT: function(hDrawDC: HDC; hReadDC: HDC; hglrc: HGLRC): Boolean;  stdcall;
+   wglGetCurrentReadDCEXT: function(): HDC;  stdcall;
+
+   // WGL_EXT_pbuffer
+   wglCreatePbufferEXT: function(hDC: HDC; iPixelFormat: TGLint; iWidth: TGLint; iHeight: TGLint; const piAttribList: PGLint): HPBUFFEREXT;  stdcall;
+   wglGetPbufferDCEXT: function(hPbuffer: HPBUFFEREXT): HDC;  stdcall;
+   wglReleasePbufferDCEXT: function(hPbuffer: HPBUFFEREXT; hDC: HDC): TGLint;  stdcall;
+   wglDestroyPbufferEXT: function(hPbuffer: HPBUFFEREXT): Boolean;  stdcall;
+   wglQueryPbufferEXT: function(hPbuffer: HPBUFFEREXT; iAttribute: TGLint; piValue: PGLint): Boolean;  stdcall;
+
+   // WGL_EXT_pixel_format
+   wglGetPixelFormatAttribivEXT: function(hdc: HDC; iPixelFormat: TGLint; iLayerPlane: TGLint; nAttributes: TGLuint; piAttributes: PGLint; piValues: PGLint): Boolean;  stdcall;
+   wglGetPixelFormatAttribfvEXT: function(hdc: HDC; iPixelFormat: TGLint; iLayerPlane: TGLint; nAttributes: TGLuint; piAttributes: PGLint; pfValues: PGLfloat): Boolean;  stdcall;
+   wglChoosePixelFormatEXT: function(hdc: HDC; const piAttribIList: PGLint; const pfAttribFList: PGLfloat; nMaxFormats: TGLuint; piFormats: PGLint; nNumFormats: PGLuint): Boolean;  stdcall;
+
+   // WGL_EXT_swap_control
+   wglSwapIntervalEXT: function(interval: TGLint): Boolean;  stdcall;
+   wglGetSwapIntervalEXT: function(): TGLint;  stdcall;
+   // WGL_I3D_digital_video_control
+   wglGetDigitalVideoParametersI3D: function(hDC: HDC; iAttribute: TGLint; piValue: PGLint): Boolean;  stdcall;
+   wglSetDigitalVideoParametersI3D: function(hDC: HDC; iAttribute: TGLint; const piValue: PGLint): Boolean;  stdcall;
+
+   // WGL_I3D_gamma
+   wglGetGammaTableParametersI3D: function(hDC: HDC; iAttribute: TGLint; piValue: PGLint): Boolean;  stdcall;
+   wglSetGammaTableParametersI3D: function(hDC: HDC; iAttribute: TGLint; const piValue: PGLint): Boolean;  stdcall;
+   wglGetGammaTableI3D: function(hDC: HDC; iEntries: TGLint; puRed: PGLushort; puGreen: PGLushort; puBlue: PGLushort): Boolean;  stdcall;
+   wglSetGammaTableI3D: function(hDC: HDC; iEntries: TGLint; const puRed: PGLushort; const puGreen: PGLushort; const puBlue: PGLushort): Boolean;  stdcall;
+
+   // WGL_I3D_genlock
+   wglEnableGenlockI3D: function(hDC: HDC): Boolean;  stdcall;
+   wglDisableGenlockI3D: function(hDC: HDC): Boolean;  stdcall;
+   wglIsEnabledGenlockI3D: function(hDC: HDC; pFlag: Boolean): Boolean;  stdcall;
+   wglGenlockSourceI3D: function(hDC: HDC; uSource: TGLuint): Boolean;  stdcall;
+   wglGetGenlockSourceI3D: function(hDC: HDC; uSource: PGLuint): Boolean;  stdcall;
+   wglGenlockSourceEdgeI3D: function(hDC: HDC; uEdge: TGLuint): Boolean;  stdcall;
+   wglGetGenlockSourceEdgeI3D: function(hDC: HDC; uEdge: PGLuint): Boolean;  stdcall;
+   wglGenlockSampleRateI3D: function(hDC: HDC; uRate: TGLuint): Boolean;  stdcall;
+   wglGetGenlockSampleRateI3D: function(hDC: HDC; uRate: PGLuint): Boolean;  stdcall;
+   wglGenlockSourceDelayI3D: function(hDC: HDC; uDelay: TGLuint): Boolean;  stdcall;
+   wglGetGenlockSourceDelayI3D: function(hDC: HDC; uDelay: PGLuint): Boolean;  stdcall;
+   wglQueryGenlockMaxSourceDelayI3D: function(hDC: HDC; uMaxLineDelay: PGLuint; uMaxPixelDelay: PGLuint): Boolean;  stdcall;
+
+   // WGL_I3D_image_buffer
+   wglCreateImageBufferI3D: function(hDC: HDC; dwSize: TGLuint; uFlags: TGLuint): TGLvoid;  stdcall;
+   wglDestroyImageBufferI3D: function(hDC: HDC; pAddress: TGLvoid): Boolean;  stdcall;
+   wglAssociateImageBufferEventsI3D: function(hDC: HDC; const pEvent: THandle; const pAddress: PGLvoid; const pSize: PGLuint; count: TGLuint): Boolean;  stdcall;
+   wglReleaseImageBufferEventsI3D: function(hDC: HDC; const pAddress: PGLvoid; count: TGLuint): Boolean;  stdcall;
+
+   // WGL_I3D_swap_frame_lock
+   wglEnableFrameLockI3D: function(): Boolean;  stdcall;
+   wglDisableFrameLockI3D: function(): Boolean;  stdcall;
+   wglIsEnabledFrameLockI3D: function(pFlag: Boolean): Boolean;  stdcall;
+   wglQueryFrameLockMasterI3D: function(pFlag: Boolean): Boolean;  stdcall;
+
+   // WGL_I3D_swap_frame_usage
+   wglGetFrameUsageI3D: function(pUsage: PGLfloat): Boolean;  stdcall;
+   wglBeginFrameTrackingI3D: function(): Boolean;  stdcall;
+   wglEndFrameTrackingI3D: function(): Boolean;  stdcall;
+   wglQueryFrameTrackingI3D: function(pFrameCount: PGLuint; pMissedFrames: PGLuint; pLastMissedUsage: PGLfloat): Boolean;  stdcall;
+
+   // WGL_NV_vertex_array_range
+   wglAllocateMemoryNV: procedure(size: TGLsizei; readfreq: TGLfloat; writefreq: TGLfloat; priority: TGLfloat);  stdcall;
+   wglFreeMemoryNV: procedure(_pointer: Pointer);  stdcall;
+
+   // WGL_OML_sync_control
+   wglGetSyncValuesOML: function(hdc: HDC; ust: PGLint64; msc: PGLint64; sbc: PGLint64): Boolean;  stdcall;
+   wglGetMscRateOML: function(hdc: HDC; numerator: PGLint; denominator: PGLint): Boolean;  stdcall;
+   wglSwapBuffersMscOML: function(hdc: HDC; target_msc: TGLint64; divisor: TGLint64; remainder: TGLint64): TGLint64;  stdcall;
+   wglSwapLayerBuffersMscOML: function(hdc: HDC; fuPlanes: TGLint; target_msc: TGLint64; divisor: TGLint64; remainder: TGLint64): TGLint64;  stdcall;
+   wglWaitForMscOML: function(hdc: HDC; target_msc: TGLint64; divisor: TGLint64; remainder: TGLint64; ust: PGLint64; msc: PGLint64; sbc: PGLint64): Boolean;  stdcall;
+   wglWaitForSbcOML: function(hdc: HDC; target_sbc: TGLint64; ust: PGLint64; msc: PGLint64; sbc: PGLint64): Boolean;  stdcall;
+
+   // WIN_draw_range_elements
+   glDrawRangeElementsWIN: procedure(mode: TGLenum; start: TGLuint; _end: TGLuint; count: TGLsizei; _type: TGLenum; const indices: PGLvoid);  stdcall;
+
+   // WIN_swap_hint
+   glAddSwapHintRectWIN: procedure(x: TGLint; y: TGLint; width: TGLsizei; height: TGLsizei);  stdcall;
+
+   // GL_ARB_vertex_shader
+   glGetActiveAttribARB: procedure(programobj:GLhandleARB;index:GLuint;maxLength:GLsizei;var length:GLsizei;var size:GLint;var _type:GLenum;name:PChar);stdcall;
+   glGetAttribLocationARB: function(programObj:GLhandleARB;const char:PChar):glint;stdcall;
+   glBindAttribLocationARB: procedure(programObj:GLhandleARB;index:GLuint;const name:PChar);
+   //glGetVertexAttribPointervARB: procedure(index: gluint; pname: glenum; p:PPointer); stdcall;
+
+   // GL_ARB_SHADER_OBJECTS
+   glDeleteObjectARB: procedure(Obj: GLHandleARB); stdcall;
+   glGetHandleARB: function(pname: GlEnum):GLHandleARB; stdcall;
+   glDetachObjectARB: procedure(container, attached: GLHandleARB); stdcall;
+   glCreateShaderObjectARB: function(shaderType: glenum):GLHandleARB; stdcall;
+   glShaderSourceARB: procedure(shaderObj :GLHandleARB; count:glsizei; _string:PPGLCharARB; lengths:pglint);stdcall;
+   glCompileShaderARB: function(shaderObj: GLHandleARB):glboolean; stdcall;
+   glCreateProgramObjectARB: function:GLHandleARB; stdcall;
+   glAttachObjectARB: procedure(programObj, shaderObj:GLhandleARB); stdcall;
+   glLinkProgramARB: procedure(programObj: GLHandleARB); stdcall;
+   glUseProgramObjectARB: procedure(programObj:GLHandleARB); stdcall;
+   glValidateProgramARB: procedure(programObj: GLhandleARB); stdcall;
+   glUniform1fARB: procedure(location:glint;v0:glfloat); stdcall;
+   glUniform2fARB: procedure(location:glint;v0,v1:glfloat); stdcall;
+   glUniform3fARB: procedure(location:glint;v0,v1,v2:glfloat); stdcall;
+   glUniform4fARB: procedure(location:glint;v0,v1,v2,v3:glfloat); stdcall;
+   glUniform1iARB: procedure(location:glint;v0:glint); stdcall;
+   glUniform2iARB: procedure(location:glint;v0,v1:glint); stdcall;
+   glUniform3iARB: procedure(location:glint;v0,v1,v2:glint); stdcall;
+   glUniform4iARB: procedure(location:glint;v0,v1,v2,v3:glint); stdcall;
+   glUniform1fvARB: procedure(location:glint;value:pglfloat); stdcall;
+   glUniform2fvARB: procedure(location:glint;value:pglfloat); stdcall;
+   glUniform3fvARB: procedure(location:glint;value:pglfloat); stdcall;
+   glUniform4fvARB: procedure(location:glint;value:pglfloat); stdcall;
+   glUniform1ivARB: procedure(location:glint;value:pglint); stdcall;
+   glUniform2ivARB: procedure(location:glint;value:pglint); stdcall;
+   glUniform3ivARB: procedure(location:glint;value:pglint); stdcall;
+   glUniform4ivARB: procedure(location:glint;value:pglint); stdcall;
+   glUniformMatrix2fvARB: procedure(location:glint;count:glsizei;transpose:glboolean;value:pglfloat); stdcall;
+   glUniformMatrix3fvARB: procedure(location:glint;count:glsizei;transpose:glboolean;value:pglfloat); stdcall;
+   glUniformMatrix4fvARB: procedure(location:glint;count:glsizei;transpose:glboolean;value:pglfloat); stdcall;
+   glGetObjectParameterfvARB: procedure(Obj:GLHandleARB; pname:GLEnum; params:PGLFloat); stdcall;
+   glGetObjectParameterivARB: procedure(Obj:GLHandleARB; pname:GLEnum; params:PGLInt); stdcall;
+   glGetInfoLogARB: procedure(shaderObj:GLHandleARB; maxLength:glsizei; var length:glint;infoLog:PChar); stdcall;
+   glGetAttachedObjectsARB: procedure(programobj:GLhandleARB; maxCount:GLsizei; var count:GLsizei;objects:PGLhandleARB); stdcall;
+   glGetUniformLocationARB: function(programObj:GLhandleARB; const char:PChar):glint; stdcall;
+   glGetActiveUniformARB:procedure(programobj:GLhandleARB;index:GLuint;maxLength:GLsizei;var length:GLsizei;var size:GLint;var _type:GLenum;name:PChar); stdcall;
+   glGetUniformfvARB: procedure(programObj: GLhandleARB; location:GLint; params:PGLfloat); stdcall;
+   glGetUniformivARB: procedure(programObj: GLhandleARB; location:GLint; params:PGLInt); stdcall;
+   glGetShaderSourceARB: procedure(shader:GLhandleARB; maxLength:GLsizei; var length:GLsizei; source:PChar); stdcall;
+
+   // GL_ARB_Occlusion_Query
+   glGenQueriesARB:procedure(n:GLsizei;ids:PGLuint);stdcall;
+   glDeleteQueriesARB:procedure(n:GLsizei;const ids:PGLuint);stdcall;
+   glIsQueryARB:function(id:GLuint):boolean;stdcall;
+   glBeginQueryARB:procedure(target:GLenum;id:GLuint);stdcall;
+   glEndQueryARB:procedure(target:GLenum);stdcall;
+   glGetQueryivARB:procedure(target,pname:GLenum;params:PGLint);stdcall;
+   glGetQueryObjectivARB:procedure(id:GLuint;pname:GLenum;params:PGLint);stdcall;
+   glGetQueryObjectuivARB:procedure(id:GLuint;pname:GLenum;params:PGLuint);stdcall;
+
+   // ARB less version for GL 1.5
+   glGenQueries:procedure(n:GLsizei;ids:PGLuint);stdcall;
+   glDeleteQueries:procedure(n:GLsizei;const ids:PGLuint);stdcall;
+   glIsQuery:function(id:GLuint):boolean;stdcall;
+   glBeginQuery:procedure(target:GLenum;id:GLuint);stdcall;
+   glEndQuery:procedure(target:GLenum);stdcall;
+   glGetQueryiv:procedure(target,pname:GLenum;params:PGLint);stdcall;
+   glGetQueryObjectiv:procedure(id:GLuint;pname:GLenum;params:PGLint);stdcall;
+   glGetQueryObjectuiv:procedure(id:GLuint;pname:GLenum;params:PGLuint);stdcall;
+   
+   {***************************************************************************************************************}
+    //Процедуры и функции отсутствующие в версии GL1.5
+	
+    // GL_EXT_framebuffer_object
+   glIsRenderbufferEXT:  function(renderbuffer: TGLuint): Boolean; stdcall;  
+   glBindRenderbufferEXT: procedure(target: TGLenum; renderbuffer: TGLuint); stdcall;  
+   glDeleteRenderbuffersEXT: procedure(n: TGLsizei; const renderbuffers: PGLuint); stdcall;  
+   glGenRenderbuffersEXT: procedure(n: TGLsizei; renderbuffers: PGLuint); stdcall;  
+   glRenderbufferStorageEXT: procedure(target: TGLenum; internalformat: TGLenum; width: TGLsizei; height: TGLsizei); stdcall;  
+   glGetRenderbufferParameterivEXT: procedure(target: TGLenum; pname: TGLenum; params: PGLint); stdcall;  
+   glIsFramebufferEXT: function(framebuffer: TGLuint): Boolean; stdcall;  
+   glBindFramebufferEXT: procedure(target: TGLenum; framebuffer: TGLuint); stdcall;  
+   glDeleteFramebuffersEXT: procedure(n: TGLsizei; const framebuffers: PGLuint); stdcall;  
+   glGenFramebuffersEXT: procedure(n: TGLsizei; framebuffers: PGLuint); stdcall;  
+   glCheckFramebufferStatusEXT: function(target: TGLenum): TGLenum; stdcall;  
+   glFramebufferTexture1DEXT: procedure(target: TGLenum; attachment: TGLenum; textarget: TGLenum; texture: TGLuint; level: TGLint); stdcall;  
+   glFramebufferTexture2DEXT: procedure(target: TGLenum; attachment: TGLenum; textarget: TGLenum; texture: TGLuint; level: TGLint); stdcall;  
+   glFramebufferTexture3DEXT: procedure(target: TGLenum; attachment: TGLenum; textarget: TGLenum; texture: TGLuint; level: TGLint; zoffset: TGLint); stdcall;  
+   glFramebufferRenderbufferEXT: procedure(target: TGLenum; attachment: TGLenum; renderbuffertarget: TGLenum; renderbuffer: TGLuint); stdcall;  
+   glGetFramebufferAttachmentParameterivEXT: procedure(target: TGLenum; attachment: TGLenum; pname: TGLenum; params: PGLint); stdcall;  
+   glGenerateMipmapEXT: procedure(target: TGLenum); stdcall;  
+   
+
+   implementation
+
+
+   initialization
+   Set8087CW($133F);
+
+   finalization
+
 end.

@@ -2,7 +2,7 @@ unit hiGL_BindTexture;
 
 interface
 
-uses Kol,Share,Debug,OpenGL,hiGL_GenTextures;
+uses Kol,Share,Debug,OpenGL;
 var
   Texture: Integer;
 type
