@@ -33,11 +33,6 @@ implementation
 
 uses hiGL_Main;
 
-
-function wglUseFontOutlines(p1: HDC; p2, p3, p4: DWORD;
-  p5, p6: Single; p7: Integer; p8: PGlyphMetricsFloat): BOOL; stdcall; external opengl32 name 'wglUseFontOutlinesA';
-
-
 procedure THIGl_Text._work_doInit;
 var hFontNew, hOldFont : HFONT;
     lf : TLOGFONT;
