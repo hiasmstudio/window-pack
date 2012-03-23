@@ -77,32 +77,55 @@ type
    PGLvoid     = Pointer;
    PGLint64    = ^TGLint64;
 
-   // Datatypes corresponding to GL's types TGL(name)(type)(count)
-   TGLVectori4 = array[0..3] of TGLInt;
-   TGLVectorf4 = array[0..3] of TGLFloat;
-   TGLVectord3 = array[0..2] of TGLDouble;
-   TGLVectord4 = array[0..3] of TGLDouble;
-   TGLVectorp4 = array[0..3] of Pointer;
+  // Datatypes corresponding to GL's types TGL(name)(type)(count)
+  TGLVectorub2 = array[0..1] of GLubyte;
+  TGLVectori2  = array[0..1] of GLint;
+  TGLVectorf2  = array[0..1] of GLfloat;
+  TGLVectord2  = array[0..1] of GLdouble;
+  TGLVectorp2  = array[0..1] of Pointer;
 
-   TGLArrayf4  = array [0..3] of TGLFloat;
-   TGLArrayf3  = array [0..2] of TGLFloat;
-   TGLArrayd3  = array [0..2] of TGLDouble;
-   TGLArrayi4  = array [0..3] of TGLint;
-   TGLArrayp4  = array [0..3] of Pointer;
+  TGLVectorub3 = array[0..2] of GLubyte;
+  TGLVectori3  = array[0..2] of GLint;
+  TGLVectorf3  = array[0..2] of GLfloat;
+  TGLVectord3  = array[0..2] of GLdouble;
+  TGLVectorp3  = array[0..2] of Pointer;
 
-   TGLMatrixf4 = array[0..3, 0..3] of Single;
-   TGLMatrixd4 = array[0..3, 0..3] of Double;
-   TGlMatrixi4 = array[0..3, 0..3] of Integer;
+  TGLVectorub4 = array[0..3] of GLubyte;
+  TGLVectori4  = array[0..3] of GLint;
+  TGLVectorf4  = array[0..3] of GLfloat;
+  TGLVectord4  = array[0..3] of GLdouble;
+  TGLVectorp4  = array[0..3] of Pointer;
 
-   // Datatypes corresponding to OpenGL12.pas for easy porting
-   TVector3d = TGLVectord3;
+  TGLArrayf4 = TGLVectorf4;
+  TGLArrayf3 = TGLVectorf3;
+  TGLArrayd3 = TGLVectord3;
+  TGLArrayi4 = TGLVectori4;
+  TGLArrayp4 = TGLVectorp4;
 
-   TVector4i = TGLVectori4;
-   TVector4f = TGLVectorf4;
-   TVector4p = TGLVectorp4;
+  TGlMatrixub3 = array[0..2, 0..2] of GLubyte;
+  TGlMatrixi3  = array[0..2, 0..2] of GLint;
+  TGLMatrixf3  = array[0..2, 0..2] of GLfloat;
+  TGLMatrixd3  = array[0..2, 0..2] of GLdouble;
 
-   TMatrix4f = TGLMatrixf4;
-   TMatrix4d = TGLMatrixd4;
+  TGlMatrixub4 = array[0..3, 0..3] of GLubyte;
+  TGlMatrixi4  = array[0..3, 0..3] of GLint;
+  TGLMatrixf4  = array[0..3, 0..3] of GLfloat;
+  TGLMatrixd4  = array[0..3, 0..3] of GLdouble;
+
+  TGLVector3f = TGLVectorf3;
+
+  // Datatypes corresponding to OpenGL12.pas for easy porting
+  TVector3d = TGLVectord3;
+
+  TVector4i = TGLVectori4;
+  TVector4f = TGLVectorf4;
+  TVector4p = TGLVectorp4;
+
+  TMatrix4f = TGLMatrixf4;
+  TMatrix4d = TGLMatrixd4;
+
+  PGLMatrixd4 = ^TGLMatrixd4;
+  PVector4i = ^TVector4i;
 
 
    // WGL_ARB_pbuffer
@@ -121,6 +144,11 @@ type
    PPGLCharARB  = ^PChar;
    PGLCharARB   = PChar;
    GLCharARB    = Char;
+   
+    // GL_VERSION_2_0
+  GLHandle = Integer;
+  PGLchar = PAnsiChar;
+  PPGLchar = ^PGLChar;
 
 type
    // GLU types
@@ -4187,8 +4215,11 @@ procedure   gluOrtho2D(left, right, bottom, top: TGLdouble);  stdcall; external 
 procedure   gluPerspective(fovy, aspect, zNear, zFar: TGLdouble);  stdcall; external glu32;
 procedure   gluPickMatrix(x, y, width, height: TGLdouble; viewport: TVector4i);  stdcall; external glu32;
 procedure   gluLookAt(eyex, eyey, eyez, centerx, centery, centerz, upx, upy, upz: TGLdouble);  stdcall; external glu32;
-function    gluProject(objx, objy, objz: TGLdouble; modelMatrix: TGLMatrixd4; projMatrix: TGLMatrixd4; viewport: TVector4i; winx, winy, winz: PGLdouble): TGLint;  stdcall; external glu32;
-function    gluUnProject(winx, winy, winz: TGLdouble; modelMatrix: TGLMatrixd4; projMatrix: TGLMatrixd4; viewport: TVector4i;   objx, objy, objz: PGLdouble): TGLint;  stdcall; external glu32;
+
+
+function  gluProject (objx, objy, obyz: GLdouble;modelMatrix: PGLdouble;projMatrix: PGLdouble;viewport: PGLint;var winx, winy, winz: GLDouble): Integer; stdcall; external glu32;
+function  gluUnProject(winx, winy, winz: GLdouble;modelMatrix: PGLdouble;projMatrix: PGLdouble;viewport: PGLint;var objx, objy, objz: GLdouble): Integer; stdcall; external glu32;
+
 function    gluScaleImage(format: TGLEnum; widthin, heightin: TGLint; typein: TGLEnum; datain: Pointer; widthout, heightout: TGLint; typeout: TGLEnum; dataout: Pointer): TGLint;  stdcall; external glu32;
 function    gluBuild1DMipmaps(target: TGLEnum; components, width: TGLint; format, atype: TGLEnum; data: Pointer): TGLint;  stdcall; external glu32;
 function    gluBuild2DMipmaps(target: TGLEnum; components, width, height: TGLint; format, atype: TGLEnum; Data: Pointer): TGLint;  stdcall; external glu32;
@@ -4207,14 +4238,14 @@ function    gluNewTess: PGLUtesselator; stdcall; external glu32;
 procedure   gluDeleteTess(tess: PGLUtesselator);  stdcall; external glu32;
 procedure   gluTessBeginPolygon(tess: PGLUtesselator; polygon_data: Pointer);  stdcall; external glu32;
 procedure   gluTessBeginContour(tess: PGLUtesselator);  stdcall; external glu32;
-procedure   gluTessVertex(tess: PGLUtesselator; coords: TGLArrayd3; data: Pointer);  stdcall; external glu32;
+procedure   gluTessVertex( tess: PGLUtesselator; coords: PGLdouble; data: Pointer ); stdcall; external glu32;
 procedure   gluTessEndContour(tess: PGLUtesselator);  stdcall; external glu32;
 procedure   gluTessEndPolygon(tess: PGLUtesselator);  stdcall; external glu32;
 procedure   gluTessProperty(tess: PGLUtesselator; which: TGLEnum; value: TGLdouble);  stdcall; external glu32;
 procedure   gluTessNormal(tess: PGLUtesselator; x, y, z: TGLdouble);  stdcall; external glu32;
 procedure   gluTessCallback(tess: PGLUtesselator; which: TGLEnum; fn: Pointer);  stdcall; external glu32;
 procedure   gluGetTessProperty(tess: PGLUtesselator; which: TGLEnum; value: PGLdouble);  stdcall; external glu32;
-function    gluNewNurbsRenderer: PGLUnurbs; stdcall; external glu32;
+function         gluNewNurbsRenderer: PGLUnurbs; stdcall; external glu32;
 procedure   gluDeleteNurbsRenderer(nobj: PGLUnurbs);  stdcall; external glu32;
 procedure   gluBeginSurface(nobj: PGLUnurbs);  stdcall; external glu32;
 procedure   gluBeginCurve(nobj: PGLUnurbs);  stdcall; external glu32;
@@ -4225,7 +4256,7 @@ procedure   gluEndTrim(nobj: PGLUnurbs);  stdcall; external glu32;
 procedure   gluPwlCurve(nobj: PGLUnurbs; count: TGLint; points: PGLfloat; stride: TGLint; atype: TGLEnum);  stdcall; external glu32;
 procedure   gluNurbsCurve(nobj: PGLUnurbs; nknots: TGLint; knot: PGLfloat; stride: TGLint; ctlarray: PGLfloat; order: TGLint; atype: TGLEnum);  stdcall; external glu32;
 procedure   gluNurbsSurface(nobj: PGLUnurbs; sknot_count: TGLint; sknot: PGLfloat; tknot_count: TGLint; tknot: PGLfloat; s_stride, t_stride: TGLint; ctlarray: PGLfloat; sorder, torder: TGLint; atype: TGLEnum);  stdcall; external glu32;
-procedure   gluLoadSamplingMatrices(nobj: PGLUnurbs; modelMatrix, projMatrix: TGLMatrixf4; viewport: TVector4i);  stdcall; external glu32;
+procedure   gluLoadSamplingMatrices (nobj: PGLUnurbsObj; modelMatrix: PGLdouble; projMatrix: PGLdouble; viewport: PGLint);  stdcall; external glu32;
 procedure   gluNurbsProperty(nobj: PGLUnurbs; aproperty: TGLEnum; value: TGLfloat);  stdcall; external glu32;
 procedure   gluGetNurbsProperty(nobj: PGLUnurbs; aproperty: TGLEnum; value: PGLfloat);  stdcall; external glu32;
 procedure   gluNurbsCallback(nobj: PGLUnurbs; which: TGLEnum; fn: TGLUNurbsErrorProc);  stdcall; external glu32;
