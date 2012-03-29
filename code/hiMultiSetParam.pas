@@ -49,16 +49,24 @@ TRY
   if (idx < 0) or (idx > Param.Count - 1) then exit;
   str := Param.Items[idx];
   
-  {$ifdef _PROTECT_MAX_}
-  if (_prop_Char = '') or (str = '') then exit;
-  {$endif}
-  if (pos(_prop_Char[1], str) = 0) then exit;
-  
-  for i := 0 to FOutCount - 1 do
-  case _prop_OutType of
-    0: _hi_OnEvent(onSet[i], str2int(fparse(Str, _prop_Char[1])));
-    1: _hi_OnEvent(onSet[i], fparse(Str, _prop_Char[1]));
-  end;
+  if str = '' then exit;
+  if (_prop_Char <> '') then
+  begin  
+    if (pos(_prop_Char[1], str) = 0) then exit;
+    for i := 0 to FOutCount - 1 do
+    case _prop_OutType of
+      0: _hi_OnEvent(onSet[i], str2int(fparse(Str, _prop_Char[1])));
+      1: _hi_OnEvent(onSet[i], fparse(Str, _prop_Char[1]));
+    end;
+  end
+  else
+  begin
+    for i := 0 to min(Length(Str) - 1, FOutCount - 1) do
+    case _prop_OutType of
+      0: _hi_OnEvent(onSet[i], str2int(Str[i + 1]));
+      1: _hi_OnEvent(onSet[i], Str[i + 1]);
+    end;
+  end;  
 FINALLY
   Param.free;
 END;
