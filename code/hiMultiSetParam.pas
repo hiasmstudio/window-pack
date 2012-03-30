@@ -52,7 +52,6 @@ TRY
   if str = '' then exit;
   if (_prop_Char <> '') then
   begin  
-    if (pos(_prop_Char[1], str) = 0) then exit;
     for i := 0 to FOutCount - 1 do
     case _prop_OutType of
       0: _hi_OnEvent(onSet[i], str2int(fparse(Str, _prop_Char[1])));
