@@ -49,7 +49,6 @@ TRY
   if (idx < 0) or (idx > Param.Count - 1) then exit;
   str := Param.Items[idx];
   
-  if str = '' then exit;
   if (_prop_Char <> '') then
   begin  
     for i := 0 to FOutCount - 1 do
