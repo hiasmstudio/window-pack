@@ -40,12 +40,17 @@ end;
 procedure THIMultiSetParam.SetOut;
 var
   i: integer;
+  p: string;
 begin
   if (_prop_Char <> '') then
   begin  
     for i := 0 to FOutCount - 1 do
     case _prop_OutType of
-      0: _hi_OnEvent(onSet[i], str2int(fparse(Str, _prop_Char[1])));
+      0:
+      begin 
+        p := fparse(Str, _prop_Char[1]); 
+        if p <> ' ' then _hi_OnEvent(onSet[i], str2int(p));
+      end;
       1: _hi_OnEvent(onSet[i], fparse(Str, _prop_Char[1]));
     end;
   end
@@ -53,7 +58,7 @@ begin
   begin
     for i := 0 to min(Length(Str) - 1, FOutCount - 1) do
     case _prop_OutType of
-      0: _hi_OnEvent(onSet[i], str2int(Str[i + 1]));
+      0: if Str[i + 1] <> ' ' then _hi_OnEvent(onSet[i], str2int(Str[i + 1]));
       1: _hi_OnEvent(onSet[i], Str[i + 1]);
     end;
   end;  
