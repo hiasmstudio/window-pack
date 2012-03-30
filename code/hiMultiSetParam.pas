@@ -8,7 +8,8 @@ type
   THIMultiSetParam = class(TDebug)
   private
     FOutCount: byte;
-    procedure SetCount(Value: Word);    
+    procedure SetCount(Value: Word);
+    procedure SetOut(str: string);    
   public
     _prop_Parameters: string;
     _prop_OutType: byte;
@@ -22,6 +23,7 @@ type
 
     property _prop_Count: Word write SetCount;
     procedure _work_doSet(var _Data: TData; Index: Word);
+    procedure _work_doDirectSet(var _Data: TData; Index: Word);    
     procedure _work_doChar(var _Data: TData; Index: Word);
   end;
 
@@ -35,20 +37,10 @@ begin
   FOutCount := Value;
 end;
 
-procedure THIMultiSetParam._work_doSet;
+procedure THIMultiSetParam.SetOut;
 var
-  idx, i: integer;
-  str: string;
-  Param: PStrList;
+  i: integer;
 begin
-  Param := NewStrList;
-TRY
-  Param.Text := ReadString(_Data, _data_Parameters, _prop_Parameters);
-  idx := ReadInteger(_Data, _data_Index, _prop_Index);
-
-  if (idx < 0) or (idx > Param.Count - 1) then exit;
-  str := Param.Items[idx];
-  
   if (_prop_Char <> '') then
   begin  
     for i := 0 to FOutCount - 1 do
@@ -65,9 +57,29 @@ TRY
       1: _hi_OnEvent(onSet[i], Str[i + 1]);
     end;
   end;  
+end;
+
+procedure THIMultiSetParam._work_doSet;
+var
+  idx, i: integer;
+  str: string;
+  Param: PStrList;
+begin
+  Param := NewStrList;
+TRY
+  Param.Text := ReadString(_Data, _data_Parameters, _prop_Parameters);
+  idx := ReadInteger(_Data, _data_Index, _prop_Index);
+  if (idx < 0) or (idx > Param.Count - 1) then exit;
+  str := Param.Items[idx];
+  SetOut(str);
 FINALLY
   Param.free;
 END;
+end;
+
+procedure THIMultiSetParam._work_doDirectSet;
+begin
+  SetOut(ToString(_Data));
 end;
 
 procedure THIMultiSetParam._work_doChar;
