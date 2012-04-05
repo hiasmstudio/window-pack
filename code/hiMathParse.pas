@@ -15,6 +15,7 @@ type
     Token:string;
     TokType:byte;
     Line:string;
+    SafeLine:string;
     LPos:smallint;
     FResult:real;
     FDefault:real;
@@ -28,6 +29,7 @@ type
     procedure SetLine(Value:string);
     procedure SetDefault(Value:real);
     procedure SetAngleMode(Value:byte);
+    function CalcErrPos(Value:integer): string;
 
     procedure GetToken;
 
@@ -80,9 +82,38 @@ const
   s:array[0..1]of string = ('Ошибка синтаксиса в элементе MathParser'#13#10'Обнаружена в позиции '
                            ,'Ошибка вычисления в элементе MathParser'#13#10'Обнаружена в позиции ');
 
+function THIMathParse.CalcErrPos;
+var
+  ListLine: PStrListEx;
+  i: integer;
+  s: string;
+begin
+  Result := '0:1';
+  ListLine := NewStrListEx;
+TRY
+  s := SafeLine;
+  Replace(s, #1, '');
+  ListLine.SetText(s, false);
+  if ListLine.Count = 0 then exit;
+  i := 0;
+  ListLine.Objects[0] := 1;
+  if ListLine.Count > 1 then 
+    for i := 1 to ListLine.Count - 1 do
+    begin
+      ListLine.Objects[i] := Length(ListLine.Items[i - 1]) + ListLine.Objects[i - 1];
+      if Value < ListLine.Objects[i] + Length(ListLine.Items[i]) then break;  
+    end; 
+  Result := int2str(Value - ListLine.Objects[i] + 1) + ':' + int2str(i + 1); 
+FINALLY
+  ListLine.free;
+END;  
+end;
+
 procedure THIMathParse.SetLine;
 begin
   Line := Value+#1;
+  SafeLine := Line;
+  Replace(Line, #13#10, '');
 end;
 
 procedure THIMathParse.SetAngleMode;
@@ -153,7 +184,9 @@ begin
     dec(LPos);
     if assigned(_event_onError.Event) then
       _hi_CreateEvent(_Data,@_event_onError,Err)
-    else _debug(s[Err]+ int2Str(LPos));
+//    else _debug(s[Err]+ int2Str(LPos));
+    else _debug(s[Err]+ CalcErrPos(LPos));
+
   end;
 end;//_work_doCalc
 
@@ -188,7 +221,11 @@ end;
 procedure THIMathParse._work_doMathStr;
 begin
   if _IsStr(_Data) then
+  begin
     Line := _data.sdata+#1;
+    SafeLine := Line;
+    Replace(Line, #13#10, '');
+  end;  
 end;
 
 procedure THIMathParse._var_Result;
