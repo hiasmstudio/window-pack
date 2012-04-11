@@ -17,6 +17,7 @@ type
          constructor Create;
          destructor Destroy; override;
          procedure _work_doClear(var _Data:TData; Index:word);
+         procedure _work_doDelete(var _Data:TData; Index:word);
          procedure _var_Array(var _Data:TData; Index:word);
    end;
 
@@ -93,6 +94,19 @@ begin
      dispose(PData(FList.Items[i]));
   end;
   FList.Clear;
+end;
+
+procedure ThiMT_MTArray._work_doDelete;
+var
+  ind: integer;
+begin
+  ind := ToIntIndex(_Data);
+  if (ind >= 0) and (ind < FList.Count) then
+  begin
+    FreeData(PData(FList.Items[ind]));
+    dispose(PData(FList.Items[ind]));
+    FList.Delete(ind);
+  end;
 end;
 
 end.
