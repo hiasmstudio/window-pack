@@ -11,6 +11,8 @@ type
    public
      _prop_InData: boolean;
      _prop_Delay: cardinal;
+     _prop_Data: TData;     
+     _data_Data: THI_Event;
      _event_onDeferredEvent: THI_Event;
      procedure _work_doDeferredEvent(var _Data:TData; Index:word);
  end;
@@ -27,7 +29,7 @@ var
 procedure ThiDeferredEvent._work_doDeferredEvent;
 begin
   if _prop_InData then
-    FData := ReadData(_Data, Null)
+    FData := ReadData(_Data, _data_Data, @_prop_Data)
   else
     dtNull(FData);
   Sleep(_prop_Delay);  
