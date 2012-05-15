@@ -893,6 +893,7 @@ INSERT INTO "elements" VALUES(863,'ConvertorEx','Конвертер одной величины в друг
 INSERT INTO "elements" VALUES(864,'PointInRectParam','Проверка попадания точки в прямоугольные координаты по списку',15,27,NULL);
 INSERT INTO "elements" VALUES(865,'MultiSetParam','Установка параметров выходов согласно списка',15,22,NULL);
 INSERT INTO "elements" VALUES(866,'DeferredEvent','Отложенное событие',6,9,NULL);
+INSERT INTO "elements" VALUES(866,'MemFIFO','Запоминает данные из потока в очередь FIFO',15,13,NULL);
 CREATE TABLE files_link(file_id int,el_id int);
 INSERT INTO "files_link" VALUES(21,404);
 INSERT INTO "files_link" VALUES(21,405);
