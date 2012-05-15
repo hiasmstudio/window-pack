@@ -100,10 +100,10 @@ TRY
   if ListLine.Count > 1 then 
     for i := 1 to ListLine.Count - 1 do
     begin
-      ListLine.Objects[i] := Length(ListLine.Items[i - 1]) + ListLine.Objects[i - 1];
-      if Value < ListLine.Objects[i] + Length(ListLine.Items[i]) then break;  
+      ListLine.Objects[i] := Length(ListLine.Items[i - 1]) + integer(ListLine.Objects[i - 1]);
+      if Value < integer(ListLine.Objects[i]) + Length(ListLine.Items[i]) then break;  
     end; 
-  Result := int2str(Value - ListLine.Objects[i] + 1) + ':' + int2str(i + 1); 
+  Result := int2str(Value - integer(ListLine.Objects[i]) + 1) + ':' + int2str(i + 1); 
 FINALLY
   ListLine.free;
 END;  

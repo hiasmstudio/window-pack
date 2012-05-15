@@ -43,7 +43,12 @@ var
 begin      
   x := ReadInteger(_Data,_data_X);
   y := ReadInteger(_Data,_data_Y);
-    
+  x1 := 0;
+  y1 := 0;   
+  x2 := 0;
+  y2 := 0;
+  i := -1;
+
   ParamList := NewStrList;
   ParamList.text := ReadString(_Data, _data_Parameters, _prop_Parameters);
   Result := false;
