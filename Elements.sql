@@ -518,8 +518,8 @@ INSERT INTO "elements" VALUES(484,'IndexToChanel','Индекс в канал',15,9,'D37ED97
 INSERT INTO "elements" VALUES(485,'Case','Выбор значения',15,10,'D949BC4629B0D32C231474A48BCAC9B8');
 INSERT INTO "elements" VALUES(486,'Switch','Переключатель',15,11,'D35F7477DDE30EDCE1FDCAD9ACA72FF2');
 INSERT INTO "elements" VALUES(487,'Stack','Организация стека',15,12,'0933453C2279A7F92B28CF2E21390EB7');
-INSERT INTO "elements" VALUES(488,'SampleDelta','Разность сигнала',15,12,'6C5A45B855983CAC1A9E32C79A3B526C');
-INSERT INTO "elements" VALUES(489,'ChangeMon','Мониторинг изменения потока',15,14,'2A5D69026C9B8E153909A1CB2068A778');
+INSERT INTO "elements" VALUES(488,'SampleDelta','Разность сигнала',15,13,'6C5A45B855983CAC1A9E32C79A3B526C');
+INSERT INTO "elements" VALUES(489,'ChangeMon','Мониторинг изменения потока',15,15,'2A5D69026C9B8E153909A1CB2068A778');
 INSERT INTO "elements" VALUES(490,'GlobalVar','Глобальная переменная',15,16,'22719640849013E82A371809E5B65D6B');
 INSERT INTO "elements" VALUES(491,'TimeCounter','Счетчик времени',15,17,'571EA87DC9EA074A8177BF53AC73A6DF');
 INSERT INTO "elements" VALUES(492,'KeyMask','Маска клавиш',15,18,'1F66BA98256C1143B26DDF81296B538C');
@@ -893,7 +893,7 @@ INSERT INTO "elements" VALUES(863,'ConvertorEx','Конвертер одной величины в друг
 INSERT INTO "elements" VALUES(864,'PointInRectParam','Проверка попадания точки в прямоугольные координаты по списку',15,27,NULL);
 INSERT INTO "elements" VALUES(865,'MultiSetParam','Установка параметров выходов согласно списка',15,22,NULL);
 INSERT INTO "elements" VALUES(866,'DeferredEvent','Отложенное событие',6,9,NULL);
-INSERT INTO "elements" VALUES(867,'MemFIFO','Запоминает данные из потока в очередь FIFO',15,13,NULL);
+INSERT INTO "elements" VALUES(867,'MemFIFO','Запоминает данные из потока в очередь FIFO',15,14,NULL);
 CREATE TABLE files_link(file_id int,el_id int);
 INSERT INTO "files_link" VALUES(21,404);
 INSERT INTO "files_link" VALUES(21,405);
