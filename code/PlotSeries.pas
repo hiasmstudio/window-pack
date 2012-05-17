@@ -35,6 +35,7 @@ type
     destructor Destroy; override;
     procedure _work_doAdd(var _Data:TData; Index:word);
     procedure _work_doClear(var _Data:TData; Index:word);
+    procedure _work_doShow(var _Data:TData; Index:word);
     procedure _work_doMaxValues(var _Data:TData; Index:word);
     procedure _work_doColor(var _Data:TData; Index:word);
     procedure _var_MinX(var _Data:TData; Index:word);
@@ -95,9 +96,21 @@ begin
    FSeries.Clear;
 end;
 
+procedure TPlotSeries._work_doShow;
+begin
+   FSeries.Show(ReadBool(_data));
+   FGrapher.ReDraw;
+end;
+
 procedure TPlotSeries._work_doMaxValues;
 begin
-   FSeries.MaxValues := ToInteger(_Data);
+   with FSeries do begin
+     MaxValues := ToInteger(_Data);
+     if Count > MaxValues then begin
+       Count := MaxValues;
+       SetLength(Values,Count);
+     end; 
+   end;
 end;
 
 procedure TPlotSeries._work_doColor;

@@ -19,6 +19,7 @@ type
     Size:integer;
     Color:TColor;
     MaxValues:integer;
+    hide:bool;
 
 //    onChangeSeries:TEvents;
 
@@ -26,6 +27,7 @@ type
     destructor Destroy; override;
     procedure Add(valY, valX:real); virtual;
     procedure Clear;
+    procedure Show(val:bool);
     procedure Draw(Canvas:PCanvas; startX,startY,fX,fY:real; VSpace, HSpace:integer); virtual; abstract;
     function graphMinY:real; virtual;
     function graphMaxY:real; virtual;
@@ -38,8 +40,6 @@ type
     FSeries:PList;
     FRgn:HRGN;
 
-    FGrid:integer;
-    
     FStartPos,FBPos:TPoint;
     FBeginMove:byte;
 
@@ -51,7 +51,6 @@ type
     function graphMaxY:real;
     function graphMinX:real;
     function graphMaxX:real;
-    procedure SetGrid(Value:integer);
     
     function GetSeries(index:integer):TSeries;
     function GetSeriesCount:integer;
@@ -69,6 +68,8 @@ type
     _prop_MaxH:real;
     _prop_MinW:real;
     _prop_MaxW:real;
+    _prop_GridX:integer;
+    _prop_GridY:integer;
     _prop_LeftMargin:integer;
     _prop_RightMargin:integer;
     _prop_TopMargin:integer;
@@ -101,7 +102,6 @@ type
     function AbsToGraphY(v:real):real;
     function AbsToGraphX(v:real):real;
     
-    property _prop_Grid:integer write SetGrid;
     property Series[index:integer]:TSeries read GetSeries;
     property SeriesCount:integer read GetSeriesCount;    
   end;
@@ -111,6 +111,7 @@ implementation
 constructor TSeries.Create;
 begin
    inherited;
+   hide := false;
 //   onChangeSeries := TEvents.create;
 end;
 
@@ -118,6 +119,11 @@ destructor TSeries.Destroy;
 begin
 //   onChangeSeries.Destroy;
    inherited;
+end; 
+
+procedure TSeries.Show;
+begin
+   hide := not val;
 end; 
 
 procedure TSeries.Add;
@@ -434,11 +440,6 @@ begin
    Bmp.Draw(DC,0,0);
 end;
 
-procedure THIPlotter.SetGrid;
-begin
-   FGrid := max(1,Value);
-end;
-
 function THIPlotter.graphMinY:real;
 var i:integer; 
     r:real;
@@ -574,8 +575,8 @@ begin
       if FX = 0 then FX := 1;
       
       //---------------------------- X Axis ------------------------------------
-      dx := FX/FGrid;
-      _Grid := max(1,VSpace/FGrid);
+      dx := FX/max(1,_prop_GridX);
+      _Grid := max(1,VSpace/max(1,_prop_GridX));
       x := fstartX;
       if _Grid > 10 then
        TextOut(_prop_LeftMargin-2,Height - _prop_BottomMargin + 1,Double2Str(Round(x*100)/100));
@@ -602,8 +603,8 @@ begin
        end;
 
       //---------------------------- Y Axis ------------------------------------
-      dx := FY/FGrid;
-      _Grid := max(1,HSpace/FGrid);
+      dx := FY/max(1,_prop_GridY);
+      _Grid := max(1,HSpace/max(1,_prop_GridY));
       x := fstartY;
       ix := Height - _prop_BottomMargin;
       while ix > _prop_TopMargin-1 do
@@ -637,7 +638,7 @@ begin
       rg := CreateRectRgn(_prop_LeftMargin,_prop_TopMargin,_prop_LeftMargin + VSpace,_prop_TopMargin + HSpace);
       SelectObject(Handle, rg);
       for t := 0 to SeriesCount-1 do
-        Series[t].Draw(Canvas, fstartX, fstartY, FX, FY, VSpace, HSpace);
+        if not Series[t].hide then Series[t].Draw(Canvas, fstartX, fstartY, FX, FY, VSpace, HSpace);
       SelectObject(Handle, FRgn);  
       DeleteObject(rg);      
         
