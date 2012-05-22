@@ -2,7 +2,7 @@ unit hiConvertorEx;
 
 interface
 
-uses Kol,Share,Debug;
+uses Windows, Kol, Share, Debug;
 
 type
   ThiConvertorEx = class(TDebug)
@@ -43,6 +43,7 @@ type
     procedure _work_doConvert13(var _Data:TData; Index:word);//StrToTri
     procedure _work_doConvert14(var _Data:TData; Index:word);//StrToWrd
     procedure _work_doConvert15(var _Data:TData; Index:word);//NumToFStr    
+    procedure _work_doConvert16(var _Data:TData; Index:word);//VKeyToChar    
     procedure _var_Var(var _Data: TData; Index: word);
   end;
   
@@ -256,10 +257,30 @@ begin
   _hi_CreateEvent(_Data, @_event_onResult,st);
 end;
 
+procedure ThiConvertorEx._work_doConvert16;//VKeyToChar
+var
+  Key: Word;
+  keyboardState: TKeyboardState;
+  asciiResult: Integer;
+begin
+  key := ReadInteger(_Data,_data_Data);
+  GetKeyboardState(keyboardState) ;
+
+  SetLength(st, 2);
+  asciiResult := ToAscii(key, MapVirtualKey(key, 0), keyboardState, @st[1], 0);
+  case asciiResult of
+    1: SetLength(st, 1);
+    2: ;
+    else
+      st := '';
+  end;
+  _hi_CreateEvent(_Data, @_event_onResult,st);
+end;
+   
 procedure ThiConvertorEx._var_Var;
 begin
   case _prop_Mode of
-    0,4,6,8,9,11,13,14,15: dtString(_Data, st);
+    0,4,6,8,9,11,13,14,15,16: dtString(_Data, st);
     1,2,3,5,7,12 : dtInteger(_Data, i);
     10: dtReal(_Data, r);
   end;  
