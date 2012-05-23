@@ -261,14 +261,12 @@ procedure ThiConvertorEx._work_doConvert16;//VKeyToChar
 var
   Key: Word;
   keyboardState: TKeyboardState;
-  asciiResult: Integer;
 begin
   key := ReadInteger(_Data,_data_Data);
   GetKeyboardState(keyboardState) ;
 
   SetLength(st, 2);
-  asciiResult := ToAscii(key, MapVirtualKey(key, 0), keyboardState, @st[1], 0);
-  case asciiResult of
+  case ToAscii(key, MapVirtualKey(key, 0), keyboardState, @st[1], 0) of
     1: SetLength(st, 1);
     2: ;
     else
