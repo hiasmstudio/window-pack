@@ -5,9 +5,13 @@ interface
 uses Kol, Share, RegExpr,Debug;
 
 type
-  THIRegExpr = class(TDebug)
+  THIRE_Search = class(TDebug)
   private
-    RE: TRegExpr;
+    RE:TRegExpr;
+    Arr:PArray;
+    
+    function _Get(Var Item:TData; var Val:TData):boolean;
+    function _Count:integer;
     
     procedure SetModifier(idx:integer; nw:boolean);
   public
@@ -27,6 +31,7 @@ type
     procedure _var_MatchPos(var _Data:TData; Index:word);
     procedure _var_MatchLen(var _Data:TData; Index:word);
     procedure _var_Match(var _Data:TData; Index:word);
+    procedure _var_Matches(var _Data:TData; Index:word);
     
     property _prop_ModifierI:boolean index 1 write SetModifier;
     property _prop_ModifierR:boolean index 2 write SetModifier;
@@ -37,11 +42,9 @@ type
     
   end;
 
-  THIRE_Search = THIRegExpr; //Лень было переписывать
-
 implementation
 
-procedure THIRegExpr.SetModifier;
+procedure THIRE_Search.SetModifier;
 begin
   with RE do
     case idx of
@@ -54,19 +57,19 @@ begin
     end;
 end;
 
-constructor THIRegExpr.Create;
+constructor THIRE_Search.Create;
 begin
   inherited Create;
   RE := TRegExpr.Create;
 end;
 
-destructor THIRegExpr.Destroy;
+destructor THIRE_Search.Destroy;
 begin
   RE.Free;
   inherited Destroy;
 end;
 
-procedure THIRegExpr._work_doExec;
+procedure THIRE_Search._work_doExec;
 var
   Expression, InputStr: String;
   err:integer;
@@ -84,7 +87,7 @@ begin
   else _hi_OnEvent(_event_onNotFound);
 end;
 
-procedure THIRegExpr._work_doExecNext;
+procedure THIRE_Search._work_doExecNext;
 var _f:boolean;
     err:integer;
 begin
@@ -95,22 +98,47 @@ begin
   else _hi_OnEvent(_event_onNotFound);
 end;
 
-procedure THIRegExpr._var_MatchPos;
+procedure THIRE_Search._var_MatchPos;
 begin
   if RE = nil then dtNull(_Data)
   else dtInteger(_Data,RE.MatchPos[0]);
 end;
 
-procedure THIRegExpr._var_MatchLen;
+procedure THIRE_Search._var_MatchLen;
 begin
   if RE = nil then dtNull(_Data)
   else dtInteger(_Data,RE.MatchLen[0]);
 end;
 
-procedure THIRegExpr._var_Match;
+procedure THIRE_Search._var_Match;
 begin
   if RE = nil then dtNull(_Data)
   else dtString(_Data,RE.Match[0]);
+end;
+
+procedure THIRE_Search._var_Matches;
+begin
+  if Arr = nil then Arr := CreateArray(nil, _Get, _Count, nil);
+  dtArray(_Data, Arr);
+end;
+
+function THIRE_Search._Get(Var Item:TData; var Val:TData):boolean;
+var idx:integer;
+    mt:PMT;
+begin
+  idx := ToIntIndex(Item);
+  FreeData(@Val);
+  dtString(Val, RE.Match[idx]);
+  mt := mt_make(Val);
+  mt_int(mt, RE.MatchPos[idx]);
+  mt_int(mt, RE.MatchLen[idx]);
+  dispose(mt);
+  Result := true;
+end;
+
+function THIRE_Search._Count:integer;
+begin
+  Result := RE.SubExprMatchCount;
 end;
 
 end.
