@@ -138,7 +138,7 @@ end;
 
 destructor THiDirectoryChanges.Destroy;
 begin
-  StopWatch;
+  {$ifndef F_P}StopWatch;{$endif}
   inherited;
 end;
 
