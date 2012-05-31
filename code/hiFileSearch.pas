@@ -81,7 +81,7 @@ begin
     end else if StrCmp(LowerCase(FindData.cFileName),FWorkExt) then begin
       inc(FCount);
       if _prop_Include <> 1 then OutFiles(Dir,FindData.cFileName);
-    end else _hi_OnEvent(_event_onOtherFiles,Dir + '\' + FindData.cFileName);
+    end else _hi_OnEvent(_event_onOtherFiles,Dir + FindData.cFileName);
   until FStop or not FindNextFile(FindHandle, FindData);
   FindClose(FindHandle);
 end;
