@@ -10,29 +10,29 @@ type
     Res: string;
    public
     _prop_String: string;
-    _prop_NameEnv: string;
-    _prop_NewEnvVal: string;
+    _prop_Name: string;
+    _prop_Value: string;
     
     _data_String,
-    _data_NameEnv,
-    _data_NewEnvVal,
-    _event_onExpandEnv,
-    _event_onEnumEnv,
-    _event_onEndEnumEvn,
-    _event_onGetEnv:THI_Event;
+    _data_Name,
+    _data_Value,
+    _event_onExpand,
+    _event_onEnum,
+    _event_onEndEnum,
+    _event_onGet:THI_Event;
 
-    procedure _work_doExpandEnv(var _Data:TData; Index:word);
-    procedure _work_doEnumEnv(var _Data:TData; Index:word);
-    procedure _work_doGetEnv(var _Data:TData; Index:word);
-    procedure _work_doSetEnv(var _Data:TData; Index:word);
-    procedure _work_doDelEnv(var _Data:TData; Index:word);
+    procedure _work_doExpand(var _Data:TData; Index:word);
+    procedure _work_doEnum(var _Data:TData; Index:word);
+    procedure _work_doGet(var _Data:TData; Index:word);
+    procedure _work_doSet(var _Data:TData; Index:word);
+    procedure _work_doDelete(var _Data:TData; Index:word);
     
     procedure _var_Result(var _Data:TData; Index:word);
   end;
 
 implementation
 
-procedure THIEnvVars._work_doExpandEnv;
+procedure THIEnvVars._work_doExpand;
 var
   Sz: Cardinal;
   Src: string;
@@ -43,10 +43,10 @@ begin
   SetLength(Res, Sz);
   ExpandEnvironmentStrings(@Src[1], @Res[1], Sz);
   SetLength(Res, StrLen(@Res[1])); 
-  _hi_CreateEvent(_Data, @_event_onExpandEnv, Res);    
+  _hi_CreateEvent(_Data, @_event_onExpand, Res);    
 end;
 
-procedure THIEnvVars._work_doEnumEnv;
+procedure THIEnvVars._work_doEnum;
 var
   EnvBlock: PChar;
   i, l :integer;
@@ -63,40 +63,40 @@ begin
       begin
         SetLength(Res, l);
         StrCopy(@Res[1], @EnvBlock[i]);
-        _hi_OnEvent(_event_onEnumEnv, Res);
+        _hi_OnEvent(_event_onEnum, Res);
       end;   
       Inc(i, l + 1);      
     until l = 0;  
     FreeEnvironmentStrings(EnvBlock);
   end;
-  _hi_CreateEvent(_Data, @_event_onEndEnumEvn);
+  _hi_CreateEvent(_Data, @_event_onEndEnum);
 end;
 
-procedure THIEnvVars._work_doGetEnv;
+procedure THIEnvVars._work_doGet;
 var
   Sz: Cardinal;
   N: string;
 begin
   Res := '';
-  N := ReadString(_Data, _data_NameEnv, _prop_NameEnv);
+  N := ReadString(_Data, _data_Name, _prop_Name);
   Sz := GetEnvironmentVariable(@N[1], nil, 0);
   if Sz <> 0 then
   begin
     SetLength(Res, Sz);
     GetEnvironmentVariable(@N[1], @Res[1], Sz);
     SetLength(Res, StrLen(@Res[1])); 
-    _hi_CreateEvent(_Data, @_event_onGetEnv, Res);  
+    _hi_CreateEvent(_Data, @_event_onGet, Res);  
   end;  
 end;
 
-procedure THIEnvVars._work_doSetEnv;
+procedure THIEnvVars._work_doSet;
 begin
-  SetEnvironmentVariable(@ReadString(_Data, _data_NameEnv, _prop_NameEnv)[1], @ReadString(_Data, _data_NewEnvVal, _prop_NewEnvVal)[1]);
+  SetEnvironmentVariable(@ReadString(_Data, _data_Name, _prop_Name)[1], @ReadString(_Data, _data_Value, _prop_Value)[1]);
 end;
 
-procedure THIEnvVars._work_doDelEnv;
+procedure THIEnvVars._work_doDelete;
 begin
-  SetEnvironmentVariable(@ReadString(_Data, _data_NameEnv, _prop_NameEnv)[1], nil);
+  SetEnvironmentVariable(@ReadString(_Data, _data_Name, _prop_Name)[1], nil);
 end;
 
 procedure THIEnvVars._var_Result;
