@@ -108,7 +108,23 @@ begin
 end;  
 
 procedure ThiGHotKey._work_doStartHotKey;
+var
+  _MOD: Word;
 begin
+
+  _MOD := MOD_NONE;
+  case _prop_Alt of
+    1: _MOD := _MOD or MOD_ALT;
+  end;
+  case _prop_Ctrl of
+    1: _MOD := _MOD or MOD_CONTROL;
+  end;
+  case _prop_Shift of
+    1: _MOD := _MOD or MOD_SHIFT;
+  end;
+  case _prop_Win of
+    1: _MOD := _MOD or MOD_WIN;
+  end;
 
   with _WndClass do
   begin
@@ -117,7 +133,7 @@ begin
     cbClsExtra := 0;
     cbWndExtra := 0;
     hInstance := hInstance;
-    fClassName := 'HotKeyWindows' + '_' + int2str(_prop_Key);  
+    fClassName := 'HotKeyWindows' + '_' + int2str(_prop_Key) + '_' + int2str(_MOD);
     lpszClassName := @fClassName[1];
   end;
 
