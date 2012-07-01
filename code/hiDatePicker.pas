@@ -107,6 +107,8 @@ type
      procedure _work_doSetDate(var _Data:TData; Index:word);
      procedure _var_DateTime(var _Data:TData; Index:word);
      procedure _var_CurrentDateTime(var _Data:TData; Index:word);
+     procedure _var_DateInt(var _Data:TData; Index:word);
+     procedure _var_CurrentDateInt(var _Data:TData; Index:word);
 end;
 
 implementation
@@ -150,7 +152,7 @@ begin
    if _prop_AlignPicker = 1 then include(opt,piRightAlign);
    if _prop_DateMode = 1    then include(opt,piUpDown);
    if _prop_Time            then include(opt,piTime);
-   
+  
 //Конец определения
    icex.dwSize := sizeof(INITCOMMONCONTROLEX);
    icex.dwICC := ICC_DATE_CLASSES;
@@ -182,7 +184,7 @@ var   dt: TDateTime;
 begin
    dt:= ReadReal(_Data,_data_Data,0);
    DateTime2SystemTime(dt,st);
-   Control.Perform(DTM_SETSYSTEMTIME,GDT_VALID,Longint(@st));   
+   Control.Perform(DTM_SETSYSTEMTIME,GDT_VALID,Longint(@st));
    if _prop_SetDateOnChange then _hi_OnEvent(_event_onChange);
 end;
 
@@ -203,5 +205,24 @@ begin
    SystemTime2DateTime(st, dt);
    dtReal(_Data, dt);
 end;
+
+procedure THIDatePicker._var_DateInt;
+var   dt: TDateTime;
+      st: TSystemTime;
+begin
+   Control.Perform(DTM_GETSYSTEMTIME,0,Longint(@st));
+   SystemTime2DateTime(st,dt);
+   dtInteger(_Data, trunc(dt));
+end;
+
+procedure THIDatePicker._var_CurrentDateInt;
+var   dt: TDateTime;
+      st: TSystemTime;
+begin
+   GetLocalTime(st);
+   SystemTime2DateTime(st, dt);
+   dtInteger(_Data, trunc(dt));
+end;
+
 
 end.
