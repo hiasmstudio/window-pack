@@ -8,9 +8,12 @@ type
   THIPagePanel = class(THIWin)
    private
      function PageIndex:integer;
+     procedure _OnChange(Obj:PObj);
    public
      _prop_Caption:string;
      _prop_ImageIndex:integer;
+
+     _event_onChange: THI_Event;
      
      constructor Create(_Control:PControl); overload;
      destructor Destroy; override;
@@ -41,6 +44,7 @@ begin
      Control.Parent.TC_Items[PageIndex] := _prop_Caption;
    if _prop_ImageIndex <> -1 then
      Control.Parent.TC_Images[PageIndex] := _prop_ImageIndex;
+   Control.Parent.OnSelChange := _OnChange;
 end;
 
 function THIPagePanel.PageIndex:integer;
@@ -63,6 +67,11 @@ end;
 procedure THIPagePanel._work_doImageIndex;
 begin
   Control.Parent.TC_Images[PageIndex] := ToInteger(Data);
+end;
+
+procedure THIPagePanel._OnChange;
+begin
+  _hi_OnEvent(_event_onChange, Control.Parent.CurIndex);
 end;
 
 end.
