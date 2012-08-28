@@ -71,13 +71,19 @@ end;
 
 procedure THIFileSearch.Search;
 var FindHandle:THandle;
+    SaveData:TWin32FindData;
 begin
   FindHandle := FindFirstFile(PChar(Dir + '*.*'), FindData);
   if FindHandle=INVALID_HANDLE_VALUE then exit;
   repeat if (PChar(@FindData.cFileName[0]) <> '.')and(PChar(@FindData.cFileName[0]) <> '..') then
     if (FindData.dwFileAttributes and FILE_ATTRIBUTE_DIRECTORY)<>0 then  begin
       if _prop_Include > 0 then OutFiles(Dir,FindData.cFileName);
-      if _prop_SubDir = 0 then Search(Dir + FindData.cFileName + '\');
+      if _prop_SubDir = 0 then
+      begin
+         SaveData := FindData;
+         Search(Dir + FindData.cFileName + '\');
+         FindData := SaveData;
+      end
     end else if StrCmp(LowerCase(FindData.cFileName),FWorkExt) then begin
       inc(FCount);
       if _prop_Include <> 1 then OutFiles(Dir,FindData.cFileName);
