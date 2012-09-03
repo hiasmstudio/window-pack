@@ -19,6 +19,7 @@ type
     _prop_Dir:string;
     _prop_SubDir:byte;
     _prop_FullName:boolean;
+    _prop_FullOtherName:boolean;    
     _prop_Include:byte;
     _prop_Format:string;
     _prop_TimeType:byte;
@@ -29,6 +30,7 @@ type
     _event_onSearch:THI_Event;
     _event_onOtherFiles:THI_Event;
 
+    constructor Create;
     procedure _work_doSearch(var _Data:TData; Index:word);
     procedure _work_doStop(var _Data:TData; Index:word);
     procedure _var_Count(var _Data:TData; Index:word);
@@ -46,6 +48,13 @@ type
 implementation
 
 uses hiStrMask, HiTime;
+
+var Dummy:TWin32FindData;
+
+constructor THIFileSearch.Create;
+begin
+  FindData := @Dummy; //инициализируем пустышкой для дуракоустойчивости
+end;
 
 procedure THIFileSearch.OutFiles;
 var fn:string;
@@ -65,7 +74,8 @@ begin
   if FWorkExt = '' then FWorkExt := '*';
   FCount := 0;
   FStop := false;
-  Search(Dr);
+  Search(Dr);         //там FindData принимает боевые значения
+  FindData := @Dummy; //восстанавливаем указатель на пустышку
   _hi_CreateEvent(_Data,@_event_onEndSearch,FCount);
 end;
 
@@ -87,7 +97,8 @@ begin
     end else if StrCmp(LowerCase(FindData.cFileName),FWorkExt) then begin
       inc(FCount);
       if _prop_Include <> 1 then OutFiles(Dir,FindData.cFileName);
-    end else _hi_OnEvent(_event_onOtherFiles,Dir + FindData.cFileName);
+    end else if _prop_FullOtherName then _hi_OnEvent(_event_onOtherFiles,Dir + FindData.cFileName)
+    else _hi_OnEvent(_event_onOtherFiles,FindData.cFileName);
   until FStop or not FindNextFile(FindHandle, FindData);
   FindClose(FindHandle);
 end;
@@ -221,4 +232,6 @@ begin
   dtInteger(_Data, i);
 end;
 
+initialization
+  FillChar(Dummy, sizeof(Dummy), #0);
 end.
