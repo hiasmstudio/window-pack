@@ -2,7 +2,7 @@ unit hiStrMask;
 
 interface
 
-uses Windows,Kol,Share,Debug;
+uses Windows,Share,Debug;
 
 type
   THIStrMask = class(TDebug)
@@ -19,82 +19,47 @@ type
     procedure _work_doMask(var _Data:TData; Index:word);
   end;
 
- function StrCmp(const Str,M:string):boolean;
+function StrCmp(Str,Msk:string):boolean;
 
 implementation
 
-function _StrCmp(const Str,M:string; sInd,mInd:integer ):boolean;
+function _StrCmp(Str,Msk:PChar):boolean;
 begin
-  while (mInd <= length(M))or(sInd <= length(Str)) do begin
-    case M[mInd] of
-      '?':
-        if Str[sInd] <> #0  then
-         begin
-          inc(sInd); inc(mInd);
-         end
-        else Break;
-      '#':
-        if Str[sInd] in ['0'..'9'] then
-         begin
-          inc(sInd); inc(mInd);
-         end
-        else Break;
-      '*':
-        begin
-          if _StrCmp(Str,M,sInd,mInd+1) then 
-           begin
-             Result := true;
-             exit;
-           end
-          else if sInd >= length(Str) then
-           begin
-              Result := false;
-              exit;
-           end
-          else 
-           begin
-            while sInd < length(str) do
-             begin
-               inc(sInd);
-               if _StrCmp(Str,M,sInd,mInd+1) then
-                begin
-                   Result := true;
-                   Exit;
-                end;
-             end;            
-           end;
-        end;
-      else
-        if M[mInd] = Str[sInd] then
-         begin
-           inc(sInd); inc(mInd);
-         end
-        else Break;
-    end;
+  while (Str^<>#0)and(Msk^<>#0) do begin
+    if Msk^ = '*' then  begin
+      if _StrCmp(Str,Msk+1) then begin 
+        Result := true;  
+        exit; 
+      end;
+    end else if Msk^ = '#' then begin
+        if Str^ in ['0'..'9'] then Inc(Msk)
+        else break;
+    end else if (Msk^ = '?')or(Msk^ = Str^) then Inc(Msk)
+    else break;
+    Inc(Str);          
   end;
-  Result := (mInd > length(M))and(sInd > Length(Str));
+  Result := (Str^ = #0)and(Msk^ = #0);
 end;
 
-function StrCmp(const Str,M:string):boolean;
+function StrCmp(Str,Msk:string):boolean;
 begin
-  Result := _StrCmp(Str+#0,M+#0,1,1);
+  Result := _StrCmp(Pchar(Str+#1),Pchar(Msk+#1));
 end;
 
 procedure THIStrMask._work_doCompare;
-var str,sstr,m:string;
+var sstr,str,msk:string;
 begin
-  str := ReadString(_Data,_data_Str);
-  sstr := str+#0;
-  m := _prop_Mask+#0;
-  if (_prop_CaseSensitive = 1) then
-  begin
-    CharLower(PChar(sstr));
-    CharLower(PChar(m));
+  sstr := ReadString(_Data,_data_Str);
+  str  := sstr+#1;
+  msk  := _prop_Mask+#1;
+  if (_prop_CaseSensitive = 1) then begin
+    CharLower(PChar(str));
+    CharLower(PChar(msk));
   end;
-  if _StrCmp(sstr,m,1,1) then
-    _hi_CreateEvent(_Data,@_event_onTrue,str)
+  if _StrCmp(PChar(str),PChar(msk)) then
+    _hi_CreateEvent(_Data,@_event_onTrue, sstr)
   else
-    _hi_CreateEvent(_Data,@_event_onFalse,str);
+    _hi_CreateEvent(_Data,@_event_onFalse,sstr);
 end;
 
 procedure THIStrMask._work_doMask;
