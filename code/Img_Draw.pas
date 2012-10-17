@@ -35,7 +35,9 @@ type
      _prop_Point2            : integer;
      _prop_Point2AsOffset    : boolean;
      _prop_Size              : integer;
+     _prop_LineStyle         : TPenStyle;
      _prop_Style             : TBrushStyle;
+     _prop_PatternStyle      : boolean;
      _prop_Color             : TColor;
      _prop_BgColor           : TColor;
      _prop_Transparent       : boolean;
@@ -52,6 +54,7 @@ type
      _data_Point1            : THI_Event;
      _data_Point2            : THI_Event;
      _data_LineSize          : THI_Event;
+     _data_Pattern             :THI_Event;
 
      _event_onDraw           : THI_Event;
 
@@ -63,6 +66,9 @@ type
      procedure imgNewSizeDC;
 
      procedure _work_doDrawSource(var _Data:TData; Index:word);
+     procedure _work_doLineStyle(var _Data:TData; Index:word);
+     procedure _work_doStyle(var _Data:TData; Index:word);
+     procedure _work_doPattern(var _Data:TData; Index:word);
 
    protected
      procedure ReadXY(var _Data:TData);
@@ -135,6 +141,21 @@ end;
 procedure THIImg._work_doDrawSource;
 begin
    SetDrawSource(ToInteger(_Data));
+end;
+
+procedure THIImg._work_doLineStyle;
+begin
+   _prop_LineStyle := TPenStyle(ToInteger(_Data));
+end;
+
+procedure THIImg._work_doPattern;
+begin
+   _prop_PatternStyle := ReadBool(_Data);
+end;
+
+procedure THIImg._work_doStyle;
+begin
+  _prop_Style := TBrushStyle(ToInteger(_Data));
 end;
 
 procedure THIImg.ReadXY;

@@ -26,7 +26,7 @@ TRY
 
    ImgNewSizeDC;
 
-   pen := CreatePen(PS_SOLID, Round((fScale.x + fScale.y) * ReadInteger(_Data,_data_Size,_prop_Size)/2), Color2RGB(ReadInteger(_Data,_data_Color,_prop_Color)));
+   pen := CreatePen(ord(_prop_LineStyle), Round((fScale.x + fScale.y) * ReadInteger(_Data,_data_Size,_prop_Size)/2), Color2RGB(ReadInteger(_Data,_data_Color,_prop_Color)));
    SelectObject(pDC,Pen);
    MoveToEx(pDC, x1, y1, nil);
    LineTo(pDC, x2, y2);

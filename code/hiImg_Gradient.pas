@@ -56,7 +56,7 @@ function GradientFill(DC: HDC; Vertex: Pointer; NumVertex: Cardinal;
                       Mesh: Pointer; NumMesh, Mode: DWORD): BOOL; stdcall;
                       external 'msimg32.dll' name 'GradientFill';
 
-procedure _Gradient(DC:HDC; cbRect:TRect; Gradient:boolean; StartColor,EndColor,FrameColor:TColor; Frame:boolean; LineSize:integer; InversGrad:boolean; GradientStyle:TGradientStyle; Scale:TScale);
+procedure _Gradient(DC:HDC; cbRect:TRect; Gradient:boolean; StartColor,EndColor,FrameColor:TColor; Frame:boolean; LineSize:integer; InversGrad:boolean; GradientStyle:TGradientStyle; Scale:TScale; LineStyle:Integer);
 var   EColor: TRGB;
       SColor: TRGB;
       hdcMem:HDC;
@@ -281,7 +281,7 @@ TRY
 FINALLY
    if Frame then begin
       br := GetStockObject(NULL_BRUSH);
-      pen := CreatePen(PS_SOLID, Round((Scale.x + Scale.y) * LineSize/2), Color2RGB(FrameColor));
+      pen := CreatePen(LineStyle, Round((Scale.x + Scale.y) * LineSize/2), Color2RGB(FrameColor));
       SelectObject(DC,br);
       SelectObject(DC,Pen);
       Rectangle(DC, cbRect.Left, cbRect.Top, cbRect.Right, cbRect.Bottom);
@@ -308,13 +308,13 @@ TRY
    fLineSize := ReadInteger(_Data,_data_Size,_prop_Size);
    case fDrawSource of
       dcHandle, 
-      dcBitmap : _Gradient(pDC, PRect(@oldx1)^, fGradient, fStartColor, fEndColor, fFrameColor, fFrame, fLineSize, fInversGrad, fGradientStyle, SingleScale); 
+      dcBitmap : _Gradient(pDC, PRect(@oldx1)^, fGradient, fStartColor, fEndColor, fFrameColor, fFrame, fLineSize, fInversGrad, fGradientStyle, SingleScale, ord(_prop_LineStyle)); 
       dcContext: begin 
                     hdcMem:= CreateCompatibleDC(0);
                     hdcBmp:= CreateCompatibleBitmap(pDC, newwh, newhh);
                     SelectObject(hdcMem, hdcBmp);  
                     ARect := MakeRect(0, 0, newwh, newhh);
-                    _Gradient(hdcMem, ARect, fGradient, fStartColor, fEndColor, fFrameColor, fFrame, fLineSize, fInversGrad, fGradientStyle, fScale);
+                    _Gradient(hdcMem, ARect, fGradient, fStartColor, fEndColor, fFrameColor, fFrame, fLineSize, fInversGrad, fGradientStyle, fScale, ord(_prop_LineStyle));
                     BitBlt(pDC, x1, y1, newwh, newhh, hdcMem, 0, 0, SRCCOPY);
                     DeleteDC(hdcMem);
                     DeleteObject(hdcBmp);
