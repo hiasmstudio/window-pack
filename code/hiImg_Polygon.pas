@@ -137,7 +137,7 @@ TRY
    SelectObject(pDC,Pen);
    if Length(PointsArray) <> 0 then begin
       MyPolyline(pDC, PointsArray);  
-      if _prop_Style <> bsClear then MyPolygon(pDC, PointsArray);
+      if (_prop_Style <> bsClear) or _prop_PatternStyle then MyPolygon(pDC, PointsArray);
    end;
    DeleteObject(br);
    DeleteObject(Pen);

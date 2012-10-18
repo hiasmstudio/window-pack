@@ -154,8 +154,15 @@ begin
 end;
 
 procedure THIImg._work_doStyle;
+var
+  tmp: Integer;
 begin
-  _prop_Style := TBrushStyle(ToInteger(_Data));
+  tmp := ToInteger(_Data);
+  case tmp of
+    0: tmp := 1;
+    1: tmp := 0;
+  end;
+  _prop_Style := TBrushStyle(tmp);
 end;
 
 procedure THIImg.ReadXY;
