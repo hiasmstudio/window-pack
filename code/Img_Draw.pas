@@ -68,7 +68,7 @@ type
      procedure _work_doDrawSource(var _Data:TData; Index:word);
      procedure _work_doLineStyle(var _Data:TData; Index:word);
      procedure _work_doStyle(var _Data:TData; Index:word);
-     procedure _work_doPattern(var _Data:TData; Index:word);
+     procedure _work_doPatternStyle(var _Data:TData; Index:word);
 
    protected
      procedure ReadXY(var _Data:TData);
@@ -148,7 +148,7 @@ begin
    _prop_LineStyle := TPenStyle(ToInteger(_Data));
 end;
 
-procedure THIImg._work_doPattern;
+procedure THIImg._work_doPatternStyle;
 begin
    _prop_PatternStyle := ReadBool(_Data);
 end;
