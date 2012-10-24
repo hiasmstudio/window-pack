@@ -529,15 +529,17 @@ TRY
     _hi_OnEvent(_event_onSelect, IdxFrom);
     exit;
   end;
-
   if GMouse and (OldState = 0) then
   begin 
     Sender.LVItemStateImgIdx[IdxFrom] := 0;
     exit;    
   end;
-  if (Newstate = $2000) and (OldState = $1000) then
+
+  if (Newstate = $3000) and ((OldState = $1000) or (OldState = $2000)) then
+    dtInteger(dt, 2)
+  else if (Newstate = $2000) and ((OldState = $1000) or (OldState = $3000)) then
     dtInteger(dt, 1)
-  else if (Newstate = $1000) and (OldState = $2000) then
+  else if (Newstate = $1000) and ((OldState = $2000) or (OldState = $3000)) then
     dtInteger(dt, 0)
   else
     exit;         
