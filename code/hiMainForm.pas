@@ -54,6 +54,7 @@ type
      _prop_TransparentColor:TColor;
 
      _data_Close:THI_Event;
+     _data_QueryEndSession:THI_Event;
      _event_onQueryEndSession:THI_Event;     
      _event_onClick:THI_Event;
      _event_onActivate:THI_Event;
@@ -128,9 +129,8 @@ end;
 
 procedure THIMainForm._OnQueryEndSession;
 begin
-  if not Assigned(_event_onQueryEndSession.Event) then exit;
   _hi_OnEvent(_event_onQueryEndSession);
-  Accept := false;
+  Accept := (ToIntegerEvent(_data_QueryEndSession) = 0);
 end;
 
 constructor THIMainForm.Create;
