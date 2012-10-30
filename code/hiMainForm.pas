@@ -8,6 +8,7 @@ uses Windows,Kol,Share,Win,Messages, hiTransparentManager{,KOLMHToolTip};
 
 type
  THIPosition = procedure of object;
+ 
  THIMainForm = class(THIWin)
    private
      IsMain,First:boolean;
@@ -26,6 +27,7 @@ type
      procedure Load;
 
      function _OnClose( Sender: PObj; Accept: Boolean ):boolean;
+     procedure _OnQueryEndSession(Sender: PObj; var Accept: Boolean);     
      procedure _OnPaint( Sender: PControl; DC: HDC );
      procedure SetCustomTransparent(Value: ITransparentManager);
    protected  
@@ -52,6 +54,7 @@ type
      _prop_TransparentColor:TColor;
 
      _data_Close:THI_Event;
+     _event_onQueryEndSession:THI_Event;     
      _event_onClick:THI_Event;
      _event_onActivate:THI_Event;
      _event_onDeactivate:THI_Event;
@@ -122,6 +125,14 @@ begin
   sTransparentManager.setaeromode(Control);  
 end;
 
+
+procedure THIMainForm._OnQueryEndSession;
+begin
+  if not Assigned(_event_onQueryEndSession.Event) then exit;
+  _hi_OnEvent(_event_onQueryEndSession);
+  Accept := false;
+end;
+
 constructor THIMainForm.Create;
 begin
    {$ifdef SUPER_PARENT}if Parent<>nil then Parent := Parent.ParentForm;{$endif}
@@ -130,6 +141,7 @@ begin
     begin
      Applet := NewApplet('');
      IsMain := true;
+     Applet.OnQueryEndSession := _OnQueryEndSession;
     end
    else IsMain := false;
    if FParent = nil then Control := NewForm(Applet,'Form')
@@ -194,7 +206,7 @@ begin
     begin
      Result := false;
      _hi_OnEvent(_event_onClose);
-     EventOff;
+//     EventOff;
     end
    else
     begin
@@ -213,6 +225,7 @@ function THIMainForm._onMessage;
 var
   sControl: PControl;
   i: integer;
+  acc: boolean;
 begin
    Result := false;
    if (Msg.message = WM_INNERMESSAGE) and not isMain and
