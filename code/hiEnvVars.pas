@@ -91,12 +91,12 @@ end;
 
 procedure THIEnvVars._work_doSet;
 begin
-  SetEnvironmentVariable(@ReadString(_Data, _data_Name, _prop_Name)[1], @ReadString(_Data, _data_Value, _prop_Value)[1]);
+  SetEnvironmentVariable(PChar(ReadString(_Data, _data_Name, _prop_Name)), PChar(ReadString(_Data, _data_Value, _prop_Value)));
 end;
 
 procedure THIEnvVars._work_doDelete;
 begin
-  SetEnvironmentVariable(@ReadString(_Data, _data_Name, _prop_Name)[1], nil);
+  SetEnvironmentVariable(PChar(ReadString(_Data, _data_Name, _prop_Name)), nil);
 end;
 
 procedure THIEnvVars._var_Result;

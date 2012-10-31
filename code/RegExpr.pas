@@ -515,8 +515,14 @@ type
   end;
   {$ENDIF}
 
+{$ifdef FPC}
+var
+  RegExprInvertCaseFunction : TRegExprInvertCaseFunction;
+{$else}
 const
   RegExprInvertCaseFunction : TRegExprInvertCaseFunction = TRegExpr.InvertCaseFunction;
+ // defaul for InvertCase property
+{$endif}
   // defaul for InvertCase property
 
 function ExecRegExpr (const ARegExpr, AInputStr : RegExprString) : boolean;
@@ -3956,8 +3962,11 @@ end;
 // be carefull - placed here code will be always compiled with
 // compiler optimization flag
 
+{$ifdef FPC}
+initialization
+  RegExprInvertCaseFunction := TRegExpr.InvertCaseFunction;
+{$endif}
 end.
-
 
 
 

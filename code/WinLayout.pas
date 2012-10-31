@@ -1,5 +1,8 @@
 unit WinLayout;
 
+{$WARNINGS OFF}
+{$HINTS OFF}
+
 interface
 
 uses Messages,Windows,Kol,Share,Debug;
