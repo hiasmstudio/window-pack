@@ -20,6 +20,7 @@ const
 type
   ThiProgressBarRush = class(THIWin)
    private
+     procedure SetCaption(const Value:string);   
    public
     _prop_RoundWidth:Byte;
     _prop_RoundHeight:Byte;
@@ -28,7 +29,6 @@ type
     _prop_Kind:Byte;
     _prop_Frame:Boolean;
     _prop_DrawProgress:Boolean;
-    _prop_Caption:String;
 
     _prop_ColorTo:Integer;
     _prop_ColorText:Integer;
@@ -52,12 +52,14 @@ type
     procedure Init; override;
     procedure _work_doColor(var _Data:TData; Index:word);
     procedure _work_doPosition(var _Data:TData; Index:word);
+    procedure _work_doCaption(var _Data:TData; Index:word);
     procedure _work_doMax(var _Data:TData; Index:word);
     procedure _work_doSetTheme(var _Data:TData; Index:word);    
     procedure _work_doEnabled(var _Data:TData; Index:word);    
     procedure _var_Position(var _Data:TData; Index:word);
     procedure _work_doRoundWidth(var _Data:TData; Index:word);
-    procedure _work_doRoundHeight(var _Data:TData; Index:word);    
+    procedure _work_doRoundHeight(var _Data:TData; Index:word);
+    property _prop_Caption:string write SetCaption;          
   end;
 
 implementation
@@ -107,9 +109,13 @@ begin
     Def_GradientStyle  :=  arr[_prop_GradientStyle];
     Dis_GradientStyle  :=  arr[_prop_GradientStyleDis];
    end;
-   Control.Caption := _prop_Caption;
    Control.MaxProgress := _prop_Max;
    Control.Progress := 0;      
+end;
+
+procedure ThiProgressBarRush._work_doCaption;
+begin
+   Control.Caption := ToString(_Data);
 end;
 
 procedure ThiProgressBarRush._work_doPosition;
@@ -210,6 +216,11 @@ begin
     Dis_BorderRoundHeight  :=  _prop_RoundHeight;
   end;  
   InvalidateRect(Control.Handle, nil, true);
+end;
+
+procedure ThiProgressBarRush.SetCaption;
+begin
+  Control.Caption := Value;
 end;
 
 end.
