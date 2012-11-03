@@ -18,6 +18,7 @@ type
      _prop_ColorHover:integer;
      _prop_Underline:boolean;
      _prop_Caption:string;
+     _prop_CaptionOnClick:boolean;
      _data_Text:THI_Event;
 
      procedure _work_DoText(var Data:TData; Index:word);
@@ -51,7 +52,10 @@ end;
 
 procedure THILabel._OnClick;
 begin
-   _hi_OnEvent(_event_OnClick);
+   if _prop_CaptionOnClick then
+     _hi_OnEvent(_event_OnClick, Control.Caption)
+   else  
+     _hi_OnEvent(_event_OnClick);
 end;
 
 procedure THILabel._OnMouseEnter;
