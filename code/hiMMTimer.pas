@@ -26,6 +26,7 @@ type
     procedure _work_doStop(var _Data:TData; Index:word);
     procedure _work_doInterval(var _Data:TData; Index:word);
     procedure _work_doAutoStop(var _Data:TData; Index:word);
+    procedure _var_Enabled(var _Data:TData; Index:word);    
     property  _prop_Interval:integer write SetInterval;
     property  _prop_Enable:boolean write SetEnable;
     property  _prop_Resolution:integer write SetResolution;
@@ -108,6 +109,11 @@ procedure THIMMTimer.OnStop;
 begin
     FTimer.Enabled := false;
    _hi_OnEvent(_event_onStop);
+end;
+
+procedure THIMMTimer._var_Enabled;
+begin
+    dtInteger(_Data, ord(FTimer.Enabled));
 end;
 
 end.
