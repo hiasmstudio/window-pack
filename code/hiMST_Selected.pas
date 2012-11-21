@@ -19,6 +19,7 @@ type
      destructor Destroy; override;
      procedure _var_SelectArray(var _Data: TData; Index: word);
      procedure _var_AllSelect(var _Data: TData; Index: word);
+     procedure _var_SelCount(var _Data: TData; Index: word);
   end;
 
 implementation
@@ -108,6 +109,14 @@ begin
     until j < 0;
   end;
   _Data := FData;
+end;
+
+procedure THIMST_Selected._var_SelCount;
+var   sControl: PControl;
+begin
+  if not Assigned(_prop_MSTControl) then exit;
+  sControl := _prop_MSTControl.ctrlpoint;
+  dtInteger(_data, sControl.LVSelCount);
 end;
 
 end.
