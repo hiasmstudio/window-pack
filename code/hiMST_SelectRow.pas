@@ -16,6 +16,8 @@ type
 
     procedure _work_doAutoMakeVisible(var _Data: TData; Index: word);
     procedure _work_doSelect(var _Data: TData; Index: word);
+    procedure _work_doSelectAll(var _Data: TData; Index: word);
+    procedure _work_doSelectInvert(var _Data: TData; Index: word);
     procedure _work_doEnsureVisible(var _Data: TData; Index: word);
     procedure _work_doSetFocus(var _Data: TData; Index: word);
     procedure _work_doSelEndStr(var _Data: TData; Index: word);
@@ -93,15 +95,46 @@ begin
   sControl.LVMakeVisible(sControl.Count - 1, true);
 end;
 
+// Выделяет все строки таблицы
+//
+procedure THIMST_SelectRow._work_doSelectAll;
+var
+  sControl: PControl;
+  i: integer;
+begin
+  if not Assigned(_prop_MSTControl) then exit;
+  sControl := _prop_MSTControl.ctrlpoint;
+  for i := 0 to sControl.Count - 1 do
+    sControl.LVItemState[i] := [lvisSelect];
+end;
+
+// Инвертирует выбранные строки таблицы
+//
+procedure THIMST_SelectRow._work_doSelectInvert;
+var
+  sControl: PControl;
+  i: integer;
+begin
+  if not Assigned(_prop_MSTControl) then exit;
+  sControl := _prop_MSTControl.ctrlpoint;
+  for i := 0 to sControl.Count - 1 do
+    if sControl.LVItemState[i] = [] then
+      sControl.LVItemState[i] := [lvisSelect]
+    else
+      sControl.LVItemState[i] := [];
+end;
+
 // Снимает выделение со строк таблицы
 //
 procedure THIMST_SelectRow._work_doSelectOut;
 var
   sControl: PControl;
+  i: integer;  
 begin
   if not Assigned(_prop_MSTControl) then exit;
   sControl := _prop_MSTControl.ctrlpoint;
-  sControl.LVCurItem:= -1;
+  for i := 0 to sControl.Count - 1 do
+    sControl.LVItemState[i] := [];
 end;
 
 // Содержит выбранную строку,
