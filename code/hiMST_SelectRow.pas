@@ -43,7 +43,8 @@ begin
   sControl := _prop_MSTControl.ctrlpoint;
 
   ind := ToInteger(_Data);
-  sControl.LVCurItem := ind;
+//  sControl.LVCurItem := ind;
+  sControl.LVItemState[ind] := [lvisSelect];
   If not FAutoMakeVisible then exit;
   if (_prop_MSTControl.style = lvsDetail) or (_prop_MSTControl.style = lvsDetailNoHeader) then
     case _prop_ModeMakeVisible of
