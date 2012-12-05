@@ -12,6 +12,7 @@ type
     _prop_MSTControl: IMSTControl;
 
     _prop_ModeMakeVisible: byte;
+    _event_onSelectRow: THI_Event;
     property _prop_AutoMakeVisible: boolean write FAutoMakeVisible;
 
     procedure _work_doAutoMakeVisible(var _Data: TData; Index: word);
@@ -44,7 +45,7 @@ begin
 
   ind := ToInteger(_Data);
 //  sControl.LVCurItem := ind;
-  sControl.LVItemState[ind] := [lvisSelect];
+  if (sControl.LVItemState[ind] = [lvisSelect]) or (sControl.Count = 0) then exit;
   If not FAutoMakeVisible then exit;
   if (_prop_MSTControl.style = lvsDetail) or (_prop_MSTControl.style = lvsDetailNoHeader) then
     case _prop_ModeMakeVisible of
@@ -68,6 +69,7 @@ begin
          end;
     end; 
   sControl.LVMakeVisible(ind, false);
+  _hi_onEvent(_event_onSelectRow);
 end;
 
 // Делает видимой строку
@@ -91,9 +93,10 @@ var
 begin
   if not Assigned(_prop_MSTControl) then exit;
   sControl := _prop_MSTControl.ctrlpoint;
-  if not FAutoMakeVisible then exit;
+  if not FAutoMakeVisible or (sControl.Count = 0) then exit;
   sControl.LVCurItem:= sControl.Count - 1;
   sControl.LVMakeVisible(sControl.Count - 1, true);
+  _hi_onEvent(_event_onSelectRow);  
 end;
 
 // Выделяет все строки таблицы
@@ -105,8 +108,10 @@ var
 begin
   if not Assigned(_prop_MSTControl) then exit;
   sControl := _prop_MSTControl.ctrlpoint;
+  if (sControl.LVSelCount = sControl.Count) or (sControl.Count = 0) then exit;
   for i := 0 to sControl.Count - 1 do
     sControl.LVItemState[i] := [lvisSelect];
+  _hi_onEvent(_event_onSelectRow);    
 end;
 
 // Инвертирует выбранные строки таблицы
@@ -118,11 +123,13 @@ var
 begin
   if not Assigned(_prop_MSTControl) then exit;
   sControl := _prop_MSTControl.ctrlpoint;
+  if sControl.Count = 0 then exit;
   for i := 0 to sControl.Count - 1 do
     if sControl.LVItemState[i] = [] then
       sControl.LVItemState[i] := [lvisSelect]
     else
       sControl.LVItemState[i] := [];
+  _hi_onEvent(_event_onSelectRow); 
 end;
 
 // Снимает выделение со строк таблицы
@@ -134,8 +141,10 @@ var
 begin
   if not Assigned(_prop_MSTControl) then exit;
   sControl := _prop_MSTControl.ctrlpoint;
+  if sControl.LVSelCount = 0 then exit;
   for i := 0 to sControl.Count - 1 do
     sControl.LVItemState[i] := [];
+  _hi_onEvent(_event_onSelectRow);    
 end;
 
 // Содержит выбранную строку,
