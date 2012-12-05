@@ -50,6 +50,7 @@ type
     procedure _work_doSend(var _Data:TData; Index:word);
     procedure _work_doSendByIp(var _Data:TData; Index:word);
     procedure _work_doCloseAll(var _Data:TData; Index:word);
+    procedure _work_doCloseByIP(var _Data:TData; Index:word);
     procedure _var_Count(var _Data:TData; Index:word);
     procedure _var_IP(var _Data:TData; Index:word);
   end;
@@ -172,7 +173,9 @@ begin
          if FSize = Mem.Size then
           begin
              Mem.Position := 0;
-             _hi_OnEvent(_event_onRead,mem);
+             Share.dtStream(dt, Mem);
+             event();
+//             _hi_OnEvent(_event_onRead,mem);
              Free_and_nil(Mem);
              FSizeCount := 0;
           end;
@@ -260,6 +263,11 @@ end;
 procedure THITCP_Server._work_doCloseAll;
 begin
   Sock.DisconnectClients;
+end;
+
+procedure THITCP_Server._work_doCloseByIP;
+begin
+  Sock.DisconnectByIP(ToString(_Data));
 end;
 
 procedure THITCP_Server._var_Count;

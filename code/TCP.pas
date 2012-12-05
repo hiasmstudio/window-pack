@@ -41,6 +41,7 @@ type
      procedure Listen(Max:word);
      procedure Close;
      procedure DisconnectClients;
+     procedure DisconnectByIP(const Host:String);
      procedure Send(Buf:pointer; Size:cardinal);
 
      property Connections[Index:integer]:TSocket read GetConnections;
@@ -231,6 +232,19 @@ begin
     Destroy;
    end;
   FList.Clear;
+end;
+
+procedure TSocket.DisconnectByIP;
+var i:smallint;
+begin
+  for i := FList.Count-1 downto 0 do with Connections[i] do
+  begin
+    if ip = Host then
+    begin
+      Close;
+      Destroy;
+    end;
+  end;
 end;
 
 procedure TSocket.Send;
