@@ -17,6 +17,7 @@ type
    public
     destructor Destroy; override;
     procedure _work_doLoad(var _Data:TData; Index:word);
+    procedure _work_doClear(var _Data:TData; Index:word);    
     procedure _var_Array(var _Data:TData; Index:word);
     procedure _var_MThread(var _Data:TData; Index:word);
   end;
@@ -33,6 +34,12 @@ procedure THIMT_Array._work_doLoad;
 begin
   FreeData(@FData);
   CopyData(@FData,@_Data);
+end;
+
+procedure THIMT_Array._work_doClear;
+begin
+  FreeData(@FData);
+  dtNull(FData);
 end;
 
 procedure THIMT_Array._var_MThread;
