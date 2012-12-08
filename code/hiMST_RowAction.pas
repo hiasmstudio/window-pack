@@ -264,7 +264,8 @@ begin
     Dispose(PData(sControl.LVItemData[oldindex]));
   end;  
   sControl.LVDelete(oldindex);
-  _hi_onEvent(_event_onChange);  
+  sControl.LVCurItem := oldindex - 2; 
+  _hi_onEvent(_event_onChange, sControl.LVCurItem);
 end;
 
 // Сдвигает строку вниз
@@ -293,7 +294,8 @@ begin
     Dispose(PData(sControl.LVItemData[oldindex]));
   end;  
   sControl.LVDelete(oldindex);
-  _hi_onEvent(_event_onChange);  
+  sControl.LVCurItem := oldindex + 1; 
+  _hi_onEvent(_event_onChange, sControl.LVCurItem);
 end;
 
 end.

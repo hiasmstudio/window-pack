@@ -44,31 +44,37 @@ begin
   sControl := _prop_MSTControl.ctrlpoint;
 
   ind := ToInteger(_Data);
-//  sControl.LVCurItem := ind;
   if (sControl.LVItemState[ind] = [lvisSelect]) or (sControl.Count = 0) then exit;
-  If not FAutoMakeVisible then exit;
-  if (_prop_MSTControl.style = lvsDetail) or (_prop_MSTControl.style = lvsDetailNoHeader) then
-    case _prop_ModeMakeVisible of
-      1: begin
-           begitm:= ind + sControl.LVPerPage;
-           if begitm > sControl.Count - 1 then begitm := sControl.Count - 1;
-           ind := begitm - sControl.LVPerPage;
-           sControl.LVMakeVisible(begitm, false);
-         end;
-      2: begin 
-           begitm := ind + sControl.LVPerPage div 2;
-           if begitm > sControl.Count - 1 then begitm := sControl.Count - 1;
-           ind := begitm - sControl.LVPerPage;
-           if ind < 0 then ind := 0;
-           sControl.LVMakeVisible(begitm, false);
-         end;
-      3: begin
-           begitm := ind - sControl.LVPerPage;
-           if begitm < 0 then begitm := 0;
-           sControl.LVMakeVisible(begitm, false);
-         end;
-    end; 
-  sControl.LVMakeVisible(ind, false);
+  
+  if (lvoMultiSelect in sControl.LVOptions) then
+    sControl.LVItemState[ind] := [lvisSelect] 
+  else
+    sControl.LVCurItem := ind;
+  if FAutoMakeVisible then
+  begin
+    if (_prop_MSTControl.style = lvsDetail) or (_prop_MSTControl.style = lvsDetailNoHeader) then
+      case _prop_ModeMakeVisible of
+        1: begin
+             begitm:= ind + sControl.LVPerPage;
+             if begitm > sControl.Count - 1 then begitm := sControl.Count - 1;
+             ind := begitm - sControl.LVPerPage;
+             sControl.LVMakeVisible(begitm, false);
+           end;
+        2: begin 
+             begitm := ind + sControl.LVPerPage div 2;
+             if begitm > sControl.Count - 1 then begitm := sControl.Count - 1;
+             ind := begitm - sControl.LVPerPage;
+             if ind < 0 then ind := 0;
+             sControl.LVMakeVisible(begitm, false);
+           end;
+        3: begin
+             begitm := ind - sControl.LVPerPage;
+             if begitm < 0 then begitm := 0;
+             sControl.LVMakeVisible(begitm, false);
+           end;
+      end; 
+    sControl.LVMakeVisible(ind, false);
+  end;
   _hi_onEvent(_event_onSelectRow);
 end;
 
@@ -108,7 +114,7 @@ var
 begin
   if not Assigned(_prop_MSTControl) then exit;
   sControl := _prop_MSTControl.ctrlpoint;
-  if (sControl.LVSelCount = sControl.Count) or (sControl.Count = 0) then exit;
+  if (sControl.LVSelCount = sControl.Count) or (sControl.Count = 0) or not (lvoMultiSelect in sControl.LVOptions) then exit;
   for i := 0 to sControl.Count - 1 do
     sControl.LVItemState[i] := [lvisSelect];
   _hi_onEvent(_event_onSelectRow);    
@@ -123,7 +129,7 @@ var
 begin
   if not Assigned(_prop_MSTControl) then exit;
   sControl := _prop_MSTControl.ctrlpoint;
-  if sControl.Count = 0 then exit;
+  if (sControl.Count = 0) or not(lvoMultiSelect in sControl.LVOptions) then exit;
   for i := 0 to sControl.Count - 1 do
     if sControl.LVItemState[i] = [] then
       sControl.LVItemState[i] := [lvisSelect]
@@ -142,8 +148,7 @@ begin
   if not Assigned(_prop_MSTControl) then exit;
   sControl := _prop_MSTControl.ctrlpoint;
   if sControl.LVSelCount = 0 then exit;
-  for i := 0 to sControl.Count - 1 do
-    sControl.LVItemState[i] := [];
+  sControl.LVCurItem := -1;
   _hi_onEvent(_event_onSelectRow);    
 end;
 
