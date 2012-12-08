@@ -47,7 +47,7 @@ begin
   if (sControl.LVItemState[ind] = [lvisSelect]) or (sControl.Count = 0) then exit;
   
   if (lvoMultiSelect in sControl.LVOptions) then
-    sControl.LVItemState[ind] := [lvisSelect] 
+    sControl.LVItemState[ind] := [lvisSelect, lvisFocus] 
   else
     sControl.LVCurItem := ind;
   if FAutoMakeVisible then
@@ -115,8 +115,8 @@ begin
   if not Assigned(_prop_MSTControl) then exit;
   sControl := _prop_MSTControl.ctrlpoint;
   if (sControl.LVSelCount = sControl.Count) or (sControl.Count = 0) or not (lvoMultiSelect in sControl.LVOptions) then exit;
-  for i := 0 to sControl.Count - 1 do
-    sControl.LVItemState[i] := [lvisSelect];
+  sControl.LVSelectAll;
+  sControl.LVItemState[sControl.Count - 1] := [lvisSelect, lvisFocus];
   _hi_onEvent(_event_onSelectRow);    
 end;
 
@@ -132,7 +132,7 @@ begin
   if (sControl.Count = 0) or not(lvoMultiSelect in sControl.LVOptions) then exit;
   for i := 0 to sControl.Count - 1 do
     if sControl.LVItemState[i] = [] then
-      sControl.LVItemState[i] := [lvisSelect]
+      sControl.LVItemState[i] := [lvisSelect, lvisFocus]
     else
       sControl.LVItemState[i] := [];
   _hi_onEvent(_event_onSelectRow); 
