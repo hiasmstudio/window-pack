@@ -10,9 +10,12 @@ type
     FAutoMakeVisible: boolean;
   public
     _prop_MSTControl: IMSTControl;
-
+    _prop_IndexSelect: integer;    
     _prop_ModeMakeVisible: byte;
+
+    _data_IndexSelect: THI_Event;
     _event_onSelectRow: THI_Event;
+    
     property _prop_AutoMakeVisible: boolean write FAutoMakeVisible;
 
     procedure _work_doAutoMakeVisible(var _Data: TData; Index: word);
@@ -43,7 +46,7 @@ begin
   if not Assigned(_prop_MSTControl) then exit;
   sControl := _prop_MSTControl.ctrlpoint;
 
-  ind := ToInteger(_Data);
+  ind := ReadInteger(_Data, _data_IndexSelect, _prop_IndexSelect);
   if (sControl.LVItemState[ind] = [lvisSelect]) or (sControl.Count = 0) then exit;
   
   if (lvoMultiSelect in sControl.LVOptions) then
