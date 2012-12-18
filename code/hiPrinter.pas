@@ -42,6 +42,7 @@ end;
 destructor THIPrinter.Destroy;
 begin
    PageSetupDialog1.Free;
+   PrintDialog1.Free;
    inherited;
 end;
 
