@@ -2,7 +2,7 @@ unit hiPrinter;
 
 interface
 
-uses Kol,Share,Debug,KOLPageSetupDialog,KOLPrinters,Windows;
+uses Kol,Share,Debug,KOLPrintDialogs,KOLPageSetupDialog,KOLPrinters,Windows;
 
 {$I share.inc}
 
@@ -10,8 +10,10 @@ type
   THIPrinter = class(TDebug)
    private
     PageSetupDialog1: TKOLPageSetupDialog;
+    PrintDialog1: TKOLPrintDialog;
    public
     _prop_Title:string;
+    _prop_PrnFileName:string;    
     
     _data_RichEdit:THI_Event;
     _data_Text:THI_Event;
@@ -20,7 +22,9 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure _work_doSettings(var _Data:TData; Index:word);
+    procedure _work_doPrintDlg(var _Data:TData; Index:word);    
     procedure _work_doPrint(var _Data:TData; Index:word);
+    procedure _work_doPrnFileName(var _Data:TData; Index:word);    
     procedure _var_Context(var _Data:TData; Index:word);
     procedure _var_CurDPIX(var _Data:TData; Index:word);
     procedure _var_CurDPIY(var _Data:TData; Index:word);  
@@ -32,12 +36,29 @@ constructor THIPrinter.Create;
 begin
    inherited;
    PageSetupDialog1 := NewPageSetupDialog(Applet.Children[0],[]);
+   PrintDialog1 := NewPrintDialog(Applet.Children[0],[pdHelp,pdPrintToFile,pdSelection,pdCollate,pdPageNums]);   
 end;
 
 destructor THIPrinter.Destroy;
 begin
    PageSetupDialog1.Free;
    inherited;
+end;
+
+procedure THIPrinter._work_doPrintDlg;
+begin
+  PrintDialog1.Options := PrintDialog1.Options + [pdCollate,pdPrintToFile,pdPageNums,pdSelection,pdWarning,pdHelp];
+  PrintDialog1.FromPage :=1;
+  PrintDialog1.ToPage :=1;
+  PrintDialog1.MinPage :=1;
+  PrintDialog1.MaxPage :=200;
+  PrintDialog1.Advanced := 1;
+  if PrintDialog1.Execute then
+  begin
+    Printer.Assign(PrintDialog1.Info);
+    if pdPrintToFile in PrintDialog1.Options then Printer.Output := _prop_PrnFileName;;
+    _work_doPrint(_Data, 0);
+  end;
 end;
 
 procedure THIPrinter._work_doSettings;
@@ -93,4 +114,10 @@ procedure THIPrinter._var_CurDPIY;
 begin
    dtInteger(_Data,GetDeviceCaps(Printer.Handle, LOGPIXELSY));
 end;
+
+procedure THIPrinter._work_doPrnFileName;
+begin
+  _prop_PrnFileName := ToString(_Data);
+end;
+
 end.
