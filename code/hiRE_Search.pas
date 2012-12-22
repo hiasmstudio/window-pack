@@ -126,8 +126,12 @@ function THIRE_Search._Get(Var Item:TData; var Val:TData):boolean;
 var idx:integer;
     mt:PMT;
 begin
-  idx := ToIntIndex(Item);
+  idx := ToIntIndex(Item) + 1;
   FreeData(@Val);
+  if idx > RE.SubExprMatchCount then begin
+    Result := false;
+    Exit;
+  end;
   dtString(Val, RE.Match[idx]);
   mt := mt_make(Val);
   mt_int(mt, RE.MatchPos[idx]);
@@ -139,6 +143,8 @@ end;
 function THIRE_Search._Count:integer;
 begin
   Result := RE.SubExprMatchCount;
+  if Result < 0 then
+    Result := 0;
 end;
 
 end.
