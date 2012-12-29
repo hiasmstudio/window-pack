@@ -117,8 +117,8 @@ type
     nCopies: Word;
     hInstance: HINST;
     lCustData: LPARAM;
-    lpfnPrintHook: function(Wnd: HWND; Message: UINT; wParam: WPARAM; lParam: LPARAM): UINT stdcall;
-    lpfnSetupHook: function(Wnd: HWND; Message: UINT; wParam: WPARAM; lParam: LPARAM): UINT stdcall;
+    lpfnPrintHook: function(Wnd: HWND; Message: UINT; wParam: WPARAM; lParam: LPARAM): UINT; stdcall;
+    lpfnSetupHook: function(Wnd: HWND; Message: UINT; wParam: WPARAM; lParam: LPARAM): UINT; stdcall;
     lpPrintTemplateName: PAnsiChar;
     lpSetupTemplateName: PAnsiChar;
     hPrintTemplate: HGLOBAL;
@@ -184,9 +184,16 @@ indicates that this check box was selected and must be processed
 TPrintDlgOptions = Set of TPrintDlgOption;
 {*}
 
+  {$ifdef F_P}
+  TPrintDlg = class;
+  PPrintDlg = TPrintDlg;
+  TKOLPrintDialog = PPrintDlg;
+  TPrintDlg = class(TObj)
+  {$else}
   PPrintDlg =^TPrintDlg;
   TKOLPrintDialog = PPrintDlg;
   TPrintDlg = object(TObj)
+  {$endif}
   {*}
   private
     { Private declarations }
@@ -259,7 +266,12 @@ implementation
 
 function NewPrintDialog(AOwner : PControl; Options : TPrintDlgOptions) : PPrintDlg;
 begin
+   {$ifdef F_P}
+   Result := PPrintDlg.Create;
+   {$else}
     New(Result,Create);
+   {$endif}
+
     FillChar(Result.ftagPD,sizeof(tagPD),0);
     Result.ftagPD.hWndOwner := AOwner.GetWindowHandle;    
     Result.ftagPD.hInstance := hInstance;
