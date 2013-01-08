@@ -370,6 +370,7 @@ begin
      end;
      if fEndItemRight then begin
         i := Menu.ItemHandle[Menu.ParentItem(Menu.Count-1)];
+        if i = 0 then i := Menu.ItemHandle[Menu.Count-1];
         ModifyMenu(Menu.Handle, i, MF_BYCOMMAND or MF_HELP, i, PChar(Menu.ItemText[Menu.Count-1]));
      end;
   end;
@@ -530,7 +531,6 @@ const
 begin
 
   with PMenu(Sender){$ifndef F_P}^{$endif} do begin
-
     if (FleftBmpImage <> nil) and (TopParent.IndexOf( Parent )=-1) then PictWidth:= FleftBmpImage.Width else PictWidth:= 0;
     if Pointer(Bitmap)<>nil then
        GetObject(Bitmap , sizeof(tagBITMAP), @BitmapSize);
