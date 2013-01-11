@@ -60,7 +60,7 @@ begin
   FileName := '\\.\Com' + Int2Str(PortNo); {טלÿ פאיכא}
   hFile := CreateFile(PChar(FileName),
     GENERIC_READ or GENERIC_WRITE, 0, nil,
-    OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+    OPEN_EXISTING, 0, 0);
   if hFile = INVALID_HANDLE_VALUE then 
     exit;
 
@@ -132,7 +132,8 @@ var
   Buffer:string;
 begin
   len := ToInteger(_Data);
-  SetLength(Buffer,256);
+  if len > 4096 then len := 4096;
+  SetLength(Buffer, 4096);
   if hFile <> INVALID_HANDLE_VALUE then
    if ReadFile(hFile, Buffer[1], Len, Received, nil) then
     begin
