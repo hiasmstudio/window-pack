@@ -673,49 +673,54 @@ end;
 
 //размеры меню
 function TXPMenu._MeasureItem(Sender: PObj;  Idx: Integer): Integer;
-VAR Bound:integer;
-    bb:packed record
-      Height:word;
-      Width:word;
-      ShiftWidth:word;
-    end absolute Bound;
-    BitmapSize:tagBitmap;
-
+var
+  bb:packed record
+    Height:word;
+    Width:word;
+  end;
+  ShiftWidth:word;
+  BitmapSize:tagBitmap;
 begin
 
   with PMenu(Sender){$ifndef F_P}^{$endif} do
-   if (TopParent.IndexOf( Parent )=-1) and not FIsPopup then begin
+    if (TopParent.IndexOf( Parent )=-1) and not FIsPopup then
+    begin
       bb.Width := TextExtent(Caption).cX;
       bb.Height := TextExtent(Caption).cY;
-      bb.ShiftWidth := 0;
-   end else begin
+      ShiftWidth := 0;
+    end
+    else
+    begin
       if (FleftBmpImage <> nil) and (TopParent.IndexOf( Parent )=-1) then
-         bb.ShiftWidth:= FleftBmpImage.Width
-      else bb.ShiftWidth:= 0;
-      if Pointer(Bitmap) <> nil then begin
-         GetObject(Bitmap, sizeof(tagBITMAP), @BitmapSize);
-         bb.Width := BitmapSize.bmWidth ;
-         if IsSeparator then
-            if Max(ItemHeight, BitmapSize.bmHeight ) > 20 then //при большем 20  узкая полоска некрасива
-               bb.Height := 11 else bb.Height := 5
-            else
-               bb.Height := Max(ItemHeight, Max(TextExtent(Caption).cy , BitmapSize.bmHeight ) + 4);
-         if bb.Width < bb.Height then bb.Width := bb.Height else bb.Width := bb.Width + 5;
-         bb.Width := bb.ShiftWidth + Max(ItemWidth, bb.Width + TextExtent(Caption).cx + 15);
-         if (FleftBmpImage <> nil) and (TopParent.IndexOf( Parent )=-1) then
-            bb.Width:= bb.Width + FadWidth;
-         if (TopParent.IndexOf( Parent )<>-1) and not FIsPopup then
-            bb.Width:= bb.Width + FadWidth
-      end else begin
-         bb.Height := Max(TextExtent(Caption).cY + 4, ItemHeight);
-         bb.Width := bb.ShiftWidth + Max(ItemWidth, bb.Height + TextExtent(Caption).cx  + 15) + FadWidth;
-         bb.Width := bb.ShiftWidth + Max(ItemWidth, bb.Height + TextExtent(Caption).cx  + 15);
-         if IsSeparator then
-            if bb.Height > 20 then //при большем 20  узкая полоска некрасива
-               bb.Height := 11 else bb.Height := 5;
+        ShiftWidth:= FleftBmpImage.Width
+      else ShiftWidth:= 0;
+      if Pointer(Bitmap) <> nil then
+      begin
+        GetObject(Bitmap, sizeof(tagBITMAP), @BitmapSize);
+        bb.Width := BitmapSize.bmWidth ;
+        if IsSeparator then
+          if Max(ItemHeight, BitmapSize.bmHeight ) > 20 then //при большем 20  узкая полоска некрасива
+             bb.Height := 11 else bb.Height := 5
+          else
+             bb.Height := Max(ItemHeight, Max(TextExtent(Caption).cy , BitmapSize.bmHeight ) + 4);
+        if bb.Width < bb.Height then bb.Width := bb.Height else bb.Width := bb.Width + 5;
+        bb.Width := ShiftWidth + Max(ItemWidth, bb.Width + TextExtent(Caption).cx + 15);
+        if (FleftBmpImage <> nil) and (TopParent.IndexOf( Parent )=-1) then
+          bb.Width:= bb.Width + FadWidth;
+        if (TopParent.IndexOf( Parent )<>-1) and not FIsPopup then
+          bb.Width:= bb.Width + FadWidth
+      end
+      else
+      begin
+        bb.Height := Max(TextExtent(Caption).cY + 4, ItemHeight);
+        bb.Width := ShiftWidth + Max(ItemWidth, bb.Height + TextExtent(Caption).cx  + 15) + FadWidth;
+        bb.Width := ShiftWidth + Max(ItemWidth, bb.Height + TextExtent(Caption).cx  + 15);
+        if IsSeparator then
+          if bb.Height > 20 then //при большем 20  узкая полоска некрасива
+             bb.Height := 11 else bb.Height := 5;
       end;
-   end;
-  Result:=Bound;
+    end;
+  Result := Integer(bb);
 end;
 
 procedure TXPMenu.SetPopUp;
