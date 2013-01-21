@@ -73,6 +73,7 @@ type
 
      procedure poNone;
      procedure poCenter;
+     procedure poOwner;
      
      procedure _work_doCaption(var Data:TData; Index:word);
      procedure _work_doRestore(var Data:TData; Index:word);
@@ -369,6 +370,7 @@ begin                // _debug('ok');
    begin
     SetWindowsState(_prop_WindowsState);
     _prop_SavePosition(false);
+    _prop_Position;
     First := true;
    end;
 //  _hi_OnEvent(_event_onShow);
@@ -403,7 +405,7 @@ begin
     Control.SetClientSize(_prop_Width,_prop_Height);
   Control.OnPaint := _OnPaint;
   Control.Tag := Longint(Self);
-  _prop_Position;
+  //_prop_Position;
 end;
 
 procedure THIMainForm.Start;
@@ -488,6 +490,13 @@ procedure THIMainForm.poCenter;
 begin
   Control.Left := (ScreenWidth - Control.Width) div 2;
   Control.Top := (ScreenHeight - Control.Height) div 2;
+end;
+
+procedure THIMainForm.poOwner;
+begin
+  if Control.Parent=nil then exit;
+  Control.Left := Control.Parent.Left + _prop_Left;
+  Control.Top := Control.Parent.Top + _prop_Top;
 end;
 
 procedure THIMainForm._work_doCaption;
