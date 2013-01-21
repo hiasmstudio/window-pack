@@ -225,7 +225,7 @@ function THIMainForm._onMessage;
 var
   sControl: PControl;
   i: integer;
-  acc: boolean;
+//  acc: boolean;
 begin
    Result := false;
    if (Msg.message = WM_INNERMESSAGE) and not isMain and
@@ -425,8 +425,8 @@ var
 begin
   if State then
    begin
-    if RegCreateKeyEx(HKEY_CURRENT_USER,PChar('Software\' + _prop_SavePosName), 0, nil,
-       REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, nil, pkey, @Disposition) = ERROR_SUCCESS
+    if First and(RegCreateKeyEx(HKEY_CURRENT_USER,PChar('Software\' + _prop_SavePosName), 0, nil,
+       REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, nil, pkey, @Disposition) = ERROR_SUCCESS)
      then begin
       tmp:=Control.Left;  RegSetValueEx(pkey, PChar('Left'),  0, REG_DWORD, @tmp, SizeOf(Integer));
       tmp:=Control.Top;   RegSetValueEx(pkey, PChar('Top'),   0, REG_DWORD, @tmp, SizeOf(Integer));
@@ -461,15 +461,15 @@ begin
   Ini := OpenIniFile(GetStartDir + Copy(_prop_SavePosName,1,p+3));
   Ini.Section := Copy(_prop_SavePosName,p+5,MAXINT);
   with Control{$ifndef F_P}^{$endif} do
-   if State then
-    begin
+   if State then begin
+    if First then begin
      Ini.Mode := ifmWrite;
      Ini.ValueInteger('Left',Left);
      Ini.ValueInteger('Top',Top);
      Ini.ValueInteger('Width',Width);
      Ini.ValueInteger('Height',Height);
     end
-   else
+   end else
     begin
      Ini.Mode := ifmRead;
      Left := Ini.ValueInteger('Left',Left);
