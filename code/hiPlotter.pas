@@ -88,6 +88,10 @@ type
     destructor Destroy; override;
     procedure _work_doClear(var _Data:TData; Index:word);
     procedure _work_doSaveToFile(var _Data:TData; Index:word);
+    procedure _work_doMinH(var _Data:TData; Index:word);
+    procedure _work_doMaxH(var _Data:TData; Index:word);
+    procedure _work_doMinW(var _Data:TData; Index:word);
+    procedure _work_doMaxW(var _Data:TData; Index:word);
     procedure _var_MinX(var _Data:TData; Index:word);
     procedure _var_MaxX(var _Data:TData; Index:word);
     procedure _var_MinY(var _Data:TData; Index:word);
@@ -688,6 +692,30 @@ end;
 procedure THIPlotter._var_MaxX;
 begin
   dtReal(_Data,graphMaxX);
+end;
+
+procedure THIPlotter._work_doMinH;
+begin
+  _prop_MinH := ToReal(_Data);
+  ReDraw;
+end;
+
+procedure THIPlotter._work_doMaxH;
+begin
+  _prop_MaxH := ToReal(_Data);
+  ReDraw;
+end;
+
+procedure THIPlotter._work_doMinW;
+begin
+  _prop_MinW := ToReal(_Data);
+  ReDraw;
+end;
+
+procedure THIPlotter._work_doMaxW;
+begin
+  _prop_MaxW := ToReal(_Data);
+  ReDraw;
 end;
 
 end.
