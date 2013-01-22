@@ -7,7 +7,7 @@ interface
 uses Windows,Kol,Share,Win,Messages, hiTransparentManager{,KOLMHToolTip};
 
 type
- THIPosition = procedure of object;
+ THIPosition = procedure(State:boolean) of object;
  
  THIMainForm = class(THIWin)
    private
@@ -46,7 +46,7 @@ type
      _prop_DragForm:boolean;
      _prop_AlphaBlendValue:byte;
      _prop_WindowsState:byte;
-     _prop_SavePosition:procedure(State:boolean) of object;
+     //_prop_SavePosition:procedure(State:boolean) of object;
      _prop_SavePosName:string;
      _prop_ShowIcon:boolean;
      _prop_ClientSize:boolean;
@@ -67,13 +67,11 @@ type
      procedure Init; override;
      procedure Start;
 
-     procedure None(State:boolean);
+     procedure poNone(State:boolean);
+     procedure poCenter(State:boolean);
+     procedure poOwner(State:boolean);
      procedure Registry(State:boolean);
      procedure IniFile(State:boolean);
-
-     procedure poNone;
-     procedure poCenter;
-     procedure poOwner;
      
      procedure _work_doCaption(var Data:TData; Index:word);
      procedure _work_doRestore(var Data:TData; Index:word);
@@ -219,7 +217,7 @@ begin
        Control.Hide
      else Control.ModalResult := -1;
     end;
-   _prop_SavePosition(true);
+   _prop_Position(true);
 end;
 
 function THIMainForm._onMessage;
@@ -369,8 +367,7 @@ begin                // _debug('ok');
   if not First then
    begin
     SetWindowsState(_prop_WindowsState);
-    _prop_SavePosition(false);
-    _prop_Position;
+    _prop_Position(false);
     First := true;
    end;
 //  _hi_OnEvent(_event_onShow);
@@ -386,11 +383,6 @@ end;
 procedure THIMainForm.Init;
 var vsb:boolean;
 begin
-  if _prop_SavePosName='' then
-    _prop_SavePosition := None
-  else if Pos('.ini\',_prop_SavePosName)=0 then
-    _prop_SavePosition := Registry
-  else _prop_SavePosition := IniFile;
 
   vsb:= _prop_Visible;
   _prop_Visible:= false;
@@ -399,13 +391,17 @@ begin
     FormList.AddObject('', Control.Handle);
 
   inherited;
+  _prop_Position(false);
+  if _prop_SavePosName='' then
+  else if Pos('.ini\',_prop_SavePosName)=0 then
+    _prop_Position := Registry
+  else _prop_Position := IniFile;
   _prop_Visible:= vsb;
   SetAlphaBlendValue(_prop_AlphaBlendValue);
   if _prop_ClientSize then
     Control.SetClientSize(_prop_Width,_prop_Height);
   Control.OnPaint := _OnPaint;
   Control.Tag := Longint(Self);
-  //_prop_Position;
 end;
 
 procedure THIMainForm.Start;
@@ -414,10 +410,6 @@ begin
     Applet.Visible := _prop_Visible;
   EventOn;
   InitDo;
-end;
-
-procedure THIMainForm.None;
-begin
 end;
 
 procedure THIMainForm.Registry;
@@ -488,13 +480,14 @@ end;
 
 procedure THIMainForm.poCenter;
 begin
+  if State then exit;
   Control.Left := (ScreenWidth - Control.Width) div 2;
   Control.Top := (ScreenHeight - Control.Height) div 2;
 end;
 
 procedure THIMainForm.poOwner;
 begin
-  if Control.Parent=nil then exit;
+  if State or(Control.Parent=nil) then exit;
   Control.Left := Control.Parent.Left + _prop_Left;
   Control.Top := Control.Parent.Top + _prop_Top;
 end;
@@ -523,7 +516,7 @@ end;
 
 procedure THIMainForm._work_doClose;
 begin
-  _prop_SavePosition(true);
+  _prop_Position(true);
   Control.Perform(WM_CLOSE,0,1);
 end;
 
