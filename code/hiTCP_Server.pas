@@ -90,7 +90,7 @@ end;
 
 procedure THITCP_Server._work_doClose;
 begin
-   Sock.DisconnectClients;
+   if Sock.Connected then Sock.DisconnectClients;
    Sock.Close;
 end;
 
