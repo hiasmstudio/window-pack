@@ -44,19 +44,27 @@ implementation
 
 procedure THIKeyEvent._work_doPress;
 var code,ScanCode:word;
+    shift, ctrl, alt: integer;
 begin
    old := GetForegroundWindow;
    SetForegroundWindow(ReadInteger(_Data,_data_Handle,0));
    code := ReadInteger(_Data,_data_Code,_prop_Code);
    ScanCode := Lo(MapVirtualKey(Code,0));
-   if ReadInteger(_Data,_data_Shift,_prop_Shift)=1 then keybd_event(16,0,1,0);
-   if ReadInteger(_Data,_data_Ctrl,_prop_Ctrl)=1 then keybd_event(17,0,1,0);
-   if ReadInteger(_Data,_data_Alt,_prop_Alt)=1 then keybd_event(18,0,1,0);
+   
+   shift := ReadInteger(_Data,_data_Shift,_prop_Shift);
+   ctrl := ReadInteger(_Data,_data_Ctrl,_prop_Ctrl);
+   alt := ReadInteger(_Data,_data_Alt,_prop_Alt);
+   
+   if shift = 1 then keybd_event(16,0,1,0);
+   if ctrl = 1 then keybd_event(17,0,1,0);
+   if alt = 1 then keybd_event(18,0,1,0);
+   
    keybd_event(code,ScanCode,1,0);
    keybd_event(Code,ScanCode,3,0);
-   if ReadInteger(_Data,_data_Alt,_prop_Alt)=1 then keybd_event(18,0,3,0);
-   if ReadInteger(_Data,_data_Ctrl,_prop_Ctrl)=1 then keybd_event(17,0,3,0);
-   if ReadInteger(_Data,_data_Shift,_prop_Shift)=1 then keybd_event(16,0,3,0);
+   
+   if alt = 1 then keybd_event(18,0,3,0);
+   if ctrl = 1 then keybd_event(17,0,3,0);
+   if shift = 1 then keybd_event(16,0,3,0);
    SetForegroundWindow(old);
 end;
 
