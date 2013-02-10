@@ -11,6 +11,8 @@ type
     eIndex: integer;
     FFrom: integer;
     FTo:   integer;
+    FStep: integer;
+    FNum: integer;
     Dlm: string;
     st: string;
   public
@@ -24,6 +26,7 @@ type
 
     property _prop_From: integer write FFrom;
     property _prop_To: integer write FTo;
+    property _prop_Step: integer write FStep;
     property _prop_Delimiter: string write Dlm;
     procedure _work_doEnum0(var _Data: TData; Index: Word); //Forward
     procedure _work_doEnum1(var _Data: TData; Index: Word); //Reverse
@@ -31,6 +34,7 @@ type
     procedure _work_doFrom(var _Data: TData; Index: Word);
     procedure _work_doTo(var _Data: TData; Index: Word);
     procedure _work_doDelimiter(var _Data: TData; Index: Word);
+    procedure _work_doStep(var _Data: TData; Index: Word);    
                     
     procedure _var_NumSubStr(var _Data: TData; Index: Word);
     procedure _var_Part(var _Data: TData; Index: Word);    
@@ -125,21 +129,40 @@ end;
 
 procedure THIStr_Enum._work_doEnum0;
 var
-  s: string;
+  s, ss: string;
   i: integer;
 begin
   s := ReadString(_Data, _data_String, '');
   FStop := false;
   eIndex := FFrom;
 
-  if (Dlm = '') and (s <> '') and (eIndex > 0) then // выдаем поcимвольно,
+  if (Dlm = '') and (s <> '') and (eIndex > 0) then // выдаем группами символов,
+  begin
+    if FStep = 1 then
     repeat
-      st := s[eIndex]; 
+      st := s[eIndex];
       _hi_onEvent(_event_onEnum, st);
       if (FStop) or (eIndex = FTo) then break;
       inc(eIndex);
     until eIndex > Length(s)
-  else if (Dlm <> '') and (s <> '') then            // иначе, разбиваем по делимитеру
+    else
+    begin
+      if FTo = -1 then
+        ss := Copy(s, (FFrom - 1) * FStep + 1, Length(s) - (FFrom - 1) * FStep)
+      else      
+        ss := Copy(s, (FFrom - 1) * FStep + 1, (FTo - FFrom + 1) * FStep); 
+      eIndex := 1;
+      FNum := FFrom;
+      repeat
+        st := Copy(ss, eIndex, FStep);
+        _hi_onEvent(_event_onEnum, st);
+        if FStop then break;
+        inc(eIndex, FStep);
+        inc(FNum);
+      until eIndex > Length(ss);
+    end;
+  end  
+  else if (Dlm <> '') and (s <> '') then            // иначе, разбиваем по разделителю
   begin
     i := 1;
     while (s <> '') and (i < eIndex) do
@@ -170,14 +193,39 @@ begin
   FStop := false;
   eIndex := FFrom;
 
-  if (Dlm = '') and (s <> '') and (eIndex > 0)then // выдаем поcимвольно,
+  if (Dlm = '') and (s <> '') and (eIndex > 0)then // выдаем группами символов,
+  begin
+    if FStep = 1 then
     repeat
-      st := s[Length(s) + 1 - eIndex]; 
+      st := s[Length(s) + 1 - eIndex];
       _hi_onEvent(_event_onEnum, st);
       if (FStop) or (eIndex = FTo) then break;
       inc(eIndex);
     until eIndex  > Length(s) 
-  else if (Dlm <> '') and (s <> '') then           // иначе, разбиваем по делимитеру
+    else
+    begin
+      if FTo = -1 then
+        DeleteTail(s, (FFrom - 1) * FStep)
+      else      
+      begin
+        DeleteTail(s, (FFrom - 1) * FStep);
+        s := Copy(s, Length(s) - (FTo - FFrom + 1) * FStep + 1, (FTo - FFrom + 1) * FStep);
+      end;  
+      eIndex := 1;
+      FNum := FFrom;        
+    repeat      
+      if (Length(s) + 2 - eIndex - FStep) < 1 then
+        st := Copy(s, 1, Length(s) - eIndex + 1)
+      else         
+        st := Copy(s, Length(s) + 2 - eIndex - FStep, FStep);
+      _hi_onEvent(_event_onEnum, st);
+      if FStop then break;
+      inc(eIndex, FStep);
+      inc(FNum);
+    until eIndex  > Length(s);
+    end;
+  end
+  else if (Dlm <> '') and (s <> '') then           // иначе, разбиваем по разделителю
   begin
     i := 1;
     while (s <> '') and (i < eIndex) do
@@ -218,9 +266,17 @@ begin
   Dlm := ToString(_Data);
 end;
 
+procedure THIStr_Enum._work_doStep;
+begin
+  FStep := ToInteger(_Data);
+end;
+
 procedure THIStr_Enum._var_NumSubStr;
 begin
-  dtInteger(_Data, eIndex);
+  if (FStep = 1) or (Dlm <> '') then
+    dtInteger(_Data, eIndex)
+  else
+    dtInteger(_Data, FNum);
 end;
 
 procedure THIStr_Enum._var_Part;
