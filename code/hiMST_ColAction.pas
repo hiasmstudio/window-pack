@@ -42,6 +42,7 @@ type
     procedure _work_doColAction8(var _Data: TData; Index: word);  // IdxIconCol
     procedure _work_doColAction9(var _Data: TData; Index: word);  // AutoColWidth
     procedure _work_doColAction10(var _Data: TData; Index: word); // GetColParam
+    procedure _work_doColAction11(var _Data: TData; Index: word); // StretchCol
 
     procedure _var_CountCol(var _Data: TData; Index: word);
     procedure _work_doMaxColWidth(var _Data: TData; Index: word);
@@ -157,8 +158,8 @@ end;
 
 //-----------------   Автоустановка ширины столбцов   -----------------
 //
-// Автоматически подстраивает ширину столбца
-// ( при индексе равном -1 - все столбцы) по длинам строк
+// Автоматически подстраивает ширину столбца по длине строки
+// ( при индексе равном -1 - все столбцы)
 // ARG(IndexCol)
 //
 procedure THIMST_ColAction._work_doColAction9; // проверен
@@ -216,6 +217,7 @@ begin
       inc(Col);
     until Col = FCol;
   sControl.EndUpdate;
+  _hi_onEvent(_event_onChangeColLst);
 end;
 
 // Получает параметры столбца из таблицы
@@ -240,6 +242,77 @@ begin
    dj.ldata := @dk;
    dk.ldata := @dl;
    _hi_onEvent_(_event_onResult, dt);
+end;
+
+//-----------------   Автоустановка ширины столбцов   -----------------
+//
+// Автоматически выравнивает ширину столбца по ширине таблицы
+// ( при индексе равном -1 - все столбцы равномерно)
+// ( при индексе равном -2 - все столбцы пропорционально своей ширины)
+// ARG(IndexCol)
+//
+procedure THIMST_ColAction._work_doColAction11;
+var   i, idx, Wscroll: integer;
+      _Length, TempLength:integer;
+      Temp, Temp2: real;
+      dt, di: TData;
+      sControl: PControl;
+      R: TRect;
+      l: TListViewOptions;
+begin
+  if not Assigned(_prop_MSTControl) then exit;
+  sControl := _prop_MSTControl.ctrlpoint;
+  idx := ReadInteger(_Data, _data_Index, _prop_Index);
+  if (idx < -2) or (idx > sControl.LVColCount - 1) and
+     ((sControl.LVStyle <> lvsDetail) or (sControl.LVStyle <> lvsDetailNoHeader)) then exit;
+  sControl.BeginUpdate;
+  R := SControl.LVSubItemRect(sControl.Count - 1, _prop_MSTControl.clistcount - 1);
+  l := sControl.LVOptions;
+  if ((R.Top + R.Bottom) > sControl.Height) and not (lvoNoScroll in l) then
+    Wscroll := GetSystemMetrics(SM_CXHSCROLL) + 1
+  else
+    Wscroll := 0;
+  TempLength := 0;
+
+  case idx of
+  (-2): begin
+          for i := 0 to sControl.LVColCount - 1 do
+            TempLength := TempLength + sControl.LVColWidth[i];
+          Temp := (sControl.Width - Wscroll - sControl.LVColCount) / 100;
+          Temp2 := TempLength / 100;
+          for i := 0 to sControl.LVColCount - 1 do
+          begin
+            _Length := Round((sControl.LVColWidth[i] / Temp2) * Temp);
+            dtInteger(dt,i);
+            dtInteger(di,_Length);
+            dt.ldata:= @di;
+            _prop_MSTControl.propercol(dt, COL_WIDTH);
+          end;
+        end;
+  (-1): begin
+          _Length := (sControl.Width - Wscroll) div sControl.LVColCount - 1;
+          for i := 0 to sControl.LVColCount - 1 do
+          begin
+            dtInteger(dt,i);
+            dtInteger(di,_Length);
+            dt.ldata:= @di;
+            _prop_MSTControl.propercol(dt, COL_WIDTH);
+          end;
+        end;
+    else
+    begin
+      for i := 0 to sControl.LVColCount - 1 do
+        if i <> idx then TempLength := TempLength + sControl.LVColWidth[i] + 2;
+      _Length := sControl.Width - Wscroll - TempLength;
+      if FMaxColWidth > 0 then _Length:= max(_Length, FMinColWidth);
+      dtInteger(dt,idx);
+      dtInteger(di,_Length);
+      dt.ldata:= @di;
+      _prop_MSTControl.propercol(dt, COL_WIDTH);
+    end;
+  end;
+  sControl.EndUpdate;
+  _hi_onEvent(_event_onChangeColLst);
 end;
 
 // Содержит количество столбцов
