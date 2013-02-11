@@ -13,6 +13,7 @@ type
     FTo:   integer;
     FStep: integer;
     FNum: integer;
+    FDivG: boolean;
     Dlm: string;
     st: string;
   public
@@ -28,13 +29,15 @@ type
     property _prop_To: integer write FTo;
     property _prop_Step: integer write FStep;
     property _prop_Delimiter: string write Dlm;
+    property _prop_OnlyDivGroup: boolean write FDivG;
     procedure _work_doEnum0(var _Data: TData; Index: Word); //Forward
     procedure _work_doEnum1(var _Data: TData; Index: Word); //Reverse
     procedure _work_doStop(var _Data: TData; Index: Word);
     procedure _work_doFrom(var _Data: TData; Index: Word);
     procedure _work_doTo(var _Data: TData; Index: Word);
     procedure _work_doDelimiter(var _Data: TData; Index: Word);
-    procedure _work_doStep(var _Data: TData; Index: Word);    
+    procedure _work_doStep(var _Data: TData; Index: Word);
+    procedure _work_doOnlyDivGroup(var _Data: TData; Index: Word);         
                     
     procedure _var_NumSubStr(var _Data: TData; Index: Word);
     procedure _var_Part(var _Data: TData; Index: Word);    
@@ -155,7 +158,13 @@ begin
       FNum := FFrom;
       repeat
         st := Copy(ss, eIndex, FStep);
-        _hi_onEvent(_event_onEnum, st);
+        if FDivG and (Length(st) <> FStep) then
+        begin
+          st := '';
+          break;
+        end 
+        else
+          _hi_onEvent(_event_onEnum, st);
         if FStop then break;
         inc(eIndex, FStep);
         inc(FNum);
@@ -218,7 +227,13 @@ begin
         st := Copy(s, 1, Length(s) - eIndex + 1)
       else         
         st := Copy(s, Length(s) + 2 - eIndex - FStep, FStep);
-      _hi_onEvent(_event_onEnum, st);
+      if FDivG and (Length(st) <> FStep) then
+      begin
+        st := '';
+        break;
+      end 
+      else
+        _hi_onEvent(_event_onEnum, st);
       if FStop then break;
       inc(eIndex, FStep);
       inc(FNum);
@@ -269,6 +284,11 @@ end;
 procedure THIStr_Enum._work_doStep;
 begin
   FStep := ToInteger(_Data);
+end;
+
+procedure  THIStr_Enum._work_doOnlyDivGroup;
+begin
+  FDivG := ReadBool(_Data);
 end;
 
 procedure THIStr_Enum._var_NumSubStr;
