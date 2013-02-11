@@ -28,7 +28,7 @@ INSERT INTO "groups" VALUES(41,'Cables','Кабели',28);
 INSERT INTO "groups" VALUES(42,'GameEngine','GameEngine',29);
 DELETE FROM sqlite_sequence;
 INSERT INTO "sqlite_sequence" VALUES('groups',42);
-INSERT INTO "sqlite_sequence" VALUES('elements',869);
+INSERT INTO "sqlite_sequence" VALUES('elements',870);
 INSERT INTO "sqlite_sequence" VALUES('files',21);
 CREATE TABLE elements(id INTEGER PRIMARY KEY AUTOINCREMENT,name varchar(64),info varchar(64),tab int,pos int,hash varchar(32));
 INSERT INTO "elements" VALUES(1,'Label','Нaдпиcь',1,1,'9A8A102B87CC1EA8F21DC8AF6D60B970');
@@ -896,6 +896,7 @@ INSERT INTO "elements" VALUES(866,'DeferredEvent','Отложенное событие',6,9,NULL)
 INSERT INTO "elements" VALUES(867,'MemFIFO','Запоминает данные из потока в очередь FIFO',15,14,NULL);
 INSERT INTO "elements" VALUES(868,'EnvVars','Работа с переменными окружения',15,23,NULL);
 INSERT INTO "elements" VALUES(869,'TCPStat','Информация по TCP и UDP протоколам',9,3,NULL);
+INSERT INTO "elements" VALUES(870,'RGN_PointXY','Проверка нахождения точки в регионе',5,23,NULL);
 CREATE TABLE files_link(file_id int,el_id int);
 INSERT INTO "files_link" VALUES(21,404);
 INSERT INTO "files_link" VALUES(21,405);
