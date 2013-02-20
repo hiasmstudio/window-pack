@@ -37,6 +37,7 @@ type
      _prop_InversBack    : boolean;
      _prop_CutText       : boolean;
      _prop_SelComboEdit  : boolean;     
+//
      _prop_LightColor    : TColor;
      _prop_DarkColor     : TColor;
      _prop_ColorFrame    : TColor;
@@ -48,13 +49,40 @@ type
      _prop_DepthGutter   : integer;
      _prop_DepthBack     : integer;
      _prop_StyleBack     : byte;
-//     _prop_AddSize       : integer;
      _prop_ImageShift    : integer;
      _prop_GutterWidth   : integer;
      _prop_GutterShift   : integer;     
 
      constructor Create;
      function getInterfaceBoxDraw:IBoxDrawManager;
+
+     procedure _work_doGradient(var _Data:TData; Index:word);
+     procedure _work_doGutter(var _Data:TData; Index:word);
+     procedure _work_doHorizontal(var _Data:TData; Index:word);     
+     procedure _work_doFrame(var _Data:TData; Index:word);
+     procedure _work_doBumpText(var _Data:TData; Index:word);
+     procedure _work_doInversClrTxt(var _Data:TData; Index:word);
+     procedure _work_doInversGrad(var _Data:TData; Index:word);
+     procedure _work_doInversGutt(var _Data:TData; Index:word);
+     procedure _work_doInversBack(var _Data:TData; Index:word);
+     procedure _work_doCutText(var _Data:TData; Index:word);
+     procedure _work_doSelComboEdit(var _Data:TData; Index:word);
+//
+     procedure _work_doLightColor(var _Data:TData; Index:word);
+     procedure _work_doDarkColor(var _Data:TData; Index:word);
+     procedure _work_doColorFrame(var _Data:TData; Index:word);
+     procedure _work_doLightClrGutt(var _Data:TData; Index:word);
+     procedure _work_doDarkClrGutt(var _Data:TData; Index:word);
+     procedure _work_doLightClrBack(var _Data:TData; Index:word);
+     procedure _work_doDarkClrBack(var _Data:TData; Index:word);
+     procedure _work_doDepthGradient(var _Data:TData; Index:word);
+     procedure _work_doDepthGutter(var _Data:TData; Index:word);
+     procedure _work_doDepthBack(var _Data:TData; Index:word);
+     procedure _work_doStyleBack(var _Data:TData; Index:word);
+     procedure _work_doImageShift(var _Data:TData; Index:word);
+     procedure _work_doGutterWidth(var _Data:TData; Index:word);
+     procedure _work_doGutterShift(var _Data:TData; Index:word);
+     
   end;
 
 implementation
@@ -330,6 +358,131 @@ begin
       end;
    end;  
    Result:= True;
+end;
+
+procedure THIBoxDrawManager._work_doGradient;
+begin
+  _prop_Gradient := ReadBool(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doGutter;
+begin
+  _prop_Gutter := ReadBool(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doHorizontal;     
+begin
+  _prop_Horizontal := ReadBool(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doFrame;
+begin
+  _prop_Frame := ReadBool(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doBumpText;
+begin
+  _prop_BumpText := ReadBool(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doInversClrTxt;
+begin
+  _prop_InversClrTxt := ReadBool(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doInversGrad;
+begin
+  _prop_InversGrad := ReadBool(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doInversGutt;
+begin
+  _prop_InversGutt := ReadBool(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doInversBack;
+begin
+  _prop_InversBack := ReadBool(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doCutText;
+begin
+  _prop_CutText := ReadBool(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doSelComboEdit;
+begin
+  _prop_SelComboEdit := ReadBool(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doLightColor;
+begin
+  _prop_LightColor := ToInteger(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doDarkColor;
+begin
+  _prop_DarkColor := ToInteger(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doColorFrame;
+begin
+  _prop_ColorFrame := ToInteger(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doLightClrGutt;
+begin
+  _prop_LightClrGutt := ToInteger(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doDarkClrGutt;
+begin
+  _prop_DarkClrGutt := ToInteger(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doLightClrBack;
+begin
+  _prop_LightClrBack := ToInteger(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doDarkClrBack;
+begin
+  _prop_DarkClrBack := ToInteger(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doDepthGradient;
+begin
+  _prop_DepthGradient := ToInteger(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doDepthGutter;
+begin
+  _prop_DepthGutter := ToInteger(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doDepthBack;
+begin
+  _prop_DepthBack := ToInteger(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doStyleBack;
+begin
+  _prop_StyleBack := ToInteger(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doImageShift;
+begin
+  _prop_ImageShift := ToInteger(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doGutterWidth;
+begin
+  _prop_GutterWidth := ToInteger(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doGutterShift;
+begin
+  _prop_GutterShift := ToInteger(_Data);
 end;
 
 end.
