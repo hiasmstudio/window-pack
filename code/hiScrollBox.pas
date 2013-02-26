@@ -48,31 +48,15 @@ begin
 end;
 
 procedure THIScrollBox._work_doHScroll;
-var h:HWND;
-    Pos:integer;
-    lpMinPos,lpMaxPos: Integer;
 begin
-   h := Control.Handle;
-   Pos := ReadInteger(_Data,_data_HScroll);
-   GetScrollRange( h, SB_HORZ, lpMinPos, lpMaxPos);
-   if Pos > lpMaxPos then Pos := lpMaxPos;
-   if Pos < lpMinPos then Pos := lpMinPos;   
-   SetScrollPos(h, SB_HORZ, Pos, True);
-   SendMessage(h, WM_HSCROLL, SB_THUMBTRACK, 0);
+   SetScrollPos(Control.Handle, SB_HORZ, ReadInteger(_Data,_data_HScroll), True);
+   SendMessage(Control.Handle, WM_HSCROLL, SB_THUMBTRACK, 0);
 end;
 
 procedure THIScrollBox._work_doVScroll;
-var h:HWND;
-    Pos:integer;
-    lpMinPos,lpMaxPos: Integer;
 begin
-   h := Control.Handle;
-   Pos := ReadInteger(_Data,_data_VScroll);
-   GetScrollRange( h, SB_VERT, lpMinPos, lpMaxPos);
-   if Pos > lpMaxPos then Pos := lpMaxPos;
-   if Pos < lpMinPos then Pos := lpMinPos;   
-   SetScrollPos(h, SB_VERT, Pos, True);
-   SendMessage(h, WM_VSCROLL, SB_THUMBTRACK, 0);
+   SetScrollPos(Control.Handle, SB_VERT, ReadInteger(_Data,_data_VScroll), True);
+   SendMessage(Control.Handle, WM_VSCROLL, SB_THUMBTRACK, 0);
 end;
 
 procedure THIScrollBox._var_HPos;
