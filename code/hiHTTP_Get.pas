@@ -29,7 +29,7 @@ type
     _prop_ProxyUsername:string;
     _prop_ProxyPassword:string;
     _prop_Length:cardinal;
-    _prop_UserAgent:PChar;
+    _prop_UserAgent:string;
     _prop_Method:integer;
 
     _data_FileName:THI_Event;
@@ -89,7 +89,7 @@ var
   i:integer;
 begin
    FBusy := true; dtNull(dt);
-   NetHandle := InternetOpen(_prop_UserAgent, INTERNET_OPEN_TYPE_PRECONFIG, nil, nil, 0);
+   NetHandle := InternetOpen(PChar(_prop_UserAgent), INTERNET_OPEN_TYPE_PRECONFIG, nil, nil, 0);
    s := ReadString(dt, _data_Proxy, _prop_Proxy);
    if s<>'' then begin
      PI.dwAccessType := INTERNET_OPEN_TYPE_PROXY;
