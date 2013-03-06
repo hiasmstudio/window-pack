@@ -41,6 +41,7 @@ type
       procedure _work_doPosition(var _Data:TData; Index:word);
       procedure _work_doMax(var _Data:TData; Index:word);
       procedure _work_doMin(var _Data:TData; Index:word);
+      procedure _work_doStep(var _Data:TData; Index:word);      
       procedure _var_Position(var _Data:TData; Index:word);
    end;
 
@@ -186,6 +187,12 @@ procedure THIUpDown.SetOnChangingEx;
 begin
    FOnChangingEx := Value;
    Control.AttachProc(WndProcUpDown);
+end;
+
+procedure THIUpDown._work_doStep;
+begin
+   acc.nInc := ToInteger(_Data);
+   Control.Perform(UDM_SETACCEL, 1, LongInt(@acc));
 end;
 
 end.
