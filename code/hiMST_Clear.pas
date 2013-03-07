@@ -24,7 +24,8 @@ implementation
 procedure THIMST_Clear._work_doClear;
 var
   sControl: PControl;
-  Item: integer;
+  l: TListViewOptions;  
+  i, Item: integer;
 begin
   if not Assigned(_prop_MSTControl) then exit;
   sControl := _prop_MSTControl.ctrlpoint;
@@ -45,6 +46,10 @@ begin
     until sControl.LVColCount <= 0;
     _prop_MSTControl.clistclear;
   end;
+  l := sControl.LVOptions;
+  if (lvoOwnerData in l) then
+    for i := 0 to sControl.LVPerPage - 1 do
+      sControl.LVItemAdd('');  
   sControl.EndUpDate;
   _hi_onEvent(_event_onChange);
 end;
