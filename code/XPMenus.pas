@@ -681,19 +681,17 @@ var
   ShiftWidth:word;
   BitmapSize:tagBitmap;
 begin
-
+  ShiftWidth := 0;
   with PMenu(Sender){$ifndef F_P}^{$endif} do
     if (TopParent.IndexOf( Parent )=-1) and not FIsPopup then
     begin
       bb.Width := TextExtent(Caption).cX;
       bb.Height := TextExtent(Caption).cY;
-      ShiftWidth := 0;
     end
     else
     begin
       if (FleftBmpImage <> nil) and (TopParent.IndexOf( Parent )=-1) then
-        ShiftWidth:= FleftBmpImage.Width
-      else ShiftWidth:= 0;
+        ShiftWidth:= FleftBmpImage.Width;
       if Pointer(Bitmap) <> nil then
       begin
         GetObject(Bitmap, sizeof(tagBITMAP), @BitmapSize);

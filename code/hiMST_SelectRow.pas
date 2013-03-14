@@ -113,7 +113,6 @@ end;
 procedure THIMST_SelectRow._work_doSelectAll;
 var
   sControl: PControl;
-  i: integer;
 begin
   if not Assigned(_prop_MSTControl) then exit;
   sControl := _prop_MSTControl.ctrlpoint;
@@ -146,7 +145,6 @@ end;
 procedure THIMST_SelectRow._work_doSelectOut;
 var
   sControl: PControl;
-  i: integer;  
 begin
   if not Assigned(_prop_MSTControl) then exit;
   sControl := _prop_MSTControl.ctrlpoint;
