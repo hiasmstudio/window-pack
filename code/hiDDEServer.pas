@@ -121,7 +121,7 @@ begin
       XTYP_ADVREQ,XTYP_REQUEST:
        begin
          FError := False; _hi_onEvent(_event_onGetItem,FLastItem);
-         if not FError then Result := DdeCreateDataHandle(g_DdeInstance,PChar(FValue),Length(FValue)+1,0,hSz2,CF_TEXT,0);
+         if not FError then Result := DdeCreateDataHandle(g_DdeInstance,PChar(FValue),Length(FValue){+1},0,hSz2,CF_TEXT,0);
        end;
       XTYP_POKE:
        begin

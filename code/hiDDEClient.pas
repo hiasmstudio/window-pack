@@ -169,7 +169,7 @@ begin
   CheckOpenLink; if FConv=0 then Exit;
   hszItem := DdeCreateStringHandle(g_DdeInstance,PChar(ReadString(_Data,_data_Name,'')),CP_WINANSI);
   s := ReadString(_Data,_data_Value,'');
-  hData := DdeClientTransaction(PChar(s),Length(s)+1,FConv,hszItem,CF_TEXT,XTYP_POKE,_prop_Timeout,dwRes);
+  hData := DdeClientTransaction(PChar(s),Length(s){+1},FConv,hszItem,CF_TEXT,XTYP_POKE,_prop_Timeout,dwRes);
   DdeFreeStringHandle(g_DdeInstance,hszItem);
   _hi_CreateEvent(_Data,@_event_onPutItem, integer(hData));
 end;
@@ -179,7 +179,7 @@ var s:string; hData:THandle; dwRes:DWORD;
 begin
   CheckOpenLink; if FConv=0 then Exit;
   s := ToString(_Data);
-  hData := DdeClientTransaction(PChar(s),Length(s)+1,FConv,0,CF_TEXT,XTYP_EXECUTE,_prop_Timeout,dwRes);
+  hData := DdeClientTransaction(PChar(s),Length(s){+1},FConv,0,CF_TEXT,XTYP_EXECUTE,_prop_Timeout,dwRes);
   _hi_CreateEvent(_Data, @_event_onExecute, integer(hData));
 end;
 
