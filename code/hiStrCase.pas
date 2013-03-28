@@ -67,6 +67,7 @@ end;
 
 procedure THIStrCase.FirstChar;
 begin
+  CharLower(@Str[1]);
   CharUpperBuff(@Str[1], 1);
 end;
 
