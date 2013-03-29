@@ -16,6 +16,8 @@ type
     onEvent:array of THI_Event;
 
     procedure _work_doEvent(var _Data:TData; Index:word);
+    procedure _var_Count(var _Data:TData; Index:word);
+    procedure _var_EndIdx(var _Data:TData; Index:word);    
     property _prop_Count:integer write SetCount;
   end;
 
@@ -34,6 +36,16 @@ begin
   _Data := ReadData(_Data,_data_Data,@_prop_Data);
   if(ind >= 0)and(ind < FCount) then
     _hi_CreateEvent_(_Data,@onEvent[ind]);
+end;
+
+procedure THIIndexToChanel._var_Count;
+begin
+  dtInteger(_Data, FCount);
+end;
+
+procedure THIIndexToChanel._var_EndIdx;    
+begin
+  dtInteger(_Data, FCount - 1);
 end;
 
 end.

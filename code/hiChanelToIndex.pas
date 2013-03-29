@@ -14,6 +14,8 @@ type
 
     procedure doWork(var _Data:TData; Index:word);
     procedure _var_Data(var _Data:TData; Index:word);
+    procedure _var_Count(var _Data:TData; Index:word);
+    procedure _var_EndIdx(var _Data:TData; Index:word); 
   end;
 
 implementation
@@ -27,6 +29,17 @@ end;
 procedure THIChanelToIndex._var_Data(var _Data:TData; Index:word);
 begin
    _Data:=dt;
+end;
+
+
+procedure THIChanelToIndex._var_Count;
+begin
+  dtInteger(_Data, _prop_Count);
+end;
+
+procedure THIChanelToIndex._var_EndIdx;    
+begin
+  dtInteger(_Data, _prop_Count - 1);
 end;
 
 end.
