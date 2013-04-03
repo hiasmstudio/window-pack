@@ -76,6 +76,6 @@ initialization
   
 finalization
   Windows.DestroyWindow(FWnd);
-  UnregisterClass('DeferredEvent', hInstance);
+  UnregisterClass(MyWindowClass.lpszClassName, hInstance);
   
 end.
