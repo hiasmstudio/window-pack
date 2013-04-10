@@ -93,6 +93,8 @@ end;
     _prop_SearFrom: integer; 
     _prop_Indent: integer; 
     _prop_WidthRightMargin: integer;
+    _prop_WidthACF: integer;
+    _prop_HeightACF: integer;
     
     _prop_ColorRightMargin: TColor; 
     _prop_ColorUnderLine: TColor;
@@ -178,8 +180,10 @@ end;
     procedure _work_doLoadHiLight          (var _Data: TData; Index: Word); 
     procedure _work_doSaveHiLight          (var _Data: TData; Index: Word);
     procedure _work_doHilightCaseSens      (var _Data: TData; Index: Word);
-    procedure _work_doEnsureVisible        (var _Data: TData; Index: Word);          
-
+    procedure _work_doEnsureVisible        (var _Data: TData; Index: Word);
+    procedure _work_doWidthACF             (var _Data: TData; Index: Word);              
+    procedure _work_doHeightACF            (var _Data: TData; Index: Word);
+    
     procedure _var_Array                   (var _Data: TData; Index: Word); 
     procedure _var_Text                    (var _Data: TData; Index: Word); override; 
     procedure _var_Count                   (var _Data: TData; Index: Word); 
@@ -1248,7 +1252,7 @@ end;
 procedure THIHiLightMemo._work_doViewToCaret;        begin Focused_CaretToView;                        end; 
 procedure THIHiLightMemo._work_doTopLine;            begin TopLine := ToInteger(_Data);                end; 
 procedure THIHiLightMemo._work_doLeftCol;            begin LeftCol := ToInteger(_Data);                end; 
-procedure THIHiLightMemo._work_doAutoCompstrings;    begin AutoAdd2Dictionary(ToString(_Data)); end; 
+procedure THIHiLightMemo._work_doAutoCompstrings;    begin AutoAdd2Dictionary(ToString(_Data));        end; 
 procedure THIHiLightMemo._work_doShowAutoComp;       begin AutoCompletionShow;                         end; 
 procedure THIHiLightMemo._work_doHideAutoComp;       begin AutoCompletionHide;                         end; 
 procedure THIHiLightMemo._work_doClearAutoComp;      begin AutoCompletionClear;                        end; 
@@ -1584,7 +1588,7 @@ begin
           exit; // есть только 1 слово и оно совпадает с тем что под кареткой
         if FAutoCompletionForm = nil then
         begin
-          FAutoCompletionForm := NewForm(Applet, '').SetSize(200, 200); 
+          FAutoCompletionForm := NewForm(Applet, '').SetSize(_prop_WidthACF, _prop_HeightACF); 
             { Внимание! Во избежание проблем Applet должен использоваться как
               отдельный объект KOL.TApplet ! }
           FAutoCompletionForm.Visible := false; 
@@ -3341,7 +3345,7 @@ begin
   S := Lines[AtPos.Y]; 
   if (AtPos.X < Length(S)) and IsLetterDigit(S[AtPos.X + 1]) then
     i := AtPos.X
-  else if (AtPos.X - 1 > 0) and (AtPos.X - 1 < Length(S)) and IsLetterDigit(S[AtPos.X]) then
+  else if (AtPos.X - 1 >= 0) and (AtPos.X - 1 < Length(S)) and IsLetterDigit(S[AtPos.X]) then
     i := AtPos.X - 1
   else
     exit; 
@@ -3407,6 +3411,24 @@ begin
     Result := true; 
   end; 
 end; 
+
+procedure THIHiLightMemo._work_doWidthACF; 
+begin
+  _prop_WidthACF := ToInteger(_Data);
+  if not Assigned(FAutoCompletionForm) then exit;
+  FAutoCompletionForm.Width := _prop_WidthACF;
+  if FAutoCompletionForm.Visible then     
+  InvalidateRect(FAutoCompletionForm.Handle, nil, false); 
+end;
+
+procedure THIHiLightMemo._work_doHeightACF; 
+begin
+  _prop_HeightACF := ToInteger(_Data);
+  if not Assigned(FAutoCompletionForm) then exit;
+  FAutoCompletionForm.Height := _prop_HeightACF;
+  if FAutoCompletionForm.Visible then     
+  InvalidateRect(FAutoCompletionForm.Handle, nil, false);; 
+end;
 
 initialization
   InitUpper; 
