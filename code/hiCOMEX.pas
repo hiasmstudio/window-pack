@@ -4,6 +4,10 @@ interface
 
 uses Windows, Kol, Share, Debug;
 
+const
+  _nm: string = 'NOEMS';
+  dtrrts: string = 'offon ';
+
 type
   _COMSTAT1 = record
     Flags: DWORD;
@@ -23,7 +27,8 @@ type
     MaskRd: DWORD;
     SendedWr: Integer;
     procedure CloseCom;
-    function InitCom(BaudRate, PortNo: Integer; Parity: Char; DataBits: integer; DTR, RTS: string): boolean;
+    function SetCom(BaudRate: Integer; Parity, DataBits, StopBits: Char; DTR, RTS: string): boolean;
+    function InitCom(BaudRate, PortNo: Integer; Parity, DataBits, StopBits: Char; DTR, RTS: string): boolean;
     function ExecuteRd(Sender: PThread): Integer;
     function ExecuteWr(Sender: PThread): Integer;
     procedure SyncExecRd;
@@ -34,6 +39,7 @@ type
     _prop_BaudRate:integer;
     _prop_Parity:integer;
     _prop_DataBits:integer;
+    _prop_StopBits:integer;    
     _prop_DTR: byte;
     _prop_RTS: byte;    
 
@@ -44,6 +50,7 @@ type
     _event_onCTS:THI_Event;
     _event_onDCD:THI_Event;    
     _event_onRING:THI_Event;
+    _event_onSetComState:THI_Event;    
     _data_BaudRate:THI_Event;
     _data_Port:THI_Event;
 
@@ -55,6 +62,10 @@ type
     procedure _work_doWrite(var _Data:TData; Index:word);
     procedure _work_doDTR(var _Data:TData; Index:word);
     procedure _work_doRTS(var _Data:TData; Index:word);
+    procedure _work_doSetComState(var _Data:TData; Index:word);
+    procedure _work_doDataBits(var _Data:TData; Index:word);    
+    procedure _work_doParity(var _Data:TData; Index:word);    
+    procedure _work_doStopBits(var _Data:TData; Index:word);
   end;
 
 implementation
@@ -80,7 +91,32 @@ begin
   inherited Destroy; 
 end;
 
-function THICOMEX.InitCom(BaudRate, PortNo: Integer; Parity: Char; DataBits: integer; DTR, RTS: string): Boolean;
+function THICOMEX.SetCom(BaudRate: Integer; Parity, DataBits, StopBits: Char; DTR, RTS: string): Boolean;
+var 
+  PortParam: string;
+  dcb: TDCB;
+  cto: _COMMTIMEOUTS;
+begin 
+  result := false;
+  if hFile = INVALID_HANDLE_VALUE then exit;
+
+  //установка требуемых параметров
+  GetCommState(hFile, dcb); //чтение текущих параметров порта
+  PortParam := 'baud='    + Int2Str(BaudRate) +
+               ' data='   + DataBits +
+               ' parity=' + Parity +
+               ' stop='   + StopBits +
+               ' dtr='    + DTR +
+               ' rts='    + RTS +
+               ' xon=off odsr=off octs=off idsr=off';
+
+  FillChar(cto, sizeof(cto), #0);   // убираем все TimeOut-ы, так как будем работать с перекрытыми методами
+
+  if BuildCommDCB(PChar(PortParam), DCB) then
+    result := SetCommState(hFile, DCB) and SetCommTimeouts(hFile, cto);
+end;
+
+function THICOMEX.InitCom(BaudRate, PortNo: Integer; Parity, DataBits, StopBits: Char; DTR, RTS: string): Boolean;
 var 
   FileName: string; 
   PortParam: string;
@@ -102,12 +138,13 @@ begin
 
   //установка требуемых параметров
   GetCommState(hFile, dcb); //чтение текущих параметров порта
-  PortParam := 'baud=' + Int2Str(BaudRate) +
+  PortParam := 'baud='    + Int2Str(BaudRate) +
+               ' data='   + DataBits +
                ' parity=' + Parity +
-               ' data=' + Int2Str(DataBits) +
-               ' dtr=' + DTR +
-               ' rts=' + RTS +
-               ' stop=1 xon=off odsr=off octs=off idsr=off';
+               ' stop='   + StopBits +
+               ' dtr='    + DTR +
+               ' rts='    + RTS +
+               ' xon=off odsr=off octs=off idsr=off';
 
   FillChar(cto, sizeof(cto), #0);   // убираем все TimeOut-ы, так как будем работать с перекрытыми методами
 
@@ -157,16 +194,15 @@ begin
 end;
 
 procedure THICOMEX._work_doOpen;
-const _nm: string = 'NOEMS';
-      dtrrts: string = 'offon ';
 begin
    CloseCom;
    InitCom(ReadInteger(_Data,_data_BaudRate,_prop_BaudRate),
-                       ReadInteger(_Data,_data_Port,_prop_Port + 1),
-                       _nm[_prop_Parity + 1],
-                       _prop_DataBits,
-                       Copy(dtrrts, _prop_DTR * 3 + 1, 3),
-                       Copy(dtrrts, _prop_RTS * 3 + 1, 3));
+           ReadInteger(_Data,_data_Port,_prop_Port + 1),
+           _nm[_prop_Parity + 1],
+           Int2Str(_prop_DataBits + 7)[1],
+           Int2Str(_prop_StopBits + 1)[1],
+           Copy(dtrrts, _prop_DTR * 3 + 1, 3),
+           Copy(dtrrts, _prop_RTS * 3 + 1, 3));
 end;
 
 procedure THICOMEX._work_doClose;
@@ -296,6 +332,34 @@ begin
     EscapeCommFunction(hFile, SETRTS)
   else
     EscapeCommFunction(hFile, CLRRTS);
+end;
+
+procedure THICOMEX._work_doSetComState;
+begin
+  if not SetCom(ReadInteger(_Data,_data_BaudRate,_prop_BaudRate),
+                _nm[_prop_Parity + 1],
+                Int2Str(_prop_DataBits + 7)[1],
+                Int2Str(_prop_StopBits + 1)[1],
+                Copy(dtrrts, _prop_DTR * 3 + 1, 3),
+                Copy(dtrrts, _prop_RTS * 3 + 1, 3)) then
+    _hi_onEvent(_event_onSetComState, 0)
+  else
+    _hi_onEvent(_event_onSetComState, 1);
+end;
+
+procedure THICOMEX._work_doDataBits;    
+begin
+  _prop_DataBits := ToInteger(_Data);
+end;
+
+procedure THICOMEX._work_doParity;    
+begin
+  _prop_Parity := ToInteger(_Data);
+end;
+
+procedure THICOMEX._work_doStopBits;
+begin
+  _prop_StopBits := ToInteger(_Data);
 end;
 
 end.
