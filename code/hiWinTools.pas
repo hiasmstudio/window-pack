@@ -16,6 +16,7 @@ type
 
     procedure _work_doVisible(var _Data:TData; Index:word);
     procedure _work_doPopup(var _Data:TData; Index:word);
+    procedure _work_doBottom(var _Data:TData; Index:word);    
     procedure _work_doClose(var _Data:TData; Index:word);
     procedure _work_doQuit(var _Data:TData; Index:word);
     procedure _work_doCaption(var _Data:TData; Index:word);
@@ -215,6 +216,13 @@ end;
 procedure THIWinTools._work_doRedraw;
 begin
  InvalidateRect(ReadInteger(_Data,_data_Handle,0),nil,true);
+end;
+
+procedure THIWinTools._work_doBottom;
+var h:HWND;
+begin
+  SetWindowPos(ReadInteger(_Data,_data_Handle,0),HWND_NOTOPMOST,0,0,0,0,SWP_NOSIZE or SWP_NOMOVE);
+  SetWindowPos(ReadInteger(_Data,_data_Handle,0),HWND_BOTTOM,0,0,0,0,SWP_NOSIZE or SWP_NOMOVE or SWP_NOOWNERZORDER);
 end;
 
 end.
