@@ -219,7 +219,6 @@ begin
 end;
 
 procedure THIWinTools._work_doBottom;
-var h:HWND;
 begin
   SetWindowPos(ReadInteger(_Data,_data_Handle,0),HWND_NOTOPMOST,0,0,0,0,SWP_NOSIZE or SWP_NOMOVE);
   SetWindowPos(ReadInteger(_Data,_data_Handle,0),HWND_BOTTOM,0,0,0,0,SWP_NOSIZE or SWP_NOMOVE or SWP_NOOWNERZORDER);
