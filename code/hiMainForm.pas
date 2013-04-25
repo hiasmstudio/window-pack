@@ -90,6 +90,7 @@ type
      procedure _work_doShowModal(var _Data:TData; Index:word);
      procedure _work_doPlaceInTaskBar(var _Data:TData; Index:word);
      procedure _var_SizeHeader(var Data:TData; Index:word);
+     procedure _var_SizeBorder(var Data:TData; Index:word);     
 
      property _prop_Caption:string write SetCaption;
      property _prop_Icon:HICON write SetIcon;
@@ -573,6 +574,15 @@ begin
    Pt.x := 0; Pt.y := 0;
    ClientToScreen(Control.Handle, Pt);
    dtInteger(Data, Pt.Y - Control.Top);
+end;
+
+procedure THIMainForm._var_SizeBorder;
+var
+  Pt: TPoint;
+begin
+   Pt.x := 0; Pt.y := 0;
+   ClientToScreen(Control.Handle, Pt);
+   dtInteger(Data, Pt.X - Control.Left);
 end;
 
 procedure THIMainForm._work_doShiftLeft;
