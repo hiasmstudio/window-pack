@@ -19,6 +19,7 @@ type
 //                           DrawAction: TDrawAction; ItemState: TDrawState ): Boolean;
     function _OnMes( var Msg: TMsg; var Rslt: Integer ): Boolean;
     procedure RefBMP;
+    procedure RefBMPall;    
 
     procedure Init;
    public
@@ -155,6 +156,36 @@ begin
    end;
 end;
 
+procedure THIPopupMenu.RefBMPall;
+var   dt,Ind:TData;
+      bmp:PBitmap;
+      arr:PArray;
+      i,j,k:integer;
+      c:TColor;
+begin
+   Arr := ReadArray(_data_Bitmaps);
+   if Arr = nil then exit;
+
+   for k := 0 to min(Arr._Count - 1, PM.Count - 1) do
+   begin 
+     Ind := _DoData(k);
+     Arr._Get(Ind,dt);
+     bmp := PBitmap(dt.idata);
+     if (_IsBitmap(dt)) and (bmp <> nil) and not bmp.Empty then
+     begin
+       if _prop_TranspIcon then
+       begin
+         c := Bmp.Pixels[0,0];
+         for i := 0 to Bmp.Width-1 do
+           for j := 0 to Bmp.Height-1 do
+             if Bmp.Pixels[i,j] = c then
+               Bmp.Pixels[i,j] := clMenu;
+        end;
+        PM.Items[k].BitmapItem := CopyImage(bmp.Handle,IMAGE_BITMAP,0,0,LR_CREATEDIBSECTION);
+   end;
+   end;
+end;
+
 procedure THIPopupMenu.SetMenu;
 begin
   FMenuList := Value;
@@ -182,6 +213,7 @@ procedure THIPopupMenu._work_doPopup;
 var   pos:cardinal;
 begin
    pos := Cardinal(ToInteger(_data));
+   RefBMPall;
    TrackPopupMenu(PM.Handle,0,pos and $ffff,pos shr 16,0,FC.Handle,nil);
    _hi_OnEvent(_event_onEndPopup);
 end;
@@ -202,6 +234,7 @@ var   pos:TPoint;
 begin
    GetCursorPos(pos);
    SetForegroundWindow( FC.Handle );
+   RefBMPall;
    with pos do
       TrackPopupMenu(PM.Handle,0,x,y,0,FC.Handle,nil);
    _hi_OnEvent(_event_onEndPopup);
