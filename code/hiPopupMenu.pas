@@ -150,7 +150,8 @@ begin
          for i := 0 to Bmp.Width-1 do
             for j := 0 to Bmp.Height-1 do
                if Bmp.Pixels[i,j] = c then
-                  Bmp.Pixels[i,j] := clMenu;
+//                  Bmp.Pixels[i,j] := clMenu;
+                 Bmp.Pixels[i,j] := clNone;
       end;
       PM.Items[PM.Count-1].BitmapItem := CopyImage(bmp.Handle,IMAGE_BITMAP,0,0,LR_CREATEDIBSECTION);
    end;
@@ -179,7 +180,8 @@ begin
          for i := 0 to Bmp.Width-1 do
            for j := 0 to Bmp.Height-1 do
              if Bmp.Pixels[i,j] = c then
-               Bmp.Pixels[i,j] := clMenu;
+//               Bmp.Pixels[i,j] := clMenu;
+               Bmp.Pixels[i,j] := clNone;
         end;
         PM.Items[k].BitmapItem := CopyImage(bmp.Handle,IMAGE_BITMAP,0,0,LR_CREATEDIBSECTION);
    end;
