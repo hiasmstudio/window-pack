@@ -43,6 +43,8 @@ type
     procedure _var_Part(var _Data: TData; Index: Word);    
   end;
 
+function StrScan(Str: PChar; Chr: Char): PChar;
+function StrRScan(const Str: PChar; Chr: Char): PChar;
 function FParse(var S: string; const Delimiters: char): string;
 function RParse(var S: string; const Delimiters: char): string;
 
@@ -92,7 +94,6 @@ asm
 end {$IFDEF F_P} [ 'EAX', 'EDX', 'ECX' ] {$ENDIF};
 
 //---------------- Функция обратного парсирования строки ----------------------- 
-
 function RParse(var S: string; const Delimiters: char): string;
 var
   Pos: integer;
@@ -112,6 +113,7 @@ end;
 //------------------------------------------------------------------------------
 //
 //------------ Исправленная функция прямого парсирования строки ----------------
+(*
 function FParse(var S: string; const Delimiters: char): string;
 var
   Pos: Integer;
@@ -126,6 +128,16 @@ begin
   Result := S;
   S := CopyEnd(Result, Pos + 1);
   Result := Copy(Result, 1, Pos - 1);
+end;
+*)
+function FParse(var S: string; const Delimiters: char): string;
+var
+  P, F: PChar;
+begin
+  P := PChar(S);
+  F := StrScanLen(P, Delimiters, Length(S));
+  Result := Copy(S, 1, F-P-1);
+  S := string(F);
 end;
 
 //------------------------------------------------------------------------------
