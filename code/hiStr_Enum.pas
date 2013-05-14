@@ -45,95 +45,91 @@ type
 
 function FParse(var S: string; const Delimiters: char): string;
 function RParse(var S: string; const Delimiters: char): string;
+function SRParse(var S: pchar; const Dlm: char; Len: integer): string;
+function SFParse(var S: pchar; const Dlm: char; Len: integer): string;
 
 implementation
 
-//[function StrScan]
-function StrScan(Str: PChar; Chr: Char): PChar; assembler;
-asm
-        PUSH    EDI
-        PUSH    EAX
-        MOV     EDI,Str
-        OR      ECX, -1
-        XOR     AL,AL
-        REPNE   SCASB
-        NOT     ECX
-        POP     EDI
-        XCHG    EAX, EDX
-        REPNE   SCASB
-
-        XCHG    EAX, EDI
-        POP     EDI
-
-        JE      @@1
-        MOV     EAX,1
-@@1:    DEC     EAX
-end {$IFDEF F_P} [ 'EAX', 'EDX', 'ECX' ] {$ENDIF};
-
-//[function StrRScan]
-function StrRScan(const Str: PChar; Chr: Char): PChar; assembler;
-asm
-        PUSH    EDI
-        MOV     EDI,Str
-        MOV     ECX,0FFFFFFFFH
-        XOR     AL,AL
-        REPNE   SCASB
-        NOT     ECX
-        STD
-        DEC     EDI
-        MOV     AL,Chr
-        REPNE   SCASB
-        MOV     EAX,0
-        JNE     @@1
-        MOV     EAX,EDI
-        INC     EAX
-@@1:    CLD
-        POP     EDI
-end {$IFDEF F_P} [ 'EAX', 'EDX', 'ECX' ] {$ENDIF};
-
-//---------------- Функция обратного парсирования строки ----------------------- 
-
-function RParse(var S: string; const Delimiters: char): string;
-var
-  Pos: integer;
-  P, F: PChar;
-begin
-  P := PChar(S);
-  F := StrRScan(P, Delimiters);
-  if F <> nil then
-    Pos := Integer(F) - Integer(P)
-  else
-    Pos := -1;    
-  Result := S;
-  S := Copy(Result, 1, Pos);
-  Result := CopyEnd(Result, Pos + 2);
-end;
 
 //------------------------------------------------------------------------------
 //
-//------------ Исправленная функция прямого парсирования строки ----------------
-function FParse(var S: string; const Delimiters: char): string;
-var
-  Pos: Integer;
-  P, F: PChar;
+//------------------- Новые функции парсирования строки ------------------------
+function StrRScanLen(Str: PChar; Chr: Char; Len: Integer): PChar; assembler;
+asm
+        PUSH    EDI
+        XCHG    EDI, EAX
+        XCHG    EAX, EDX
+        STD //!!!
+        REPNE   SCASB
+        CLD //!!!
+        XCHG    EAX, EDI
+        POP     EDI
+        { -> EAX => to next character after found or to the end of Str,
+             ZF = 0 if character found. }
+end {$IFDEF F_P} [ 'EAX', 'EDX', 'ECX' ] {$ENDIF};
+
+
+function SRParse(var S:pchar; const Dlm:char; Len:integer): string;
+// Ищет символ Dlm влево, начиная с S, но не дальше чем Len символов. 
+// Переустанавливает S перед (левее) найденным символом Dlm, или перед Len символами (если Dlm не найден)
+// Защиты от Len<=0 -- НЕТ!!!
+var F:pchar; L:integer;
 begin
-  P := PChar(S);
-  F := StrScan(P, Delimiters);
-  if F <> nil then
-    Pos := Integer(F) - Integer(P) + 1
-  else
-    Pos := Length(S) + 1;    
-  Result := S;
-  S := CopyEnd(Result, Pos + 1);
-  Result := Copy(Result, 1, Pos - 1);
+  F := StrRScanLen(S, Dlm, Len);
+  L := S-F-byte((F+1)^=Dlm); 
+  SetLength(Result, L);
+  Move((S-L+1)^, Result[1], L);
+  S := F;
 end;
 
+function SFParse(var S:pchar; const Dlm:char; Len:integer): string;
+// Ищет символ Dlm вправо, начиная с S, но не дальше чем Len символов. 
+// Переустанавливает S после (правее) найденного символа Dlm, или после Len символов (если Dlm не найден)
+// Защиты от Len<=0 -- НЕТ!!!
+var F:pchar; L:integer;
+begin
+  F := StrScanLen(S, Dlm, Len);
+  L := F-S-byte((F-1)^=Dlm);
+  SetLength(Result, L);
+  Move(S^, Result[1], L);
+  S := F;
+end;
+
+//------------------------------------------------------------------------------
+function FParse(var S: string; const Delimiters: char): string;
+var
+  P, F: PChar;
+  L: integer;
+begin
+  P := PChar(S); 
+  F := StrScanLen(P, Delimiters, Length(S));
+  L := F - P - byte((F - 1)^ = Delimiters);
+  SetLength(Result, L);
+  Move(P^, Result[1], L);
+  S := string(F);
+end;
+//------------------------------------------------------------------------------
+function RParse(var S: string; const Delimiters: char): string;
+var
+  P, Q, F: PChar;
+  L: integer;  
+begin
+  Q := PChar(S);
+  P := Q + Length(S) - 1;
+  F := StrRScanLen(P, Delimiters, Length(S));
+  L := P - F - byte((F + 1)^ = Delimiters); 
+  SetLength(Result, L);
+  Move((P - L + 1)^, Result[1], L);
+  SetLength(S, F - Q + 1); 
+end;
 //------------------------------------------------------------------------------
 
 procedure THIStr_Enum._work_doEnum0;
 var
   s, ss: string;
   i: integer;
+  P, Q: pchar;
+  Ln: integer;
 begin
   s := ReadString(_Data, _data_String, '');
   FStop := false;
@@ -174,6 +170,24 @@ begin
   else if (Dlm <> '') and (s <> '') then            // иначе, разбиваем по разделителю
   begin
     i := 1;
+    Ln := Length(s);
+    P := pchar(s);
+    while Ln > 0 do
+    begin
+      Q := P; 
+      st := SFParse(P, Dlm[1], Ln);
+      if i < FFrom then
+      else if (FStop) or ((i > FTo) and (FTo > 0)) then break
+      else
+      begin
+        _hi_onEvent(_event_onEnum, st);
+        inc(eIndex);
+      end;  
+      dec(Ln, P - Q);
+      inc(i);
+    end;  
+  end;
+(*
     while (s <> '') and (i < eIndex) do
     begin
       fparse(s, Dlm[1]);
@@ -187,6 +201,7 @@ begin
         inc(eIndex);
       until s = '';
   end;  
+*)
   if FStop and _prop_onBreakEnable then
     _hi_CreateEvent(_Data,@_event_onBreak, st)
   else
@@ -197,6 +212,8 @@ procedure THIStr_Enum._work_doEnum1;
 var
   s: string;
   i: integer;
+  P, Q: pchar;
+  Ln: integer;
 begin
   s := ReadString(_Data, _data_String, '');
   FStop := false;
@@ -243,6 +260,24 @@ begin
   else if (Dlm <> '') and (s <> '') then           // иначе, разбиваем по разделителю
   begin
     i := 1;
+    Ln := Length(s);
+    P := pchar(s) + Ln - 1;
+    while Ln > 0 do
+    begin
+      Q := P; 
+      st := SRParse(P, Dlm[1], Ln);
+      if i < FFrom then
+      else if (FStop) or ((i > FTo) and (FTo > 0)) then break
+      else
+      begin
+        _hi_onEvent(_event_onEnum, st);
+        inc(eIndex);
+      end;  
+      dec(Ln, Q - P);
+      inc(i);
+    end;
+  end;   
+(*
     while (s <> '') and (i < eIndex) do
     begin
       rparse(s, Dlm[1]);
@@ -255,6 +290,7 @@ begin
       inc(eIndex);
     until s = '';
   end;  
+*)
   if FStop and _prop_onBreakEnable then
     _hi_CreateEvent(_Data,@_event_onBreak, st)
   else
