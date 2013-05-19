@@ -41,12 +41,13 @@ type
     procedure Level4(var x:real); // unar + - not
     procedure Level5(var x:real); // and or xor
     procedure Level6(var x:real); // ( function
-    procedure ReadFunc(var x:real; f:byte);
+    function ReadFunc(var x:real; f:string):boolean;
    public
     X:array of THI_Event;
     _event_onError:THI_Event;
     _event_onResult:THI_Event;
     _prop_ResultType:byte;
+    _prop_ExtNames:integer;
 
     procedure _work_doCalc(var _Data:TData; Index:word);
     procedure _work_doMathStr(var _Data:TData; Index:word);
@@ -97,16 +98,16 @@ TRY
   if ListLine.Count = 0 then exit;
   i := 0;
   ListLine.Objects[0] := 1;
-  if ListLine.Count > 1 then 
+  if ListLine.Count > 1 then
     for i := 1 to ListLine.Count - 1 do
     begin
       ListLine.Objects[i] := Length(ListLine.Items[i - 1]) + integer(ListLine.Objects[i - 1]);
-      if Value < integer(ListLine.Objects[i]) + Length(ListLine.Items[i]) then break;  
-    end; 
-  Result := int2str(Value - integer(ListLine.Objects[i]) + 1) + ':' + int2str(i + 1); 
+      if Value < integer(ListLine.Objects[i]) + Length(ListLine.Items[i]) then break;
+    end;
+  Result := int2str(Value - integer(ListLine.Objects[i]) + 1) + ':' + int2str(i + 1);
 FINALLY
   ListLine.free;
-END;  
+END;
 end;
 
 procedure THIMathParse.SetLine;
@@ -220,12 +221,7 @@ end;
 
 procedure THIMathParse._work_doMathStr;
 begin
-  if _IsStr(_Data) then
-  begin
-    Line := _data.sdata+#1;
-    SafeLine := Line;
-    Replace(Line, #13#10, '');
-  end;  
+  if _IsStr(_Data) then _prop_MathStr := ToString(_Data);
 end;
 
 procedure THIMathParse._var_Result;
@@ -258,7 +254,7 @@ begin
            Token := Token + Line[LPos];
            inc(LPos);
          until not(Line[LPos] in ['a'..'z','A'..'Z','_','а'..'я','А'..'Я','0'..'9']);
-         Token := LowerCase(Token);
+         //Token := LowerCase(Token);
          TokType := TokName;
        end;
      '.','$','0'..'9':
@@ -313,20 +309,25 @@ begin
      '(',')','%',',','[',']':
         begin Token := Line[LPos]; inc(LPos); TokType := TokSymbol end;
      '<','>','=':
-        begin 
-          Token := Line[LPos]; 
-          inc(LPos); 
+        begin
+          Token := Line[LPos];
+          inc(LPos);
           TokType := TokSymbol;
           if(Token = '<')and(Line[LPos] = '=') then
           begin
              Token := '{';
              inc(LPos);
-          end   
+          end
           else if(Token = '>')and(Line[LPos] = '=') then
           begin
              Token := '}';
              inc(LPos);
-          end;   
+          end
+          else if(Token = '<')and(Line[LPos] = '>') then
+          begin
+             Token := '#';
+             inc(LPos);
+          end;
         end;
      '+','-','/','*','^':
        begin
@@ -340,7 +341,7 @@ begin
    end;
 end;
 
-procedure THIMathParse.Level0;
+procedure THIMathParse.Level0; // Формула целиком
 var i:integer;
 begin
   for i:=0 to FDataCount-1 do Flags[i] := false;
@@ -353,33 +354,31 @@ begin
     {$else}Err:=0;{$endif};
 end;
 
-procedure THIMathParse.Level1a;
+procedure THIMathParse.Level1a;  // Логическое сравнение (если есть)
 var
   op:char;
   x2:real;
   b:boolean;
 begin
   Level1b(x); {$ifdef F_P} if Err>=0 then exit; {$endif}
-  while (Token = '<')or(Token = '>')or(Token = '{')or(Token = '}')or(Token = '=') do
+  while (Token = '<')or(Token = '>')or(Token = '{')or(Token = '}')or(Token = '=')or(Token = '#') do
    begin
     op := Token[1];
     GetToken; Level1b(x2); {$ifdef F_P} if Err>=0 then exit; {$endif}
     case op of
-     '<': b := (x < x2);
-     '>': b := (x > x2);
+     '<': b := (x  < x2);
+     '>': b := (x  > x2);
      '{': b := (x <= x2);
      '}': b := (x >= x2);
-     '=': b := (x = x2);
-     else b := false;
+     '=': b := (x  = x2);
+     '#': b := (x <> x2);
+     else b := false; // нафига - непонятно....
     end;
     x := ord(b);
-//    if b then
-//      x := 1
-//    else x := 0;
    end;
 end;
 
-procedure THIMathParse.Level1b;
+procedure THIMathParse.Level1b;  // Сложение
 var
   op:char;
   x2:real;
@@ -394,7 +393,7 @@ begin
    end;
 end;
 
-procedure THIMathParse.Level2;
+procedure THIMathParse.Level2;   // Умножение
 var op:char;
     x2:real;
 begin
@@ -441,7 +440,7 @@ begin
   else x := Exp(Exponent*Ln(x));
 end;
 
-procedure THIMathParse.Level3;
+procedure THIMathParse.Level3;   // Возведение в степень
 var x2:real;
 begin
   Level4(x); {$ifdef F_P} if Err>=0 then exit; {$endif}
@@ -451,12 +450,11 @@ begin
     {$ifdef F_P}
     if Err>=0 then exit;
     if (Round(x2)<>x2)and(x<=0) then Err:=1
-    else{$endif}
-    Power(x,x2);
+    else{$endif} Power(x,x2);
   end;
 end;
 
-procedure THIMathParse.Level4;
+procedure THIMathParse.Level4;   // Смена знака
 var op:char;
 begin
   op := ' ';
@@ -468,7 +466,7 @@ begin
   if op = '-' then x := -x;
 end;
 
-procedure THIMathParse.Level5;
+procedure THIMathParse.Level5;   // Логические операции
 var op:char;
     x2:real;
     b:boolean;
@@ -492,13 +490,15 @@ begin
   end
 end;
 
-procedure THIMathParse.Level6;
+procedure THIMathParse.Level6;   // Атомы, или рекурсия
 var i,j:integer; Y:real;
-    Fd,FItem:TData;
+    Fd,FItem:TData; f:boolean;
+    tmp:PData;
     Arr:PArray;
     Mtx:PMatrix;
 begin
   if Token = '%' then begin
+    // Имя пина, иначе - syntax error
     GetToken;
     if TokType=TokNumber then begin
       i := Str2Int(Token)-1;
@@ -506,8 +506,10 @@ begin
       else if i<FDataCount then begin
         GetToken;
         if Token = '[' then begin
+        // Однако матрица или массив (по количеству аргументов)
           GetToken; Level1a(Y); {$ifdef F_P} if Err>=0 then exit; {$endif}
           if Token <> ',' then begin
+          // Таки это массив
             Arr := ReadArray(self.X[i]);
             if Arr=nil then
               {$ifdef F_P}
@@ -531,6 +533,7 @@ begin
             x := ToReal(FItem);
           end
           else begin
+          // Таки это матрица
             Mtx := ReadMatrix(self.X[i]);
             if Mtx=nil then
               {$ifdef F_P}
@@ -556,30 +559,35 @@ begin
             x := ToReal(Fd);
           end
         end
-        else if Token = '(' then
-         begin
+        else if Token = '(' then begin
+        // Однако функция (одного аргумента ???)
           GetToken;
           Level1a(Y); {$ifdef F_P} if Err>=0 then exit; {$endif}
-          if Token <> ')' then
-            {$ifdef F_P}
-            begin Err:=0; exit; end;
-            {$else}
-            raise Exception.Create(e_Custom,'');
-            {$endif}
           dtReal(Fd,Y);
-          _ReadData(Fd,self.X[i]);
-          if _IsNULL(Fd) then
-            {$ifdef F_P}
-            begin Err:=1; exit; end;
-            {$else}
-            raise Exception.Create(e_Math_InvalidArgument,'');
-            {$endif}
-          x := ToReal(Fd);
+          TRY
+            while Token = ',' do begin  // уже не только одного
+              GetToken;
+              Level1a(Y); {$ifdef F_P} if Err>=0 then exit; {$endif}
+              dtReal(FItem,Y);
+              AddMTData(@Fd, @FItem, tmp);
+            end;
+            FItem := Fd;
+            if Token <> ')' then
+              {$ifdef F_P} begin Err:=0; exit; end;
+              {$else}      raise Exception.Create(e_Custom,''); {$endif}
+            _ReadData(FItem,self.X[i]);
+          FINALLY
+            FreeData(@Fd);
+          END;
+          if _IsNULL(FItem) then
+            {$ifdef F_P} begin Err:=1; exit; end;
+            {$else}      raise Exception.Create(e_Math_InvalidArgument,''); {$endif}
+          x := ToReal(FItem);
         end
         else begin
-          if Flags[i] then x:=Args[i]
-          else
-           begin
+        // Однако просто внешний аргумент. И все
+          if Flags[i] then x:=Args[i] // читаем из кэша
+          else begin
             Fd := ReadData(dt,self.X[i],nil);
             if _IsNULL(Fd) and (Fd.sdata=serr) then
               {$ifdef F_P}begin Err := Fd.idata; exit; end
@@ -587,9 +595,10 @@ begin
               else raise Exception.Create(e_Custom,'')
               {$endif};
             x := ToReal(Fd);
+            // кэшируем данные, чтобы попусту не суетиться еще раз
             Args[i] := x;
             Flags[i] := true;
-           end;
+          end;
           exit;
         end
       end
@@ -598,6 +607,7 @@ begin
     else  {$ifdef F_P}begin Err:=0;exit;end{$else}raise Exception.Create(e_Custom,''){$endif};
   end
   else if Token = '(' then begin
+    // Скобочная рекурсия
     GetToken; Level1a(x); {$ifdef F_P} if Err>=0 then exit; {$endif}
     if Token <> ')' then
       {$ifdef F_P}
@@ -605,47 +615,47 @@ begin
       {$else}
       raise Exception.Create(e_Custom,'');
       {$endif}
-   end
+  end
   else case TokType of
-    TokName: begin
-      if      Token = 'pi'     then  x := pi
-      else if Token = 'e'      then  x := digE
-      else if Token = 'cos'    then  ReadFunc(x,1)
-      else if Token = 'sin'    then  ReadFunc(x,2)
-      else if Token = 'tg'     then  ReadFunc(x,3)
-      else if Token = 'ctg'    then  ReadFunc(x,4)
-      else if Token = 'arccos' then  ReadFunc(x,5)
-      else if Token = 'arcsin' then  ReadFunc(x,6)
-      else if Token = 'arctg'  then  ReadFunc(x,7)
-      else if Token = 'arcctg' then  ReadFunc(x,8)
-      else if Token = 'atan'   then  ReadFunc(x,9)
-      else if Token = 'ch'     then  ReadFunc(x,10)
-      else if Token = 'sh'     then  ReadFunc(x,11)
-      else if Token = 'th'     then  ReadFunc(x,12)
-      else if Token = 'cth'    then  ReadFunc(x,13)
-      else if Token = 'arcch'  then  ReadFunc(x,14)
-      else if Token = 'arcsh'  then  ReadFunc(x,15)
-      else if Token = 'arcth'  then  ReadFunc(x,16)
-      else if Token = 'arccth' then  ReadFunc(x,17)
-      else if Token = 'log'    then  ReadFunc(x,18)
-      else if Token = 'lg'     then  ReadFunc(x,19)
-      else if Token = 'ln'     then  ReadFunc(x,20)
-      else if Token = 'exp'    then  ReadFunc(x,21)
-      else if Token = 'sqr'    then  ReadFunc(x,22)
-      else if Token = 'sqrt'   then  ReadFunc(x,23)
-      else if Token = 'abs'    then  ReadFunc(x,24)
-      else if Token = 'sign'   then  ReadFunc(x,25)
-      else if Token = 'round'  then  ReadFunc(x,26)
-      else if Token = 'frac'   then  ReadFunc(x,27)
-      else if Token = 'trunc'  then  ReadFunc(x,28)
-      else if Token = 'min'    then  ReadFunc(x,29)
-      else if Token = 'max'    then  ReadFunc(x,30)
-      else if Token = 'floor'  then  ReadFunc(x,31)
-      else if Token = 'ceil'   then  ReadFunc(x,32)
-      else if Token = 'odd'    then  ReadFunc(x,33)
-      else if Token = 'even'   then  ReadFunc(x,34)                   
-      else{$ifdef F_P}Err:=0;if Err>=0 then exit{$else}raise Exception.Create(e_Custom,''){$endif};
-     end;
+    TokName: begin if ReadFunc(x,LowerCase(Token)) then // Встроенные функции => уже посчитаны
+      else begin
+        if (_prop_ExtNames>0)and(_prop_ExtNames<=FDataCount) then begin
+        // Вот тут и запузырим "внешнее распознавание имени"
+          dtString(FItem,Token);
+          Fd := FItem;
+          GetToken;
+          f := Token = '(';
+          TRY
+            if f then begin
+              GetToken;
+              Level1a(Y); {$ifdef F_P} if Err>=0 then exit; {$endif}
+              dtReal(FItem,Y);
+              AddMTData(@Fd, @FItem, tmp);
+              while Token = ',' do begin  // уже не одного
+                GetToken;
+                Level1a(Y); {$ifdef F_P} if Err>=0 then exit; {$endif}
+                dtReal(FItem,Y);
+                AddMTData(@Fd, @FItem, tmp);
+              end;
+              FItem := Fd;
+              if Token <> ')' then
+                {$ifdef F_P} begin Err:=0; exit; end;
+                {$else}      raise Exception.Create(e_Custom,''); {$endif}
+            end;
+            _ReadData(FItem,self.X[_prop_ExtNames-1]);
+          FINALLY
+            FreeData(@Fd);
+          END;
+          if _IsNULL(FItem) then
+            {$ifdef F_P} begin Err:=0; exit; end;
+            {$else}      raise Exception.Create(e_Custom,''); {$endif}
+          x := ToReal(FItem); if not f then exit; // О как!
+        end else
+          {$ifdef F_P} begin Err:=0;if Err>=0 then exit; end;
+          {$else}raise Exception.Create(e_Custom,''){$endif};
+      end;
+    end;
+    // Просто числа в разных форматах
     TokReal,TokNumber: x := Str2Double(Token);
     TokHex: x:= Hex2Int(Token);
     else  {$ifdef F_P}begin Err:=0; exit; end{$else}raise Exception.Create(e_Custom,''){$endif};
@@ -692,18 +702,26 @@ asm
         FWAIT
 end;
 
-procedure THIMathParse.ReadFunc;
-var y:real;
+function THIMathParse.ReadFunc;
+const FuncNames:array[1..34] of pchar = (
+  'cos','sin','tg','ctg','arccos','arcsin','arctg','arcctg','atan',  //1..9
+  'ch','sh','th','cth','arcch','arcsh','arcth','arccth',             //10..17
+  'log','lg','ln','exp','sqr','sqrt','abs','sign',                   //18..25
+  'round','frac','trunc','floor','ceil','min','max','odd','even');   //26..34
+Var y:real; I:integer;
 begin
+  Result := True;
+  if      f = 'pi' then begin  x := pi;   exit end
+  else if f = 'e'  then begin  x := digE; exit end;
+  Result := false;
+  for I := 1 to length(FuncNames) do if FuncNames[I]=f then begin Result := True;  break end;
+  if not Result then exit;
   GetToken;
   if Token <> '(' then
-    {$ifdef F_P}
-    begin Err:=0; exit; end;
-    {$else}
-    raise Exception.Create(e_Custom,'');
-    {$endif}
+    {$ifdef F_P} begin Err:=0; exit; end;
+    {$else}raise Exception.Create(e_Custom,'');{$endif}
   GetToken; Level1a(x); {$ifdef F_P} if Err>=0 then exit; {$endif}
-  case f of
+  case I of
     1:  x := cos(x*AngleMode);
     2:  x := sin(x*AngleMode);
     3:  {$ifdef F_P}if cos(x*AngleMode)=0 then begin Err:=1;exit;end else{$endif}x := Tan(x*AngleMode);
@@ -748,39 +766,30 @@ begin
     23: {$ifdef F_P}if x<0 then begin Err:=1;exit;end else{$endif}x := sqrt(x);
     24: if x<0 then x := -x;
     25: if x<0 then x := -1 else if x>0 then x:=1;
-    26..28:
+    26..30:
         begin
           y:=1;
           if Token=',' then begin
             GetToken; Level1a(y); {$ifdef F_P} if Err>=0 then exit; {$endif}
           end;
-          case f of
-            26:  x := y*round(x/y);
-            27:  x := y*frac (x/y);
-            else x := y*trunc(x/y);
+          x := x/y;
+          case I of
+            26:  x := y*round(x);
+            27:  x := y*frac (x);
+            28:  x := y*trunc(x);
+            29:  if frac(x)<0 then x := y*(trunc(x)-1) //floor
+                 else x := y*trunc(x);
+            else if frac(x)>0 then x := y*(trunc(x)+1) //ceil
+                 else x := y*trunc(x);
           end;
         end;
-    29,30:
+    31,32:
         while Token=',' do begin
           GetToken; Level1a(y); {$ifdef F_P} if Err>=0 then exit; {$endif}
-          case f of
-            29:  if x>y then x := y;
+          case I of
+            31:  if x>y then x := y;
             else if x<y then x := y;
           end;
-        end;
-    31: {floor}
-        begin
-          if frac(x) < 0 then
-            x := trunc(x) - 1
-          else  
-            x := trunc(x);
-        end;
-    32: {ceil}
-        begin
-          if frac(x) > 0 then
-            x := trunc(x) + 1
-          else  
-            x := trunc(x);
         end;
     33: x := ord(odd(round(x)));     {odd}
     34: x := ord(not odd(round(x))); {even}
