@@ -49,7 +49,9 @@ begin
    if (Control.Count > 0)and(control.items[control.Count-1] <> '')then
      Control.Add(#13#10);
  
-   Result := Control.Add(Text);
+//   Result := Control.Add(Text);
+   if Text<>'' then Result := Control.Add(Text)
+   else Result := Control.Add(#13#10);
    {inherited;}
 end;
 
