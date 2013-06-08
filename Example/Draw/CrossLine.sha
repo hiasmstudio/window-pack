@@ -1,91 +1,62 @@
-*Пример получения координат пересечения двух отрезков#13#10__________#13#10Автор: Леонид
 Make(delphi)
-ver(4.04 build 183)
-Add(MainForm,9929235,224,133)
+ver(4.04 build 185)
+Add(MainForm,9929235,70,175)
 {
  Width=300
- Point(Handle)
- Point(onPaint)
+ Caption="CrossLine"
+ Position=1
 }
-Add(Img_Line,7576544,434,273)
+Add(Img_Line,7576544,511,231)
 {
+ @Hint=#7:Линия 2|
  Point1=6946841
  Point2=3473616
- Point(Point1)
- Point(Point2)
- Point(Color)
- link(onDraw,2461668:doDraw,[])
- link(Bitmap,12160652:Var2,[])
- link(Point1,12717687:Point,[])
- link(Point2,2382763:Point,[(454,251)(482,251)])
- link(Color,5024363:Value,[(461,254)(594,254)])
-}
-Add(Img_Line,2461668,504,273)
-{
- Point1=1769559
- Point2=12124341
+ Color=255
+ Point(Pattern)
  Point(Point1)
  Point(Point2)
  Point(Color)
  link(onDraw,1479421:doEvent1,[])
- link(Bitmap,12160652:Var3,[(510,257)])
- link(Point1,4826005:Point,[])
- link(Point2,5142681:Point,[(524,257)(552,257)])
- link(Color,1966691:Value,[(531,260)(601,260)])
+ link(Bitmap,14694423:Var3,[(517,210)])
+ link(Point1,12717687:Point,[])
+ link(Point2,2382763:Point,[(531,216)(559,216)])
 }
-Add(GetDataEx,12160652,434,252)
+Add(Img_Line,2461668,392,231)
 {
- link(Data,13966783:Bitmap,[(440,244)(391,244)])
+ Point1=3276900
+ Point2=13107450
+ Point(Pattern)
+ Point(Point1)
+ Point(Point2)
+ Point(Color)
+ link(onDraw,7576544:doDraw,[])
+ link(Bitmap,14694423:Var2,[])
 }
-Add(Memory,3679827,511,77)
+Add(PointXY,12717687,518,175)
 {
- Default=Integer(100)
+ link(X,16773545:Wire1,[])
+ link(Y,16773545:Wire2,[])
 }
-Add(Memory,779053,518,84)
-{
- Default=Integer(50)
-}
-Add(PointXY,12717687,441,203)
-{
- link(X,7275492:Var2,[])
- link(Y,1388058:Var2,[])
-}
-Add(PointXY,2382763,476,203)
+Add(PointXY,2382763,553,175)
 {
  X=150
  Y=150
- link(X,15799357:Var2,[(482,184)(461,184)])
- link(Y,12862031:Var2,[(489,177)(468,177)])
+ link(X,16773545:Wire3,[(559,168)(538,168)])
+ link(Y,16773545:Wire4,[(566,164)(545,164)])
 }
-Add(PointXY,4826005,511,203)
+Add(Timer,14138341,28,231)
 {
- link(X,3679827:Value,[])
- link(Y,779053:Value,[])
+ Interval=20
+ link(onTimer,3380661:doNext,[])
 }
-Add(PointXY,5142681,546,203)
+Add(Counter,3380661,70,231)
 {
- link(X,12593993:Value,[])
- link(Y,1490061:Value,[])
-}
-Add(Memory,12593993,546,91)
-{
- Default=Integer(250)
-}
-Add(Memory,1490061,553,98)
-{
- Default=Integer(200)
-}
-Add(Timer,14138341,224,84)
-{
- Interval=10
- link(onTimer,5684599:doEvent1,[])
-}
-Add(Counter,3380661,294,91)
-{
+ @Hint=#16:Считаем импульсы|
  Max=359
  link(onNext,8756041:doCalc,[])
+ AddHint(102,-75,112,13,@Hint)
 }
-Add(MathParse,8756041,336,91)
+Add(MathParse,8756041,133,231)
 {
  DataCount=1
  MathStr="sin(%1)*100+150"
@@ -93,7 +64,7 @@ Add(MathParse,8756041,336,91)
  AngleMode=1
  link(onResult,6349645:doCalc,[])
 }
-Add(MathParse,2076100,420,91)
+Add(MathParse,2076100,217,231)
 {
  DataCount=1
  MathStr="-sin(%1)*100+150"
@@ -102,7 +73,7 @@ Add(MathParse,2076100,420,91)
  link(onResult,3184027:doCalc,[])
  link(X1,1087630:Var2,[])
 }
-Add(MathParse,6349645,378,91)
+Add(MathParse,6349645,175,231)
 {
  DataCount=1
  MathStr="cos(%1)*100+150"
@@ -111,109 +82,142 @@ Add(MathParse,6349645,378,91)
  link(onResult,2076100:doCalc,[])
  link(X1,6823430:Var2,[])
 }
-Add(MathParse,3184027,462,91)
+Add(MathParse,3184027,259,231)
 {
  DataCount=1
  MathStr="-cos(%1)*100+150"
  ResultType=0
  AngleMode=1
- link(onResult,7576544:doDraw,[(502,97)(502,162)(425,162)(425,279)])
- link(X1,1087630:Var3,[(468,79)])
+ link(onResult,13966783:doRefresh,[])
+ link(X1,1087630:Var3,[(265,219)])
 }
-Add(GetDataEx,6823430,378,74)
+Add(GetDataEx,6823430,175,214)
 {
  Angle=3
- link(Data,3380661:Count,[(331,79)(331,136)(300,136)])
+ link(Data,3380661:Count,[(107,219)(107,274)(76,274)])
 }
-Add(GetDataEx,1087630,420,74)
+Add(GetDataEx,1087630,217,214)
 {
  Angle=3
  link(Data,6823430:Var3,[])
 }
-Add(Hub,5684599,266,84)
-{
- link(onEvent1,13966783:doClear,[(286,90)(286,216)])
- link(onEvent2,3380661:doNext,[])
-}
-Add(PaintBox,13966783,385,203)
+Add(PaintBox,13966783,315,231)
 {
  Width=300
  Height=300
- Point(Handle)
+ ClearBeforeDraw=0
+ link(onBeforeDraw,2461668:doDraw,[])
 }
-Add(Hub,1479421,546,273)
+Add(Hub,1479421,644,231)
 {
- OutCount=4
- link(onEvent1,13966783:doRefresh,[(567,279)(567,263)(377,263)(377,209)])
- link(onEvent2,600461:doIntercross,[])
- link(onEvent3,10350184:doStrCat,[(576,293)(576,335)])
- link(onEvent4,4986574:doStrCat,[(568,300)(568,377)])
+ link(onEvent1,600461:doIntercross,[(667,237)(667,174)])
+ link(onEvent2,6997998:doString,[])
 }
-Add(LED,7839709,742,273)
+Add(LED,7839709,777,161)
 {
  Left=5
  Top=5
 }
-Add(GetDataEx,7275492,441,189)
-{
- link(Data,8756041:Result,[(447,153)(342,153)])
-}
-Add(GetDataEx,1388058,448,182)
-{
- link(Data,6349645:Result,[(454,146)(384,146)])
-}
-Add(GetDataEx,15799357,455,175)
-{
- link(Data,2076100:Result,[(461,141)(426,141)])
-}
-Add(GetDataEx,12862031,462,168)
-{
- link(Data,3184027:Result,[])
-}
-Add(If_else,14307846,700,280)
-{
- Op2=Integer(0)
- link(onTrue,7839709:doOff,[])
- link(onFalse,7839709:doOn,[])
-}
-Add(CrossLine,600461,630,280)
+Add(CrossLine,600461,693,168)
 {
  AX1=100
  AY1=50
  AX2=250
  AY2=200
- link(onIntercross,14307846:doCompare,[])
- link(BX1,7275492:Var3,[(636,194)])
- link(BY1,1388058:Var3,[(643,187)])
- link(BX2,15799357:Var3,[(650,180)])
- link(BY2,12862031:Var3,[(657,173)])
+ ResultType=0
+ link(onIntercross,13854350:doEvent,[])
+ link(BX1,4351953:Wire1,[])
+ link(BY1,4351953:Wire2,[])
+ link(BX2,4351953:Wire3,[])
+ link(BY2,4351953:Wire4,[])
 }
-Add(Memory,5024363,588,203)
-{
- Default=Integer(255)
-}
-Add(Memory,1966691,595,210)
-{
- Default=Integer(0)
-}
-Add(Label,2129633,700,329)
+Add(Label,2129633,735,238)
 {
  Left=40
+ Top=5
+ Height=35
+ Caption=""
+ AutoSize=1
 }
-Add(Label,9972795,700,371)
+Add(InfoTip,987140,126,182)
 {
- Left=40
- Top=15
+ Info=#36:Вычисление координат подвижной линии|
+ Font=[MS Sans Serif,8,0,255,204]
+ Frame=2
+ Width=176
+ Height=130
 }
-Add(StrCat,10350184,623,329)
+Add(InfoTip,5268721,469,133)
 {
- Str1="X="
- link(onStrCat,2129633:doText,[])
- link(Str2,600461:ResultX,[])
+ Info=#25:Отрисовка подвижной линии|
+ Font=[MS Sans Serif,8,0,255,1]
+ Frame=2
+ Width=162
+ Height=179
 }
-Add(StrCat,4986574,651,371)
+Add(InfoTip,10593205,371,133)
 {
- Str1="Y="
- link(onStrCat,9972795:doText,[])
- link(Str2,600461:ResultY,[(664,322)(643,322)])
+ Info=#27:Отрисовка неподвижной линии|
+ Font=[MS Sans Serif,8,0,255,1]
+ Frame=2
+ Width=85
+ Height=179
+}
+Add(InfoTip,9998842,679,133)
+{
+ Info=#27:Индикатор пересечения линий|
+ Font=[MS Sans Serif,8,0,255,1]
+ Frame=2
+ Width=218
+ Height=81
+}
+Add(InfoTip,16420762,679,224)
+{
+ Info=#16:Вывод координат |18:точки пересечения |
+ Font=[MS Sans Serif,8,0,255,1]
+ Frame=2
+ HAlign=2
+ Width=218
+ Height=88
+ Margin=2
+}
+Add(CableData,9026816,168,287)
+{
+ Count=4
+ link(Wire1,8756041:Result,[(174,272)(139,272)])
+ link(Wire2,6349645:Result,[])
+ link(Wire3,2076100:Result,[(188,272)(223,272)])
+ link(Wire4,3184027:Result,[(195,279)(265,279)])
+}
+Add(CableVar,4351953,693,147)
+{
+ Count=4
+ link(Cable,3126709:Var3,[(699,103)])
+}
+Add(CableVar,16773545,518,147)
+{
+ Count=4
+ link(Cable,3126709:Var2,[])
+}
+Add(GetDataEx,3126709,518,98)
+{
+ Angle=3
+ link(Data,9026816:Cable,[(13,103)(13,304)(174,304)])
+}
+Add(GetDataEx,14694423,392,205)
+{
+ Angle=3
+ link(Data,13966783:Bitmap,[(358,210)(358,274)(321,274)])
+}
+Add(IndexToChanel,13854350,735,168)
+{
+ link(onEvent1,7839709:doOff,[])
+ link(onEvent2,7839709:doOn,[])
+}
+Add(FormatStr,6997998,693,238)
+{
+ Mask="X=%1\r\nY=%2"
+ link(onFString,2129633:doText,[])
+ link(Str1,600461:ResultX,[])
+ link(Str2,600461:ResultY,[])
 }
