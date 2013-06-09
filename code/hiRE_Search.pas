@@ -128,7 +128,7 @@ var idx:integer;
 begin
   idx := ToIntIndex(Item) + 1;
   FreeData(@Val);
-  if idx > RE.SubExprMatchCount then begin
+  if (idx > RE.SubExprMatchCount) or (idx < 1) then begin
     Result := false;
     Exit;
   end;
