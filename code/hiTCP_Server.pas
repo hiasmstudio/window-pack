@@ -190,6 +190,7 @@ var i,j:integer;
   s:string;
   st:PStream;
 begin
+    st := nil;
     case _prop_DataType of
        0: j := ReadInteger(_data,_data_Data,0);
        1: s := ReadString(_data,_data_Data,'');
@@ -225,6 +226,7 @@ var i,j:integer;
   st:PStream;
   con:TSocket;
 begin
+    st := nil;
     case _prop_DataType of
        0: j := ReadInteger(_data,_data_Data,0);
        1: s := ReadString(_data,_data_Data,'');
