@@ -8,7 +8,7 @@ type
   THIMemFifo = class(TDebug)
    private
     FData:array of TData;
-    highF:integer;
+    offSet,highF:integer;
     procedure SetCount(cnt:integer);
    public
     _event_onData:THI_Event;
@@ -29,18 +29,18 @@ var i:integer;
 begin
    SetLength(FData,cnt);
    highF := high(FData);
+   offSet := highF;
    for i := 0 to highF do
      FData[i] := _prop_Default;
 end;
 
 procedure THIMemFifo._work_doValue;
-var dt:TData; i:integer;
+var dt:TData;
 begin
    if highF<0 then exit;
-   dt := FData[highF];
-   for i := highF downto 1 do
-     FData[i] := FData[i-1];               
-   FData[0] := ReadData(_Data,_data_Data);
+   offSet := (offSet+highF)mod(highF+1);
+   dt := FData[offSet];
+   FData[offSet] := ReadData(_Data,_data_Data);
    _hi_CreateEvent(_Data,@_event_onData,dt);
 end;
 
@@ -51,7 +51,7 @@ end;
 
 procedure THIMemFifo.Value;
 begin
-   _Data := FData[Index];
+   _Data := FData[(Index+offSet)mod(highF+1)];
 end;
 
 end.
