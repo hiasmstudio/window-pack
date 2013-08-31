@@ -181,16 +181,26 @@ procedure THiDirectoryChanges.HandleEvent;
 var FileNotifyInfo : PFileNotifyInformation;
     InfoCallBack   : TInfoCallBack;
     Offset         : Longint;
+    WStr           : string;
 begin
   Pointer(FileNotifyInfo) := @FWatchBuf[0];
   repeat
     Offset:=FileNotifyInfo^.NextEntryOffset;
     InfoCallBack.FAction := FileNotifyInfo^.Action;
     InfoCallBack.FDrive := FName;
-    InfoCallBack.FNewFileName := WideCharToString(@(FileNotifyInfo^.FileName[0]));
-    InfoCallBack.FNewFileName := Trim(InfoCallBack.FNewFileName);
+//    InfoCallBack.FNewFileName := WideCharToString(@(FileNotifyInfo^.FileName[0]));
+//    InfoCallBack.FNewFileName := Trim(InfoCallBack.FNewFileName);
+//    case FileNotifyInfo^.Action of
+//      FILE_ACTION_RENAMED_OLD_NAME: FOldFileName := Trim(WideCharToString(@(FileNotifyInfo^.FileName[0])));
+//      FILE_ACTION_RENAMED_NEW_NAME: InfoCallBack.FOldFileName := FOldFileName;
+//    end;
+    SetLength(WStr, FileNotifyInfo.FileNameLength+1); // На 1 больше, так как должна оканчиваться двумя #0
+    WStr[FileNotifyInfo.FileNameLength + 1] := #0; // В конце получается #0#0
+    Move(FileNotifyInfo^.FileName[0], WStr[1], FileNotifyInfo.FileNameLength);
+    WStr := Trim(WideCharLenToString(@WStr[1], FileNotifyInfo.FileNameLength));
+    InfoCallBack.FNewFileName := WStr;
     case FileNotifyInfo^.Action of
-      FILE_ACTION_RENAMED_OLD_NAME: FOldFileName := Trim(WideCharToString(@(FileNotifyInfo^.FileName[0])));
+      FILE_ACTION_RENAMED_OLD_NAME: FOldFileName := WStr;
       FILE_ACTION_RENAMED_NEW_NAME: InfoCallBack.FOldFileName := FOldFileName;
     end;
     FInfoCallBack(InfoCallBack, sTag);
