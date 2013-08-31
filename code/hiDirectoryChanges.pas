@@ -181,7 +181,7 @@ procedure THiDirectoryChanges.HandleEvent;
 var FileNotifyInfo : PFileNotifyInformation;
     InfoCallBack   : TInfoCallBack;
     Offset         : Longint;
-    WStr           : string;
+    Str            : string;
 begin
   Pointer(FileNotifyInfo) := @FWatchBuf[0];
   repeat
@@ -194,13 +194,10 @@ begin
 //      FILE_ACTION_RENAMED_OLD_NAME: FOldFileName := Trim(WideCharToString(@(FileNotifyInfo^.FileName[0])));
 //      FILE_ACTION_RENAMED_NEW_NAME: InfoCallBack.FOldFileName := FOldFileName;
 //    end;
-    SetLength(WStr, FileNotifyInfo.FileNameLength+1); // На 1 больше, так как должна оканчиваться двумя #0
-    WStr[FileNotifyInfo.FileNameLength + 1] := #0; // В конце получается #0#0
-    Move(FileNotifyInfo^.FileName[0], WStr[1], FileNotifyInfo.FileNameLength);
-    WStr := Trim(WideCharLenToString(@WStr[1], FileNotifyInfo.FileNameLength));
-    InfoCallBack.FNewFileName := WStr;
+    Str := Trim(WideCharLenToString(@(FileNotifyInfo^.FileName[0]), FileNotifyInfo.FileNameLength div 2));
+    InfoCallBack.FNewFileName := Str;
     case FileNotifyInfo^.Action of
-      FILE_ACTION_RENAMED_OLD_NAME: FOldFileName := WStr;
+      FILE_ACTION_RENAMED_OLD_NAME: FOldFileName := Str;
       FILE_ACTION_RENAMED_NEW_NAME: InfoCallBack.FOldFileName := FOldFileName;
     end;
     FInfoCallBack(InfoCallBack, sTag);
