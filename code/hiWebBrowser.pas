@@ -9,12 +9,20 @@ uses Kol,Share,Win,ActiveX;
 {$I def.inc}
 
 type
+  TIIEManager = record
+    ctrlpoint:function:pointer of object;
+  end;
+  IIEManager = ^TIIEManager;
+
+type
   THIWebBrowser = class(THIWin)
    private
+    cp: TIIEManager;
     Count:word;
     Max:word;
     LastState:string;
     
+    function ctrlpoint:pointer;
     procedure OnNavigate(Sender: TObject; const pDisp: IDispatch;
               var URL: OleVariant;
               var Flags: OleVariant;
@@ -32,6 +40,7 @@ type
    protected
      procedure _OnDestroy(Sender:PObj); override;
    public
+    _prop_Namae:string;
     _prop_URL:string;
     _prop_Silent:boolean;
     _event_onNavigate:THI_Event;
@@ -46,6 +55,8 @@ type
     constructor Create(Parent:PControl);
     destructor Destroy; override;
     procedure Init; override;
+
+    function getInterfaceIEManager:IIEManager;
 
     procedure _work_doNavigate(var _Data:TData; Index:word);
     procedure _work_doRefresh(var _Data:TData; Index:word);
@@ -305,6 +316,17 @@ begin
    _hi_OnEvent(_event_OnQuit);
 end;
 
+
+function THIWebBrowser.getInterfaceIEManager;
+begin
+   Result := @cp;
+end;
+
+function THIWebBrowser.ctrlpoint;
+begin
+  Result := Control;
+end;
+
 procedure THIWebBrowser.Init;
 begin
    Control := NewKOLWebBrowser(FParent);
@@ -316,6 +338,7 @@ begin
    PKOLWebBrowser(Control).OnQuit := OnQuit;
    PKOLWebBrowser(Control).OnNewWindow2 := OnNewWindow;
    PKOLWebBrowser(Control).Silent := _prop_Silent; 
+   cp.ctrlpoint := ctrlpoint;
    inherited;
 end;
 
