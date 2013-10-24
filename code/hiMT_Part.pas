@@ -36,6 +36,8 @@ var i:integer;
 begin
   FreeData(@FData);
   FreeData(@FData_1);
+  dtNull(FData);
+  dtNull(FData_1);  
 
   FData := ReadMTData(_data,_data_Data);
   CopyData(@FData,@FData);
