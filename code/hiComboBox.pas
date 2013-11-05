@@ -149,7 +149,8 @@ procedure THIComboBox._work_doEditText;
 begin
   Control.Caption := ToString(_Data);
   case _prop_EditSelectMode of
-    1: PostMessage(Control.Handle, CB_SETEDITSEL, 0, MAKELPARAM(length(Control.Caption), length(Control.Caption)));
+    0: Control.Perform(CB_SETEDITSEL, 0, $FFFF0000);
+    1: Control.Perform(CB_SETEDITSEL, 0, MAKELPARAM(length(Control.Caption), length(Control.Caption)));
   end;
   _hi_onEvent(_event_onChangeText, Control.Caption);  
 end;
@@ -158,7 +159,8 @@ procedure THIComboBox._work_doEditTextNoEvents;
 begin
   Control.Caption := ToString(_Data);
   case _prop_EditSelectMode of
-    1: PostMessage(Control.Handle, CB_SETEDITSEL, 0, MAKELPARAM(length(Control.Caption), length(Control.Caption)));
+    0: Control.Perform(CB_SETEDITSEL, 0, $FFFF0000);
+    1: Control.Perform(CB_SETEDITSEL, 0, MAKELPARAM(length(Control.Caption), length(Control.Caption)));
   end;
 end;
 
