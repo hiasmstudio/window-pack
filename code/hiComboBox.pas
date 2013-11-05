@@ -33,13 +33,15 @@ type
       _prop_Text:string;
       _prop_Strings:string;
       _prop_Sort:boolean;
-      _prop_ItemHeight:integer;     
+      _prop_ItemHeight:integer;
+      _prop_EditSelectMode:byte;     
       _prop_DropDownCount:integer; // === DropDownCount
     
       _event_onChangeText: THI_Event;
       procedure Init; override;
       destructor Destroy; override;
       procedure _work_doEditText(var _Data:TData; Index:word);
+      procedure _work_doEditTextNoEvents(var _Data:TData; Index:word);      
       procedure _var_EditText(var _Data:TData; Index:word);
       procedure _var_Index(var _Data:TData; Index:word);
       procedure _work_doDropDownCount(var _Data:TData; Index:word);
@@ -146,7 +148,18 @@ end;
 procedure THIComboBox._work_doEditText;
 begin
   Control.Caption := ToString(_Data);
+  case _prop_EditSelectMode of
+    1: PostMessage(Control.Handle, CB_SETEDITSEL, 0, -1);
+  end;
   _hi_onEvent(_event_onChangeText, Control.Caption);  
+end;
+
+procedure THIComboBox._work_doEditTextNoEvents;
+begin
+  Control.Caption := ToString(_Data);
+  case _prop_EditSelectMode of
+    1: PostMessage(Control.Handle, CB_SETEDITSEL, 0, -1);
+  end;
 end;
 
 procedure THIComboBox._var_EditText;
