@@ -12,6 +12,7 @@ type
     procedure SetDelimiter(Value: string);
     procedure SetEndSymbol(Value: string);
   public
+    _prop_Mode:byte;
     _prop_ReplaceList: string;    
     _prop_EnterTag: string;
 
@@ -22,7 +23,8 @@ type
     property _prop_Delimiter: string write SetDelimiter;
     property _prop_EndSymbol: string write SetEndSymbol;
         
-    procedure _work_doMultiReplace(var _Data:TData; index:word);
+    procedure _work_doMultiReplace0(var _Data:TData; index:word);
+    procedure _work_doMultiReplace1(var _Data:TData; index:word);    
     procedure _work_doDelimiter(var _Data:TData; index:word);
     procedure _work_doEndSymbol(var _Data:TData; index:word);
     procedure _work_doEnterTag(var _Data:TData; index:word);             
@@ -71,7 +73,7 @@ begin
   end;
 end;
 
-procedure THiMultiReplace._work_doMultiReplace;
+procedure THiMultiReplace._work_doMultiReplace0;
 var
   i: integer;
   s: string;
@@ -101,7 +103,61 @@ begin
   FListTo.free;
 
   _hi_onEvent(_event_onResult, FMultiReplace);
- 
+end;
+
+procedure THiMultiReplace._work_doMultiReplace1;
+var
+  i, dig: integer;
+  s: string;
+  FListFrom: PStrList;
+  FListTo: PStrList;
+  FListMark: PStrList;
+
+  function Int2Mark(Value: integer): string;
+  const
+    arrsym: array[0..9] of char = (#1,#2,#3,#4,#5,#6,#11,#12,#14,#15);
+  var
+    s: string;
+    i: integer;
+  begin
+    Result := _Dlm;
+    s := Int2Str(Value);
+    while Length(s) < 3 do s := '0' + s;
+    for i := 1 to Length(s) do
+      Result := Result + arrsym[ord(s[i]) - 48];
+    Result := Result + _End;   
+  end;
+         
+begin
+  FMultiReplace := ReadString(_Data, _data_Text);
+  s := ReadString(_Data, _data_ReplaceList, _prop_ReplaceList);
+
+  Replace(s, _End + #13#10, _End);
+  Replace(s, #13#10, _prop_EnterTag);  
+  
+  FListFrom := NewStrList;
+  FListTo := NewStrList;
+  FListMark := NewStrList;  
+    
+  while s <> '' do
+  begin
+    FListFrom.Add(trim(fparse(s, _Dlm)));
+    FListTo.Add(trim(fparse(s, _End)));
+  end;
+
+  for i := 0 to FListFrom.count - 1 do
+    FlistMark.Add(Int2Mark(i));
+  for i := 0 to FListFrom.count - 1 do
+    Replace(FMultiReplace, FListFrom.Items[i], FListMark.Items[i]);
+  for i := 0 to FListFrom.count - 1 do
+    Replace(FMultiReplace, FListMark.Items[i], FListTo.Items[i]);
+  Replace(FMultiReplace, _prop_EnterTag, #13#10); 
+  
+  FListFrom.free;
+  FListTo.free;
+  FListMark.free;
+
+  _hi_onEvent(_event_onResult, FMultiReplace);
 end;
 
 procedure THiMultiReplace._var_Result;
