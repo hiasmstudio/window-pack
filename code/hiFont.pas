@@ -69,6 +69,7 @@ function ChooseFontA(var ChooseFont: TChooseFontA): Bool; stdcall;
 type
   THIFont = class(TDebug)
    private
+    f:TFontRec;
    public
     _prop_Font:TFontRec;
     _prop_FontDialog:boolean;
@@ -80,6 +81,12 @@ type
     _event_onFont:THI_Event;
 
     procedure _work_doFont(var _Data:TData; Index:word);
+    procedure _var_FontName(var _Data:TData; Index:word);    
+    procedure _var_FontColor(var _Data:TData; Index:word);
+    procedure _var_FontSize(var _Data:TData; Index:word);
+    procedure _var_FontStyle(var _Data:TData; Index:word);        
+    procedure _var_FontStrStyle(var _Data:TData; Index:word);
+    procedure _var_FontCharSet(var _Data:TData; Index:word);    
   end;
 
 implementation
@@ -87,8 +94,7 @@ implementation
 function ChooseFontA; external 'comdlg32.dll'  name 'ChooseFontA';
 
 procedure THIFont._work_doFont;
-var   f:TFontRec;
-      cf : TChooseFontA;
+var   cf : TChooseFontA;
       lf : TLogFont;
       i :integer;
 begin
@@ -140,5 +146,43 @@ begin
    end else   
       _hi_OnEvent(_event_onFont,f);
 end;
+
+procedure THIFont._var_FontName;    
+begin
+  dtString(_Data, f.Name);
+end;
+
+procedure THIFont._var_FontColor;
+begin
+  dtInteger(_Data, f.Color);
+end;
+
+procedure THIFont._var_FontSize;
+begin
+  dtInteger(_Data, f.Size);
+end;
+
+procedure THIFont._var_FontStyle;        
+begin
+  dtInteger(_Data, f.Style);
+end;
+
+procedure THIFont._var_FontStrStyle;
+var
+  sFontStyle: string;
+begin
+  sFontStyle := '';
+  if f.Style and 1 > 0 then sFontStyle := sFontStyle + 'b';
+  if f.Style and 2 > 0 then sFontStyle := sFontStyle + 'i';   
+  if f.Style and 4 > 0 then sFontStyle := sFontStyle + 'u';   
+  if f.Style and 8 > 0 then sFontStyle := sFontStyle + 's';
+  dtString(_Data, sFontStyle);
+end;
+
+procedure THIFont._var_FontCharSet;
+begin
+  dtInteger(_Data, f.CharSet);
+end;
+
 
 end.
