@@ -9,6 +9,7 @@ type
    private
     hNet, hFTP: HINTERNET;
     FindData: TWin32FindData;
+    CurrentDirectory: string;    
    public
     _prop_Host:string;
     _prop_Username:string;
@@ -20,6 +21,7 @@ type
 
     _data_LocalName:THI_Event;
     _data_RemoteName:THI_Event;
+    _data_NewRemoteName:THI_Event;
     _data_Host:THI_Event;
     _data_Username:THI_Event;
     _data_Password:THI_Event;
@@ -33,6 +35,7 @@ type
     _event_onWrite:THI_Event;
     _event_onFindFile:THI_Event;
     _event_onEndFind:THI_Event;
+    _event_onGetCurrentDirectory:THI_Event;
 
     procedure _work_doOpen(var _Data:TData; Index:word);
     procedure _work_doClose(var _Data:TData; Index:word);
@@ -43,12 +46,15 @@ type
     procedure _work_doFindFile(var _Data:TData; Index:word);
     procedure _work_doCreateDirectory(var _Data:TData; Index:word);
     procedure _work_doRemoveDirectory(var _Data:TData; Index:word);
+    procedure _work_doRename(var _Data:TData; Index:word);    
+    procedure _work_doGetCurrentDirectory(var _Data:TData; Index:word);    
 
     procedure _var_FoundIsDirectory(var _Data:TData; Index:word);
     procedure _var_FoundFileName(var _Data:TData; Index:word);
     procedure _var_FoundFileSize(var _Data:TData; Index:word);
     procedure _var_FoundDateCreate(var _Data:TData; Index:word);
     procedure _var_FoundDateLastWrite(var _Data:TData; Index:word);
+    procedure _var_CurrentDirectory(var _Data:TData; Index:word);
   end;
 
 implementation
@@ -188,6 +194,16 @@ begin
     _hi_onEvent(_event_onError,4);
 end;
 
+procedure THIWinFTP._work_doRename;
+var
+  name, newname: string;
+begin
+  name := ReadString(_data,_data_RemoteName,_prop_RemoteName);
+  newname := ReadString(_data,_data_NewRemoteName,name); 
+  if not FtpRenameFile(hFTP, PChar(name), PChar(newname)) then
+    _hi_onEvent(_event_onError,8);
+end;
+
 procedure THIWinFTP._work_doFindFile;
 var hFind:HINTERNET;
 begin
@@ -211,6 +227,22 @@ procedure THIWinFTP._work_doRemoveDirectory;
 begin
   if not FtpRemoveDirectory(hFTP, PChar(ToString(_Data))) then
     _hi_onEvent(_event_onError,7);
+end;
+
+procedure THIWinFTP._work_doGetCurrentDirectory;
+var
+  len: Cardinal;
+begin
+  len := MAX_PATH; 
+  CurrentDirectory := '';
+  SetLength(CurrentDirectory, len);
+  if not FtpGetCurrentDirectory(hFTP, @CurrentDirectory[1], len) then
+  begin
+    _hi_onEvent(_event_onError,9);
+    exit;
+  end;  
+  SetLength(CurrentDirectory, len);
+  _hi_onEvent(_event_onGetCurrentDirectory,CurrentDirectory);
 end;
 
 procedure THIWinFTP._var_FoundIsDirectory;
@@ -251,6 +283,11 @@ begin
   T(FSize).H := FindData.nFileSizeHigh;
   if (T(FSize).H=0)and(T(FSize).L>=0) then dtInteger(_Data,T(FSize).L)
   else dtReal(_Data,FSize);
+end;
+
+procedure THIWinFTP._var_CurrentDirectory;
+begin
+  dtString(_Data, CurrentDirectory);
 end;
 
 end.
