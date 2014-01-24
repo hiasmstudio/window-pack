@@ -201,7 +201,7 @@ begin
   name := ReadString(_data,_data_RemoteName,_prop_RemoteName);
   newname := ReadString(_data,_data_NewRemoteName,name); 
   if not FtpRenameFile(hFTP, PChar(name), PChar(newname)) then
-    _hi_onEvent(_event_onError,8);
+    _hi_onEvent(_event_onError,9);
 end;
 
 procedure THIWinFTP._work_doFindFile;
@@ -238,7 +238,7 @@ begin
   SetLength(CurrentDirectory, len);
   if not FtpGetCurrentDirectory(hFTP, @CurrentDirectory[1], len) then
   begin
-    _hi_onEvent(_event_onError,9);
+    _hi_onEvent(_event_onError,8);
     exit;
   end;  
   SetLength(CurrentDirectory, len);
