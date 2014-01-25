@@ -37,6 +37,7 @@ type
     _event_onEndFind:THI_Event;
     _event_onGetCurrentDirectory:THI_Event;
 
+    destructor Destroy; override;
     procedure _work_doOpen(var _Data:TData; Index:word);
     procedure _work_doClose(var _Data:TData; Index:word);
     procedure _work_doReadFile(var _Data:TData; Index:word);
@@ -60,6 +61,13 @@ type
 implementation
 
 uses HiTime;
+
+destructor THIWinFTP.Destroy;
+begin
+  InternetCloseHandle(hFTP);
+  InternetCloseHandle(hNet);
+  inherited;
+end;
 
 procedure THIWinFTP._work_doOpen;
 begin
