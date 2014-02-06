@@ -9,7 +9,8 @@ type
    private
     hNet, hFTP: HINTERNET;
     FindData: TWin32FindData;
-    CurrentDirectory: string;    
+    CurrentDirectory: string;
+    procedure CloseHandle;          
    public
     _prop_Host:string;
     _prop_Username:string;
@@ -62,15 +63,21 @@ implementation
 
 uses HiTime;
 
+procedure THIWinFTP.CloseHandle;
+begin
+  if hFTP <> nil then InternetCloseHandle(hFTP);
+  if hNet <> nil then InternetCloseHandle(hNet);
+end;
+
 destructor THIWinFTP.Destroy;
 begin
-  InternetCloseHandle(hFTP);
-  InternetCloseHandle(hNet);
+  CloseHandle;
   inherited;
 end;
 
 procedure THIWinFTP._work_doOpen;
 begin
+   CloseHandle;
    hNet := InternetOpen('HiAsm WinFTP',INTERNET_OPEN_TYPE_PRECONFIG,nil,nil,0);
    if hNet = nil then
     begin
@@ -94,8 +101,7 @@ end;
 
 procedure THIWinFTP._work_doClose;
 begin
-   InternetCloseHandle(hFTP);
-   InternetCloseHandle(hNet);
+   CloseHandle;
 end;
 
 const
