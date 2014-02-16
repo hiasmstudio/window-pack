@@ -50,7 +50,7 @@ begin
   if _prop_VER_POSITIVE then dwFlags := AW_VER_POSITIVE or dwFlags;
   if _prop_VER_NEGATIVE then dwFlags := AW_VER_NEGATIVE or dwFlags;             
   AnimateWindow(sControl.Handle, _prop_Time, dwFlags);
-  RedrawWindow(sControl.Handle, nil, 0, RDW_ERASE or RDW_INVALIDATE or RDW_FRAME or RDW_ALLCHILDREN);  
+//  RedrawWindow(sControl.Handle, nil, 0, RDW_ERASE or RDW_INVALIDATE or RDW_FRAME or RDW_ALLCHILDREN);  
 end;
 
 procedure THIUseWinAnimation._work_doActivationMode;
