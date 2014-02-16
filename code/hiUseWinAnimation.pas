@@ -19,6 +19,7 @@ type
 
      _prop_ControlManager:IControlManager;
      procedure _work_doAnimation(var _Data:TData; Index:word);
+     procedure _work_doRedrawWindow(var _Data:TData; Index:word);     
      procedure _work_doActivationMode(var _Data:TData; Index:word);
      procedure _work_doCENTER(var _Data:TData; Index:word);
      procedure _work_doSLIDE(var _Data:TData; Index:word);
@@ -50,8 +51,16 @@ begin
   if _prop_VER_POSITIVE then dwFlags := AW_VER_POSITIVE or dwFlags;
   if _prop_VER_NEGATIVE then dwFlags := AW_VER_NEGATIVE or dwFlags;             
   AnimateWindow(sControl.Handle, _prop_Time, dwFlags);
-//  RedrawWindow(sControl.Handle, nil, 0, RDW_ERASE or RDW_INVALIDATE or RDW_FRAME or RDW_ALLCHILDREN);  
 end;
+
+procedure THIUseWinAnimation._work_doRedrawWindow;
+var
+  sControl: PControl;
+begin
+  if not Assigned(_prop_ControlManager) then exit;
+  sControl := _prop_ControlManager.ctrlpoint;
+  RedrawWindow(sControl.Handle, nil, 0, RDW_ERASE or RDW_INVALIDATE or RDW_FRAME or RDW_ALLCHILDREN);
+end;  
 
 procedure THIUseWinAnimation._work_doActivationMode;
 begin
