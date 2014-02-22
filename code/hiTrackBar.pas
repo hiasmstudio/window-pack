@@ -23,6 +23,7 @@ type
       _prop_Min:integer;
       _prop_Position:integer;
       _prop_ThumbLength:integer;
+      _prop_PageSize:integer;      
 
       _event_onPosition:THI_Event;
       _event_onStart:THI_Event;
@@ -162,6 +163,7 @@ begin
    Pos := _prop_Position;
    Control.Perform(TBM_SETTHUMBLENGTH,_prop_ThumbLength,0);
    Control.Perform(TBM_SETTICFREQ,FFrequency,1);
+   Control.Perform(TBM_SETPAGESIZE,0,_prop_PageSize);   
    Control.tag := dword(Self);
 end;
 
