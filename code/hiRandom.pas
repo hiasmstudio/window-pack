@@ -82,7 +82,6 @@ begin
   SetLength(IRnd, _max - _min);
   for i := 0 to High(IRnd) do
     IRnd[i] := _min + i;
-  Randomize;
   for i := 0 to High(IRnd) do
   begin
     j := Round(Random *(High(IRnd) - i + 1) - 0.5 + i);
