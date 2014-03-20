@@ -2,105 +2,131 @@ unit hiWinExec;
 
 interface
 
-uses Kol,Share,Windows,ShellApi,Debug;
+uses Kol, Share, Windows, ShellApi, Debug;
 
 type
+
   THIWinExec = class(TDebug)
-   private
-     hProcess: THandle;
-     hPipeInputWrite: THandle;
-     hPipeOutputRead: THandle;
-     hPipeErrorsRead: THandle;
-     hPipeInputRead: THandle;
-     hPipeOutputWrite: THandle;
-     hPipeErrorsWrite: THandle;
-     
-     dwReadThreadID: dword;
-     hReadThread: THandle;
-     FRead: boolean;
+    private
+      hProcess: THandle;
+      hPipeInputWrite: THandle;
+      hPipeOutputRead: THandle;
+      hPipeErrorsRead: THandle;
+      hPipeInputRead: THandle;
+      hPipeOutputWrite: THandle;
+      hPipeErrorsWrite: THandle;
 
-     procedure Read;
-     procedure Terminate;
-   public
-    _prop_Param:string;
-    _prop_FileName:string;
-    _prop_Mode:byte;
-    _prop_RunEvent:procedure(const Fn,Params:string) of object;
+      dwReadThreadID: dword;
+      hReadThread: THandle;
+      FRead: boolean;
+      FExitCode: dword;
+      FProcessID: dword;
 
-    _data_Params:THI_Event;
-    _data_FileName:THI_Event;
-    _event_onExec:THI_Event;
-    _event_onConsoleResult:THI_Event;
-    _event_onConsoleError:THI_Event;
-    _event_onConsoleTerminate:THI_Event;
+      procedure Read;
+      procedure Terminate;
+      function RunProcess(const Fn, CmdLine, WDir: string; Wait: boolean): boolean;
+    public
+      _prop_Param: string;
+      _prop_FileName: string;
+      _prop_Mode: byte;
+      _prop_RunEvent: byte;
+      _prop_Action: string;
+      _prop_WorkingDir: string;
 
-    procedure Wait(const Fn,Params:string);
-    procedure Async(const Fn,Params:string);
+      _data_Params: THI_Event;
+      _data_FileName: THI_Event;
+      _data_Action: THI_Event;
+      _data_WorkingDir: THI_Event;
 
-    procedure _work_doExec(var _Data:TData; Index:word);
-    procedure _work_doRunCpl(var _Data:TData; Index:word);
-    procedure _work_doShellExec(var _Data:TData; Index:word);
-    procedure _work_doConsoleExec(var _Data:TData; Index:word);
-    procedure _work_doConsoleInput(var _Data:TData; Index:word);
-    procedure _work_doConsoleTerminate(var _Data:TData; Index:word);
-    
-    destructor Destroy; override;
+      _event_onExec: THI_Event;
+      _event_onConsoleResult: THI_Event;
+      _event_onConsoleError: THI_Event;
+      _event_onConsoleTerminate: THI_Event;
+
+      procedure _work_doExec(var _Data:TData; Index:word);
+      procedure _work_doRunCpl(var _Data:TData; Index:word);
+      procedure _work_doShellExec(var _Data:TData; Index:word);
+      procedure _work_doConsoleExec(var _Data:TData; Index:word);
+      procedure _work_doConsoleInput(var _Data:TData; Index:word);
+      procedure _work_doConsoleTerminate(var _Data:TData; Index:word);
+
+      procedure _var_ExitCode(var _Data: TData; Index: word);
+      procedure _var_ProcessID(var _Data: TData; Index: word);
+
+      destructor Destroy; override;
   end;
 
 implementation
 
-procedure THIWinExec.Wait;
+function THIWinExec.RunProcess(const Fn, CmdLine, WDir: string; Wait: boolean): boolean;
 var
-  si: Tstartupinfo;
-  p: Tprocessinformation;
+  SI: TStartupInfo;
+  PI: TProcessInformation;
+  Dir: PChar;
 begin
-  FillChar( Si, SizeOf( Si ) , 0 );
-  with Si do
-   begin
-    cb := SizeOf( Si);
+  FillChar(SI, SizeOf(TStartupInfo), 0);
+  with SI do
+  begin
+    cb := SizeOf(TStartupInfo);
     dwFlags := STARTF_USESHOWWINDOW;
     wShowWindow := _prop_Mode;
-   end;
-
-  CreateProcess(nil,PChar(trim(Fn + ' ' + Params)), nil, nil,
-             false, CREATE_DEFAULT_ERROR_MODE, nil, nil, si, p);
-  WaitForSingleObject(p.hProcess, INFINITE);
-   _hi_onEvent(_event_onExec);
-end;
-
-procedure THIWinExec.Async;
-begin
-   if WinExec(PChar(trim(Fn + ' ' + Params)),_prop_Mode)>31 then
-     _hi_onEvent(_event_onExec);
+  end;
+  
+  FExitCode := 0;
+  FProcessID := 0;
+  
+  if Length(WDir) > 0 then Dir := PChar(WDir) else Dir := nil;
+  
+  Result := CreateProcess(nil, PChar(Trim(Fn + ' ' + CmdLine)), nil, nil,
+                          False, CREATE_DEFAULT_ERROR_MODE, nil, Dir, SI, PI);
+  if Result then
+  begin
+    FProcessID := PI.dwProcessId;
+    if Wait then
+    begin
+      WaitForSingleObject(PI.hProcess, INFINITE);
+      GetExitCodeProcess(PI.hProcess, FExitCode);
+    end;
+    CloseHandle(PI.hThread);
+    CloseHandle(PI.hProcess);
+  end;
 end;
 
 procedure THIWinExec._work_doRunCpl;
-var FN:string;
+var Fn: string;
 begin
-   Fn := ReadString(_Data,_data_FileName,_prop_FileName);
-   WinExec(PChar('rundll32.exe shell32.dll,Control_RunDLL ' + fn),_prop_Mode)
+  Fn := ReadString(_Data,_data_FileName,_prop_FileName);
+  WinExec(PChar('rundll32.exe shell32.dll,Control_RunDLL ' + Fn),_prop_Mode)
 end;
 
 procedure THIWinExec._work_doExec;
-var FN,params:string;
+var Fn, Cmd, WD: string;
 begin
-   Fn := ReadString(_Data,_data_FileName,_prop_FileName);
-   Params := ReadString(_Data,_data_Params,_prop_Param);
-   _prop_RunEvent(Fn,Params);
+  Fn := ReadString(_Data,_data_FileName,_prop_FileName);
+  Cmd := ReadString(_Data,_data_Params,_prop_Param);
+  WD := ReadString(_Data,_data_WorkingDir,_prop_WorkingDir);
+  
+  if RunProcess(Fn, Cmd, WD, Boolean(_prop_RunEvent)) then
+    _hi_CreateEvent(_Data, @_event_onExec);
 end;
 
 procedure THIWinExec._work_doShellExec;
-var FN,params:string;
+var Fn, Params, WD, Action: string;
+    Dir: PChar;
 begin
-   Fn := ReadString(_Data,_data_FileName,_prop_FileName);
-   Params := ReadString(_Data,_data_Params,_prop_Param);
-   ShellExecute(0,'open',pchar(fn),PChar(Params), '',_prop_Mode);
+  Fn := ReadString(_Data,_data_FileName,_prop_FileName);
+  Params := ReadString(_Data,_data_Params,_prop_Param);
+  WD := ReadString(_Data,_data_WorkingDir,_prop_WorkingDir);
+  if Length(WD) > 0 then Dir := PChar(WD) else Dir := nil;
+  Action := ReadString(_Data,_data_Action,_prop_Action);
+  
+  ShellExecute(0, PChar(Action), PChar(Fn), PChar(Params), Dir, _prop_Mode);
 end;
 
 function ReadFunc(Parent:THIWinExec):cardinal; stdcall;
 begin
-   Parent.Read;
-   Result := 0;
+  Parent.Read;
+  Result := 0;
 end;
 
 procedure THIWinExec.Read;
@@ -219,6 +245,16 @@ procedure THIWinExec._work_doConsoleTerminate;
 begin
   Terminate;
   _hi_OnEvent(_event_onConsoleTerminate);
+end;
+
+procedure THIWinExec._var_ExitCode(var _Data: TData; Index: word);
+begin
+  dtInteger(_Data, FExitCode);
+end;
+
+procedure THIWinExec._var_ProcessID(var _Data: TData; Index: word);
+begin
+  dtInteger(_Data, FProcessID);
 end;
 
 destructor THIWinExec.Destroy;
