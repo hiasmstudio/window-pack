@@ -1113,7 +1113,7 @@ var   pos:cardinal;
 begin
    if not FIsPopup then exit;
    pos := Cardinal(ToInteger(_data));
-   TrackPopupMenu(Menu.Handle, 0, pos shr 16, pos and $ffff, 0, FC.Handle, nil);
+   TrackPopupMenu(Menu.Handle, 0, pos and $ffff, pos shr 16, 0, FC.Handle, nil);
    _hi_CreateEvent(_Data,@_event_onEndPopup);
 end;
 
