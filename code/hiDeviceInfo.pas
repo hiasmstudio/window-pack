@@ -8,6 +8,7 @@ const
   SetupApiModuleName = 'SetupApi.dll';
 
 const
+  MAX_DEVICE_ID_LEN     = 200;
   PINVALID_HANDLE_VALUE = Pointer(INVALID_HANDLE_VALUE);
 
 const
@@ -456,7 +457,12 @@ function SetupDiSetClassInstallParams(DeviceInfoSet: HDEVINFO; DeviceInfoData: P
                                       stdcall; external SetupApiModuleName name 'SetupDiSetClassInstallParamsA';
 
 function SetupDiChangeState(DeviceInfoSet: HDEVINFO; var DeviceInfoData: TSPDevInfoData): LongBool;
-                            stdcall; external SetupApiModuleName name 'SetupDiChangeState';                              
+                            stdcall; external SetupApiModuleName name 'SetupDiChangeState';
+                            
+function SetupDiGetDeviceInstanceIdA(DeviceInfoSet: HDEVINFO; DeviceInfoData: PSPDevInfoData;
+                                     DeviceInstanceId: LPTSTR; DeviceInstanceIdSize: DWORD;
+                                     RequiredSize: PDWORD): LongBool;
+                                     stdcall; external SetupApiModuleName name 'SetupDiGetDeviceInstanceIdA';                                                          
 
 //------------------------------------------------------------------------------
 
@@ -881,6 +887,8 @@ end;
 
 procedure THiDeviceInfo._work_doDeviceInfo;
 var
+  BytesReturned: DWORD;
+  DeviceInstanceId: string;
   DeviceInfoData: SP_DEVINFO_DATA;
   EmptyGUID, AGUID: TGUID;
   dwData: DWORD;
@@ -969,6 +977,13 @@ begin
     AddRow('Device Address', Int2Str(dwData))
   else  
     AddRow('Device Address', '');
+
+  SetLength(DeviceInstanceId, MAX_DEVICE_ID_LEN);
+  if SetupDiGetDeviceInstanceIdA(hAllDevices, @DeviceInfoData, @DeviceInstanceId[1], MAX_DEVICE_ID_LEN, @BytesReturned) then
+    SetLength(DeviceInstanceId, BytesReturned)
+  else  
+    DeviceInstanceId := '';
+  AddRow('DeviceInstanceID', DeviceInstanceId);
 
 end;
 
