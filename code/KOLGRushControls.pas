@@ -3189,6 +3189,7 @@ begin
     Result.Caption := Caption;
     Result.fCommandActions.aAutoSzX := 12;
     Result.fCommandActions.aAutoSzY := 11;
+    Result.fClsStyle := Result.fClsStyle or CS_DBLCLKS;
 
     Result.InitLast(TRUE, ctButton);
     {$IFDEF ALL_BUTTONS_RESPOND_TO_ENTER}
@@ -3200,7 +3201,7 @@ function NewGRushPanel;
 begin
     Result := PGRushControl(_NewControl( AParent, 'GRUSH_PANEL'
         , WS_VISIBLE  or WS_CHILD, False, @LabelActions ));
-
+    Result.fClsStyle := Result.fClsStyle or CS_DBLCLKS;
     Result.InitLast(FALSE, ctPanel);
     Result.All_TextVAlign := vaTop;
 end;
@@ -3214,6 +3215,7 @@ begin
     Result.Caption := Caption;
     Result.fIgnoreDefault := TRUE;
     Result.fCommandActions.aAutoSzX := 24;
+    Result.fClsStyle := Result.fClsStyle or CS_DBLCLKS;
 
     Result.InitLast(TRUE, ctCheckBox);
     Result.All_BorderRoundWidth := 0;
@@ -3230,6 +3232,7 @@ begin
     Result.fCommandActions.aAutoSzX := 24;
     Result.Caption := Caption;
     Result.fIgnoreDefault := TRUE;
+    Result.fClsStyle := Result.fClsStyle or CS_DBLCLKS;
 
     Result.InitLast(TRUE, ctRadioBox);
     Result.All_BorderRoundWidth := 50;
@@ -3240,6 +3243,7 @@ function NewGRushSplitter;
 var     Data: PGRushData;
 begin
     Result := PGRushControl(NewSplitterEx(AParent, MinSizePrev, MinSizeNext, esNone));
+    Result.fClsStyle := Result.fClsStyle or CS_DBLCLKS;
     Result.InitLast(TRUE, ctSplitter);
     Data := PGRushData(Result.CustomObj);
     Data.fPSOver.ColorTo := $D0AD95;
@@ -3270,7 +3274,9 @@ var     Data: PGRushData;
 begin
     Result := PGRushControl(_NewControl( AParent, 'GRUSH_PROGRESSBAR'
         , WS_VISIBLE or WS_CHILD, False, @LabelActions ));
-
+        
+    Result.fClsStyle := Result.fClsStyle or CS_DBLCLKS;
+    
     Result.InitLast(FALSE, ctProgressBar);
     Data := PGRushData(Result.CustomObj);
     Data.fDrawProgress := TRUE;

@@ -816,6 +816,7 @@ end;
 procedure THITrackBarRush.Init;
 begin
   Control := _NewControl(FParent, 'GRUSH_TRACKBAR', WS_VISIBLE or WS_CHILD, FALSE, nil);
+  Control.ClsStyle := Control.ClsStyle or CS_DBLCLKS;
   inherited;
   FThumbState  := bsOut;
   SetMax(_prop_Max); 
