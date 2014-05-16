@@ -7,14 +7,26 @@ uses WIndows,kol,Share,Debug;
 type
   TDCMode = (dcBitmap,dcHandle,dcContext);
 
-type
   TScale = record
-  x,y : Real;
-end;
+    x,y : Real;
+  end;
 
-type
   PByteArray = ^TByteArray;
   TByteArray = array[0..32767] of byte;
+
+  
+  TTransformSet = function(pDC:HDC;x1,y1,x2,y2:integer):boolean of object;
+  TTransformReset = procedure(pDC:HDC) of object;
+  TTransformGetRect = function(rect:TRect):TRect of object;
+  TTransform = record
+    _Set:TTransformSet;
+    _Reset:TTransformReset;
+    _GetRect:TTransformGetRect;
+  end;
+  PTransform = ^TTransform;
+  
+  function CreateTransform(_Set:TTransformSet;_Reset:TTransformReset;_GetRect:TTransformGetRect):PTransform;
+  
 
 type
   THIImg = class(TDebug)
@@ -54,8 +66,8 @@ type
      _data_Point1            : THI_Event;
      _data_Point2            : THI_Event;
      _data_LineSize          : THI_Event;
-     _data_Pattern             :THI_Event;
-
+     _data_Pattern           : THI_Event;
+     _data_Transform         : THI_Event;
      _event_onDraw           : THI_Event;
 
      procedure SetDrawSource(Value:byte);
@@ -64,7 +76,6 @@ type
      function  imgGetDC(var _Data:TData):boolean;
      procedure imgReleaseDC;
      procedure imgNewSizeDC;
-
      procedure _work_doDrawSource(var _Data:TData; Index:word);
      procedure _work_doLineStyle(var _Data:TData; Index:word);
      procedure _work_doStyle(var _Data:TData; Index:word);
@@ -112,7 +123,18 @@ type
    public
   end;
 
+var 
+  TRANSFORM_GUID: Integer;
+
 implementation
+
+function CreateTransform(_Set:TTransformSet;_Reset:TTransformReset;_GetRect:TTransformGetRect):PTransform;
+begin
+   new(result);
+   Result._Set := _Set;
+   Result._Reset := _Reset;   
+   Result._GetRect := _GetRect;
+end;
 
 procedure THIImg.AntiAlias;
 var X,Y: integer;
@@ -274,5 +296,8 @@ begin
    newwh := x2-x1;
    newhh := y2-y1;
 end;
+
+initialization
+  GenGUID(TRANSFORM_GUID);
 
 end.

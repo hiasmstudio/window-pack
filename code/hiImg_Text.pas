@@ -39,6 +39,8 @@ var   dt: TData;
       OldFontSize: Integer;
       s:string;
       a:integer;
+      mTransform: PTransform;
+      SizeFont: TSize;
 begin
    dt := _Data;
 TRY
@@ -54,7 +56,17 @@ TRY
    GFont.FontHeight := Round(GFont.FontHeight * fScale.y);
    GFont.FontOrientation := a * 10;
    hOldFont := SelectObject(pDC, GFont.Handle);
+
+   mTransform := ReadObject(_Data, _data_Transform, TRANSFORM_GUID);
+   if mTransform <> nil then
+    begin
+     GetTextExtentPoint32(pDC, PChar(s), Length(s), SizeFont);
+     if mTransform._Set(pDC,x1,y1,x1 + SizeFont.cx, y1 + SizeFont.cy) then   //если необходимо изменить координаты (rotate, flip)
+      PRect(@x1)^ := mTransform._GetRect(MakeRect(x1,y1,x2,y2));
+    end;
    TextOut(pDC, x1, y1, PChar(s), length(s));
+   if mTransform <> nil then mTransform._Reset(pDC);
+   
    SelectObject(pDC, hOldFont);
    GFont.FontHeight := OldFontSize;
 FINALLY

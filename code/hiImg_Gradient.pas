@@ -21,7 +21,7 @@ type
     fFrameColor:TColor;
     fGradientStyle:TGradientStyle;
    public
-
+    
     property _prop_GradientStyle : TGradientStyle write fGradientStyle;
     property _prop_Frame         : boolean write fFrame;
     property _prop_Gradient      : boolean write fGradient;
@@ -298,6 +298,8 @@ var   dt: TData;
       ARect:TRect;
       hdcMem:HDC;
       hdcBmp:HBITMAP;
+      mTransform: PTransform;
+      change: boolean;
 begin
    dt := _Data;
 TRY
@@ -306,10 +308,23 @@ TRY
    ReadXY(_Data);
    ImgNewSizeDC;
    fLineSize := ReadInteger(_Data,_data_Size,_prop_Size);
+   mTransform := ReadObject(_Data, _data_Transform, TRANSFORM_GUID);
    case fDrawSource of
       dcHandle, 
-      dcBitmap : _Gradient(pDC, PRect(@oldx1)^, fGradient, fStartColor, fEndColor, fFrameColor, fFrame, fLineSize, fInversGrad, fGradientStyle, SingleScale, ord(_prop_LineStyle)); 
+      dcBitmap : begin
+                  if mTransform <> nil then
+                   if mTransform._Set(pDC,oldx1,oldy1,oldx2,oldy2) then  //если необходимо изменить координаты (rotate, flip)
+                     PRect(@oldx1)^ := mTransform._GetRect(MakeRect(oldx1, oldy1, oldx2, oldy2));
+                  _Gradient(pDC, PRect(@oldx1)^, fGradient, fStartColor, fEndColor, fFrameColor, fFrame, fLineSize, fInversGrad, fGradientStyle, SingleScale, ord(_prop_LineStyle)); 
+                 end;
       dcContext: begin 
+                  if mTransform <> nil then
+                   if mTransform._Set(pDC,x1,y1,x2,y2) then  //если необходимо изменить координаты (rotate, flip)
+                    begin
+                     PRect(@x1)^ := mTransform._GetRect(MakeRect(x1,y1,x2,y2));
+                     newwh := x2-x1;
+                     newhh := y2-y1;
+                    end; 
                     hdcMem:= CreateCompatibleDC(0);
                     hdcBmp:= CreateCompatibleBitmap(pDC, newwh, newhh);
                     SelectObject(hdcMem, hdcBmp);  
@@ -320,6 +335,7 @@ TRY
                     DeleteObject(hdcBmp);
                end;
    end;               
+   if mTransform <> nil then mTransform._Reset(pDC); // сброс трансформации
 FINALLY
    ImgReleaseDC;
    _hi_CreateEvent(_Data,@_event_onDraw,dt);

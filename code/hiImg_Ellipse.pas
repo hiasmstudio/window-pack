@@ -16,11 +16,12 @@ type
 implementation
 
 procedure THIImg_Ellipse._work_doDraw;
-var   dt: TData;
-      br: HBRUSH;
-      pen: HPEN;
-      sColor: TColor;
-      Pattern: PBitmap;      
+var dt: TData;
+    br: HBRUSH;
+    pen: HPEN;
+    sColor: TColor;
+    Pattern: PBitmap;      
+    mTransform: PTransform;
 begin
    dt := _Data;
 TRY
@@ -43,7 +44,10 @@ TRY
      else if _prop_Style = bsClear then
         br := GetStockObject(NULL_BRUSH)
      else
-        br := CreateHatchBrush(ord(_prop_Style) - 2, sColor);
+       begin
+         SetBkMode(pDC, TRANSPARENT);
+         br := CreateHatchBrush(ord(_prop_Style) - 2, sColor);
+       end;
    end;
 
    ImgNewSizeDC;
@@ -52,6 +56,14 @@ TRY
    
    SelectObject(pDC,br);
    SelectObject(pDC,Pen);
+
+   mTransform := ReadObject(_Data, _data_Transform, TRANSFORM_GUID);
+   if mTransform <> nil then
+    if mTransform._Set(pDC,x1,y1,x2,y2) then //если необходимо изменить координаты (rotate, flip)
+     begin
+      PRect(@x1)^ := mTransform._GetRect(MakeRect(x1,y1,x2,y2));
+      PRect(@x3)^ := mTransform._GetRect(MakeRect(x3,y3,x4,y4));
+     end;
    case fDirection of
       0: SetArcDirection(pDC, AD_COUNTERCLOCKWISE);
       1: SetArcDirection(pDC, AD_CLOCKWISE);
@@ -60,6 +72,9 @@ TRY
       0: Ellipse(pDC, x1, y1, x2, y2);
       1: Chord(pDC, x1, y1, x2, y2, x3, y3, x4, y4);
    end;        
+
+   if mTransform <> nil then mTransform._Reset(pDC); // сброс трансформации
+   
    DeleteObject(br);
    DeleteObject(Pen);
 FINALLY

@@ -24,6 +24,7 @@ implementation
 procedure THIImg_Point._work_doDraw;
 var   dt: TData;
       pen: HPEN;
+      mTransform: PTransform;
 begin
    dt := _Data;
 TRY
@@ -32,9 +33,14 @@ TRY
    ImgNewSizeDC;
    pen := CreatePen(PS_SOLID, Round((fScale.x + fScale.y) * ReadInteger(_Data,_data_Size,_prop_Size)/2), Color2RGB(ReadInteger(_Data,_data_Color,_prop_Color)));
    SelectObject(pDC,Pen);
+   mTransform := ReadObject(_Data, _data_Transform, TRANSFORM_GUID);
+   if mTransform <> nil then
+    if mTransform._Set(pDC,x1,y1,x1,y1) then  //если необходимо изменить координаты (rotate, flip)
+     PRect(@x1)^ := mTransform._GetRect(MakeRect(x1,y1,x1,y1));
    MoveToEx(pDC, x1, y1, nil);
-   LineTo(pDC, x1+1, y1+1);
+   LineTo(pDC, x1, y1);
    DeleteObject(Pen);
+   if mTransform <> nil then mTransform._Reset(pDC);
 FINALLY
    ImgReleaseDC;
    _hi_CreateEvent(_Data,@_event_onDraw,dt);
@@ -51,7 +57,7 @@ TRY
    pen := CreatePen(PS_SOLID, Round((fScale.x + fScale.y)/2), Color2RGB(ReadInteger(Val,_data_Color,_prop_Color)));
    SelectObject(pDC,Pen);
    MoveToEx(pDC, x, y, nil);
-   LineTo(pDC, x+1, y+1);
+   LineTo(pDC, x, y);
    DeleteObject(Pen);
 FINALLY
    ImgReleaseDC;

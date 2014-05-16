@@ -343,6 +343,7 @@ function ToStreamEvent(const PointData:THI_Event):PStream;
 function ToBitmapEvent(const PointData:THI_Event):PBitmap;
 function ToIconEvent(const PointData:THI_Event):PIcon;
 function ToTypesEvent(const PointData:THI_Event):PType;
+function ToObjectEvent(const PointData:THI_Event; const ID: Integer):Pointer;
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ##ReadXXX
@@ -358,6 +359,7 @@ function ReadIcon(var Data:TData; PointData:THI_Event; Def:PIcon=nil):PIcon;
 function ReadMatrix(PointData:THI_Event):PMatrix;
 function ReadArray(PointData:THI_Event):PArray;
 function ReadType(var Data:TData; PointData:THI_Event; Def:PType=nil):PType;
+function ReadObject(var Data:TData; PointData:THI_Event; const ID: Integer):Pointer;
 
 function ReadControl(PointData:THI_Event; const CName:string):PControl;
 //оптимизация для перенаправления потока
@@ -372,7 +374,7 @@ function ToReal(const Data:TData):real;
 function ToStream(var Data:TData):PStream;
 function ToBitmap(var Data:TData):PBitmap;
 function ToIcon(var Data:TData):PIcon;
-function ToObject(var Data:TData):pointer;
+function ToObject(var Data:TData; const ID: Integer = 0):pointer;
 function ToFont(var Data:TData):PFontRec;
 function ToTypes(var Data:TData):PType;
 
@@ -387,6 +389,7 @@ procedure _hi_OnEvent(const PointEvent:THI_Event); overload;
 procedure _hi_OnEvent(const PointEvent:THI_Event;Value:PBitmap); overload;
 procedure _hi_OnEvent(const PointEvent:THI_Event;const Value:TFontRec); overload;
 procedure _hi_OnEvent(const PointEvent:THI_Event;Value:PType); overload;
+procedure _hi_OnEvent(const PointEvent:THI_Event; const ID:Integer; const Value:Pointer); overload;
 
 // ##_hi_CreateEvent
 procedure _hi_CreateEvent_(var _Data:TData; Event:PHI_Event); overload; //не надо ничего копировать
@@ -398,6 +401,7 @@ procedure _hi_CreateEvent(var _Data:TData; Event:PHI_Event; const Data:string); 
 procedure _hi_CreateEvent(var _Data:TData; Event:PHI_Event; const Data:PStream); overload;
 procedure _hi_CreateEvent(var _Data:TData; Event:PHI_Event; const Data:PBitmap); overload;
 procedure _hi_CreateEvent(var _Data:TData; Event:PHI_Event; const Data:PType); overload;
+procedure _hi_CreateEvent(var _Data:TData; Event:PHI_Event; const ID:Integer; const Data:Pointer); overload;
 
 // ##_DoData
 function _DoData(Value:THiInt):TData; overload;
@@ -408,6 +412,7 @@ function _DoData(Value:PStream):TData; overload;
 function _DoData(Value:PBitmap):TData; overload;
 function _DoData(Value:PMatrix):TData; overload;
 function _DoData(Value:PType):TData; overload;
+function _DoData(ID:Integer; Value:Pointer):TData; overload;
 
 // ##CreateData
 procedure dtData(var Data:TData; const Value:TData);
@@ -851,6 +856,14 @@ begin
   Result := ToTypes(dt);
 end;
 
+function ToObjectEvent;
+var dt:TData;
+begin
+  dt.Data_type := data_null;
+  onData(PointData,dt);
+  Result := ToObject(dt, ID);
+end;
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 function ReadString(var Data:TData; PointData:THI_Event; const Def:string):string;
@@ -981,10 +994,17 @@ end;
 
 function ToObject;
 begin
-   case Data.data_type of
-    data_object: Result := pointer(Data.idata);
-    else Result := nil;
-   end;
+  if (Data.data_type = data_object) and (ID = 0) then // Для совместимости. TODO: Убрать после правки существующих компонентов
+  begin  //
+    Result := Pointer(Data.idata); //
+    Exit; //
+  end; //
+  
+  if (Data.data_type = data_object) and (Data.rdata > 0) and (Data.rdata = ID)
+  then
+    Result := Pointer(Data.idata)
+  else
+    Result := nil;
 end;
 
 function ToFont;
@@ -1188,6 +1208,19 @@ begin
    else Result := Def;
 end;
 
+function ReadObject;
+var dt:TData;
+begin
+  Result := nil;
+  if Assigned(PointData.Event) then
+  begin
+    dt.data_type := data_null; //!!!
+    OnData(PointData,dt);
+    if (dt.data_type = data_object) and (dt.rdata > 0) and (dt.rdata = ID)
+    then Result := Pointer(dt.idata);
+  end;
+end;
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 procedure __hi_OnEvent(const PointEvent:THI_Event;var Data:TData);
@@ -1293,6 +1326,15 @@ begin
   _Data.Next := Event;
 end;
 
+procedure _hi_CreateEvent(var _Data:TData; Event:PHI_Event; const ID:Integer; const Data:Pointer); overload;
+begin
+  _Data.Data_type := data_object + $80;
+  _Data.idata := integer(Data);
+  _Data.rdata := ID;
+   {$ifdef MT_ENABLED}_Data.ldata := nil;{$endif}
+  _Data.Next := Event;
+end;
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 procedure _hi_OnEvent(const PointEvent:THI_Event;var Data:TData);
@@ -1365,6 +1407,13 @@ begin
    OnEvent(PointEvent,Data);
 end;
 
+procedure _hi_OnEvent(const PointEvent:THI_Event; const ID:Integer; const Value:Pointer); overload;
+var Data:TData;
+begin
+  dtObject(Data, ID, Value);
+  OnEvent(PointEvent, Data);
+end;
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 //##__DoData
@@ -1406,6 +1455,11 @@ end;
 function _DoData(Value:PType):TData;
 begin
   dtType(Result,Value);
+end;
+
+function _DoData(ID:Integer; Value:Pointer):TData;
+begin
+  dtObject(Result,ID,Value);
 end;
 
 procedure dtData(var Data:TData; const Value:TData);

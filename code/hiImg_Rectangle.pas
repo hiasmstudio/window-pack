@@ -21,13 +21,13 @@ var   dt: TData;
       pen: HPEN;
       sColor: TColor;
       Pattern: PBitmap;  
+      mTransform: PTransform;
 begin
    dt := _Data;
 TRY
    if not ImgGetDC(_Data) then exit;
    ReadXY(_Data);
    sColor := Color2RGB(ReadInteger(_Data,_data_BgColor,_prop_BgColor));
-     
    if _prop_PatternStyle then
    begin
      Pattern := ReadBitmap(_Data,_data_Pattern);
@@ -43,7 +43,10 @@ TRY
      else if _prop_Style = bsClear then
         br := GetStockObject(NULL_BRUSH)
      else
-        br := CreateHatchBrush(ord(_prop_Style) - 2, sColor);
+       begin
+         SetBkMode(pDC, TRANSPARENT);
+         br := CreateHatchBrush(ord(_prop_Style) - 2, sColor);
+       end;
    end;    
 
    ImgNewSizeDC;
@@ -52,7 +55,14 @@ TRY
    
    SelectObject(pDC,br);
    SelectObject(pDC,Pen);
+
+   mTransform := ReadObject(_Data, _data_Transform, TRANSFORM_GUID);
+   if mTransform <> nil then
+    if mTransform._Set(pDC,x1,y1,x2,y2) then  //если необходимо изменить координаты (rotate, flip)
+     PRect(@x1)^ := mTransform._GetRect(MakeRect(x1,y1,x2,y2));
    RoundRect(pDC, x1, y1, x2, y2, rx, ry);
+   if mTransform <> nil then mTransform._Reset(pDC); // сброс трансформации
+
    DeleteObject(br);
    DeleteObject(Pen);
 FINALLY

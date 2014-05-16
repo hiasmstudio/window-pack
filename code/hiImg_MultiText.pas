@@ -38,6 +38,7 @@ var
   s: string;
   hOldFont: HFONT;
   OldFontSize: Integer;
+  mTransform: PTransform;
 begin
   dt := _Data;
   if not ImgGetDC(_Data) then exit;
@@ -51,7 +52,22 @@ begin
   OldFontSize := GFont.FontHeight;
   GFont.FontHeight := Round(GFont.FontHeight * fScale.y);
   hOldFont := SelectObject(pDC, GFont.Handle);
-  if s <> '' then DrawText(pDC, @s[1], Length(s), rect, DT_LEFT or DT_TOP);
+
+  mTransform := ReadObject(_Data, _data_Transform, TRANSFORM_GUID);
+  if mTransform <> nil then
+   begin 
+    DrawText(pDC, PChar(s), -1, rect, DT_CALCRECT);
+    inc(rect.Right, 2);    
+    inc(rect.Bottom, 2);
+    if mTransform._Set(pDC,rect.Left,rect.Top,rect.Right,rect.Bottom) then  //если необходимо изменить координаты (rotate, flip)
+     begin
+      rect := mTransform._GetRect(rect); 
+     end;
+   end;
+  DrawText(pDC, @s[1], Length(s), rect, DT_LEFT or DT_TOP);
+
+  if mTransform <> nil then mTransform._Reset(pDC); // сброс трансформации
+
   SelectObject(pDC, hOldFont);
   GFont.FontHeight := OldFontSize;
   ImgReleaseDC;
@@ -60,55 +76,37 @@ end;
 
 procedure THIImg_MultiText._var_TextWidth;
 var
-  SizeFont: TSize;
-  DC: HDC;
+  pDC: HDC;
   s: string;
-  st: PStrList;
-  i, m: integer;
+  r: TRect;
 begin
-  m := 0;
+  pDC := CreateCompatibleDC(0);
   s := ReadString(_Data,_data_Text,_prop_Text);
-  st := NewStrList;
-  DC := CreateCompatibleDC(0);
 TRY
   if s = '' then exit;
-  st.SetText(s, true);
-  SelectObject(DC, GFont.Handle);
-  s := st.items[m];
-  while GetTextExtentPoint32(DC, @st.items[i][1], Length(st.items[i]), SizeFont) and (i <= st.Count) do
-  begin
-    if SizeFont.cx > m then m := SizeFont.cx;
-    Inc(i);
-  end;
+  SelectObject(pDC, GFont.Handle);
+  DrawText(pDC, PChar(s), -1, r, DT_LEFT or DT_TOP or DT_CALCRECT);
 FINALLY
-  dtInteger(_Data, m);
-  DeleteDC(DC);
-  st.Free;
+  DeleteDC(pDC);
+  dtInteger(_Data, r.Right - r.Left);
 END;
 end;
 
 procedure THIImg_MultiText._var_TextHeight;
 var
-  SizeFont: TSize;
-  DC: HDC;
+  pDC: HDC;
   s: string;
-  st: PStrList;
-  m: integer;
+  r: TRect;
 begin
-  m := 0;
+  pDC := CreateCompatibleDC(0);
   s := ReadString(_Data,_data_Text,_prop_Text);
-  st:= NewStrList;
-  DC := CreateCompatibleDC(0);
 TRY
   if s = '' then exit;
-  st.SetText(s, true);
-  SelectObject(DC, GFont.Handle);
-  GetTextExtentPoint32(DC, @s[1], Length(s), SizeFont);
-  m := SizeFont.cy * st.Count; 
+  SelectObject(pDC, GFont.Handle);
+  DrawText(pDC, PChar(s), -1, r, DT_LEFT or DT_TOP or DT_CALCRECT);
 FINALLY
-  dtInteger(_Data, m);
-  DeleteDC(DC);
-  st.Free;
+  DeleteDC(pDC);
+  dtInteger(_Data, r.Bottom - r.Top);
 END;
 end;
 

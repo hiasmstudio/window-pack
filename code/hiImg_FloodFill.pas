@@ -54,7 +54,10 @@ TRY
      else if _prop_Style = bsClear then
         br := GetStockObject(NULL_BRUSH)
      else
-        br := CreateHatchBrush(ord(_prop_Style) - 2, sColor);
+       begin
+         SetBkMode(pDC, TRANSPARENT);
+         br := CreateHatchBrush(ord(_prop_Style) - 2, sColor);
+       end;
    end; 
 
    SelectObject(pDC, br);
