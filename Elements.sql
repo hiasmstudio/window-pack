@@ -915,7 +915,7 @@ INSERT INTO "elements" VALUES(885,'Img_SetTransform','Установка трансформации',4
 INSERT INTO "elements" VALUES(886,'Img_UseFlip','Отражение',4,86,NULL);
 INSERT INTO "elements" VALUES(887,'Img_UseOffset','Смещение',4,87,NULL);
 INSERT INTO "elements" VALUES(888,'Img_UseRotate','Поворот',4,88,NULL);
-INSERT INTO "elements" VALUES(889,'Img_UseScale','Маштаб',4,85,NULL);
+INSERT INTO "elements" VALUES(889,'Img_UseScale','Масштаб',4,85,NULL);
 INSERT INTO "elements" VALUES(890,'Img_UseSkew','Скос',4,89,NULL);
 INSERT INTO "elements" VALUES(891,'Img_UseTransform','Трансформация',4,84,NULL);
 CREATE TABLE files_link(file_id int,el_id int);
