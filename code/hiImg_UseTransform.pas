@@ -56,7 +56,7 @@ begin
     Result := False;                            //не измен€ютс€ кооднинаты
 end;
 
-function THIImg_UseTransform._Reset;
+procedure THIImg_UseTransform._Reset;
 var mXFORM: XFORM;
 begin
     FillChar(mXFORM, SizeOf(mXFORM), #0);
