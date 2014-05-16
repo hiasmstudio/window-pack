@@ -56,7 +56,7 @@ Add(Edit,14409903,525,28)
  Top=30
  Width=105
  Font=[MS Sans Serif,8,1,0,1]
- Text="nesco"
+ Text=""
 }
 Add(Edit,2731123,567,28)
 {
@@ -64,7 +64,7 @@ Add(Edit,2731123,567,28)
  Top=30
  Width=105
  Font=[MS Sans Serif,8,1,0,1]
- Text="120961"
+ Text=""
  Password=0
 }
 Add(LED,12343517,777,105)
