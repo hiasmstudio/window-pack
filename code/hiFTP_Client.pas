@@ -25,12 +25,14 @@ type
     _prop_Username,
     _prop_Password: string;
     _prop_Port: integer;
+    _prop_ErrorEvent: byte;
 
     _data_Host,
     _data_Port,
     _data_Username,
     _data_Password: THI_Event;
 
+    _event_onGlobalError,
     _event_onError,
     _event_onConnect,
     _event_onDisconnect: THI_Event;
@@ -58,7 +60,7 @@ end;
 
 procedure THIFTP_Client.onerror;  
 begin
-  _hi_onEvent(_event_onError, error);
+  _hi_onEvent(_event_onGlobalError, error);
 end;
 
 procedure THIFTP_Client.CloseHandle;
@@ -79,7 +81,8 @@ begin
   hNet := InternetOpen('HiAsm FTP_Client', INTERNET_OPEN_TYPE_PRECONFIG, nil, nil, 0);
   if hNet = nil then
   begin
-    onerror(1);
+    if (_prop_ErrorEvent = 0) or (_prop_ErrorEvent = 2) then onerror(1);
+    if (_prop_ErrorEvent = 1) or (_prop_ErrorEvent = 2) then _hi_onEvent(_event_onError, 1); 
     exit;
   end;
   hFTP := InternetConnect(hNet,
@@ -93,10 +96,11 @@ begin
   if hFTP = nil then
   begin
     InternetCloseHandle(hNet);
-    onerror(2);
-    exit;
-  end;
-  _hi_onEvent(_event_onConnect);
+    if (_prop_ErrorEvent = 0) or (_prop_ErrorEvent = 2) then onerror(2);
+    if (_prop_ErrorEvent = 1) or (_prop_ErrorEvent = 2) then _hi_onEvent(_event_onError, 2);     
+  end
+  else
+    _hi_onEvent(_event_onConnect);
 end;
 
 procedure THIFTP_Client._work_doClose;
