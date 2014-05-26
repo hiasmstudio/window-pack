@@ -33,10 +33,10 @@ begin
   if not FtpDeleteFile(hFTP, PChar(name)) then
   begin
     if (_prop_ErrorEvent = 0) or (_prop_ErrorEvent = 2) then _prop_FTP_Client.onerror(12);
-    if (_prop_ErrorEvent = 1) or (_prop_ErrorEvent = 2) then _hi_onEvent(_event_onError, 12);
+    if (_prop_ErrorEvent = 1) or (_prop_ErrorEvent = 2) then _hi_CreateEvent(_Data, @_event_onError, 12);
   end  
   else
-    _hi_onEvent(_event_onDeleteFile, name);      
+    _hi_CreateEvent(_Data, @_event_onDeleteFile, name);      
 end;
 
 end.

@@ -18,7 +18,8 @@ type
     hNet, hFTP: HINTERNET;
     function getftphandle: HINTERNET;
     procedure onerror(error: integer);
-    procedure CloseHandle;  
+    procedure CloseHandle;
+    procedure RaiseError(var _Data: TData; Code: Integer);      
    public
     _prop_Name,
     _prop_Host,
@@ -75,14 +76,19 @@ begin
   inherited;
 end;
 
+procedure THIFTP_Client.RaiseError;
+begin
+  if (_prop_ErrorEvent = 0) or (_prop_ErrorEvent = 2) then onerror(Code);
+  if (_prop_ErrorEvent = 1) or (_prop_ErrorEvent = 2) then _hi_CreateEvent(_Data, @_event_onError, Code);
+end;
+
 procedure THIFTP_Client._work_doOpen;
 begin
   CloseHandle;
   hNet := InternetOpen('HiAsm FTP_Client', INTERNET_OPEN_TYPE_PRECONFIG, nil, nil, 0);
   if hNet = nil then
   begin
-    if (_prop_ErrorEvent = 0) or (_prop_ErrorEvent = 2) then onerror(1);
-    if (_prop_ErrorEvent = 1) or (_prop_ErrorEvent = 2) then _hi_onEvent(_event_onError, 1); 
+    RaiseError(_Data, 1);
     exit;
   end;
   hFTP := InternetConnect(hNet,
@@ -96,17 +102,16 @@ begin
   if hFTP = nil then
   begin
     InternetCloseHandle(hNet);
-    if (_prop_ErrorEvent = 0) or (_prop_ErrorEvent = 2) then onerror(2);
-    if (_prop_ErrorEvent = 1) or (_prop_ErrorEvent = 2) then _hi_onEvent(_event_onError, 2);     
+    RaiseError(_Data, 2);
   end
   else
-    _hi_onEvent(_event_onConnect);
+    _hi_CreateEvent(_Data, @_event_onConnect);
 end;
 
 procedure THIFTP_Client._work_doClose;
 begin
   CloseHandle;
-  _hi_onEvent(_event_onDisconnect);
+  _hi_CreateEvent(_Data, @_event_onDisconnect);
 end;
 
 end.

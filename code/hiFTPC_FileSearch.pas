@@ -79,7 +79,7 @@ begin
   end
   else if (hFind = nil) and not FStop then
     _hi_onEvent(_event_onNotFound);  
-  _hi_onEvent(_event_onEndSearch);
+  _hi_CreateEvent(_Data, @_event_onEndSearch);
 end;
 
 procedure THIFTPC_FileSearch._work_doStop;

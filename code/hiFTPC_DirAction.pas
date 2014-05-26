@@ -7,7 +7,8 @@ uses Kol, Share, Debug, WinInet, Windows, hiFTP_Client;
 type
   THIFTPC_DirAction = class(TDebug)
    private
-    CurrentDir: string;    
+    CurrentDir: string;
+    procedure RaiseError(var _Data: TData; Code: Integer);        
    public
     _prop_Action: byte;
     _prop_Directory: string;
@@ -30,6 +31,12 @@ type
 
 implementation
 
+procedure THIFTPC_DirAction.RaiseError;
+begin
+  if (_prop_ErrorEvent = 0) or (_prop_ErrorEvent = 2) then _prop_FTP_Client.onerror(Code);
+  if (_prop_ErrorEvent = 1) or (_prop_ErrorEvent = 2) then _hi_CreateEvent(_Data, @_event_onError, Code);
+end;
+
 procedure THIFTPC_DirAction._work_doDirAction0;
 var
   hFTP: HINTERNET;
@@ -39,10 +46,7 @@ begin
   dir := ReadString(_Data, _data_Directory, _prop_Directory);
   hFTP := _prop_FTP_Client.getftphandle;
   if not FtpSetCurrentDirectory(hFTP, PChar(dir)) then
-  begin
-    if (_prop_ErrorEvent = 0) or (_prop_ErrorEvent = 2) then _prop_FTP_Client.onerror(3);
-    if (_prop_ErrorEvent = 1) or (_prop_ErrorEvent = 2) then _hi_onEvent(_event_onError, 3);
-  end  
+    RaiseError(_Data, 3)
   else
     _hi_onEvent(_event_onDirAction, dir);  
 end;
@@ -59,12 +63,11 @@ begin
   SetLength(CurrentDir, len);
   if not FtpGetCurrentDirectory(hFTP, @CurrentDir[1], len) then
   begin
-    if (_prop_ErrorEvent = 0) or (_prop_ErrorEvent = 2) then _prop_FTP_Client.onerror(10);
-    if (_prop_ErrorEvent = 1) or (_prop_ErrorEvent = 2) then _hi_onEvent(_event_onError, 10);    
+    RaiseError(_Data, 10);
     exit;
   end;  
   SetLength(CurrentDir, len);
-  _hi_onEvent(_event_onDirAction, CurrentDir);
+  _hi_CreateEvent(_Data, @_event_onDirAction, CurrentDir);
 end;
 
 procedure THIFTPC_DirAction._work_doDirAction2;
@@ -76,12 +79,9 @@ begin
   dir := ReadString(_Data, _data_Directory, _prop_Directory);
   hFTP := _prop_FTP_Client.getftphandle;
   if not FtpCreateDirectory(hFTP, PChar(dir)) then
-  begin
-    if (_prop_ErrorEvent = 0) or (_prop_ErrorEvent = 2) then _prop_FTP_Client.onerror(8);
-    if (_prop_ErrorEvent = 1) or (_prop_ErrorEvent = 2) then _hi_onEvent(_event_onError, 8);    
-  end  
+    RaiseError(_Data, 8)
   else
-    _hi_onEvent(_event_onDirAction, dir);    
+    _hi_CreateEvent(_Data, @_event_onDirAction, dir);
 end;
 
 procedure THIFTPC_DirAction._work_doDirAction3;
@@ -93,12 +93,9 @@ begin
   dir := ReadString(_Data, _data_Directory, _prop_Directory);
   hFTP := _prop_FTP_Client.getftphandle;
   if not FtpRemoveDirectory(hFTP, PChar(dir)) then
-  begin
-    if (_prop_ErrorEvent = 0) or (_prop_ErrorEvent = 2) then _prop_FTP_Client.onerror(9);
-    if (_prop_ErrorEvent = 1) or (_prop_ErrorEvent = 2) then _hi_onEvent(_event_onError, 9);
-  end  
+    RaiseError(_Data, 9)
   else
-    _hi_onEvent(_event_onDirAction, dir);
+    _hi_CreateEvent(_Data, @_event_onDirAction, dir);
 end;
 
 procedure THIFTPC_DirAction._var_CurrentDir;
