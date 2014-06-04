@@ -64,6 +64,7 @@ var dt: TData;
     dTop, dWidth, dHeight, Data: TData;
     mTransform: PTransform;
 begin
+   dt := _Data;
 TRY
    if not ImgGetDC(_Data) then exit;
    ReadXY(_Data);
