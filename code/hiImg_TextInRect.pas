@@ -55,7 +55,8 @@ begin
 end;
 
 procedure THIImg_TextInRect._work_doDraw;
-var hOldFont: HFONT;
+var dt: TData;
+    hOldFont: HFONT;
     OldFontSize, h: Integer;
     s:string;
     flag: Cardinal;
@@ -139,7 +140,7 @@ TRY
    GFont.FontHeight := OldFontSize;
 FINALLY
    ImgReleaseDC;
-   _hi_OnEvent(_event_onDraw);
+   _hi_onEvent(_event_onDraw, dt);
 END;
 end;
 
