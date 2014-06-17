@@ -1,7 +1,7 @@
 unit WinLayout;
 
+{$IFNDEF FPC}{$HINTS OFF}{$ENDIF}
 {$WARNINGS OFF}
-{$HINTS OFF}
 
 interface
 
@@ -361,5 +361,8 @@ begin
 //  FParent.OnMessage := OldMes;
   value.addLayout(self, _prop_WidthScale, _prop_HeightScale);
 end;
+
+{$IFNDEF FPC}{$HINTS ON}{$ENDIF}
+{$WARNINGS ON}
 
 end.
