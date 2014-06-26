@@ -454,16 +454,17 @@ begin
   end;
 end;
 
-procedure THIMathParse.Level4;   // Смена знака
+procedure THIMathParse.Level4;   // Смена знака, лог. not
 var op:char;
 begin
   op := ' ';
-  if (Token = '-')or(Token = '+') then begin
+  if (Token = '-')or(Token = '+')or(Token = 'not') then begin
     op := Token[1];
     GetToken;
   end;
   Level5(x);
-  if op = '-' then x := -x;
+  if op = '-' then x := -x else
+  if op = 'n' then x := ord(x=0);
 end;
 
 procedure THIMathParse.Level5;   // Логические операции
