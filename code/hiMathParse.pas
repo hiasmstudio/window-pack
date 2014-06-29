@@ -15,7 +15,6 @@ type
     Token:string;
     TokType:byte;
     Line:string;
-    SafeLine:string;
     LPos:smallint;
     FResult:real;
     FDefault:real;
@@ -80,41 +79,35 @@ const
   TokHex    = 7;
   digE      = 2.718281828459045; //may be defined in Delphi
   serr      = 'MathParse Exception';
-  s:array[0..1]of string = ('Ошибка синтаксиса в элементе MathParser'#13#10'Обнаружена в позиции '
-                           ,'Ошибка вычисления в элементе MathParser'#13#10'Обнаружена в позиции ');
+  s:array[0..1]of string = ('Ошибка синтаксиса в элементе MathParser'#13#10'Обнаружена в строке:позиции - '
+                           ,'Ошибка вычисления в элементе MathParser'#13#10'Обнаружена в строке:позиции - ');
 
 function THIMathParse.CalcErrPos;
 var
-  ListLine: PStrListEx;
-  i: integer;
-  s: string;
+  nStr, nPos, i: integer;
 begin
-  Result := '0:1';
-  ListLine := NewStrListEx;
-TRY
-  s := SafeLine;
-  Replace(s, #1, '');
-  ListLine.SetText(s, false);
-  if ListLine.Count = 0 then exit;
-  i := 0;
-  ListLine.Objects[0] := 1;
-  if ListLine.Count > 1 then
-    for i := 1 to ListLine.Count - 1 do
+  nStr := 1;
+  nPos := 1;
+  i := 0; 
+
+  while i < Value do
+  begin
+    inc(nPos);
+    if (Line[i + 1] = #13) then
     begin
-      ListLine.Objects[i] := Length(ListLine.Items[i - 1]) + integer(ListLine.Objects[i - 1]);
-      if Value < integer(ListLine.Objects[i]) + Length(ListLine.Items[i]) then break;
-    end;
-  Result := int2str(Value - integer(ListLine.Objects[i]) + 1) + ':' + int2str(i + 1);
-FINALLY
-  ListLine.free;
-END;
+      inc(nStr);
+      nPos := 1;
+      if (Line[i + 2] = #10) then inc(i);
+    end;  
+    inc(i);
+  end;
+
+  Result := int2str(nStr) + ':' + int2str(nPos);
 end;
 
 procedure THIMathParse.SetLine;
 begin
-  Line := Value+#1;
-  SafeLine := Line;
-  Replace(Line, #13#10, '');
+  Line := Value;
 end;
 
 procedure THIMathParse.SetAngleMode;
@@ -185,7 +178,6 @@ begin
     dec(LPos);
     if assigned(_event_onError.Event) then
       _hi_CreateEvent(_Data,@_event_onError,Err)
-//    else _debug(s[Err]+ int2Str(LPos));
     else _debug(s[Err]+ CalcErrPos(LPos));
 
   end;
@@ -246,7 +238,7 @@ procedure THIMathParse.GetToken;
 begin
    Token := '';
    TokType := 0;
-   while Line[LPos] in [' ',#9] do inc(LPos);
+   while Line[LPos] in [' ',#9,#10,#13] do inc(LPos);
    case Line[LPos] of
      'a'..'z','A'..'Z','_','а'..'я','А'..'Я':
        begin
@@ -337,7 +329,7 @@ begin
         if not(Line[LPos] in ['+','-']) then TokType := TokMath
         else Token := '';
        end;
-     #1: TokType := TokEnd;
+     #0: TokType := TokEnd;
    end;
 end;
 
