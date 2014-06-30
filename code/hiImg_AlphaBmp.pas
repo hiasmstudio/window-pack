@@ -67,6 +67,7 @@ procedure THIImg_AlphaBmp._work_doDraw;
 var   dt: TData;
       src: PBitmap;
       blend: TBlendFunction;
+      mTransform: PTransform;
 begin
    dt := _Data;
    if not ImgGetDC(_Data) then exit;
@@ -93,11 +94,31 @@ TRY
    y2 := y1 + src.height;
    ImgNewSizeDC;
 
+   mTransform := ReadObject(_Data, _data_Transform, TRANSFORM_GUID);
    case fDrawSource of
       dcHandle, 
-      dcBitmap:  AlphaBlend(pDC, oldx1, oldy1, oldwh, oldhh, Bitmap.Canvas.Handle, 0, 0, oldwh, oldhh, blend);
-      dcContext: AlphaBlend(pDC, x1, y1, newwh, newhh, Bitmap.Canvas.Handle, 0, 0, oldwh, oldhh, blend);
+      dcBitmap:  begin
+                  if mTransform <> nil then
+                   if mTransform._Set(pDC,oldx1,oldy1,oldx2,oldy2) then  //если необходимо изменить координаты (rotate, flip)
+                     begin
+                      PRect(@oldx1)^ := mTransform._GetRect(MakeRect(oldx1, oldy1, oldx2, oldy2));
+                      oldwh := x2-x1;
+                      oldhh := y2-y1;
+                     end;
+                  AlphaBlend(pDC, oldx1, oldy1, oldwh, oldhh, Bitmap.Canvas.Handle, 0, 0, oldwh, oldhh, blend);
+                 end;
+      dcContext: begin
+                  if mTransform <> nil then
+                   if mTransform._Set(pDC,x1,y1,x2,y2) then  //если необходимо изменить координаты (rotate, flip)
+                    begin
+                     PRect(@x1)^ := mTransform._GetRect(MakeRect(x1,y1,x2,y2));
+                     newwh := x2-x1;
+                     newhh := y2-y1;
+                    end; 
+                  AlphaBlend(pDC, x1, y1, newwh, newhh, Bitmap.Canvas.Handle, 0, 0, oldwh, oldhh, blend);
+                 end;
    end;
+   if mTransform <> nil then mTransform._Reset(pDC); // сброс трансформации
 FINALLY
    ImgReleaseDC;
    _hi_CreateEvent(_Data, @_event_onDraw, dt);
