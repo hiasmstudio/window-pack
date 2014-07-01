@@ -1,6 +1,6 @@
 *ќтрисовка эллипсов с убывающей R составл€ющей цвета
 Make(delphi)
-ver(4.01 build 177)
+ver(4.04 build 185)
 Add(MainForm,18192,56,98)
 {
  Left=131
@@ -12,7 +12,7 @@ Add(MainForm,18192,56,98)
  BorderStyle=3
  link(onCreate,31785:doFor,[])
 }
-Add(GetDataEx,194253,210,154)
+Add(GetDataEx,194253,217,158)
 {
  Angle=3
  link(Data,31785:Position,[(118,163)])
@@ -27,9 +27,9 @@ Add(MathParse,56984,266,112)
  DataCount=1
  MathStr="(255 - %1)  *2"
  ResultType=0
- link(onResult,775:doDraw,[(311,118)(311,290)(226,290)(226,258)])
+ link(onResult,775:doDraw,[(305,118)(305,328)(228,328)(228,293)])
 }
-Add(Img_Ellipse,775,238,252)
+Add(Img_Ellipse,775,238,287)
 {
  Point2AsOffset=0
  Style=1
@@ -42,19 +42,21 @@ Add(Img_Ellipse,775,238,252)
  link(Point1,89528:Point,[(265,230)(223,230)])
  link(Point2,47468:Point,[])
 }
-Add(GetDataEx,3001651,161,224)
+Add(GetDataEx,3001651,168,228)
 {
  link(Data,14725897:Bitmap,[])
 }
-Add(Img_Text,28603,168,252)
+Add(Img_Text,28603,168,287)
 {
  X=50
  Y=475
  Font=[Courier New,11,1,65280,1]
  Text="ќтрисовка эллипсов с убывающей R составл€ющей цвета"
+ Point(Orientation)
  link(Bitmap,3001651:Var2,[])
+ link(Orientation,6652827:Value,[])
 }
-Add(GetDataEx,14370786,259,154)
+Add(GetDataEx,14370786,266,158)
 {
  link(Data,56984:Result,[])
 }
@@ -67,7 +69,7 @@ Add(For,31785,112,112)
 {
  End=255
  link(onEvent,56984:doCalc,[])
- link(onStop,28603:doDraw,[(156,125)(156,258)])
+ link(onStop,28603:doDraw,[(156,125)(156,293)])
 }
 Add(PaintBox,14725897,168,189)
 {
@@ -76,12 +78,16 @@ Add(PaintBox,14725897,168,189)
  Align=5
  Color=0
 }
-Add(GetDataEx,10895933,217,154)
+Add(GetDataEx,10895933,224,158)
 {
  Angle=3
  link(Data,194253:Var3,[])
 }
-Add(GetDataEx,15429529,245,231)
+Add(GetDataEx,15429529,252,235)
 {
  link(Data,10895933:Var3,[(258,163)])
+}
+Add(Memory,6652827,182,238)
+{
+ Default=Integer(0)
 }
