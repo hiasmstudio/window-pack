@@ -31,21 +31,14 @@ TRY
    if not ImgGetDC(_Data) then exit;
    ReadXY(_Data);
    ImgNewSizeDC;
-   pen := CreatePen(PS_SOLID, Round((fScale.x + fScale.y) * ReadInteger(_Data,_data_Size,_prop_Size)/2), Color2RGB(ReadInteger(_Data,_data_Color,_prop_Color)));
+   pen := CreatePen(PS_SOLID, Round((fScale.x + fScale.y) * ReadInteger(_Data,_data_Size,_prop_Size)), Color2RGB(ReadInteger(_Data,_data_Color,_prop_Color)));
    SelectObject(pDC,Pen);
    mTransform := ReadObject(_Data, _data_Transform, TRANSFORM_GUID);
-   if mTransform = nil then
-    begin
-     MoveToEx(pDC, x1, y1, nil);
-     LineTo(pDC, x1 + 1, y1 + 1);
-    end 
-   else
-    begin
-     if mTransform._Set(pDC,x1,y1,x1,y1) then  //если необходимо изменить координаты (rotate, flip)
-      PRect(@x1)^ := mTransform._GetRect(MakeRect(x1,y1,x1,y1));
-     MoveToEx(pDC, x1, y1, nil);
-     LineTo(pDC, x1, y1);
-    end;
+   if mTransform <> nil then
+    if mTransform._Set(pDC,x1,y1,x1,y1) then  //если необходимо изменить координаты (rotate, flip)
+     PRect(@x1)^ := mTransform._GetRect(MakeRect(x1,y1,x1,y1));
+   MoveToEx(pDC, x1, y1, nil);
+   LineTo(pDC, x1, y1);
    DeleteObject(Pen);
    if mTransform <> nil then mTransform._Reset(pDC);
 FINALLY
@@ -55,17 +48,12 @@ END;
 end;
 
 procedure THIImg_Point._Set;
-var   pen: HPEN;
 begin
 TRY
    if not ImgGetDC(Val) then exit;
    x := Round(x * fScale.x);
    y := Round(y * fScale.y);   
-   pen := CreatePen(PS_SOLID, Round((fScale.x + fScale.y)/2), Color2RGB(ReadInteger(Val,_data_Color,_prop_Color)));
-   SelectObject(pDC,Pen);
-   MoveToEx(pDC, x, y, nil);
-   LineTo(pDC, x, y);
-   DeleteObject(Pen);
+   SetPixelV(pDC, x, y, Color2RGB(ReadInteger(Val,_data_Color,_prop_Color)));
 FINALLY
    ImgReleaseDC;
 END;
