@@ -21,7 +21,7 @@ type
 
     procedure Init; override;
     procedure _work_doEnsureVisible(var _Data:TData; Index:word);
-    procedure _work_doKeyBack(var _Data:TData; Index:word);
+//    procedure _work_doKeyBack(var _Data:TData; Index:word);
   end;
 
 implementation
@@ -91,6 +91,7 @@ begin
      Control.Style:= Control.Style and not ws_BORDER;
    inherited;
    Control.Text := _prop_Strings;
+   Control.SubClassName := 'obj_MemoControl';
 end;
 
 procedure THIMemo._OnChange;
@@ -98,9 +99,9 @@ begin
    _hi_OnEvent(_event_onChange,Control.text);
 end;
 
-procedure THIMemo._work_doKeyBack(var _Data:TData; Index:word);
-begin
-  Back := ToInteger(_Data);
-end;
+//procedure THIMemo._work_doKeyBack(var _Data:TData; Index:word);
+//begin
+//  Back := ToInteger(_Data);
+//end;
 
 end.
