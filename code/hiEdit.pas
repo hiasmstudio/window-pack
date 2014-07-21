@@ -78,6 +78,7 @@ begin
    Control.Perform(em_LimitText,_prop_MaxLenField, 0);
    Control.OnChange := _OnChange;
    Control.Text := _prop_Text;
+//   Control.SubClassName := 'obj_EditControl';
    FOld := _prop_Text; 
    IdxPassSym := Control.Perform(EM_GETPASSWORDCHAR, 0, 0);
    if not _prop_Password then
@@ -258,6 +259,7 @@ begin
    ChangeEvent := true;
 end;
 
+(*
 procedure THIEdit._OnKeyDown;
 var dt:TData;
 begin
@@ -276,6 +278,24 @@ begin
   end
   else
     inherited;
+end;
+*)
+
+procedure THIEdit._OnKeyDown;
+var dt:TData;
+begin
+  if Key = 13 then begin
+    if Assigned(_event_onEnter.Event) then begin
+      if _prop_DataType(dt) then  begin
+        _hi_onEvent(_event_onEnter,dt);
+        if _prop_ClearAfterEnter then  begin
+          ChangeEvent := false; // Установка Control.Text вызывает _OnChange !!!
+          Control.Text := '';
+        end;
+      end;
+    end else inherited; // _event_onKeyDown
+    Key := 0;
+  end else inherited; // _event_onKeyDown
 end;
 
 function THIEdit._fast_Text:string;
