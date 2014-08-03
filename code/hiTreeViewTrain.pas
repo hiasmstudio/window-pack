@@ -88,6 +88,7 @@ type
     _event_onClick:THI_Event;
     _event_onDelete:THI_Event;
     _event_onExpand:THI_Event;
+    _event_onCollapse:THI_Event;    
     _event_onDrop:THI_Event;
     
     property _prop_IconsManager:IIconsManager read tmp write setIM;
@@ -527,11 +528,11 @@ function THITreeViewTrain._OnExpanding;
 var dt:TData;
 begin
    Result := true;
+   dt := PData(Control.TVItemData[Item])^; 
    if Expand then
-    begin
-      dt := PData(Control.TVItemData[Item])^; 
-      _hi_onEvent(_event_onExpand, dt);
-    end;
+     _hi_onEvent(_event_onExpand, dt)
+   else  
+     _hi_onEvent(_event_onCollapse, dt)
 end;
 
 procedure THITreeViewTrain._OnClick(Obj:PObj);
