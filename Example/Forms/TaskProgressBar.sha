@@ -1,0 +1,136 @@
+Make(delphi)
+ver(4.04 build 185)
+Add(MainForm,2953706,210,266)
+{
+ Width=150
+ Height=165
+ Caption="TaskProgressBar"
+ BorderStyle=4
+ Position=1
+ link(onCreate,1640222:doDeferredEvent,[])
+}
+Add(TaskProgressBar,4436180,448,217)
+{
+ Point(doMarquee)
+ Point(doError)
+ Point(doPaused)
+}
+Add(Timer,8698242,210,231)
+{
+ Interval=50
+ Enable=1
+ link(onTimer,7977314:doNext,[])
+}
+Add(CounterEx,7977314,273,231)
+{
+ Point(doReset)
+ Point(onThroughMax)
+ link(onNext,14941413:doWork2,[])
+}
+Add(RadioButton,10622977,273,161)
+{
+ Left=35
+ Top=110
+ Width=80
+ Font=[MS Sans Serif,8,1,0,1]
+ TabOrder=-1
+ Caption="Off"
+ link(onSelect,3624183:doEvent1,[])
+}
+Add(RadioButton,3920621,273,98)
+{
+ Left=35
+ Top=10
+ Width=80
+ Font=[MS Sans Serif,8,1,0,1]
+ TabOrder=-1
+ Caption="On"
+ link(onSelect,3309083:doEvent1,[])
+}
+Add(RadioButton,4519771,336,301)
+{
+ Left=35
+ Top=35
+ Width=80
+ Font=[MS Sans Serif,8,1,0,1]
+ TabOrder=-1
+ Caption="Error"
+ link(onSelect,8713214:doEvent1,[])
+}
+Add(RadioButton,7407843,336,336)
+{
+ Left=35
+ Top=60
+ Width=80
+ Font=[MS Sans Serif,8,1,0,1]
+ TabOrder=-1
+ Caption="Paused"
+ link(onSelect,8857312:doEvent1,[])
+}
+Add(RadioButton,5541544,329,245)
+{
+ Left=35
+ Top=85
+ Width=80
+ Font=[MS Sans Serif,8,1,0,1]
+ TabOrder=-1
+ Selected=0
+ Caption="Marquee"
+ link(onSelect,4758544:doEvent1,[])
+}
+Add(Hub,3309083,343,98)
+{
+ link(onEvent1,4436180:doOn,[(438,104)(438,223)])
+ link(onEvent2,8698242:doTimer,[(368,111)(368,146)(200,146)(200,237)])
+}
+Add(Hub,3624183,343,161)
+{
+ OutCount=4
+ link(onEvent1,2955536:doWork1,[(368,167)(368,153)(186,153)])
+ link(onEvent2,7512414:doData,[])
+ link(onEvent3,7977314:doReset,[(368,181)(368,223)(263,223)(263,244)])
+ link(onEvent4,4436180:doOff,[(375,188)(375,230)])
+}
+Add(Hub,8713214,385,301)
+{
+ link(onEvent1,7148035:doWork2,[])
+ link(onEvent2,4436180:doError,[(424,314)(424,251)])
+}
+Add(Hub,8857312,385,336)
+{
+ link(onEvent1,8368011:doWork2,[])
+ link(onEvent2,4436180:doPaused,[(431,349)(431,258)])
+}
+Add(HubEx,2955536,182,238)
+{
+ link(onEvent,8698242:doStop,[])
+}
+Add(Hub,4758544,385,245)
+{
+ InCount=2
+ link(onEvent1,4436180:doMarquee,[(410,251)(410,244)])
+ link(onEvent2,7148035:doWork1,[(418,258)])
+}
+Add(DoData,7512414,385,168)
+{
+ Data=Integer(0)
+ link(onEventData,14941413:doWork1,[(431,174)])
+}
+Add(HubEx,14941413,427,231)
+{
+ link(onEvent,4436180:doPosition,[])
+}
+Add(DeferredEvent,1640222,273,280)
+{
+ link(onDeferredEvent,4758544:doEvent2,[(368,286)(368,258)])
+}
+Add(HubEx,8368011,414,336)
+{
+ Angle=1
+ link(onEvent,2955536:doWork3,[(418,382)(186,382)])
+}
+Add(HubEx,7148035,414,301)
+{
+ Angle=1
+ link(onEvent,8368011:doWork1,[])
+}
