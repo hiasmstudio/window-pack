@@ -183,8 +183,7 @@ end;
 
 procedure ThiTaskProgressBar._work_doOff;
 begin
-  if not Assigned(TaskProgressBar) then
-    TaskProgressBar := TWin7TaskProgressBar.Create(Applet.handle);
+  InitClass;
   TaskProgressBar.Marquee := false;
   TaskProgressBar.Style := tbpsNone;
 end;
@@ -203,25 +202,17 @@ begin
 end;
 
 procedure ThiTaskProgressBar._work_doError;
-var
-  Progress: integer;
 begin
   InitClass;
   TaskProgressBar.Marquee := false;
-  Progress := TaskProgressBar.Progress;
   TaskProgressBar.Style := tbpsError;
-  TaskProgressBar.Progress := Progress;
 end;
 
 procedure ThiTaskProgressBar._work_doPaused;
-var
-  Progress: integer;
 begin
   InitClass;
   TaskProgressBar.Marquee := false;
-  Progress := TaskProgressBar.Progress;
   TaskProgressBar.Style := tbpsPaused;
-  TaskProgressBar.Progress := Progress;
 end;
 
 procedure ThiTaskProgressBar._var_Position;
