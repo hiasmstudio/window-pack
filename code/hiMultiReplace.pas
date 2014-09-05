@@ -107,7 +107,7 @@ end;
 
 procedure THiMultiReplace._work_doMultiReplace1;
 var
-  i, dig: integer;
+  i: integer;
   s: string;
   FListFrom: PStrList;
   FListTo: PStrList;
