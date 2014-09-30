@@ -220,8 +220,9 @@ end;
 
 procedure THIStrList._work_doGetString;
 begin
-   FString := FList.Items[ReadInteger(_Data, _data_IdxToSelect)]; 
-   FIndex :=  FList.IndexOf(FString);
+   FIndex := ReadInteger(_Data, _data_IdxToSelect);
+   FString := FList.Items[FIndex];     
+   if (FIndex<0) or (FIndex>=Flist.Count) then FIndex := -1;
    _hi_CreateEvent(_Data, @_event_onGetString, FString);
 end;
 
