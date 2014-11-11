@@ -7,7 +7,7 @@ uses Windows,Kol,Share,Debug;
 type
   THIRGN_RoundRect = class(TDebug)
    private
-    FRegion:HRGN;
+    FRegion: HRGN;
    public
     _prop_Point1:integer;
     _prop_Point2:integer;
@@ -21,6 +21,7 @@ type
 
     destructor Destroy; override;
     procedure _work_doCreateRect(var _Data:TData; Index:word);
+    procedure _work_doClear(var _Data:TData; Index:word);
     procedure _var_Result(var _Data:TData; Index:word);
   end;
 
@@ -39,8 +40,8 @@ var
 begin
    p1 := ReadInteger(_Data, _data_Point1, _prop_Point1);
    p2 := ReadInteger(_Data, _data_Point2, _prop_Point2);
-   x1 := p1 and $FFFF;
-   y1 := p1 shr 16;
+   x1 := smallint(p1 and $FFFF);
+   y1 := smallint(p1 shr 16);
    if _prop_Point2AsOffset then
      begin
        x2 := x1;
@@ -51,11 +52,17 @@ begin
        x2 := 0;
        y2 := 0;
      end;
-   inc(x2, p2 and $FFFF);
-   inc(y2, p2 shr 16);
+   inc(x2, smallint(p2 and $FFFF));
+   inc(y2, smallint(p2 shr 16));
    DeleteObject(FRegion);
    FRegion := CreateRoundRectRgn(x1, y1, x2, y2, _prop_rX, _prop_rY);
    _hi_onEvent(_event_onCreateRect, integer(FRegion));
+end;
+
+procedure THIRGN_RoundRect._work_doClear;
+begin
+  DeleteObject(FRegion);
+  FRegion := 0;
 end;
 
 procedure THIRGN_RoundRect._var_Result;

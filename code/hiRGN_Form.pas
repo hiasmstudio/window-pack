@@ -4,16 +4,11 @@ interface
 
 uses Messages, Windows, Kol, Share, Debug, Win;
 
-const
-  RGN_ERROR         = 0;
-  RGN_NULLREGION    = 1;
-  RGN_SIMPLEREGION  = 2;
-  RGN_COMPLEXREGION = 3;
-  
 type
  THiRGN_Form = class(TDebug)
    private
     FRegion: HRGN;
+    rIndex: integer;
    public
     _prop_ControlManager: IControlManager;
     
@@ -26,7 +21,8 @@ type
     destructor Destroy; override;
     procedure _work_doCreateRgn(var _Data: TData; Index: Word);
     procedure _var_Result(var _Data: TData; Index: Word);
-
+    procedure _var_ResultIndex(var _Data:TData; Index:word);
+    
  end;
 
 implementation
@@ -54,14 +50,14 @@ begin
         if Visible or not _prop_OnlyVisible then
         begin
           tRGN := CreateRectRgn(0, 0, 0, 0);
-          if integer(GetWindowRgn(Handle, tRGN)) < RGN_SIMPLEREGION then  // регион не найден
+          if integer(GetWindowRgn(Handle, tRGN)) < 2 then  // регион не найден
           begin 
             DeleteObject(tRgn);
             tRGN := CreateRectRgn(shx + left, shy + top, shx + left + width, shy + top + height);
           end
           else 
             OffsetRgn(tRGN, shx + left, shy + top); 
-          CombineRgn(FRegion, FRegion, tRGN, RGN_OR);
+          rIndex := CombineRgn(FRegion, FRegion, tRGN, RGN_OR);
           DeleteObject(tRGN);
         end;
     
@@ -73,6 +69,11 @@ end;
 procedure THiRGN_Form._var_Result;
 begin
   dtInteger(_Data, FRegion);
+end;
+
+procedure THiRGN_Form._var_ResultIndex;
+begin
+  dtInteger(_Data, rIndex);
 end;
 
 destructor THiRGN_Form.Destroy;

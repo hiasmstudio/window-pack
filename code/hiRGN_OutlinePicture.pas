@@ -25,6 +25,7 @@ type
      procedure _work_doOutlinePicture(var _Data:TData; Index:word);
      procedure _work_doTransparent(var _Data: TData; Index: Word);
      procedure _work_doPicture(var Data: TData; Index: Word);
+     procedure _work_doClear(var _Data:TData; Index:word);
      procedure _var_Result(var _Data:TData; Index:word);
      procedure _var_Bitmap(var _Data:TData; Index:word);
      procedure _var_Width(var _Data:TData; Index:word);
@@ -136,6 +137,12 @@ procedure THIRGN_OutlinePicture._work_doTransparent;
 begin
   FTransparent := ToInteger(_Data);
   CreateOutlinePicture;
+end;
+
+procedure THIRGN_OutlinePicture._work_doClear;
+begin
+  DeleteObject(FRegion);
+  FRegion := 0;
 end;
 
 procedure THIRGN_OutlinePicture._var_Bitmap;
