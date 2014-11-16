@@ -63,7 +63,7 @@ begin
   
   InRegion := PtInRegion (rgn, X, Y);
   if InRegion then
-    _hi_onEvent(_event_onTrue, rgn)
+    _hi_onEvent(_event_onTrue, integer(rgn))
   else
     _hi_onEvent(_event_onFalse);
   _hi_onEvent(_event_onCheck, ord(InRegion));

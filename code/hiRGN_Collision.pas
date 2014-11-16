@@ -55,7 +55,7 @@ begin
      begin
       Collision := 0;
       Count := 0;
-      _hi_onEvent(_event_onFalse, rgn1);
+      _hi_onEvent(_event_onFalse, integer(rgn1));
      end
     else
      begin
