@@ -76,7 +76,8 @@ type
     procedure _var_Strings(var _Data:TData; Index:word);
     procedure _var_Index(var _Data:TData; Index:word);
     procedure _var_StringTable(var _Data:TData; Index:word);
-    procedure _var_EndIdx(var _Data:TData; Index:word);    
+    procedure _var_EndIdx(var _Data:TData; Index:word);
+    procedure _var_PerPage(var _Data:TData; Index:word);        
   end;
 
 implementation
@@ -469,6 +470,10 @@ begin
   dtArray(_Data,Arr);
 end;
 
+procedure THIStringTable._var_PerPage;
+begin
+  dtInteger(_Data, Control.LVPerPage);
+end;
 
 end.
 
