@@ -22,6 +22,7 @@ type
      _data_Text:THI_Event;
 
      procedure _work_DoText(var Data:TData; Index:word);
+     procedure _work_doAlignment(var Data:TData; Index:word);
      procedure _var_Caption(var Data:TData; Index:word);
 
      constructor Create(Parent:PControl);
@@ -83,6 +84,11 @@ end;
 procedure THILabel._work_DoText;
 begin
    Control.Caption := ReadString(Data,_data_Text);
+end;
+
+procedure THILabel._work_doAlignment;
+begin
+  Control.TextAlign := TTextAlign(ToInteger(Data));
 end;
 
 procedure THILabel.SetAlignment;
