@@ -10,6 +10,7 @@ type
     FEvent:cardinal;
    public
     _prop_Name:string;
+    _prop_ManualReset:boolean; //Добавлено
 
     _event_onCreate:THI_Event;
 
@@ -33,7 +34,8 @@ end;
 procedure THIEvents._work_doCreate;
 begin
    CloseHandle(FEvent);
-   FEvent := CreateEvent(nil,true,false,PChar(_prop_Name));
+//   FEvent := CreateEvent(nil,true,false,PChar(_prop_Name));
+   FEvent := CreateEvent(nil,_prop_ManualReset,false,PChar(_prop_Name)); //Заменен true на _prop_ManualReset
    _hi_CreateEvent(_Data,@_event_onCreate);
 end;
 
