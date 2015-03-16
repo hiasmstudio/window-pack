@@ -7,7 +7,7 @@ interface
 uses Windows,Kol,Share,Img_Draw;
 
 type
-  THIImg_TextInRect= class(THIDraw2PR)
+  THIImg_TextInRect= class(THIImg)
    private
     GFont: PGraphicTool;
     procedure SetNewFont(Value:TFontRec);
@@ -68,7 +68,7 @@ begin
 TRY
    if not ImgGetDC(_Data) then exit;
    ReadXY(_Data);
-   ImgNewSizeDC;
+   ImgNewSizeDC;   
    s := ReadString(_Data,_data_Text,_prop_Text);
    SetBkMode(pDC, TRANSPARENT);
    SetTextColor(pDC, Color2RGB(GFont.Color));   
@@ -79,8 +79,6 @@ TRY
    flag := DT_TOP;
    SetRect(Rect, x1 + _prop_OffsetLeft, y1 + _prop_OffsetTop,
                  x2 - _prop_OffsetRight, y2 - _prop_OffsetBottom);
-
-   newRect := Rect;
 
    case _prop_AlignHorizon of // выравнивание по горизонтали
     0: flag := flag OR DT_LEFT;
@@ -101,6 +99,9 @@ TRY
    // h - высота прямоугольника в который помещается текст
    // в newRect - заносится размер прямоугольника занимаемый текстом
    // (DT_CALCRECT - вычесляет размер, рисование не происходит)
+   
+   newRect := rect;
+   
    h := DrawText(pDC,PChar(s), -1, newRect, flag OR DT_CALCRECT); 
   
    case _prop_AlignVertical of // выравнивание по вертикали
@@ -124,10 +125,10 @@ TRY
       if mTransform._Set(pDC, Left, Top, Right, Bottom) then  //если необходимо изменить координаты (rotate, flip)
         Rect := mTransform._GetRect(Rect);
     end;
-   dtInteger(Data, Rect.Left);
-   dtInteger(dWidth, Rect.Right);
-   dtInteger(dTop, Rect.Top);
-   dtInteger(dHeight, Rect.Bottom);
+   dtInteger(Data, newRect.Left);
+   dtInteger(dWidth, newRect.Right);
+   dtInteger(dTop, newRect.Top);
+   dtInteger(dHeight, newRect.Bottom);
    Data.ldata:= @dTop;
    dTop.ldata:= @dWidth;
    dWidth.ldata:= @dHeight;
