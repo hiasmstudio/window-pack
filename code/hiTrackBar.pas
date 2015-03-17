@@ -151,7 +151,7 @@ begin
    GenGuid(TRACK_GUID);
    Guid := TRACK_GUID;
    DoInitCommonControls( ICC_BAR_CLASSES );
-   Control := _NewCommonControl( FParent,'msctls_trackbar32', WS_CHILD or WS_VISIBLE or
+   Control := _NewCommonControl( FParent,'msctls_trackbar32', WS_CHILD or WS_VISIBLE or WS_TABSTOP or 
                                  TBS_FIXEDLENGTH or TBS_AUTOTICKS or TBS_ENABLESELRANGE or
                                  Orientation2Style[ FOrientation ] or
                                  UseToolTip2Style[ FUseToolTip ] or
