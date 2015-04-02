@@ -56,10 +56,10 @@ var
   end;
 
 begin
-  str := ReadString(_Data, _data_String);
-  padstring := ReadString(_Data, _data_PadString);
+  str := ReadString(_Data, _data_String, _prop_String);
+  padstring := ReadString(_Data, _data_PadString, _prop_PadString);
   if padstring ='' then padstring := ' ';
-  padlength := ReadInteger(_Data, _data_PadLength);
+  padlength := ReadInteger(_Data, _data_PadLength, _prop_PadLength);
 
   pad_to_go := padlength - length(str);
   if pad_to_go > 0 then
