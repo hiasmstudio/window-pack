@@ -17,6 +17,7 @@ type
     _prop_Kind:byte;
     _prop_Max:integer;
     _event_onPosition:THI_Event;
+    _event_onEndScroll:THI_Event;
     
     procedure Init; override;
     procedure _work_doPosition(var _Data:TData; Index:word);
@@ -64,8 +65,12 @@ begin
       SB_PAGERIGHT:           inc(si.nPos, _prop_Page);
       SB_THUMBPOSITION,
       SB_THUMBTRACK: si.nPos := si.nTrackPos;
-      SB_ENDSCROLL:  if _prop_ScrollMode = 1 then
+      SB_ENDSCROLL:
+      begin
+        if _prop_ScrollMode = 1 then
          _hi_OnEvent(_event_onPosition,si.nPos);
+        _hi_OnEvent(_event_onEndScroll);
+      end;   
      end;
      Update;
      if _prop_ScrollMode = 0 then
