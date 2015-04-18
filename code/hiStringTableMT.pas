@@ -5,6 +5,10 @@ interface
 uses Windows,Messages,{for new}Share,Win,Debug,ListEdit,Kol,ShellAPI;
 
 const
+   CLEAR_FULL         = 0;
+   CLEAR_COLUMNS      = 1;
+   CLEAR_TABLE        = 2;
+
    _Flags_NEV         = DT_NOPREFIX or DT_END_ELLIPSIS or DT_VCENTER;
    _Flags_WL          = DT_NOPREFIX or DT_END_ELLIPSIS or DT_VCENTER or DT_WORDBREAK or DT_LEFT; 
    _Flags_WR          = DT_NOPREFIX or DT_END_ELLIPSIS or DT_VCENTER or DT_WORDBREAK or DT_RIGHT;
@@ -400,8 +404,12 @@ type
     procedure _var_StrLstArray(var _Data:TData; Index:word);
     procedure _var_ImgSize(var _Data:TData; Index:word);
     
+    function FullSaveColumns(_Dlm: Char): string;
+    procedure FullLoadColumns(StrCol: string; _Dlm: Char); 
+    function FullSaveTable(_CellDlm, _Dlm: Char): string;
+    procedure FullLoadTable(var StrTbl: string; _CellDlm, _Dlm: Char);
+    procedure FullClear(Mode: Cardinal = CLEAR_FULL);
   end;
-
 
 implementation
 
@@ -787,6 +795,7 @@ begin
    Control.DoubleBuffered := _prop_DoubleBuffered;
 
    if FAutoTblStrLst then for ind:= 0 to FList.Count - 1 do Add(FList.Items[ind]);
+   Control.SubClassName := 'obj_StringTableMT';
    Control.InvaliDate;
 end;
 
@@ -1133,8 +1142,7 @@ end;
 //
 procedure ThiStringTableMT._var_EndIdx;
 begin
-   if Control.Count = 0 then dtNull(_Data)
-   else dtInteger(_Data,Control.Count - 1);
+  dtInteger(_Data,Control.Count - 1);
 end;
 
 //Select - Содержит выбранную строку со столбцами, разделенными подстрокой StrDelimiter
@@ -1497,8 +1505,7 @@ end;
 //
 procedure ThiStringTableMT._var_EndIdxCol;
 begin
-   if CList.Count = 0 then dtNull(_Data)
-   else dtInteger(_Data,CList.Count - 1);
+  dtInteger(_Data,CList.Count - 1);
 end;
 
 //#####################################################################
@@ -2011,8 +2018,7 @@ end;
 //
 procedure ThiStringTableMT._var_EndIdxIcons;
 begin
-   if IList.Count = 0 then dtNull(_Data) 
-   else dtInteger(_Data,IList.Count - 1);
+  dtInteger(_Data,IList.Count - 1);
 end;
 
 //ImgSize - Содержит размер иконок в списках иконок Icons и IconsCheck
@@ -2404,8 +2410,7 @@ end;
 //
 procedure ThiStringTableMT._var_EndIdxStrLst;
 begin
-   if FList.Count = 0 then dtNull(_Data)
-   else dtInteger(_Data,FList.Count - 1);
+  dtInteger(_Data,FList.Count - 1);
 end;
 
 //TextStrLst - Содержит список строк строкового накопителя, разделенных символами 10 и 13
@@ -3179,6 +3184,109 @@ begin
    end;
    _Data := FData;
 end;
+
+function ThiStringTableMT.FullSaveColumns;
+var
+  i: integer;
+begin
+  Result := '';
+  if Control.LVColCount > 0 then
+  begin
+    for i := 0 to Control.LVColCount - 1 do
+    begin
+      Result := Result + Control.LVColText[i]  + '=' + 
+                int2str(Control.LVColWidth[i]) + '=' +
+                int2str(Control.LVColImage[i]) + '=' +
+                int2str(ord(Control.LVColAlign[i])) + _Dlm;
+    end;
+    deleteTail(Result, 1);
+  end;
+end;
+
+procedure ThiStringTableMT.FullLoadColumns; 
+var
+  s: string;
+begin
+  FullClear(CLEAR_COLUMNS);
+  s := StrCol;
+  Replace(s, _Dlm, #13#10);
+  CList.SetText(s, false);
+  SetColumns(CList, 0);
+end;
+
+function ThiStringTableMT.FullSaveTable;
+var
+  i, j: integer;
+  s: string;
+begin
+  Result := '';
+  if (Control.Count <= 0) or (Control.LVColCount <= 0) then exit;
+  for i := 0 to Control.Count - 1 do
+  begin
+    s := int2str(Control.LVItemStateImgIdx[i] - 1) + _CellDlm +
+         int2str(Control.LVItemImageIndex[i])      + _CellDlm + 
+         PakColor2Str(Control.LVItemData[i])       + _CellDlm;   
+    for j := 0 to Control.LVColCount - 1 do
+      s := s + Control.LVItems[i,j] + _CellDlm;
+    deleteTail(s, 1);
+    Result := Result + s + _Dlm;
+  end;
+  deleteTail(Result, 1);  
+end;
+
+procedure ThiStringTableMT.FullLoadTable;
+var
+  i, chk: integer;
+  d: PData;
+  dt, dp: TData;
+  st: string;
+  SList: PStrList;  
+begin
+  FullClear(CLEAR_TABLE);
+  SList := NewStrList;
+  dtNull(dt);
+TRY    
+  Replace(StrTbl, _Dlm, #13#10);
+  SList.SetText(StrTbl, false);
+  if SList.Count = 0 then exit; 
+  for i := 0 to SList.Count - 1 do
+  begin 
+    d := @dt;
+    St := SList.Items[i] + _CellDlm; 
+    chk := str2int(GetTok(St, _CellDlm)) + 1; 
+    while St <> '' do
+    begin   
+      dtString(d^, GetTok(St, _CellDlm));
+      if St <> '' then
+      begin
+        new(d.ldata);
+        d := d.ldata;
+      end;    
+    end;
+    dp := dt;
+    MT_ActionItm(dp, ITM_ADD);
+    freedata(@dt);
+    Control.LVItemStateImgIdx[i] := chk;
+  end;      
+FINALLY
+  SList.free;
+END;    
+end;
+
+procedure ThiStringTableMT.FullClear;  
+begin
+  Control.BeginUpdate;
+  if (Mode = CLEAR_FULL) or (Mode = CLEAR_TABLE) then Control.Clear;
+  if (Mode = CLEAR_FULL) or (Mode = CLEAR_COLUMNS) then
+  begin
+    repeat
+      Control.LVColDelete(Control.LVColCount-1);
+    until Control.LVColCount <= 0;
+    CList.Clear;
+  end;
+  Control.EndUpDate;
+end;
+
 //
 //----------------------------   Конец   ------------------------------
 end.

@@ -233,8 +233,7 @@ end;
 //
 procedure THIIconsManager._var_EndIdxIcons;
 begin
-  if _CountIcons <> 0 then
-    dtInteger(_Data, _CountIcons - 1)
+  dtInteger(_Data, _CountIcons - 1)
 end;
 
 end.

@@ -243,10 +243,7 @@ end;
 
 procedure THIStrList._var_EndIdx;
 begin
-  if FList.Count = 0 then
-    dtNull(_Data)
-  else
-    dtInteger(_Data, FList.Count - 1);
+  dtInteger(_Data, FList.Count - 1);
 end;
 
 procedure THIStrList._var_Index;

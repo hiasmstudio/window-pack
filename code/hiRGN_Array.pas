@@ -185,10 +185,7 @@ end;
 
 procedure THIRGN_Array._var_EndIdx;
 begin
-  if ArrRegion.Count = 0 then
-    dtNull(_Data)
-  else
-    dtInteger(_Data, ArrRegion.Count - 1);
+  dtInteger(_Data, ArrRegion.Count - 1);
 end;
 
 end.

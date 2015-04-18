@@ -362,10 +362,7 @@ end;
 
 procedure THIStringTable._var_EndIdx;
 begin
-  if Control.Count = 0 then
-    dtNull(_Data)
-  else
-    dtInteger(_Data, Control.Count - 1);
+  dtInteger(_Data, Control.Count - 1);
 end;
 
 function THIStringTable.Get(index:integer):string;

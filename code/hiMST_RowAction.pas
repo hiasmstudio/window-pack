@@ -231,10 +231,7 @@ var
 begin
   if not Assigned(_prop_MSTControl) then exit;
   sControl := _prop_MSTControl.ctrlpoint;
-  if sControl.Count = 0 then
-    dtNull(_Data)
-  else
-    dtInteger(_Data, sControl.Count - 1);
+  dtInteger(_Data, sControl.Count - 1);
 end;
 
 // Сдвигает строку вверх

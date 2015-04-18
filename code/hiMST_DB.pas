@@ -119,10 +119,7 @@ var
 begin
   if not Assigned(_prop_MSTControl) then exit;
   sControl := _prop_MSTControl.ctrlpoint;
-  if sControl.Count = 0 then
-    dtNull(_Data)
-  else
-    dtInteger(_Data, sControl.Count - 1);
+  dtInteger(_Data, sControl.Count - 1);
 end;
 
 // Содержит индекс последнего столбца в таблице
@@ -130,10 +127,7 @@ end;
 procedure THIMST_DB._var_EndIdxCol;
 begin
   if not Assigned(_prop_MSTControl) then exit;
-  if _prop_MSTControl.clistcount = 0 then
-    dtNull(_Data)
-  else
-    dtInteger(_Data, _prop_MSTControl.clistcount - 1);
+  dtInteger(_Data, _prop_MSTControl.clistcount - 1);
 end;
 
 end.

@@ -102,6 +102,7 @@ type
     FImgColumn,
     FRedaction,
     FEnableOnClick,
+    FChangeWidth,    
     FInfoTip: boolean;    
 
     FImgSize,
@@ -204,6 +205,7 @@ type
     _event_onClick,
     _event_onColumnClick,
     _event_onCheck,
+    _event_onChangeWidth,
     _event_onLineChange,
     _event_onBeforeLineChange: THI_Event;
 
@@ -241,6 +243,7 @@ type
     property _prop_MultiSelect: boolean     write FMultiSelect;
     property _prop_ColDelimiter: string     write ColDlm;
     property _prop_Columns: string          write SetTextColLst;
+    property _prop_ChangeWidth: boolean     write FChangeWidth;    
 
     procedure Init; override;
 
@@ -253,7 +256,8 @@ type
     procedure _work_doMultiSelect(var _Data: TData; Index: word);
     procedure _work_doEnableOnClick(var _Data: TData; Index: word);
     procedure _work_doColor(var _Data: TData; Index: word);
-    procedure _work_doClientRect(var _Data: TData; Index: word);    
+    procedure _work_doClientRect(var _Data: TData; Index: word);
+    procedure _work_doChangeWidth(var _Data: TData; Index: word);    
 
     procedure _work_doNIdxIcon(var _Data: TData; Index: word);
     procedure _work_doNColorRow(var _Data: TData; Index: word);
@@ -677,6 +681,70 @@ end;
 
 //==============================================================================
 
+function WndHDR(Sender: PControl; var Msg: TMsg; var Rslt: Integer): Boolean;
+const
+  HDN_FIRST            = -300;           { Header }
+  HDN_ITEMCHANGINGA    = HDN_FIRST - 0;
+  HDN_ITEMCHANGEDA     = HDN_FIRST - 1;
+  HDN_DIVIDERDBLCLICKA = HDN_FIRST - 5;
+  HDN_BEGINTRACKA      = HDN_FIRST - 6;
+  HDN_ENDTRACKA        = HDN_FIRST - 7;  
+  HDN_ITEMCHANGINGW    = HDN_FIRST - 20;
+  HDN_ITEMCHANGEDW     = HDN_FIRST - 21;
+  HDN_DIVIDERDBLCLICKW = HDN_FIRST - 25;
+  HDN_BEGINTRACKW      = HDN_FIRST - 26;
+  HDN_ENDTRACKW        = HDN_FIRST - 27;  
+type
+  tagNMHEADERA = packed record
+    Hdr: TNMHdr;
+    Item: Integer;
+    Button: Integer;
+    PItem: PHDItemA;
+  end;
+  HD_NOTIFY = tagNMHEADERA;
+  PHDNotify = ^HD_NOTIFY; 
+  PNMHEADER = ^tagNMHEADERA;  
+var
+  fClass: ThiMTStrTbl;
+  ind: integer;
+  di, dw: TData;
+  s: string;
+begin
+  Result := false;
+  fClass := ThiMTStrTbl(Sender.Tag);
+  with fClass do
+  begin
+    case Msg.message of
+      WM_NOTIFY:
+        case HD_NOTIFY(Pointer(Msg.LParam)^).Hdr.code of
+        HDN_ITEMCHANGINGA, HDN_ITEMCHANGINGW:
+          _hi_onEvent(_event_onChangeWidth, Sender.LVColWidth[HD_NOTIFY(Pointer(Msg.LParam)^).Item]);        
+        HDN_ENDTRACKA, HDN_ENDTRACKW:
+        begin
+          ind := HD_NOTIFY(Pointer(Msg.LParam)^).Item;
+          s := Sender.LVColText[ind] + _ColDlm +
+               int2str(PHDNotify(PNMHEADER(Msg.LParam))^.pItem^.cxy) + _ColDlm +
+               int2str(Sender.LVColImage[ind]) + _ColDlm +
+               int2str(ord(Sender.LVColAlign[ind]));
+          CList.Items[ind] := InitColStr(s);
+          dtInteger(di, ind);
+          dtInteger(dw, PHDNotify(PNMHEADER(Msg.LParam))^.pItem^.cxy);
+          di.ldata := @dw;
+//          _hi_onEvent_(_event_onChangeWidth, di);
+        end;
+        HDN_BEGINTRACKA, HDN_BEGINTRACKW, HDN_DIVIDERDBLCLICKA, HDN_DIVIDERDBLCLICKW:
+          if not FChangeWidth then
+          begin
+            Rslt := 1;
+            Result := True;
+          end;          
+        end;  
+    end;      
+  end;   
+end;
+
+//==============================================================================
+
 procedure ThiMTStrTbl.detachwndproc;
 begin
   if Control.IsProcAttached(WndProcTabGrid) then
@@ -798,6 +866,7 @@ begin
   Control.LVTextBkColor   := FTextBkColor;
   Control.Tag             := Cardinal(Self);
   Control.AttachProc(WndProcTabGrid);
+  Control.AttachProc(WndHDR);  
   Control.DoubleBuffered := _prop_DoubleBuffered;
 end;
 
@@ -996,6 +1065,11 @@ end;
 procedure ThiMTStrTbl._work_doEnableOnClick;
 begin
   FEnableOnClick := ReadBool(_Data);
+end;
+
+procedure ThiMTStrTbl._work_doChangeWidth;
+begin
+  FChangeWidth := ReadBool(_Data);
 end;
 
 procedure ThiMTStrTbl._work_doGrid;
@@ -1362,10 +1436,7 @@ end;
 //
 procedure ThiMTStrTbl._var_EndIdx;
 begin
-  if Control.Count = 0 then
-    dtNull(_Data)
-  else
-    dtInteger(_Data, Control.Count - 1);
+  dtInteger(_Data, Control.Count - 1);
 end;
 
 // Содержит выбранную строку,
@@ -1397,10 +1468,7 @@ end;
 //
 procedure ThiMTStrTbl._var_EndIdxCol;
 begin
-  if CList.Count = 0 then
-    dtNull(_Data)
-  else
-    dtInteger(_Data, CList.Count - 1);
+  dtInteger(_Data, CList.Count - 1);
 end;
 
 //  Установка свойств менеджеров

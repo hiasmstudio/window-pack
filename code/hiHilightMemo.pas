@@ -1297,10 +1297,7 @@ procedure THIHiLightMemo._work_doHilightCaseSens;    begin _prop_HilightCaseSens
 
 procedure THIHiLightMemo._var_EndIdx;
 begin
-  if Count = 0 then
-    dtNull(_Data)
-  else
-    dtInteger(_Data, Count - 1);
+  dtInteger(_Data, Count - 1);
 end;
 
 procedure THIHiLightMemo._work_doColorUnderLine; 

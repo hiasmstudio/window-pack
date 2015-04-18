@@ -328,10 +328,7 @@ end;
 procedure THIMST_ColAction._var_EndIdxCol;
 begin
   if not Assigned(_prop_MSTControl) then exit;
-  if _prop_MSTControl.clistcount = 0 then
-    dtNull(_Data)
-  else
-    dtInteger(_Data, _prop_MSTControl.clistcount - 1);
+  dtInteger(_Data, _prop_MSTControl.clistcount - 1);
 end;
 
 procedure THIMST_ColAction._work_doMaxColWidth;

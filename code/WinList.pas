@@ -273,10 +273,7 @@ end;
 
 procedure THIWinList._var_EndIdx;
 begin
-  if Control.Count = 0 then
-    dtNull(_Data)
-  else
-    dtInteger(_Data, Control.Count - 1);
+  dtInteger(_Data, Control.Count - 1);
 end;
 
 procedure THIWinList._Set;
