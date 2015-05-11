@@ -507,7 +507,8 @@ end;
 
 procedure THIMainForm._work_doMinimize;
 begin
-  Applet.WindowState := wsMinimized;
+//  Applet.WindowState := wsMinimized;
+  PostMessage( Applet.Handle, WM_SYSCOMMAND, SC_MINIMIZE, 0);  
 end;
 
 procedure THIMainForm._work_doAlphaBlendValue;
