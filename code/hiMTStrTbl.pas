@@ -77,6 +77,7 @@ type
 
     FData_1: TData;
 
+    CBvalue: integer;
     GMouse: boolean;
     FLargIconsManager,
     FSmallIconsManager,
@@ -482,6 +483,7 @@ procedure ThiMTStrTbl._OnBeforeLineChange;
 var
   dt: TData;
 begin
+  if _prop_CheckBoxes then CBvalue := Control.LVItemStateImgIdx[idx]; //сохраним
   dt := Get(Idx); 
   _hi_OnEvent_(_event_onBeforeLineChange, dt);
 end;
@@ -490,6 +492,7 @@ procedure ThiMTStrTbl._OnLineChange;
 var
   dt: TData;
 begin
+  if _prop_CheckBoxes then Control.LVItemStateImgIdx[idx] := CBvalue; //восстановим
   dt := Get(Idx);
   _hi_OnEvent_(_event_onLineChange, dt);
 end;
