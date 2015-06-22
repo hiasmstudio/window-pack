@@ -28,7 +28,7 @@ INSERT INTO "groups" VALUES(41,'Cables','Кабели',28);
 INSERT INTO "groups" VALUES(42,'GameEngine','GameEngine',29);
 DELETE FROM sqlite_sequence;
 INSERT INTO "sqlite_sequence" VALUES('groups',42);
-INSERT INTO "sqlite_sequence" VALUES('elements',908);
+INSERT INTO "sqlite_sequence" VALUES('elements',909);
 INSERT INTO "sqlite_sequence" VALUES('files',21);
 CREATE TABLE elements(id INTEGER PRIMARY KEY AUTOINCREMENT,name varchar(64),info varchar(64),tab int,pos int,hash varchar(32));
 INSERT INTO "elements" VALUES(1,'Label','Нaдпиcь',1,1,'9A8A102B87CC1EA8F21DC8AF6D60B970');
@@ -935,6 +935,7 @@ INSERT INTO "elements" VALUES(905,'*Windows_Регионы Изменение','Регионы Изменени
 INSERT INTO "elements" VALUES(906,'*Windows_Регионы Данные','Регионы Данные',5,28,NULL);
 INSERT INTO "elements" VALUES(907,'*Windows_Регионы Операции','Регионы Операции',5,32,NULL);
 INSERT INTO "elements" VALUES(908,'StrPad','Дополнение строки другой строкой до заданной длины',11,12,NULL);
+INSERT INTO "elements" VALUES(909,'Between','Проверка вхождение данных в диапазон',13,13,NULL);
 CREATE TABLE files_link(file_id int,el_id int);
 INSERT INTO "files_link" VALUES(21,404);
 INSERT INTO "files_link" VALUES(21,405);
