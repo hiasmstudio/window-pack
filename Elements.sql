@@ -487,11 +487,11 @@ INSERT INTO "elements" VALUES(453,'Counter','Счетчик',21,43,'0193B59067ECD9B7BC6
 INSERT INTO "elements" VALUES(454,'Random','Случайное число',13,5,'993C12DFB20326B5E0A66DA9A1DC7D36');
 INSERT INTO "elements" VALUES(455,'MathParse','Математический парсер',13,6,'FB94BE0EBFB2340AAE92B78D41AFE4A2');
 INSERT INTO "elements" VALUES(456,'If_else','Условный блок',13,7,'9B9F1F1B8A82B87EAFDD7EDAFE7F846D');
-INSERT INTO "elements" VALUES(457,'For','Цикл со счетчиком',13,8,'986457C491A6D71176714E9F1EE72657');
-INSERT INTO "elements" VALUES(458,'Repeat','Цикл с условием',13,9,'E0870BAFE9522F50D782EB4BE37ECFF6');
-INSERT INTO "elements" VALUES(459,'IntToBits','Проверка битов числа',13,10,'44385433ADA17DC34E08A89431916F81');
-INSERT INTO "elements" VALUES(460,'BitsToInt','Перевод битов в число',13,11,'176E045ACF7258C5076F76572A20F748');
-INSERT INTO "elements" VALUES(461,'FastMathParse','Компилятор математики',13,12,'298FAE2D1300F508A8677A857389A21A');
+INSERT INTO "elements" VALUES(457,'For','Цикл со счетчиком',13,9,'986457C491A6D71176714E9F1EE72657');
+INSERT INTO "elements" VALUES(458,'Repeat','Цикл с условием',13,10,'E0870BAFE9522F50D782EB4BE37ECFF6');
+INSERT INTO "elements" VALUES(459,'IntToBits','Проверка битов числа',13,11,'44385433ADA17DC34E08A89431916F81');
+INSERT INTO "elements" VALUES(460,'BitsToInt','Перевод битов в число',13,12,'176E045ACF7258C5076F76572A20F748');
+INSERT INTO "elements" VALUES(461,'FastMathParse','Компилятор математики',13,13,'298FAE2D1300F508A8677A857389A21A');
 INSERT INTO "elements" VALUES(462,'*Arrays_Массивы','Массивы',14,1,'');
 INSERT INTO "elements" VALUES(463,'IntegerArray','Массив целых чисел',14,2,'BFEEA94F43DACB311888A80025506DBE');
 INSERT INTO "elements" VALUES(464,'RealArray','Массив дробных чисел',14,3,'F8986D3E24A7DF04A35256BF4830270A');
@@ -935,7 +935,7 @@ INSERT INTO "elements" VALUES(905,'*Windows_Регионы Изменение','Регионы Изменени
 INSERT INTO "elements" VALUES(906,'*Windows_Регионы Данные','Регионы Данные',5,28,NULL);
 INSERT INTO "elements" VALUES(907,'*Windows_Регионы Операции','Регионы Операции',5,32,NULL);
 INSERT INTO "elements" VALUES(908,'StrPad','Дополнение строки другой строкой до заданной длины',11,12,NULL);
-INSERT INTO "elements" VALUES(909,'Between','Проверка вхождение данных в диапазон',13,13,NULL);
+INSERT INTO "elements" VALUES(909,'Between','Проверка вхождение данных в диапазон',13,8,NULL);
 CREATE TABLE files_link(file_id int,el_id int);
 INSERT INTO "files_link" VALUES(21,404);
 INSERT INTO "files_link" VALUES(21,405);
