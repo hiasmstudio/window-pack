@@ -24,6 +24,7 @@ type
     procedure _work_doTrim6(var _Data:TData; Index:word);  // NormalCenter
     procedure _work_doTrim7(var _Data:TData; Index:word);  // NormalText            
     
+    procedure _work_doChar(var _Data:TData; Index:word); 
     procedure _var_Result(var _Data:TData; Index:word);
   end;
 
@@ -196,6 +197,11 @@ end;
 procedure THITrim._var_Result;
 begin
   dtString(_Data, FRes);
+end;
+
+procedure THITrim._work_doChar;
+begin
+  _prop_Char := ToString(_Data);
 end;
 
 end.
