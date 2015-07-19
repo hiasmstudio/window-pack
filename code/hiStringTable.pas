@@ -172,7 +172,7 @@ begin
       s := Lst.Items[i] + '=';
       Control.LVColAdd(GetTok(s,'='),taLeft,80);
       if s <> '' then
-        Control.LVColWidth[i] := max(5,str2int(s));
+        Control.LVColWidth[i] := max(0,str2int(s));
      end;
    lst.Free;
 end;
