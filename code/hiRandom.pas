@@ -17,9 +17,10 @@ type
     _data_Min:THI_Event;
     _data_Max:THI_Event;
     _event_onRandom:THI_Event;
-
+    
     procedure _work_doRandom0(var _Data:TData; Index:word);
     procedure _work_doRandom1(var _Data:TData; Index:word);
+    procedure _work_doRandom2(var _Data:TData; Index:word);
     procedure _work_doRandomize(var _Data:TData; Index:word);
     procedure _work_doRandSeed0(var _Data:TData; Index:word);
     procedure _work_doRandSeed1(var _Data:TData; Index:word);
@@ -28,6 +29,7 @@ type
     procedure _work_doRandomWithoutRepeats(var _Data:TData; Index:word);
     procedure _var_Random0(var _Data:TData; Index:word);
     procedure _var_Random1(var _Data:TData; Index:word);
+    procedure _var_Random2(var _Data:TData; Index:word);
     procedure _var_RandSeed0(var _Data:TData; Index:word);
     procedure _var_RandSeed1(var _Data:TData; Index:word);
   end;
@@ -100,6 +102,12 @@ begin
   _hi_CreateEvent(_Data,@_event_onRandom,FRnd);
 end;
 
+procedure THIRandom._work_doRandom2;
+begin
+  FRnd:=cos(pi*_prop_Quality)*sqrt(-ln(1-_prop_Quality)/2)*(_prop_Max-_prop_Min) + (_prop_Min+_prop_Max)/2;   
+  _hi_CreateEvent(_Data,@_event_onRandom,FRnd);  
+end;
+
 procedure THIRandom._work_doRandomWithoutRepeats;
 var
   i, j, _min: integer;
@@ -133,6 +141,11 @@ begin
 end;
 
 procedure THIRandom._var_Random1;
+begin
+  dtReal(_Data,FRnd);
+end;
+
+procedure THIRandom._var_Random2;
 begin
   dtReal(_Data,FRnd);
 end;
