@@ -54,7 +54,8 @@ type
     procedure _work_doPosition(var _Data:TData; Index:word);
     procedure _work_doCaption(var _Data:TData; Index:word);
     procedure _work_doMax(var _Data:TData; Index:word);
-    procedure _work_doSetTheme(var _Data:TData; Index:word);    
+    procedure _work_doSetTheme(var _Data:TData; Index:word);
+    procedure _work_doUpdate(var _Data:TData; Index:word);        
     procedure _work_doEnabled(var _Data:TData; Index:word);    
     procedure _var_Position(var _Data:TData; Index:word);
     procedure _work_doRoundWidth(var _Data:TData; Index:word);
@@ -221,6 +222,11 @@ end;
 procedure ThiProgressBarRush.SetCaption;
 begin
   Control.Caption := Value;
+end;
+
+procedure ThiProgressBarRush._work_doUpdate;
+begin
+  PGRushControl(Control).SetAllNeedUpdate;
 end;
 
 end.

@@ -76,7 +76,8 @@ type
     procedure _work_doCheck(var _Data:TData; Index:word);
     procedure _work_doCaption(var _Data:TData; Index:word);
     procedure _work_doEnabled(var _Data:TData; Index:word);    
-    procedure _work_doSetTheme(var _Data:TData; Index:word);    
+    procedure _work_doSetTheme(var _Data:TData; Index:word);
+    procedure _work_doUpdate(var _Data:TData; Index:word);        
     procedure _var_Checked(var _Data:TData; Index:word);
     property _prop_Checked:byte write SetChecked;
     property _prop_Caption:string write SetCaption;
@@ -264,6 +265,11 @@ begin
   end;
 
   InvalidateRect(Control.Handle, nil, true);
+end;
+
+procedure ThiCheckBoxRush._work_doUpdate;
+begin
+  PGRushControl(Control).SetAllNeedUpdate;
 end;
 
 

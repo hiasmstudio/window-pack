@@ -88,7 +88,8 @@ type
      procedure _work_doColor(var _Data:TData; Index:word);
      procedure _work_doCaption(var _Data:TData; Index:word);
      procedure _work_doEnabled(var _Data:TData; Index:word);
-     procedure _work_doSetTheme(var _Data:TData; Index:word);     
+     procedure _work_doSetTheme(var _Data:TData; Index:word);
+     procedure _work_doUpdate(var _Data:TData; Index:word);          
      property _prop_Caption:string write SetCaption;              
      property _prop_Glyphs: PStrListEx write SetGlyphs;     
      procedure _work_doRoundWidth(var _Data:TData; Index:word);
@@ -377,6 +378,11 @@ begin
     Dis_BorderRoundHeight  :=  _prop_RoundHeight;
   end;  
   InvalidateRect(Control.Handle, nil, true);
+end;
+
+procedure ThiButtonRush._work_doUpdate;
+begin
+  PGRushControl(Control).SetAllNeedUpdate;
 end;
 
 end.

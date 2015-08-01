@@ -70,6 +70,7 @@ type
     procedure _work_doCaption(var _Data:TData; Index:word);
     procedure _work_doEnabled(var Data:TData; Index:word);
     procedure _work_doSetTheme(var _Data:TData; Index:word);
+    procedure _work_doUpdate(var _Data:TData; Index:word);    
     procedure _work_doRoundWidth(var _Data:TData; Index:word);
     procedure _work_doRoundHeight(var _Data:TData; Index:word);          
   end;
@@ -295,6 +296,11 @@ begin
     Dis_BorderRoundHeight  :=  _prop_RoundHeight;
   end;  
   InvalidateRect(Control.Handle, nil, true);
+end;
+
+procedure THIPanelRush._work_doUpdate;
+begin
+  PGRushControl(Control).SetAllNeedUpdate;
 end;
 
 end.

@@ -166,6 +166,7 @@ type
     procedure _work_doEnabled(var _Data:TData; Index:word);
     procedure _var_Position(var _Data:TData; Index:word);
     procedure _work_doSetTheme(var _Data:TData; Index:word);
+    procedure _work_doUpdate(var _Data:TData; Index:word);    
 
     procedure _work_doSlideRoundWidth(var _Data:TData; Index:word);          
     procedure _work_doSlideRoundHeight(var _Data:TData; Index:word);  
@@ -955,5 +956,10 @@ begin
   FThumbRoundHeight := ToInteger(_Data);
   PaintTrackbar;
 end;          
+
+procedure THITrackBarRush._work_doUpdate;
+begin
+  PaintTrackbar;
+end;
 
 end.

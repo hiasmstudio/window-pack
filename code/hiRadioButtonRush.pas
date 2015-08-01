@@ -74,7 +74,8 @@ type
     procedure _work_doSelect(var _Data:TData; Index:word);
     procedure _work_doCaption(var _Data:TData; Index:word);
     procedure _work_doEnabled(var _Data:TData; Index:word);
-    procedure _work_doSetTheme(var _Data:TData; Index:word);    
+    procedure _work_doSetTheme(var _Data:TData; Index:word);
+    procedure _work_doUpdate(var _Data:TData; Index:word);        
     procedure _var_Selected(var _Data:TData; Index:word);
     property _prop_Selected:byte write SetSelected;
     property _prop_Caption:string  write SetCaption;
@@ -260,6 +261,11 @@ begin
   end;
 
   InvalidateRect(Control.Handle, nil, true);
+end;
+
+procedure ThiRadioButtonRush._work_doUpdate;
+begin
+  PGRushControl(Control).SetAllNeedUpdate;
 end;
 
 end.
