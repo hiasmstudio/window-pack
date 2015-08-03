@@ -5,11 +5,12 @@ interface
 uses Kol,Share,Windows,Debug;
 
 type
-  TWinVersion = (wvUnknown,wv95,wv98,wvME,wvNT3,wvNT4,wvW2K,wvXP,wv2003,wvVista,wv7);
+  TWinVersion = (wvUnknown,wv95,wv98,wvME,wvNT3,wvNT4,wvW2K,wvXP,wv2003,wvVista,wv7,wv8,wv81,wv10TP,wv10);
   THIComputerInfo = class(TDebug)
    private
     ver,CSDVer:string;
     MajVer,MinVer,BuildN,PlID:DWORD;
+    XXbit:integer;
    
     function DetectWinVersion:TWinVersion;
     function DetectWinVersionStr:string;
@@ -73,6 +74,7 @@ begin
   Replace(res,'%p',int2str(PlID));
   Replace(res,'%b',int2str(BuildN));
   Replace(res,'%o',CSDVer);
+  Replace(res,'%x',int2str(XXbit));
   dtString(_Data,res);
 end;
 
@@ -90,6 +92,8 @@ begin
     MinVer := OSVersionInfo.DwMinorVersion;
     PlID := OSVersionInfo.dwPlatformId;
     BuildN := OSVersionInfo.dwBuildNumber;
+    if GetEnvironmentVariable(Pchar('ProgramFiles(x86)'), nil, 0) > 0 then
+     XXbit := 64 else XXbit := 32;
     case MajVer of
       3: Result := wvNT3;              // Windows NT 3
       4: case MinVer of
@@ -107,7 +111,13 @@ begin
       6: case MinVer of
            0: Result := wvVista;       // Windows Vista
            1: Result := wv7;           // Windows 7
+           2: Result := wv8;           // Windows 8
+           3: Result := wv81;          // Windows 8.1
+           4: Result := wv10;          // Windows 10 Technical Preview
          end;
+      10: case MinVer of
+           0: Result := wv10;          // Windows 10
+         end;         
    end;
   end;
 end;
@@ -125,8 +135,11 @@ const
     'XP',
     '2003',
     'Vista',
-    '7'
-  );
+    '7',
+    '8',
+    '8.1',
+    '10 Technical Preview',
+    '10');
 begin
   Result := VersStr[DetectWinVersion];
 end;
