@@ -257,7 +257,7 @@ begin
          begin
            if isMain and Assigned(Applet) then
              Applet.SetPosition(Control.Left,Control.Top);
-           if _prop_Name <> '' then  
+//           if _prop_Name <> '' then  
              for i := 0 to FormList.Count - 1 do
                PostMessage(FormList.Objects[i], WM_INNERMESSAGE, 0, 0);
            _hi_OnEvent(_event_onMove);
