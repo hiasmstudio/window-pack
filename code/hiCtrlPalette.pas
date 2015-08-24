@@ -26,6 +26,7 @@ type
     procedure _onMouseLeave( Sender: PObj ); override;
     procedure SetText(const Value:string);
     procedure ReDraw(index:integer);
+    procedure Invalidate;
    public
     _prop_Caption:string;  
     _prop_CColor:TColor;
@@ -35,9 +36,13 @@ type
     _prop_BoxDrawManager:IBoxDrawManager;
     _prop_ItemHeight:integer;
     _prop_Padding:integer;
+    _prop_FileName:string;
 
+    _data_str:THI_Event;    
+    _data_FileName:THI_Event;
     _event_onClick:THI_Event;
     _event_onChangeState:THI_Event;
+    _event_onChange:THI_Event;    
     
     constructor Create(Parent:PControl);
     destructor Destroy; override;
@@ -46,8 +51,21 @@ type
     property _prop_CFont:TFontRec write SetNewCFont;
     property _prop_SelectedFont:TFontRec write SetNewSelectedFont;
 
+    procedure _work_doAdd(var _Data:TData; Index:word);    
+    procedure _work_doClear(var _Data:TData; Index:word);
+    procedure _work_doDelete(var _Data:TData; Index:word);
+    procedure _work_doReplace(var _Data:TData; Index:word);
+    procedure _work_doInsert(var _Data:TData; Index:word);
+    procedure _work_doLoad(var _Data:TData; Index:word);
+    procedure _work_doSave(var _Data:TData; Index:word);
+                
     procedure _work_doCaption(var _Data:TData; Index:word);
     procedure _work_doStrings(var _Data:TData; Index:word);
+    
+    procedure _var_Strings(var _Data:TData; Index:word);
+    procedure _var_Count(var _Data:TData; Index:word);
+    procedure _var_EndIdx(var _Data:TData; Index:word);    
+    
   end;
 
 implementation
@@ -270,12 +288,105 @@ begin
   InvalidateRect(Control.Handle, nil, false);
 end;
 
-procedure THICtrlPalette._work_doStrings;
+procedure THICtrlPalette.Invalidate;
 begin
-  _prop_Strings := ToString(_Data);
   if Control.height > FCaptionH + 1 then
     Control.Height := FCaptionH + FList.Count * _prop_ItemHeight + _prop_Padding*2 + 2;
   InvalidateRect(Control.Handle, nil, false);
+end;
+
+procedure THICtrlPalette._work_doStrings;
+begin
+  _prop_Strings := ToString(_Data);
+  Invalidate;
+  _hi_CreateEvent(_Data, @_event_onChange);
+end;
+
+procedure THICtrlPalette._work_doAdd;
+begin
+  FList.Add(ReadString(_Data,_data_str,''));
+  Invalidate;
+  _hi_CreateEvent(_Data, @_event_onChange);
+end;
+
+procedure THICtrlPalette._work_doClear;
+begin
+  FList.Clear;
+  Invalidate;
+  _hi_CreateEvent(_Data, @_event_onChange);
+end;
+
+procedure THICtrlPalette._work_doDelete;
+var
+  ind:integer;
+begin
+  ind := ToIntIndex(_Data);
+  if (ind < 0) or (ind > FList.Count - 1) then exit;
+  FList.Delete(ind);
+  Invalidate;
+  _hi_CreateEvent(_Data, @_event_onChange);
+end;
+
+procedure THICtrlPalette._work_doInsert;
+var
+  ind:integer;
+begin
+  ind := ToIntIndex(_Data);
+  if (ind < -1) or (ind > FList.Count) then exit
+  else
+    if ind = -1 then
+      ind := FList.Count; 
+  FList.Insert(ind, ReadString(_Data, _data_str, ''));
+  Invalidate;  
+  _hi_CreateEvent(_Data, @_event_onChange);
+end;
+
+procedure THICtrlPalette._work_doReplace;
+var
+  ind:integer;
+begin
+  ind := ToIntIndex(_Data);
+  if (ind < 0) or (ind > FList.Count - 1) then exit;
+  FList.Delete(ind);
+  FList.Insert(ind, ReadString(_Data, _data_str, ''));
+  Invalidate;     
+  _hi_CreateEvent(_Data, @_event_onChange);
+end;
+
+procedure THICtrlPalette._work_doLoad;
+var
+  fn:string;
+begin
+  fn := ReadString(_Data,_data_FileName,_prop_FileName);
+  if FileExists(fn) then
+  begin
+    FList.LoadFromFile(fn);
+    Invalidate;
+    _hi_CreateEvent(_Data, @_event_onChange);
+  end;
+end;
+
+procedure THICtrlPalette._work_doSave;
+var
+  fn:string;
+begin
+  fn := ReadString(_Data,_data_FileName,_prop_FileName);
+  FList.SaveToFile(fn);
+end;
+
+procedure THICtrlPalette._var_Strings;
+begin
+  dtString(_Data, FList.Text);
+end;
+
+procedure THICtrlPalette._var_Count;
+begin
+  dtInteger(_Data, FList.Count);
+end;
+
+procedure THICtrlPalette._var_EndIdx;
+begin
+ dtInteger(_Data, FList.Count - 1);
 end;
 
 end.
