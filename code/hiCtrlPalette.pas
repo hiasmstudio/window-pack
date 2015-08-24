@@ -28,6 +28,7 @@ type
     procedure ReDraw(index:integer);
     procedure Invalidate;
    public
+    _prop_DefDropDown:boolean;
     _prop_Caption:string;  
     _prop_CColor:TColor;
     _prop_BColor:TColor;
@@ -105,7 +106,10 @@ begin
    FBack := CreateSolidBrush(Color2RGB(Control.Color)); 
    FCaptionBack := CreateSolidBrush(Color2RGB(_prop_CColor));
    FCaptionH := 18;
-   Control.Height := FCaptionH + FList.Count * _prop_ItemHeight + _prop_Padding*2 + 2;
+   if _prop_DefDropDown then
+     Control.Height := FCaptionH + FList.Count * _prop_ItemHeight + _prop_Padding*2 + 2
+   else
+     Control.Height := FCaptionH + 1;  
    FActive := -1; 
 end;
 
