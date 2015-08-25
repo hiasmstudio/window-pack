@@ -29,6 +29,7 @@ type
     procedure Invalidate;
    public
     _prop_DefDropDown:boolean;
+    _prop_CollapseOnSelect:boolean;
     _prop_Caption:string;  
     _prop_CColor:TColor;
     _prop_BColor:TColor;
@@ -152,7 +153,10 @@ begin
     begin
       n := (Mouse.y - FCaptionH - _prop_Padding) div _prop_ItemHeight;
       if n <> -1 then
+      begin
         _hi_onEvent(_event_onClick, FList.Items[n]);
+        if _prop_CollapseOnSelect then Control.Height := FCaptionH + 1;
+      end;  
     end;
 end;
 
