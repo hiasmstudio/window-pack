@@ -2,7 +2,7 @@ unit hiDeviceInfo;
 
 interface
 
-uses Windows, Kol, Share, Debug, hiIconsManager;
+uses Windows, Messages, Kol, Share, Debug, hiIconsManager;
 
 const
   SetupApiModuleName = 'SetupApi.dll';
@@ -381,6 +381,9 @@ type
      ilDevices: PImageList;
      ClassesCount, DevicesCount: integer;
 
+     utilclass: TWndClass;
+     ToolWnd: HWND;
+
      procedure InitImageList;
      function GetDeviceImageIndex(DeviceGUID: TGUID): Integer;
 
@@ -399,6 +402,7 @@ type
      _event_onBreak: THI_Event;           
      _event_onDeviceInfo: THI_Event;
      _event_onDeviceOnOff: THI_Event;     
+     _event_onDevChange: THI_Event;
      _data_DeviceIdx: THI_Event;
 
      constructor Create;
@@ -737,6 +741,23 @@ end;
 
 //------------------------------------------------------------------------------
 
+function MWnd(Window: HWND; Message: dword; Wparam: WPARAM; Lparam:LPARAM): LRESULT; stdcall;
+var
+//  s: ^string;
+  MySelf: THiDeviceInfo;
+begin
+  case message of
+    WM_DEVICECHANGE:
+    begin
+      MySelf := THiDeviceInfo(pointer(GetWindowLong(Window,GWL_USERDATA))); 
+      if Assigned(MySelf) and (Wparam = $7) then _hi_onEvent(MySelf._event_onDevChange);
+      Result := 1;
+    end;
+    else
+      Result := DefWindowProc(Window, Message, Wparam, Lparam);
+  end;
+end;
+
 procedure THiDeviceInfo.InitImageList;
 begin
   // Получаем хэндл ImageList-а в котором находятся
@@ -749,8 +770,21 @@ begin
 end;
 
 constructor THiDeviceInfo.Create;
+var
+  s: string;
 begin
   inherited;
+
+  s := int2str(longint(Self)); 
+  ZeroMemory(@utilclass,sizeof(utilclass));
+  utilclass.lpfnWndProc := @MWnd;
+  utilclass.lpszClassName := @s[1];
+  utilclass.hInstance := HInstance;
+  RegisterClassA(utilclass);
+  ToolWnd := CreateWindowEx(WS_EX_TOOLWINDOW, utilclass.lpszclassname, nil,
+    WS_POPUP,0,0,0,0,0,0, hinstance ,nil);
+  SetWindowLong(ToolWnd, GWL_USERDATA, longint(Self));
+
   Icon := NewIcon;
   DeviceHelper := TDeviceHelper.Create;
   ilDevices := NewImageList(nil);
@@ -765,6 +799,8 @@ begin
     SetupDiDestroyDeviceInfoList(hAllDevices);
   ilDevices.free;
   Icon.free;
+  Windows.DestroyWindow(ToolWnd);
+  UnregisterClass(utilclass.lpszClassName, hInstance);  
   inherited;
 end;
 
