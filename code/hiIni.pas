@@ -64,6 +64,7 @@ begin
    else
      Ini.ValueString(ReadString(_Data,_data_Key,_prop_Key),
                      ReadString(_Data,_data_Value,''));
+   Ini.ClearAll;  // ReCache
    Ini.Free;
 end;
 
@@ -97,6 +98,7 @@ procedure THIini._work_doDeleteKey;
 begin
    Open(_Data,ifmWrite);
    Ini.ClearKey(ReadString(_Data,_data_Key,_prop_Key));
+   Ini.ClearAll;  // ReCache
    Ini.Free;
 end;
 
@@ -104,13 +106,24 @@ procedure THIini._work_doEraseSection;
 begin
    Open(_Data,ifmWrite);
    Ini.ClearSection;
+   Ini.ClearAll;  // ReCache
    Ini.Free;
 end;
 
+//******************************************************************************
+// Edit by nesco 26.10.2015
+//******************************************************************************
+//
 procedure THIini._work_doClearAll;
+var
+  iniFile: File;
 begin
-   Open(_Data,ifmWrite);
-   Ini.ClearAll;
+   AssignFile(iniFile, ReadString(_Data,_data_FileName,_prop_FileName));
+   ReWrite(iniFile);
+   CloseFile(iniFile);
+   Ini := OpenIniFile(ReadFileName(ReadString(_Data,_data_FileName,_prop_FileName)));
+   Ini.Mode := ifmWrite;
+   Ini.ClearAll;  // ReCache
    Ini.Free;
 end;
 
