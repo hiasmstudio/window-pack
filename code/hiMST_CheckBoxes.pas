@@ -26,6 +26,7 @@ type
      procedure _work_doCheckBox(var _Data: TData; Index: word);
      procedure _var_AllCheck(var _Data: TData; Index: word);
      procedure _var_CheckBoxes(var _Data: TData; Index: word);
+     procedure _var_CheckCount(var _Data: TData; Index: word);     
   end;
 
 implementation
@@ -134,6 +135,20 @@ begin
   if not Assigned(_prop_MSTControl) then exit;
   sControl := _prop_MSTControl.ctrlpoint; 
   Result := sControl.Count;
+end;
+
+procedure THIMST_CheckBoxes._var_CheckCount;
+var
+  i, j: integer;
+  sControl: PControl;
+begin
+  if not Assigned(_prop_MSTControl) then exit;
+  sControl := _prop_MSTControl.ctrlpoint; 
+  j := 0;
+  if sControl.Count > 0 then
+    for i := 0 to sControl.Count - 1 do
+      if sControl.LVItemStateImgIdx[i] > 1 then inc(j);
+  dtInteger(_Data, j);
 end;
 
 end.
