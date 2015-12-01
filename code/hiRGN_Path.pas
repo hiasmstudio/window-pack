@@ -10,6 +10,8 @@ type
     FRegion: HRGN;
     pDC: HDC;
    public
+    _prop_WidenPath: boolean;
+    
     _event_onStartCreate:THI_Event;
     _event_onFinishCreate:THI_Event;    
 
@@ -28,6 +30,7 @@ begin
   BeginPath(pDC);
    _hi_onEvent(_event_onStartCreate, integer(pDC));
   EndPath(pDC);
+  if _prop_WidenPath then WidenPath(pDC);
   FRegion := PathToRegion(pDC);
   DeleteDC(pDC);
    _hi_onEvent(_event_onFinishCreate, integer(FRegion));
