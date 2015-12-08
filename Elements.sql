@@ -750,7 +750,7 @@ INSERT INTO "elements" VALUES(716,'hcStrCat','Соединение двух строк в одну',36,1
 INSERT INTO "elements" VALUES(717,'*Core_Среда','Среда',36,15,'');
 INSERT INTO "elements" VALUES(718,'hcTrace','Трассировка',36,16,'');
 INSERT INTO "elements" VALUES(719,'hcCommander','Вызов команд',36,17,'');
-INSERT INTO "elements" VALUES(720,'hcCommandHandler','Обработчик команд',36,18,'');
+INSERT INTO "elements" VALUES(720,'hcCommanHandler','Обработчик команд',36,18,'');
 INSERT INTO "elements" VALUES(721,'hcSDKEvents','События схемы',36,19,'');
 INSERT INTO "elements" VALUES(722,'hcKeyHandler','Обработчик клавиатуры',36,20,'');
 INSERT INTO "elements" VALUES(723,'hcMouseHandler','Обработчик мыши',36,21,'');
