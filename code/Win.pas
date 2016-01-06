@@ -94,7 +94,7 @@ type
 
      _prop_WidthScale:integer;
      _prop_HeightScale:integer;
-      
+
      _event_onKeyDown:THI_Event;
      _event_onKeyUp:THI_Event;
      _event_onChar:THI_Event; //!!! KeyPreview
@@ -158,6 +158,8 @@ type
  end;
 
 
+var  ListOfNameControls: PStrListEx;
+
 implementation
 
 var defHint:THIHintManager;
@@ -215,7 +217,8 @@ begin
    end;
    
    if hid <> nil then fHint.free(hid);
-   
+   if ListOfNameControls.IndexOfObj(Control) <> -1 then
+     ListOfNameControls.Delete(ListOfNameControls.IndexOfObj(Control));
    inherited;
 end;
 
@@ -322,8 +325,8 @@ begin
           3: Control.ExStyle := WS_EX_DLGMODALFRAME;
           4: Control.ExStyle := WS_EX_CLIENTEDGE OR WS_EX_DLGMODALFRAME;
         end;
-
    end;
+   if _prop_Name <> '' then ListOfNameControls.AddObject(LowerCase(_prop_Name), LongInt(Control));
 end;
 
 procedure THIWin.SetMouseEnter(Ev:THI_Event);
@@ -568,7 +571,7 @@ end;
 procedure THIWin._onMouseWheel;
 begin
    Ms := Mouse;
-   _hi_OnEvent(_event_onMouseWheel, integer(Ms.Shift)div $10000);
+   _hi_OnEvent(_event_onMouseWheel, smallint(Ms.Shift shr 16));
 end;
 
 procedure THIWin._var_MouseX;
@@ -727,7 +730,9 @@ initialization
    DoInitCommonControls(ICC_WIN95_CLASSES);
    defHint := THIHintManager.Create;
    defHint.InitByDefault;
+   ListOfNameControls := NewStrListEx;
    
 finalization
+   ListOfNameControls.free;
 
 end.
