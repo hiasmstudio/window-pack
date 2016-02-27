@@ -16,7 +16,10 @@ type
      procedure Save(P:pointer; Data:cardinal); override;
      procedure Load(P:pointer; var Data:cardinal); override;
    public
+	 _data_IdxToName,
+	 _event_onGetName: THI_Event;
      property _prop_Bitmaps:PStrListEx write SetArray;
+     procedure _work_doGetName(var _Data: TData; Index: word);
   end;
 
 implementation
@@ -71,6 +74,17 @@ begin
     bmp.LoadFromStream( PStream(p) )
    else ;
    Data := integer(bmp);
+end;
+
+procedure THIBitmapArray._work_doGetName;
+var
+  ind: integer; 
+begin
+  ind := ReadInteger(_Data, _data_IdxToName);
+  if (ind >= 0) and (ind < Items.Count) then
+    _hi_CreateEvent(_Data, @_event_onGetName, Items.Items[ind])
+  else
+    _hi_CreateEvent(_Data, @_event_onGetName, '');
 end;
 
 end.
