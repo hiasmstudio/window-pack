@@ -16,10 +16,14 @@ type
      procedure Save(P:pointer; Data:cardinal); override;
      procedure Load(P:pointer; var Data:cardinal); override;
    public
-	 _data_IdxToName,
-	 _event_onGetName: THI_Event;
+
+     _data_Bitmap,
+     _data_Name,
+     _data_IdxToName,
+     _event_onGetName: THI_Event;
      property _prop_Bitmaps:PStrListEx write SetArray;
      procedure _work_doGetName(var _Data: TData; Index: word);
+     procedure _work_doAddBitmap(var _Data: TData; Index: word);     
   end;
 
 implementation
@@ -85,6 +89,16 @@ begin
     _hi_CreateEvent(_Data, @_event_onGetName, Items.Items[ind])
   else
     _hi_CreateEvent(_Data, @_event_onGetName, '');
+end;
+
+procedure THIBitmapArray._work_doAddBitmap;
+var
+  Name: String;
+  dt: TData;
+begin
+  dt := ReadData(_Data,_data_Bitmap);
+  Name := ReadString(_Data,_data_Name);
+  Items.AddObject(Name, DataToPointer(dt));   
 end;
 
 end.
