@@ -25,7 +25,8 @@ type
      property _prop_Bitmaps:PStrListEx write SetArray;
      procedure _work_doGetName(var _Data: TData; Index: word);
      procedure _work_doAddBitmap(var _Data: TData; Index: word);
-     procedure _var_BitmapName(var _Data: TData; Index: word);     
+     procedure _var_BitmapName(var _Data: TData; Index: word);
+     procedure _var_EndIdx(var _Data: TData; Index: word);          
   end;
 
 implementation
@@ -107,6 +108,11 @@ end;
 procedure THIBitmapArray._var_BitmapName;
 begin
   dtString(_Data, BitmapName);
+end;
+
+procedure THIBitmapArray._var_EndIdx;
+begin
+  dtInteger(_Data, Items.Count - 1);
 end;
 
 end.
