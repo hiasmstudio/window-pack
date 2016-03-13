@@ -16,6 +16,7 @@ type
       _data_newSecond:THi_Event;
 
       procedure _var_DateTime(var _Data:TData; Index:word);
+      procedure _var_DateInt(var _Data:TData; Index:word);    // Tad  11.03.2016
       procedure _var_FormatTime(var _Data:TData; Index:word);
       procedure _var_Hours(var _Data:TData; Index:word);
       procedure _var_Minute(var _Data:TData; Index:word);
@@ -59,6 +60,15 @@ begin
    GetLocalTime(SystemTime);
    SystemTime2DateTime(SystemTime, DateTime);
    dtReal(_Data, DateTime);
+end;
+
+procedure THITime._var_DateInt;  // Tad 11.03.2016
+var   SystemTime: TSystemTime;
+      DateTime:TDateTime;
+begin
+   GetLocalTime(SystemTime);
+   SystemTime2DateTime(SystemTime, DateTime);
+   dtInteger(_Data, trunc(DateTime));
 end;
 
 procedure THITime._var_Hours;
