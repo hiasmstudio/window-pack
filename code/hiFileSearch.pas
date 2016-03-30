@@ -9,9 +9,10 @@ type
    private
     FCount:integer;
     FStop:boolean;
-    FWorkExt:string;
+    FWorkExt:PStrList;
     FindData:PWin32FindData;
 
+    function multiCmp(const Name:string):boolean;
     procedure Search(const Dir:string);
     procedure OutFiles(const Dir,Name:string);
    public
@@ -19,7 +20,7 @@ type
     _prop_Dir:string;
     _prop_SubDir:byte;
     _prop_FullName:boolean;
-    _prop_FullOtherName:boolean;    
+    _prop_FullOtherName:boolean;
     _prop_Include:byte;
     _prop_Format:string;
     _prop_TimeType:byte;
@@ -31,6 +32,7 @@ type
     _event_onOtherFiles:THI_Event;
 
     constructor Create;
+    destructor Destroy; override;
     procedure _work_doSearch(var _Data:TData; Index:word);
     procedure _work_doStop(var _Data:TData; Index:word);
     procedure _var_Count(var _Data:TData; Index:word);
@@ -53,7 +55,15 @@ var Dummy:TWin32FindData;
 
 constructor THIFileSearch.Create;
 begin
+  inherited Create;
   FindData := @Dummy; //инициализируем пустышкой для дуракоустойчивости
+  FWorkExt  := NewStrList;
+end;
+
+destructor THIFileSearch.Destroy;
+begin
+  FWorkExt.Free;
+  inherited Destroy;
 end;
 
 procedure THIFileSearch.OutFiles;
@@ -64,14 +74,23 @@ begin
   _hi_OnEvent(_event_onSearch,fn);
 end;
 
+function THIFileSearch.multiCmp;
+var i:integer;
+begin
+  Result := true;
+  for i := 0 to FWorkExt.Count-1 do
+    if (FWorkExt.Items[i]<>'')and StrCmp(Name, FWorkExt.Items[i]) then exit;
+  Result := false;
+end;
+
 procedure THIFileSearch._work_doSearch;
 var Dr:String;
 begin
   Dr := ReadString(_Data,_data_Dir,_prop_Dir);
-  FWorkExt := LowerCase(ReadString(_Data,_data_Ext,_prop_Ext));
+  FWorkExt.SetText(LowerCase(ReadString(_Data,_data_Ext,_prop_Ext)), false);
   if Dr = '' then exit;
   if Dr[Length(Dr)] <> '\' then Dr := Dr + '\';
-  if FWorkExt = '' then FWorkExt := '*';
+  if FWorkExt.Count = 0 then FWorkExt.Add('*');
   FCount := 0;
   FStop := false;
   Search(Dr);         //там FindData принимает боевые значения
@@ -85,7 +104,7 @@ var FindHandle:THandle;
 begin
   FindHandle := FindFirstFile(PChar(Dir + '*.*'), FindData);
   if FindHandle=INVALID_HANDLE_VALUE then exit;
-  Self.FindData := @FindData;  
+  Self.FindData := @FindData;
   repeat if (PChar(@FindData.cFileName[0]) <> '.')and(PChar(@FindData.cFileName[0]) <> '..') then
     if (FindData.dwFileAttributes and FILE_ATTRIBUTE_DIRECTORY)<>0 then  begin
       if _prop_Include > 0 then OutFiles(Dir,FindData.cFileName);
@@ -94,7 +113,7 @@ begin
          Search(Dir + FindData.cFileName + '\');
          Self.FindData := @FindData;
       end
-    end else if StrCmp(LowerCase(FindData.cFileName),FWorkExt) then begin
+    end else if multiCmp(LowerCase(FindData.cFileName)) then begin
       inc(FCount);
       if _prop_Include <> 1 then OutFiles(Dir,FindData.cFileName);
     end else if _prop_FullOtherName then _hi_OnEvent(_event_onOtherFiles,Dir + FindData.cFileName)
