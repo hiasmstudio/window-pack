@@ -24,6 +24,7 @@ type
     procedure _work_doStop(var _Data:TData; index:word);    
     procedure _var_String(var _Data:TData; index:word);
     procedure _var_NumStr(var _Data:TData; index:word);
+    procedure _var_CountStr(var _Data:TData; index:word);    
  end;
 
 implementation
@@ -93,4 +94,35 @@ procedure THiSearchInFile._var_NumStr;
 begin
   dtInteger(_Data, num);
 end;
+
+//=======Добавил nesco & TAD 10.04.2016 ==========
+procedure THiSearchInFile._var_CountStr;
+var
+  F: textfile;
+  fn: string;
+  count: integer;
+  BufIn : Array[0..65535] of Char;    
+  s: string;
+begin
+  count := 0; 
+  fn := ReadString(_Data, _data_FileName, _prop_FileName);
+
+  if FileExists(fn) then
+  begin  
+    s := '';  
+    AssignFile(F, fn);
+    Reset(F);
+    SetTextBuf(F, BufIn);
+    while not eof(F) do
+    begin
+      Readln(F, s);
+      inc(count); // счетчик числа строк
+    end ;
+    closefile(F);
+ end;
+
+ dtInteger(_Data, count);
+end;
+//=========================================
+
 end.
