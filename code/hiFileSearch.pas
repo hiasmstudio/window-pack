@@ -12,7 +12,6 @@ type
     FWorkExt:PStrList;
     FindData:PWin32FindData;
 
-    function multiCmp(const Name:string):boolean;
     procedure Search(const Dir:string);
     procedure OutFiles(const Dir,Name:string);
    public
@@ -57,7 +56,7 @@ constructor THIFileSearch.Create;
 begin
   inherited Create;
   FindData := @Dummy; //инициализируем пустышкой для дуракоустойчивости
-  FWorkExt  := NewStrList;
+  FWorkExt := NewStrList;
 end;
 
 destructor THIFileSearch.Destroy;
@@ -66,28 +65,12 @@ begin
   inherited Destroy;
 end;
 
-procedure THIFileSearch.OutFiles;
-var fn:string;
-begin
-  fn := Name;
-  if _prop_FullName then fn := Dir + fn;
-  _hi_OnEvent(_event_onSearch,fn);
-end;
-
-function THIFileSearch.multiCmp;
-var i:integer;
-begin
-  Result := true;
-  for i := 0 to FWorkExt.Count-1 do
-    if (FWorkExt.Items[i]<>'')and StrCmp(Name, FWorkExt.Items[i]) then exit;
-  Result := false;
-end;
-
 procedure THIFileSearch._work_doSearch;
-var Dr:String;
+var Dr,Ex:String;
 begin
   Dr := ReadString(_Data,_data_Dir,_prop_Dir);
-  FWorkExt.SetText(LowerCase(ReadString(_Data,_data_Ext,_prop_Ext)), false);
+  Ex := ReadString(_Data,_data_Ext,_prop_Ext); {$ifdef F_P}UniqueString(Ex);{$endif}
+  FWorkExt.SetText(CharLower(@Ex[1]), false);
   if Dr = '' then exit;
   if Dr[Length(Dr)] <> '\' then Dr := Dr + '\';
   if FWorkExt.Count = 0 then FWorkExt.Add('*');
@@ -96,6 +79,21 @@ begin
   Search(Dr);         //там FindData принимает боевые значения
   FindData := @Dummy; //восстанавливаем указатель на пустышку
   _hi_CreateEvent(_Data,@_event_onEndSearch,FCount);
+end;
+
+procedure THIFileSearch.OutFiles;
+var fn:string; i:integer;
+begin
+  fn := Name; {$ifdef F_P}UniqueString(fn);{$endif} CharLower(@fn[1]); 
+  for i := 0 to FWorkExt.Count-1 do
+    if (FWorkExt.Items[i]<>'')and StrCmp(fn, FWorkExt.Items[i]) then begin
+      inc(FCount);
+      if _prop_FullName then _hi_OnEvent(_event_onSearch, Dir + Name)
+      else _hi_OnEvent(_event_onSearch, Name);
+      exit;
+    end;
+  if _prop_FullOtherName then _hi_OnEvent(_event_onOtherFiles, Dir + Name)
+  else _hi_OnEvent(_event_onOtherFiles, Name);
 end;
 
 procedure THIFileSearch.Search;
@@ -107,17 +105,12 @@ begin
   Self.FindData := @FindData;
   repeat if (PChar(@FindData.cFileName[0]) <> '.')and(PChar(@FindData.cFileName[0]) <> '..') then
     if (FindData.dwFileAttributes and FILE_ATTRIBUTE_DIRECTORY)<>0 then  begin
-      if _prop_Include > 0 then OutFiles(Dir,FindData.cFileName);
-      if _prop_SubDir = 0 then
-      begin
-         Search(Dir + FindData.cFileName + '\');
-         Self.FindData := @FindData;
+      if _prop_Include > 0 then OutFiles(Dir, FindData.cFileName);
+      if _prop_SubDir = 0 then begin
+        Search(Dir + FindData.cFileName + '\');
+        Self.FindData := @FindData;
       end
-    end else if multiCmp(LowerCase(FindData.cFileName)) then begin
-      inc(FCount);
-      if _prop_Include <> 1 then OutFiles(Dir,FindData.cFileName);
-    end else if _prop_FullOtherName then _hi_OnEvent(_event_onOtherFiles,Dir + FindData.cFileName)
-    else _hi_OnEvent(_event_onOtherFiles,FindData.cFileName);
+    end else if _prop_Include <> 1 then OutFiles(Dir, FindData.cFileName)
   until FStop or not FindNextFile(FindHandle, FindData);
   FindClose(FindHandle);
 end;
@@ -153,9 +146,9 @@ var
   sys: TSystemTime;
 begin
   if _prop_TimeType = 1 then
-     FileTimeToLocalFileTime(FindData.ftCreationTime, m)
+    FileTimeToLocalFileTime(FindData.ftCreationTime, m)
   else
-     m := FindData.ftCreationTime;
+    m := FindData.ftCreationTime;
   FileTimeToSystemTime(m,sys);
   dtString(_Data,TimeToStr(_prop_Format, sys));
 end;
@@ -166,9 +159,9 @@ var
   sys: TSystemTime;
 begin
   if _prop_TimeType = 1 then
-     FileTimeToLocalFileTime(FindData.ftLastAccessTime, m)
+    FileTimeToLocalFileTime(FindData.ftLastAccessTime, m)
   else
-     m := FindData.ftLastAccessTime;
+    m := FindData.ftLastAccessTime;
   FileTimeToSystemTime(m,sys);
   dtString(_Data,TimeToStr(_prop_Format, sys));
 end;
@@ -179,9 +172,9 @@ var
   sys: TSystemTime;
 begin
   if _prop_TimeType = 1 then
-     FileTimeToLocalFileTime(FindData.ftLastWriteTime, m)
+    FileTimeToLocalFileTime(FindData.ftLastWriteTime, m)
   else
-     m := FindData.ftLastWriteTime;
+    m := FindData.ftLastWriteTime;
   FileTimeToSystemTime(m,sys);
   dtString(_Data,TimeToStr(_prop_Format, sys));
 end;
@@ -193,9 +186,9 @@ var
   DateTime: TDateTime;
 begin
   if _prop_TimeType = 1 then
-     FileTimeToLocalFileTime(FindData.ftCreationTime, m)
+    FileTimeToLocalFileTime(FindData.ftCreationTime, m)
   else
-     m := FindData.ftCreationTime;
+    m := FindData.ftCreationTime;
   FileTimeToSystemTime(m, sys);
   SystemTime2DateTime(sys, DateTime);
   dtReal(_Data, DateTime);
@@ -208,9 +201,9 @@ var
   DateTime: TDateTime;
 begin
   if _prop_TimeType = 1 then
-     FileTimeToLocalFileTime(FindData.ftLastAccessTime, m)
+    FileTimeToLocalFileTime(FindData.ftLastAccessTime, m)
   else
-     m := FindData.ftLastAccessTime;
+    m := FindData.ftLastAccessTime;
   FileTimeToSystemTime(m, sys);
   SystemTime2DateTime(sys, DateTime);
   dtReal(_Data, DateTime);
@@ -223,9 +216,9 @@ var
   DateTime: TDateTime;
 begin
   if _prop_TimeType = 1 then
-     FileTimeToLocalFileTime(FindData.ftLastWriteTime, m)
+    FileTimeToLocalFileTime(FindData.ftLastWriteTime, m)
   else
-     m := FindData.ftLastWriteTime;
+    m := FindData.ftLastWriteTime;
   FileTimeToSystemTime(m, sys);
   SystemTime2DateTime(sys, DateTime);
   dtReal(_Data, DateTime);
