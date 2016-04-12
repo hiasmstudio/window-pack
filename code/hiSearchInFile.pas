@@ -10,6 +10,7 @@ type
     str: string;
     num: integer;
     FStop: boolean;
+    count: integer;
   public
     _prop_Text,
     _prop_FileName: string;
@@ -17,10 +18,12 @@ type
     _data_Text,
     _data_FileName,
     _event_onSearch, _event_onNotSearch: THI_Event;
+    _event_onCountStr,
     _event_onEnd: THI_Event;    
 
     constructor Create;
     procedure _work_doSearch(var _Data:TData; index:word);
+    procedure _work_doCountStr(var _Data:TData; index:word);
     procedure _work_doStop(var _Data:TData; index:word);    
     procedure _var_String(var _Data:TData; index:word);
     procedure _var_NumStr(var _Data:TData; index:word);
@@ -34,6 +37,7 @@ begin
   inherited;
   num := -1;
   str := '';
+  count := 0;
 end;     
 
 procedure THiSearchInFile._work_doSearch;
@@ -95,12 +99,11 @@ begin
   dtInteger(_Data, num);
 end;
 
-//=======Добавил nesco & TAD 10.04.2016 ==========
-procedure THiSearchInFile._var_CountStr;
+//=======Добавил nesco & TAD 11.04.2016 ==========
+procedure THiSearchInFile._work_doCountStr;
 var
   F: textfile;
   fn: string;
-  count: integer;
   BufIn : Array[0..65535] of Char;    
   s: string;
 begin
@@ -120,8 +123,12 @@ begin
     end ;
     closefile(F);
  end;
+ _hi_CreateEvent(_Data, @_event_onCountStr, count) 
+end;
 
- dtInteger(_Data, count);
+procedure THiSearchInFile._var_CountStr;
+begin
+  dtInteger(_Data, count);
 end;
 //=========================================
 
