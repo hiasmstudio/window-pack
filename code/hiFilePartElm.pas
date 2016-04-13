@@ -16,10 +16,11 @@ type
 
     procedure _work_doPart0(var _Data: TData; Index: word);  // path name
     procedure _work_doPart1(var _Data: TData; Index: word);  // file name
-    procedure _work_doPart2(var _Data: TData; Index: word);  // file name  WOExt
+    procedure _work_doPart2(var _Data: TData; Index: word);  // file name WOExt
     procedure _work_doPart3(var _Data: TData; Index: word);  // ext name
     procedure _work_doPart4(var _Data: TData; Index: word);  // ext name WOPoint    
     procedure _work_doPart5(var _Data: TData; Index: word);  // short name
+    procedure _work_doPart6(var _Data: TData; Index: word);  // path name WOExt
     procedure _var_Part(var _Data: TData; Index: word);
   end;
 
@@ -70,7 +71,6 @@ begin
    _hi_CreateEvent(_Data, @_event_onPart, FPart);
 end;
 
-
 procedure THIFilePartElm._work_doPart3;  // ext name
 begin
    FPart := ReadString(_Data, _data_FileName, '');
@@ -97,6 +97,16 @@ begin
    FPart := ExtractShortPathName(FPart);
    _hi_CreateEvent(_Data, @_event_onPart, FPart);
 end;
+
+//=======Добавил nesco & TAD 13.04.2016 ==========
+procedure THIFilePartElm._work_doPart6;  // path name WOExt
+begin
+   FPart := ReadString(_Data, _data_FileName, '');
+   if FPart = '' then exit;
+   rparse(FPart, '.');
+   _hi_CreateEvent(_Data, @_event_onPart, FPart);
+end;
+//=========================================
 
 procedure THIFilePartElm._var_Part;
 begin
