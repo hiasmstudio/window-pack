@@ -16,9 +16,11 @@ type
     procedure _work_doLabel(var _Data:TData; Index:word);
     procedure _work_doEject(var _Data:TData; Index:word);
     procedure _work_doEnum(var _Data:TData; Index:word);
+    procedure _work_doSize(var _Data:TData; Index:word);
     procedure _var_Size(var _Data:TData; Index:word);
     procedure _var_FreeSize(var _Data:TData; Index:word);
     procedure _var_LoadSize(var _Data:TData; Index:word);
+    procedure _var_DriveType(var _Data:TData; Index:word);
   end;
 
 implementation
@@ -133,6 +135,21 @@ begin
   if length(d) = 1 then d := d + ':';
   getDiskFreeSpace(PChar(d),X,Y,Z,S);
   dtInteger(_Data,((S-Z) div 1024)*X*Y div _sx[_prop_Size]);
+end;
+
+procedure THIHardDisk._var_DriveType;
+var
+  d: string;
+begin
+  d := ReadString(_Data,_data_Disk,_prop_Disk);
+  if length(d) = 1 then d := d + ':';
+  dtInteger(_Data, GetDriveType(PChar(d)));
+end;    
+    
+procedure THIHardDisk._work_doSize;
+begin
+  _prop_Size := ToInteger(_Data);
+  if (_prop_Size > 2) or (_prop_Size < 0) then _prop_Size := 0;   
 end;
 
 end.
