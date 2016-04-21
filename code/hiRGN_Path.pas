@@ -15,12 +15,19 @@ type
     _event_onStartCreate:THI_Event;
     _event_onFinishCreate:THI_Event;    
 
+    destructor Destroy; override;
     procedure _work_doCreateRegion(var _Data:TData; Index:word);
     procedure _work_doClear(var _Data:TData; Index:word);
     procedure _var_Result(var _Data:TData; Index:word);
   end;
 
 implementation
+
+destructor THIRGN_Path.Destroy;
+begin
+   DeleteObject(FRegion);
+   inherited;
+end;
 
 procedure THIRGN_Path._work_doCreateRegion;
 begin
