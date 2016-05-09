@@ -487,7 +487,7 @@ procedure THIWorkIconsManager._work_doMT_LoadExtIcon; // проверен
 var   ico: PIcon;
       fn:string;
       dt,di:TData;
-      idx:word;
+      idx:integer;
       bmp:PBitmap;
       Licon,sIcon:hIcon;
       iSize:integer;
