@@ -9,7 +9,7 @@ type
    private
     ParentForm:PControl;
     FTrayData:TNotifyIconData;
-    FInst:boolean;
+    FInst:boolean;  
     OldMessage:TOnMessage;
     FHint:string;
     P:TPoint;
@@ -39,6 +39,7 @@ type
     _event_onBallonShow:THI_Event;
     _event_onBallonTimeOut:THI_Event;        
     _event_onBallonUserClick:THI_Event;
+    _event_onAutoRecreate:THI_Event;
     
     constructor Create(Parent:PControl);
     destructor Destroy; override;
@@ -94,7 +95,14 @@ const
   NIIF_NONE     =        $00000000; 
   NIIF_INFO     =        $00000001; 
   NIIF_WARNING  =        $00000002; 
-  NIIF_ERROR    =        $00000003; 
+  NIIF_ERROR    =        $00000003;
+  
+var
+  fRecreateMsg: DWORD;
+   
+const
+  TaskbarCreatedMsg: array[ 0..14 ] of Char = ('T','a','s','k','b','a','r',
+                     'C','r','e','a','t','e','d',#0);
 
 constructor THITrayIcon.Create;
 begin
@@ -102,12 +110,13 @@ begin
    ParentForm := Parent;
    OldMessage := ParentForm.OnMessage;
    ParentForm.OnMessage := OnMessage;
+   fRecreateMsg := RegisterWindowMessage( TaskbarCreatedMsg );
 end;
 
 destructor THITrayIcon.Destroy;
 begin
     //RemoveTrayIcon;
-    inherited;
+	    inherited;
 end;
 
 procedure THITrayIcon.SetHint;
@@ -123,6 +132,13 @@ end;
 function THITrayIcon.OnMessage;
 begin
   Result := false;
+  if Msg.message = fRecreateMsg then
+    if FInst then
+    begin
+      FInst := false;
+      AddTrayIcon(false);
+      _hi_onEvent(_event_onAutoRecreate);
+    end;
   Case Msg.message Of
     WM_SYSCOMMAND:
     begin
@@ -150,7 +166,7 @@ begin
       end;
     WM_SETICON:
      begin
-        FTrayData.hIcon := ParentForm.Icon;
+		        FTrayData.hIcon := ParentForm.Icon;
         Shell_NotifyIcon(NIM_MODIFY,@FTrayData);
      end;  
     CM_TRAYICON: 
