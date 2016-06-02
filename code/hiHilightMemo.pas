@@ -743,43 +743,28 @@ begin
   HS.Text := Value; 
 end; 
 
-function THIHiLightMemo.HiLight; 
+function THIHiLightMemo.HiLight;
 var
-  S, str, CS, U: string; 
-  i, j, k:       integer; 
-  _Color:        TColor; 
-  block:         boolean; 
-  comment:       boolean; 
-  StrtComm:      string; 
-  EndComm:       string; 
+  S, str, CS, U: string;
+  i, j, k:       integer;
+  _Color:        TColor;
+  block:         boolean;
+  StrtComm:      string;
+  EndComm:       string;
      
-  function AnsiComp1: integer;
+  function AnsiCmp(arg:string):boolean;
   begin
-    case ord(_prop_HilightCaseSens) of
-      0: Result := AnsiCompareStrNoCase(Copy(S, i + 1, Length(StrtComm)), StrtComm);
-      1: Result := AnsiCompareStr(Copy(S, i + 1, Length(StrtComm)), StrtComm)
-    else
-      Result := 1;
-    end;  
+    if not _prop_HilightCaseSens then
+         Result := AnsiCompareStrNoCase(Copy(S, i+1, Length(arg)), arg)=0
+    else Result := AnsiCompareStr      (Copy(S, i+1, Length(arg)), arg)=0;
   end;
  
-  function AnsiComp2: integer;
-  begin
-    case ord(_prop_HilightCaseSens) of
-      0: Result := AnsiCompareStrNoCase(Copy(S, i + 1, Length(str)), str);
-      1: Result := AnsiCompareStr(Copy(S, i + 1, Length(str)), str)
-    else
-      Result := 1;
-    end;  
-  end;
-
-  procedure SetColorStr; 
-  var
-    UG: string;
+  procedure SetColorStr;
+  var UG: string;
   begin
     if (CS <> '') then
     begin
-      CS := Uppercase(CS); 
+      CS := Uppercase(CS);
       if (CS[1] in ['0'..'9']) then _Color := str2int(CS)
       else if CS = 'BLACK'     then _Color := clBlack
       else if CS = 'MAROON'    then _Color := clMaroon
@@ -797,14 +782,14 @@ var
       else if CS = 'FUCHSIA'   then _Color := clFuchsia
       else if CS = 'AQUA'      then _Color := clAqua
       else if CS = 'WHITE'     then _Color := clWhite
-    end; 
-    Attrs.fontcolor := _Color; 
+    end;
+    Attrs.fontcolor := _Color;
     Attrs.fontstyle := TFontStyle({$ifdef F_P}integer(_prop_HilightFont.Style)
-                                  {$else}_prop_HilightFont.Style{$endif}); 
+                                  {$else}_prop_HilightFont.Style{$endif});
     UG := FParse(U, '=');
     while UG <> '' do
-    begin 
-      UG := Uppercase(UG); 
+    begin
+      UG := Uppercase(UG);
       if (UG = 'U') and (oeReadOnly in Options) then
         include(Attrs.fontstyle, fsUnderline)
       else if (UG = 'B') then
@@ -814,9 +799,9 @@ var
       else if (UG = 'S') then
         include(Attrs.fontstyle, fsStrikeOut);
       UG := FParse(U, '=');
-    end; 
+    end;
   end;
-
+      
 begin
   if HS.Count <> 0 then
     for i := HS.Count - 1 downto 0 do
@@ -830,7 +815,6 @@ begin
 
   StrtComm := '';
   EndComm  := '';
-  comment := false;
 
   for j := 0 to HS.Count - 1 do
   begin
@@ -838,46 +822,37 @@ begin
     str := FParse(U, '=');
     if U <> '' then CS := FParse(U, '=') else CS := '';
     _Color := _prop_HilightFont.Color;
-
-    // ведем поиск конкретного блока засветки
-    block := false;
-    if (str[1] = '{') and (str[Length(str)] = '}') then
-    begin
-      Delete(str, 1, 1);
-      if str = '' then exit;
-      deleteTail(str, 1);
-      if str = '' then exit;
-      block := true;
-    end;
-
     // ведем поиск блока комментария
     k := PosEx('*', str, 1);
-    if  k > 0 then
-    begin
+    if  k > 0 then begin
       StrtComm := Copy(str, 1, k - 1);
       EndComm  := Copy(str, k + 1, Length(str));
-      comment := true;
+      if AnsiCmp(StrtComm) then begin
+        SetColorStr;
+        Result := PosEx(EndComm, S, i+1+Length(StrtComm)) -1+Length(EndComm)-FromPos.x;
+        exit;
+      end;
     end;
-
-    if (AnsiComp1 = 0) and comment then
-    begin
+    // ведем поиск конкретного блока засветки
+    block := (Length(str)>2)and(str[1] = '{')and(str[Length(str)] = '}');
+    if block then str := Copy(str, 2, Length(str)-2);
+    if AnsiCmp(str) then begin
       SetColorStr;
-      Result := PosEx(EndComm, S, Length(StrtComm) + 1 + i) + Length(EndComm) - FromPos.x;
-      exit;
-    end
-    else if (AnsiComp2 = 0) and not comment then
-    begin
-      SetColorStr;
-      if block then inc(i,Length(str))
-      else while (i < Length(S))and(S[i + 1] > ' ') do inc(i);
+      if block then // Блок - заканчиваем сразу
+        inc(i,Length(str))
+      else // Просто Keyword - дополняем до первого пробела
+        while (i<Length(S))and(S[i+1]>' ') do inc(i);
       Result := i - FromPos.x;
       exit;
     end;
   end;
-  if (S[i + 1] <= ' ') then while (i < Length(S)) and (S[i + 1] <= ' ') do inc(i)
-  else inc(i);
+  if (S[i+1]<=' ') then // Ничего не нашли - пробелы пропускаем
+    while (i<Length(S))and(S[i+1]<=' ') do inc(i)
+  else // Ничего не нашли - следующий поиск со СЛЕДУЮЩЕГО символа
+    inc(i);
   Result := i - FromPos.x;
 end;
+
 
 procedure THIHiLightMemo._work_doEnsureVisible;
 var
