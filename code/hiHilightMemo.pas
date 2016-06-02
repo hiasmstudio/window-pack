@@ -816,74 +816,68 @@ var
       UG := FParse(U, '=');
     end; 
   end;
-           
+
 begin
   if HS.Count <> 0 then
     for i := HS.Count - 1 downto 0 do
-      if HS.Items[i] = '' then HS.Delete(i); 
-  S := Lines[FromPos.Y]; 
-  Result := 0; 
+      if HS.Items[i] = '' then HS.Delete(i);
+  S := Lines[FromPos.Y];
+  Result := 0;
   if S = '' then exit;
-  i := FromPos.X; 
-  Attrs.fontcolor := Sender.Font.Color; 
+  i := FromPos.X;
+  Attrs.fontcolor := Sender.Font.Color;
   Attrs.FontStyle := Sender.Font.FontStyle;
 
-  StrtComm := ''; 
-  EndComm  := ''; 
-  comment := false; 
-  block := false; 
+  StrtComm := '';
+  EndComm  := '';
+  comment := false;
 
   for j := 0 to HS.Count - 1 do
   begin
-    U := HS.Items[j]; 
-    str := FParse(U, '='); 
-    if U <> '' then CS := FParse(U, '=') else CS := ''; 
-    _Color := _prop_HilightFont.Color; 
+    U := HS.Items[j];
+    str := FParse(U, '=');
+    if U <> '' then CS := FParse(U, '=') else CS := '';
+    _Color := _prop_HilightFont.Color;
 
     // ведем поиск конкретного блока засветки
+    block := false;
     if (str[1] = '{') and (str[Length(str)] = '}') then
     begin
-      Delete(str, 1, 1); 
-      if str = '' then exit; 
-      deleteTail(str, 1); 
-      if str = '' then exit;       
-      block := true; 
-    end; 
+      Delete(str, 1, 1);
+      if str = '' then exit;
+      deleteTail(str, 1);
+      if str = '' then exit;
+      block := true;
+    end;
 
     // ведем поиск блока комментария
-    k := PosEx('*', str, 1);     
+    k := PosEx('*', str, 1);
     if  k > 0 then
     begin
-      StrtComm := Copy(str, 1, k - 1); 
+      StrtComm := Copy(str, 1, k - 1);
       EndComm  := Copy(str, k + 1, Length(str));
-      comment := true; 
-    end; 
+      comment := true;
+    end;
 
     if (AnsiComp1 = 0) and comment then
     begin
       SetColorStr;
       Result := PosEx(EndComm, S, Length(StrtComm) + 1 + i) + Length(EndComm) - FromPos.x;
-      exit; 
+      exit;
     end
     else if (AnsiComp2 = 0) and not comment then
     begin
-      SetColorStr; 
-      if block then
-      begin
-        inc(i, Length(str)); 
-        break; 
-      end;                                   
-    end
-    else
-      block := false; 
-  end; 
-  if (S[i + 1] <= ' ') and not block then
-    while (i < Length(S)) and (S[i + 1] <= ' ') do inc(i)
-  else if (S[i + 1] > ' ') and not block then  
-    while (i < Length(S)) and (S[i + 1] > ' ') do inc(i); 
-
-  Result := i - FromPos.x; 
-end; 
+      SetColorStr;
+      if block then inc(i,Length(str))
+      else while (i < Length(S))and(S[i + 1] > ' ') do inc(i);
+      Result := i - FromPos.x;
+      exit;
+    end;
+  end;
+  if (S[i + 1] <= ' ') then while (i < Length(S)) and (S[i + 1] <= ' ') do inc(i)
+  else inc(i);
+  Result := i - FromPos.x;
+end;
 
 procedure THIHiLightMemo._work_doEnsureVisible;
 var
