@@ -11,9 +11,11 @@ type
     procedure SetMailAgent(agent:TMailClient);
     procedure OnMailBoxStatusNew(Sender: TObject; MsgNum: DWORD; MailSender, Subject: string; TimeStamp: DWORD);
     procedure OnMailBoxStatus(Sender: TObject; Reason: DWORD);
+    procedure OnKeyRead(Sender: TObject; Key, Value: string);
    public
     _event_onNewMailReceive:THI_Event;
     _event_onChangeMailCount:THI_Event;
+    _event_onMailCount:THI_Event;
     
     property _prop_MailAgent:TMailClient read mra write SetMailAgent;
   end;
@@ -25,6 +27,7 @@ begin
   mra := agent;
   mra.OnMailBoxStatusNew := OnMailBoxStatusNew;
   mra.OnMailBoxStatus := OnMailBoxStatus;
+  mra.OnKeyRead := OnKeyRead;  
 end;
 
 procedure THIMRA_NewMail.OnMailBoxStatusNew;
@@ -46,6 +49,12 @@ end;
 procedure THIMRA_NewMail.OnMailBoxStatus;
 begin
    _hi_onEvent(_event_onChangeMailCount, integer(Reason));
+end;
+
+procedure THIMRA_NewMail.OnKeyRead;
+begin
+  if Key = 'MESSAGES.UNREAD' then
+    _hi_onEvent(_event_onMailCount, Str2int(Value));
 end;
 
 end.
