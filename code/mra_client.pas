@@ -870,6 +870,7 @@ var
  ID: DWORD;
  IDContact: Integer;
  i: Integer;
+ MsgNum: DWORD;
  
  MMP_Message: packed record
   MsgID: DWORD;
@@ -966,9 +967,12 @@ begin
   MRIM_CS_MAILBOX_STATUS_NEW:
    begin
     if Assigned(FOnMailBoxStatusNew) then
-     FOnMailBoxStatusNew(Self, MMP_GetUL(@Pack, Data, Offset),
+    begin
+     MsgNum := MMP_GetUL(@Pack, Data, Offset);
+     FOnMailBoxStatusNew(Self, MsgNum,
       MMP_GetLPS(@Pack, Data, Offset), MMP_GetLPS(@Pack, Data, Offset),
       MMP_GetUL(@Pack, Data, Offset));
+    end;
    end;
   MRIM_CS_USER_INFO:
    begin

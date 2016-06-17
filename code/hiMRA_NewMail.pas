@@ -37,6 +37,8 @@ begin
    AddMTData(@dt, @d, f);
    dtInteger(d, integer(TimeStamp));
    AddMTData(@dt, @d, f);
+   dtInteger(d, integer(MsgNum));
+   AddMTData(@dt, @d, f);
    _hi_onEvent(_event_onNewMailReceive, dt);
    FreeData(f);
 end;
