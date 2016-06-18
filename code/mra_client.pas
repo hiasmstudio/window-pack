@@ -62,7 +62,7 @@ type
  TOnKeyRead = procedure(Sender: TObject; Key, Value: string) of object;
  //yxo
  TOnMailBoxStatusNew = procedure(Sender: TObject; MsgNum: DWORD; MailSender,
-  Subject: string; TimeStamp: DWORD) of object;
+  Subject: string; TimeStamp, MsgId: DWORD) of object;
  TOnUserFound = procedure(Sender: TObject; Status, FieldNum, MaxRows,
   ServerTime: DWORD; User, Domain, Nickname, FistName, LastName,
   Sex, Birth_Day, IDCity, Location, Zodiac, BirthMonth, BirthDay, IDCountry,
@@ -971,7 +971,7 @@ begin
      MsgNum := MMP_GetUL(@Pack, Data, Offset);
      FOnMailBoxStatusNew(Self, MsgNum,
       MMP_GetLPS(@Pack, Data, Offset), MMP_GetLPS(@Pack, Data, Offset),
-      MMP_GetUL(@Pack, Data, Offset));
+      MMP_GetUL(@Pack, Data, Offset), MMP_GetUL(@Pack, Data, Offset));
     end;
    end;
   MRIM_CS_USER_INFO:
@@ -1634,4 +1634,3 @@ finalization
  WSACleanUp;
  
 end.
-

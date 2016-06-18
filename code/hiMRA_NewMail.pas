@@ -9,7 +9,7 @@ type
    private
     mra:TMailClient;
     procedure SetMailAgent(agent:TMailClient);
-    procedure OnMailBoxStatusNew(Sender: TObject; MsgNum: DWORD; MailSender, Subject: string; TimeStamp: DWORD);
+    procedure OnMailBoxStatusNew(Sender: TObject; MsgNum: DWORD; MailSender, Subject: string; TimeStamp, MsgId: DWORD);
     procedure OnMailBoxStatus(Sender: TObject; Reason: DWORD);
    public
     _event_onNewMailReceive:THI_Event;
@@ -36,6 +36,8 @@ begin
    dtString(d, Subject);
    AddMTData(@dt, @d, f);
    dtInteger(d, integer(TimeStamp));
+   AddMTData(@dt, @d, f);
+   dtInteger(d, integer(MsgId));
    AddMTData(@dt, @d, f);
    dtInteger(d, integer(MsgNum));
    AddMTData(@dt, @d, f);
