@@ -52,6 +52,7 @@ type
      _prop_ClientSize:boolean;
      _prop_Position:THIPosition;
      _prop_TransparentColor:TColor;
+     _prop_OffsetShift:boolean;     
 
      _data_Close:THI_Event;
      _data_QueryEndSession:THI_Event;
@@ -225,6 +226,9 @@ function THIMainForm._onMessage;
 var
   sControl: PControl;
   i: integer;
+  Pt: TPoint;
+  OffsetLeft: integer;
+  OffsetTop: integer;  
 //  acc: boolean;
 begin
    Result := false;
@@ -232,8 +236,20 @@ begin
       (_prop_FormFastening <> nil){ and isWindowVisible(Control.Handle)} then
    begin
      sControl := _prop_FormFastening.ctrlpoint;
-     MoveWindow(Control.Handle, sControl.Left + _prop_ShiftLeft, sControl.Top + _prop_ShiftTop,
-                Control.Width, Control.Height, true);
+     if _prop_OffsetShift then
+     begin
+       Pt.x := 0; Pt.y := 0;
+       ClientToScreen(sControl.Handle, Pt);
+       OffsetTop := Pt.Y - sControl.Top;  
+       OffsetLeft := Pt.X - sControl.Left;
+     end
+     else
+     begin
+       OffsetTop := 0;  
+       OffsetLeft := 0;
+     end;
+     MoveWindow(Control.Handle, sControl.Left + _prop_ShiftLeft + OffsetLeft,
+	            sControl.Top + _prop_ShiftTop + OffsetTop, Control.Width, Control.Height, true);
    end             
    else
      case Msg.message of
