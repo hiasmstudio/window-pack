@@ -171,7 +171,10 @@ type
     procedure _work_doSlideRoundWidth(var _Data:TData; Index:word);          
     procedure _work_doSlideRoundHeight(var _Data:TData; Index:word);  
     procedure _work_doThumbRoundWidth(var _Data:TData; Index:word);  
-    procedure _work_doThumbRoundHeight(var _Data:TData; Index:word);          
+    procedure _work_doThumbRoundHeight(var _Data:TData; Index:word);
+
+    procedure _work_doThumbLength(var _Data:TData; Index:word);  
+    procedure _work_doThumbWidth(var _Data:TData; Index:word); 	          
   end;
 
 implementation
@@ -956,6 +959,19 @@ begin
   FThumbRoundHeight := ToInteger(_Data);
   PaintTrackbar;
 end;          
+
+procedure THITrackBarRush._work_doThumbLength;  
+begin
+  FThumbLength := ToInteger(_Data);
+  PaintTrackbar;
+end;          
+
+procedure THITrackBarRush._work_doThumbWidth; 	 
+begin
+  FThumbWidth := ToInteger(_Data);
+  PaintTrackbar;
+end;          
+
 
 procedure THITrackBarRush._work_doUpdate;
 begin
