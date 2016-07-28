@@ -47,6 +47,8 @@ type
     procedure AppearFromTop;
     procedure AppearFromBottom;
     procedure AppearCW;
+    procedure AppearFromLeft;
+    procedure AppearFromRight;
     
   public
     _data_Speed:THI_Event;
@@ -120,6 +122,8 @@ begin
     11,12:AppearFromTop;
     13,14:AppearFromBottom;
     15,16,17,18:AppearCW;
+    19,20:AppearFromLeft;
+    21,22:AppearFromRight;
   else
     begin
       if assigned(FThread) then FThread.free;
@@ -481,5 +485,63 @@ begin
   if _prop_InNewThread=1 then FThread.Resume else 
     if Frac(FType / 2)=0 then AnimateDisappear else AnimateAppear;  
 end;
+
+procedure THIWindowAnimation.AppearFromLeft;
+var
+  I, J, K: Integer;
+begin
+
+  J := 0;
+  I := 0;
+
+  SetLength(FRegions, Max(FWinWidth, FWinHeight));
+  for K := 0 to High(FRegions) do
+  begin
+    if J < FWinWidth then
+    begin
+      J := J + 2;
+      FRegions[K] := CreateRectRgn(I, 0, FWinWidth - J, FWinHeight);
+    end
+    else
+    begin
+      FL := K;
+      Break;
+    end;
+  end;
+
+  if _prop_InNewThread=1 then FThread.Resume else 
+    if Frac(FType / 2)=0 then AnimateDisappear else AnimateAppear;
+end;
+
+
+procedure THIWindowAnimation.AppearFromRight;
+var
+  I, J, K: Integer;
+begin
+
+  J := 0;
+  I := 0;
+
+  SetLength(FRegions, Max(FWinWidth, FWinHeight));
+  for K := 0 to High(FRegions) do
+  begin
+    if I < FWinWidth then
+    begin
+      I := I + 2;
+      FRegions[K] := CreateRectRgn(I, J, FWinWidth, FWinHeight);
+    end
+    else
+    begin
+      FL := K;
+      Break;
+    end;
+  end;
+
+  if _prop_InNewThread=1 then FThread.Resume else 
+    if Frac(FType / 2)=0 then AnimateDisappear else AnimateAppear;
+end;
+
+
+
 
 end.
