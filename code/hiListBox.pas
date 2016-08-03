@@ -39,7 +39,8 @@ type
       _prop_Sort:boolean;
       _prop_MultiSelect:boolean;
       _prop_ItemHeight:integer;
-
+      _prop_ScrollBar:boolean;
+      
       procedure Init; override;
       destructor Destroy; override;
       procedure _work_doSelectAll(var _Data:TData; Index:word);
@@ -58,6 +59,29 @@ type
 
 implementation
 
+function WndProcSCR(Sender: PControl; var Msg: TMsg; var Rslt: Integer): Boolean;
+var
+  pulScrollLines: integer;
+  TopIdx: integer;
+  well: SmallInt;
+begin
+  Result := false;
+    case Msg.message of
+	  WM_MOUSEWHEEL:
+	  begin
+        SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, @pulScrollLines, 0);
+        TopIdx := SendMessage(Sender.Handle, LB_GETTOPINDEX, 0, 0);
+        well := SmallInt(Msg.wParam shr 16); 
+        if SmallInt(Msg.wParam shr 16) < 0 then
+          TopIdx := TopIdx + pulScrollLines 
+        else if SmallInt(Msg.wParam shr 16) > 0 then
+          TopIdx := max(0, TopIdx - pulScrollLines);
+        SendMessage(Sender.Handle, LB_SETTOPINDEX, TopIdx, 0);
+      end;
+    end;
+//  end;
+end;
+
 procedure THIListBox.Init;
 var  Fl:TListOptions;
 begin
@@ -67,6 +91,12 @@ begin
   if ManFlags and $8 > 0 then include(Fl,loOwnerDrawFixed);
   Control := NewListbox(FParent,fl);
   Control.OnMeasureItem:= _OnMeasureItem;
+  if not _prop_ScrollBar then
+  begin
+    Control.Style := Control.Style and not WS_VSCROLL;
+    Control.AttachProc(WndProcSCR);    
+  end;  
+   
   inherited;
   SetStrings(_prop_Strings);
   Control.OnSelChange := _OnClick;
