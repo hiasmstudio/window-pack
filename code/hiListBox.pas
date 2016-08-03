@@ -63,7 +63,6 @@ function WndProcSCR(Sender: PControl; var Msg: TMsg; var Rslt: Integer): Boolean
 var
   pulScrollLines: integer;
   TopIdx: integer;
-  well: SmallInt;
 begin
   Result := false;
     case Msg.message of
@@ -71,7 +70,6 @@ begin
 	  begin
         SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, @pulScrollLines, 0);
         TopIdx := SendMessage(Sender.Handle, LB_GETTOPINDEX, 0, 0);
-        well := SmallInt(Msg.wParam shr 16); 
         if SmallInt(Msg.wParam shr 16) < 0 then
           TopIdx := TopIdx + pulScrollLines 
         else if SmallInt(Msg.wParam shr 16) > 0 then
