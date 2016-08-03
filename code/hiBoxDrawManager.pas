@@ -36,7 +36,9 @@ type
      _prop_InversGutt    : boolean;
      _prop_InversBack    : boolean;
      _prop_CutText       : boolean;
+     _prop_TextAlign     : TTextAlign;     
      _prop_SelComboEdit  : boolean;     
+     _prop_MultiLineItems: boolean;     
 //
      _prop_LightColor    : TColor;
      _prop_DarkColor     : TColor;
@@ -66,7 +68,9 @@ type
      procedure _work_doInversGutt(var _Data:TData; Index:word);
      procedure _work_doInversBack(var _Data:TData; Index:word);
      procedure _work_doCutText(var _Data:TData; Index:word);
+     procedure _work_doTextAlign(var _Data:TData; Index:word);     
      procedure _work_doSelComboEdit(var _Data:TData; Index:word);
+     procedure _work_doMultiLineItems(var _Data:TData; Index:word);     
 //
      procedure _work_doLightColor(var _Data:TData; Index:word);
      procedure _work_doDarkColor(var _Data:TData; Index:word);
@@ -233,13 +237,21 @@ end;
 
 function THIBoxDrawManager.draw;
 var     fControl: PControl;
-        ARect,BRect,cbRect,gtRect: TRect;
+        ARect,BRect,sRect,cbRect,gtRect: TRect;
         _Flags: dword;
         dy,gsh:integer;
+        sItemIdx: string;
 begin
    Result:= False;
    fControl:= PControl(Sender);
    with fControl{$ifndef F_P}^{$endif} do begin
+      if strItemIdx = '' then
+	    sItemIdx := Items[ItemIdx]
+	  else
+	    sItemIdx := strItemIdx;
+      if _prop_MultiLineItems then
+        Replace(sItemIdx, '|', #13#10);
+   
       if (Rect.Bottom - Rect.Top > Height) then exit;
       dy := Rect.Bottom - Rect.Top;
       gtRect:= Rect;
@@ -305,56 +317,76 @@ begin
 
       end;
 
+// Отрисовка текста
+
       ARect:= Rect;
       ARect.Left := gtRect.Right + Canvas.TextExtent('W').cx div 2;  
 
       if (odsComboboxEdit in ItemState) then ARect.Left:= ARect.Left - 2;
-      BRect:= ARect;
-      inc(BRect.Left); inc(BRect.Top); inc(BRect.Right); inc(BRect.Bottom);
       SetTextColor(DC,Color2RGB(Font.Color));
       SetBkMode(DC, Windows.TRANSPARENT);
 
       if ItemIdx >= 0 then begin
+      
+         if _prop_MultiLineItems then
+            _Flags:= DT_NOPREFIX
+         else   
+            _Flags:= DT_SINGLELINE or DT_NOPREFIX;
+      
          if _prop_CutText then
-            _Flags:=  DT_SINGLELINE or DT_VCENTER or DT_NOPREFIX or DT_WORD_ELLIPSIS
-         else
-            _Flags:=  DT_SINGLELINE or DT_VCENTER or DT_NOPREFIX;
+            _Flags:= _Flags or DT_WORD_ELLIPSIS;
 
-         if _prop_BumpText then begin
-            if (odsSelected in ItemState) and _prop_Gradient then begin
+         if _prop_TextAlign = taLeft then
+            _Flags:= _Flags or DT_LEFT
+         else if _prop_TextAlign = taRight then
+            _Flags:= _Flags or DT_RIGHT
+         else   
+            _Flags:= _Flags or DT_CENTER;
+
+         ZeroMemory(@sRect, sizeof(sRect));
+         DrawText(DC, PChar(sItemIdx), -1, sRect, _Flags or DT_CALCRECT);
+         ARect.Top := ARect.Top + (ARect.Bottom - ARect.Top - (sRect.Bottom - sRect.Top)) div 2; 
+
+         BRect:= ARect;
+         inc(BRect.Left); inc(BRect.Top); inc(BRect.Right); inc(BRect.Bottom);
+
+         if _prop_BumpText then
+         begin
+            if (odsSelected in ItemState) then
+            begin
                if _prop_InversClrTxt then
-                  SetTextColor(DC,Color2RGB(clBackground))
+                  SetTextColor(DC,Color2RGB(Font.Color))
                else
                   SetTextColor(DC,Color2RGB(clHighlightText));
-                  if strItemIdx = '' then
-                    DrawText(DC, PChar(Items[ItemIdx]), -1, BRect, _Flags)                  
-                  else
-                    DrawText(DC, PChar(strItemIdx), -1, BRect, _Flags);
+               DrawText(DC, PChar(sItemIdx), -1, BRect, _Flags);
 
-               if _prop_InversClrTxt then
+               if _prop_InversClrTxt and (_prop_StyleBack = NONE) then
                   SetTextColor(DC,Color2RGB(clHighlightText))
+               else if _prop_InversClrTxt and (_prop_StyleBack = GRADIENT) then
+                  SetTextColor(DC,Color2RGB(_prop_LightClrBack))               
                else
                   SetTextColor(DC,Color2RGB(Font.Color));
-            end else if not (odsSelected in ItemState) and (_prop_StyleBack = GRADIENT) then begin
-               SetTextColor(DC,Color2RGB(clBackground));
-               if strItemIdx = '' then
-                 DrawText(DC, PChar(Items[ItemIdx]), -1, BRect, _Flags)
-               else
-                 DrawText(DC, PChar(strItemIdx), -1, BRect, _Flags);               
-               SetTextColor(DC,Color2RGB(clHighlightText));
-            end else
+            end
+            else if not (odsSelected in ItemState) and (_prop_StyleBack = GRADIENT) then
+            begin
+               SetTextColor(DC,Color2RGB(_prop_LightClrBack));
+               DrawText(DC, PChar(sItemIdx), -1, BRect, _Flags);
                SetTextColor(DC,Color2RGB(Font.Color));
-         end else if (odsSelected in ItemState) then begin
-            if _prop_InversClrTxt then
-               SetTextColor(DC,Color2RGB(clHighlightText))
+            end
             else
                SetTextColor(DC,Color2RGB(Font.Color));
-         end else
+         end
+         else if (odsSelected in ItemState) then
+         begin
+            if _prop_InversClrTxt then 
+               SetTextColor(DC,Color2RGB(clHighlightText))  
+            else
+               SetTextColor(DC,Color2RGB(Font.Color));
+         end
+         else
             SetTextColor(DC,Color2RGB(Font.Color));
-            if strItemIdx = '' then
-              DrawText(DC, PChar(Items[ItemIdx]), -1, ARect, _Flags)
-            else
-              DrawText(DC, PChar(strItemIdx), -1, ARect, _Flags)              
+
+         DrawText(DC, PChar(sItemIdx), -1, ARect, _Flags);
       end;
    end;  
    Result:= True;
@@ -408,6 +440,16 @@ end;
 procedure THIBoxDrawManager._work_doCutText;
 begin
   _prop_CutText := ReadBool(_Data);
+end;
+
+procedure THIBoxDrawManager._work_doTextAlign;
+begin
+  _prop_TextAlign := TTextAlign(ToInteger(_Data));
+end;
+
+procedure THIBoxDrawManager._work_doMultiLineItems;
+begin
+  _prop_MultiLineItems := ReadBool(_Data);
 end;
 
 procedure THIBoxDrawManager._work_doSelComboEdit;
