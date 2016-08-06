@@ -20,6 +20,7 @@ type
    public
     _prop_ViewStyle:procedure(DC:HDC) of object;
     _prop_AutoSize:boolean;
+    _prop_Transparent:boolean;    
     
     _prop_AlphaBlendValue: Byte;
     _prop_AlphaMode: boolean;
@@ -77,6 +78,12 @@ begin
   Control.OnClick := _OnClick;
   Control.OnPaint := _OnPaint;
   Control.Canvas.Brush.Color := _prop_Color;
+  
+  if _prop_Transparent then
+  begin
+    Control.Canvas.Brush.BrushStyle := bsClear;
+    Control.ExStyle := Control.ExStyle or WS_EX_TRANSPARENT;
+  end;  
   AfterLoad;
 end;
 
