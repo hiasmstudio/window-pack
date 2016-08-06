@@ -122,7 +122,13 @@ begin
   Bmp.Assign(t);
   if Bmp.PixelFormat <> pf32bit then Bmp.PixelFormat := pf32bit;  
   AfterLoad;
-  Control.Invalidate;
+  if _prop_Transparent then
+  begin
+    Control.Visible := false;
+    Control.Visible := true;
+  end
+  else    
+    Control.Invalidate;
 end;
 
 procedure THIAlphaImage._work_doClear;
