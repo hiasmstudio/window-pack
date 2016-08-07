@@ -122,7 +122,7 @@ begin
   Bmp.Assign(t);
   if Bmp.PixelFormat <> pf32bit then Bmp.PixelFormat := pf32bit;  
   AfterLoad;
-  if _prop_Transparent then
+  if _prop_Transparent and (Control.Visible = true) then
   begin
     Control.Visible := false;
     Control.Visible := true;
