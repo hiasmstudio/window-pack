@@ -56,6 +56,7 @@ type
     procedure Name(var Data:TData; Index:word);
     procedure EventIndex(var Data:TData; Index:word);
     procedure EventHandle(var Data:TData; Index:word);
+    procedure EventName(var Data:TData; Index:word);    
     
     property Childs[index:integer]:THIEditPolyMulti read GetChilds;
     property ChildCount:integer read GetChildCount;
@@ -269,6 +270,15 @@ begin
   if assigned(EvHandle) then
     i := integer(EvHandle.Hnd);
   dtInteger(Data, i);
+end;
+
+procedure THIPolymorphMulti.EventName;
+var  s:string;
+begin
+  s := '';
+  if assigned(EvHandle) then
+    s := FChilds.Items[FChilds.IndexOfObj(EvHandle.Hnd)];
+  dtString(Data, s);
 end;
 
 function THIPolymorphMulti.CreateInstance;
