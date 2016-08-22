@@ -153,7 +153,7 @@ Add(Button,3641466,119,112)
  TabOrder=-1
  Ctl3D=0
  WinStyle=1
- Caption="InsideStreamPNG"
+ Caption="InsideStreamJPEG"
  link(onClick,369506:doEvent1,[])
 }
 Add(Button,12219794,119,385)
