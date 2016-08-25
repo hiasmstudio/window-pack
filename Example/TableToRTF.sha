@@ -1,0 +1,95 @@
+Make(delphi)
+ver(4.04 build 185)
+Add(MainForm,2953706,119,105)
+{
+ Width=741
+ Height=363
+ Caption="AddTableToRichEdit"
+ Position=1
+ link(onCreate,7707573:doOpen,[])
+}
+Add(RichEdit,3079418,329,266)
+{
+ Left=360
+ Top=5
+ Width=360
+ Height=310
+ Strings=#18:AddTableToRichEdit|18:AddTableToRichEdit|18:AddTableToRichEdit|18:AddTableToRichEdit|18:AddTableToRichEdit|
+ ScrollBars=3
+ Point(PHandle)
+ Point(onKeyDown)
+ Point(doInsertRTF)
+ link(onKeyDown,16377193:doCheckMask,[])
+}
+Add(StringTable,1306512,406,182)
+{
+ Left=5
+ Top=5
+ Width=345
+ Height=310
+ Font=[MS Sans Serif,9,0,0,1]
+ Grid=0
+ Point(PHandle)
+ Point(doAddColumn)
+ Point(StringTable)
+}
+Add(Hub,4835456,224,119)
+{
+ link(onEvent1,11760390:doExec,[])
+ link(onEvent2,12956405:doQuery,[(249,132)(249,167)])
+}
+Add(DS_SQLite,7707573,175,119)
+{
+ Name="sqlite_1"
+ FileName=":memory:"
+ WaitClose=0
+ link(onOpen,4835456:doEvent1,[])
+}
+Add(DSC_Query,12956405,259,161)
+{
+ SQL="SELECT id AS №,name AS Имя,tel AS Телефон,adr AS Адрес FROM "tab1";"
+ DSManager="sqlite_1"
+ link(onQuery,1275088:doStr,[(298,167)(298,125)])
+ link(onColumns,4816823:doEvent1,[])
+}
+Add(DSC_Exec,11760390,259,119)
+{
+ SQL="CREATE TABLE tab1 (\r\nid INTEGER  PRIMARY KEY AUTOINCREMENT NULL,\r\nname TEXT  NULL,\r\ntel TEXT  NULL,\r\nadr TEXT  NULL\r\n);\r\nINSERT INTO "tab1" VALUES(1,'Пупкин','2123456','Москва');\r\nINSERT INTO "tab1" VALUES(2,'Витя','+79283052877','Киев');\r\nINSERT INTO "tab1" VALUES(3,'Оля','+79658348877','Орел');\r\nINSERT INTO "tab1" VALUES(4,'Олег','+79255679017','Москва');\r\nINSERT INTO "tab1" VALUES(5,'Тимофей','+79023174133','Москва');\r\nINSERT INTO "tab1" VALUES(6,'Виктор','567432','Брянск');\r\nINSERT INTO "tab1" VALUES(7,'Валентин','908070','Киев');\r\nINSERT INTO "tab1" VALUES(8,'Вячеслав','+79256173445','Москва');\r\nINSERT INTO "tab1" VALUES(9,'Леонид','+79333790876','Москва');\r\nINSERT INTO "tab1" VALUES(10,'Григорий','890890','Мурманск');\r\nINSERT INTO "tab1" VALUES(11,'Григорий','+79563777654','Уфа');\r\nINSERT INTO "tab1" VALUES(12,'nesco','461594','Сочи');\r\n"
+ DSManager="sqlite_1"
+}
+Add(MT_Array,10847908,343,168)
+{
+}
+Add(Hub,4816823,308,168)
+{
+ link(onEvent1,10847908:doLoad,[])
+ link(onEvent2,8843159:doEnum,[(333,181)(333,223)])
+}
+Add(ArrayEnum,8843159,343,217)
+{
+ link(onItem,1306512:doAddColumn,[])
+ link(Array,10847908:Array,[])
+}
+Add(MT_String,1275088,343,119)
+{
+ link(onResult,1306512:doAdd,[(396,125)(396,188)])
+}
+Add(KeyMask,16377193,378,273)
+{
+ Ctrl=1
+ Key=84
+ link(onTrue,662900:doTableToRTF,[])
+}
+Add(TableToRTF,662900,427,280)
+{
+ link(onTableToRTF,3079418:doInsertRTF,[(466,286)(466,321)(319,321)(319,307)])
+ link(StringTable,1306512:StringTable,[])
+}
+Add(InfoTip,3125877,91,217)
+{
+ Info=#40:CTRL-T вставка таблицы в позицию корсора|
+ Font=[Tahoma,14,1,32768,204]
+ Width=197
+ Height=81
+ Margin=10
+}
