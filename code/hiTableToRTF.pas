@@ -19,6 +19,19 @@ type
 
 implementation
 
+function hexencoder(text: string): string;
+var
+  i: integer;
+begin
+  Result := '';
+  if text = '' then exit;
+  for i := 1 to Length(text) do
+    if ord(text[i]) > 128 then
+      Result := Result + '\''' + lowercase(int2hex(ord(text[i]), 2))
+    else
+      Result := Result + text[i]; 
+end;
+
 procedure THiTableToRTF._work_doTableToRTF;
 var
   sControl: PControl;
@@ -35,7 +48,7 @@ begin
   CellMargin := int2str(Round(Int(2 * Kx)));
   FontSize := int2str(Round(2 * ((sControl.Font.FontHeight * -72) - 36) / GetDeviceCaps(sControl.Canvas.Handle,LOGPIXELSY)));
   rtfTable :=  '{\rtf1\ansi\ansicpg1251'#13#10 + '{\*\generator RTF-table 1.05;}'#13#10 +
-               '{\fonttbl{\f0\fnil ' + sControl.Font.FontName + ';}}'#13#10;
+               '{\fonttbl{\f0\fcharset' + int2str(sControl.Font.FontCharset) + '\fname ' + sControl.Font.FontName + ';}}'#13#10;
 
   fFrom := TRGB(Color2RGB(clSilver));
   rtfTable := rtfTable + '{\colortbl ;\red' + int2str(fFrom.R) + '\green' + int2str(fFrom.G) +
@@ -52,7 +65,7 @@ begin
   rtfTable := rtfTable + '\pard'#13#10 + '\intbl\highlight1\b'#13#10; 
 
   for Col := 0 to sControl.LVColCount - 1 do
-    rtfTable := rtfTable + sControl.LVColText[Col] + '\cell'#13#10;
+    rtfTable := rtfTable + hexencoder(sControl.LVColText[Col]) + '\cell'#13#10;
   rtfTable := rtfTable + '\highlight0\b0\row'#13#10;
   
   for Row := 0 to sControl.LVCount - 1 do
@@ -69,7 +82,7 @@ begin
 
     rtfTable := rtfTable + '\intbl'#13#10;
     for Col := 0 to sControl.LVColCount - 1 do
-      rtfTable := rtfTable + sControl.LVItems[Row, Col] + '\cell'#13#10;
+      rtfTable := rtfTable + hexencoder(sControl.LVItems[Row, Col]) + '\cell'#13#10;
     rtfTable := rtfTable + '\row'#13#10;
   end;
   rtfTable := rtfTable + '}';
