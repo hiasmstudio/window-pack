@@ -30,6 +30,8 @@ type
     _data_FileName:THI_Event;
     _data_Color:THI_Event;
     _data_Style:THI_Event;
+    _data_RTFText:THI_Event;
+   
     _data_MoveCursor:THI_Event;
     _event_onWordClick:THI_Event;
     _event_onURLClick:THI_Event;
@@ -43,6 +45,7 @@ type
     procedure _work_doUndo(var _Data:TData; Index:word);
     procedure _work_doRedo(var _Data:TData; Index:word);      
     procedure _work_doFormatSel(var _Data:TData; Index:word);  
+    procedure _work_doInsertRTF(var _Data:TData; Index:word);
     procedure _var_RichEdit(var _Data:TData; Index:word);
     procedure _var_Text(var _Data:TData; Index:word); override;
     procedure Init; override;
@@ -312,6 +315,15 @@ end;
 procedure THIRichEdit._work_doRedo;
 begin
   Control.Re_Redo;
+end;
+
+procedure THIRichEdit._work_doInsertRTF;
+var
+  RTFText: string;
+begin
+  RTFText := ReadString(_Data, _data_RTFText);
+  if RTFText = '' then exit; 
+  Control.RE_InsertRTF(RTFText);
 end;
 
 end.
