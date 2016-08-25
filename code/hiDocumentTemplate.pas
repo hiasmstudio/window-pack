@@ -29,7 +29,7 @@ type
      _prop_Width:integer;
      _prop_Height:integer;
 
-     procedure Draw(dc:HDC; x,y:integer; const Scale:TScale); virtual; abstract; 
+     procedure Draw(dc:HDC; x,y:integer; const Scale:TScale; alpha: boolean=false); virtual; abstract; 
   end;
   TIDocumentTemplate = record
     getItem:function(const name:string):TDocItem of object;
@@ -48,14 +48,17 @@ type
      function _getItemIdx(const idx:integer):TDocItem;          
    public
      _prop_Name:string;
-     
+     _prop_AlphaMode: boolean;     
      _event_onDraw:THI_Event;
+     _event_onEnumNamed:THI_Event;     
      
      OnCreate:function(_parent:pointer; Control:PControl; _ParentClass:TObject):THiClassDocumentTemplate;
      
      constructor Create(_Control:PControl);
      destructor Destroy; override;
      procedure _work_doDraw(var _Data:TData; Index:word);
+     procedure _work_doDrawName(var _Data:TData; Index:word);     
+     procedure _work_doEnumNamed(var _Data:TData; Index:word);     
      function getInterfaceDocumentTemplate:IDocumentTemplate;    
   end;
 
@@ -154,11 +157,65 @@ begin
      y1 := Round(y1 / fScale.y);
      
    for i := 0 to FChild.List.Count-1 do
-     TDocItem(FChild.List.Items[i]).Draw(pDC, x1, y1, fScale);
+     TDocItem(FChild.List.Items[i]).Draw(pDC, x1, y1, fScale, _prop_AlphaMode);
 
    ImgReleaseDC;
    _hi_CreateEvent(_Data,@_event_onDraw,dt);
 end;
 
+procedure THIDocumentTemplate._work_doDrawName;
+var dt:TData;
+    i:integer;
+    name:string;
+begin
+   InitChild;
+   
+   name := ReadString(_Data, NULL);
+   dt := _Data;
+   if not ImgGetDC(_Data) then exit;
+   ReadXY(_Data);
+
+   ImgNewSizeDC;
+
+   dec(x1, GetDeviceCaps(pDC, PHYSICALOFFSETX)); 
+   dec(y1, GetDeviceCaps(pDC, PHYSICALOFFSETY)); 
+
+   if fScale.x > 0 then
+     x1 := Round(x1 / fScale.x);
+   if fScale.y > 0 then
+     y1 := Round(y1 / fScale.y);
+     
+   for i := 0 to FChild.List.Count-1 do
+     if StrIComp(PChar(TDocItem(FChild.List.Items[i])._prop_Name), PChar(name)) = 0 then
+       TDocItem(FChild.List.Items[i]).Draw(pDC, x1, y1, fScale, _prop_AlphaMode);
+
+   ImgReleaseDC;
+   _hi_CreateEvent(_Data,@_event_onDraw,dt);
+end;
+
+procedure THIDocumentTemplate._work_doEnumNamed;
+var
+  dt: TData;
+  mt: PMT;
+  i: integer;
+  name: string; 
+begin
+   for i := 0 to FChild.List.Count-1 do
+   begin
+     name := TDocItem(FChild.List.Items[i])._prop_Name;
+	 if name <> '' then
+	 begin 
+       dtString(dt, name);
+       mt := mt_make(dt);
+       mt_string(mt, TDocItem(FChild.List.Items[i])._NameType);
+       mt_int(mt, TDocItem(FChild.List.Items[i])._prop_X);
+       mt_int(mt, TDocItem(FChild.List.Items[i])._prop_Y);
+       mt_int(mt, TDocItem(FChild.List.Items[i])._prop_Width);
+       mt_int(mt, TDocItem(FChild.List.Items[i])._prop_Height);       
+       _hi_onEvent_(_event_onEnumNamed, dt);
+       mt_free(mt);
+     end;  
+   end;  
+end;
 
 end.

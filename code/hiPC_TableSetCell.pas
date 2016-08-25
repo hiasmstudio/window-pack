@@ -10,6 +10,7 @@ type
    public
     _prop_Col:integer;
     _prop_Row:integer;
+    _prop_Text: string;
 
     _data_Object:THI_Event;
     _data_Row:THI_Event;
@@ -27,7 +28,7 @@ procedure THIPC_TableSetCell._work_doText;
 var t:string;
     x,y:integer;
 begin
-  t := ReadString(_Data, _data_Text);
+  t := ReadString(_Data, _data_Text, _prop_Text);
   x := ReadInteger(_Data, _data_Col, _prop_Col);
   y := ReadInteger(_Data, _data_Row, _prop_Row);
   InitItem(_Data);

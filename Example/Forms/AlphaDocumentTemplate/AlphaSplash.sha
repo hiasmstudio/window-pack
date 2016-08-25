@@ -1,0 +1,114 @@
+Make(delphi)
+ver(4.05 build 186)
+Add(MainForm,2953706,350,147)
+{
+ Visible=1
+ TaskBar=1
+ Position=1
+}
+Add(ChildFormEx,7564606,287,168)
+{
+ link(onStop,2953706:doClose,[])
+}
+BEGIN_SDK
+  Add(EditMultiEx,1592894,21,21)
+  {
+   EventCount=#6:onStop|
+   Width=482
+   Height=347
+  }
+  Add(MainForm,6414152,91,70)
+  {
+   Left=35
+   Top=105
+   Width=500
+   Height=100
+   BorderStyle=6
+   Position=1
+   TransparentManager="transp"
+   link(onCreate,338694:doEvent1,[])
+  }
+  Add(DocumentTemplate,5824226,252,133)
+  {
+   AlphaMode=0
+   link(onDraw,1537504:doShadow,[])
+   link(Bitmap,9339609:Var2,[])
+  }
+  BEGIN_SDK
+    Add(Print_Text,13746744,-3,-3)
+    {
+     Width=500
+     Height=100
+     Text="Hello Word!"
+     Font=[Verdana,56,1,905458,204]
+     Vertical=1
+    }
+  END_SDK
+  Add(AlphaBitmap,14053971,252,70)
+  {
+   HWidth=500
+   HHeight=100
+   Point(doCreate)
+  }
+  Add(Hub,338694,154,84)
+  {
+   OutCount=3
+   link(onEvent1,14053971:doCreate,[])
+   link(onEvent2,5824226:doDraw,[(242,97)(242,139)])
+   link(onEvent3,1694085:doTimer,[(193,104)(193,188)])
+  }
+  Add(GetDataEx,9339609,252,112)
+  {
+   link(Data,14053971:Bitmap,[])
+  }
+  Add(TransparentManager,2640399,378,133)
+  {
+   Name="transp"
+   TransparentMode=1
+   TransparentType=1
+   AlphaBlendValue=0
+   Point(doPicture)
+   Point(doAlphaBlendValue)
+  }
+  Add(AlphaShadow,1537504,315,133)
+  {
+   ShiftX=0
+   ShiftY=0
+   DeepBlur=5
+   link(onShadow,2640399:doPicture,[])
+   link(Bitmap,9339609:Var3,[(321,117)])
+  }
+  Add(CounterEx,1952457,287,182)
+  {
+   Max=254
+   Step=2
+   Point(doPrev)
+   link(onNext,2640399:doAlphaBlendValue,[(354,188)(354,146)])
+  }
+  Add(Timer,1694085,203,182)
+  {
+   Interval=20
+   Enable=1
+   AutoStop=127
+   Point(onStop)
+   link(onTimer,1952457:doNext,[])
+   link(onStop,9160649:doTimer,[(242,195)(242,223)(193,223)(193,237)])
+  }
+  Add(Timer,9160649,203,231)
+  {
+   Interval=3000
+   Enable=1
+   AutoStop=1
+   Point(onStop)
+   link(onTimer,10552188:doTimer,[(242,237)(242,272)(193,272)(193,286)])
+  }
+  Add(Timer,10552188,203,280)
+  {
+   Interval=20
+   Enable=1
+   AutoStop=127
+   Point(onStop)
+   link(onTimer,1952457:doPrev,[(249,286)(249,195)])
+   link(onStop,1592894:onStop,[(417,293)(417,27)])
+  }
+END_SDK

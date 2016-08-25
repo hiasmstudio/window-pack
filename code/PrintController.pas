@@ -16,6 +16,8 @@ type
     _prop_Document:IDocumentTemplate;
 
     _data_Object:THI_Event;
+    
+    procedure _work_doItemName(var _Data:TData; Index:word);
   end;
 
 implementation
@@ -38,6 +40,11 @@ var dt:TData;
 begin
   dtNull(dt);
   InitItem(dt);
+end;
+
+procedure TPrintController._work_doItemName;
+begin
+  _prop_ItemName := ToString(_Data);
 end;
 
 end.

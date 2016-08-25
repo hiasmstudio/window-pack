@@ -47,10 +47,13 @@ type
       FColumns:PList;
 
       FMatrix:PList;
+      
+      FAlphaBlendValue:byte;
 
       old_sx,old_sy:real;
+      blend: TBlendFunction;
 
-      procedure InitTBorberPen;
+      procedure InitTBorderPen;
       procedure SetTBorderColor(value:TColor);
       procedure SetTBorderStyle(value:byte);
       procedure SetTBorderSize(value:integer);
@@ -58,7 +61,7 @@ type
       procedure SetTableBackColor(value:TColor);
       procedure SetTableTrans(value:boolean);
 
-      procedure InitCellBorberPen;
+      procedure InitCellBorderPen;
       procedure SetCellBorderColor(value:TColor);
       procedure SetCellBorderStyle(value:byte);
       procedure SetCellBorderSize(value:integer);
@@ -73,6 +76,8 @@ type
       procedure SetHeadFont(const value:LOGFONT);
 
       procedure SetColumns(const value:string);
+      procedure SetAlphaBlendValue(value:byte);
+      
       function GetColumns:string;
       procedure ClearColumns;
       procedure SetCells(const value:string);
@@ -99,7 +104,7 @@ type
 
       constructor Create;
       destructor Destroy; override;
-      procedure Draw(dc:HDC; x,y:integer; sx,sy:real);
+      procedure Draw(sdc:HDC; xx,yy:integer; sx,sy:real; alpha:boolean=false);
 
       function AddRow:integer;
       procedure RemoveRow(index:integer);
@@ -133,10 +138,12 @@ type
       property Rows:integer read GetRows;
 
       property CellRect[x,y:integer]:TRect read GetCellRect;
+      property AlphaBlendValue:byte write SetAlphaBlendValue;
   end;
 
   TDrawImage = class
     private
+      blend: TBlendFunction;
       FFramePen:HPEN;
       FBack:HBRUSH;
 
@@ -146,6 +153,7 @@ type
       FFrameColor:TColor;
       FFrameStyle:byte;
       FFrameSize:integer;
+      FAlphaBlendValue:byte;
 
       _sx,_sy:real;
 
@@ -157,15 +165,16 @@ type
       procedure InitBackground;
       procedure SetBackColor(value:TColor);
       procedure SetBackStyle(value:boolean);
+      procedure SetAlphaBlendValue(value:byte);
 
-      procedure Fill(dc:hdc; x1,y1,x2,y2:integer);
-      procedure Center(DC:HDC; r:TRect);
-      procedure Stretch(DC:HDC; r:TRect);
-      procedure Scale(DC:HDC; r:TRect; x:boolean);
-      procedure ScaleMax(DC:HDC; const r:TRect);
-      procedure ScaleMin(DC:HDC; const r:TRect);
-      procedure Mosaic(DC:HDC; const r:TRect);
-      procedure None(DC:HDC; r:TRect);
+      procedure Fill(dc:hdc; x1,y1,x2,y2:integer; alpha:boolean=false);
+      procedure Center(DC:HDC; r:TRect; alpha:boolean=false);
+      procedure Stretch(DC:HDC; r:TRect; alpha:boolean=false);
+      procedure Scale(DC:HDC; r:TRect; x:boolean; alpha:boolean=false);
+      procedure ScaleMax(DC:HDC; const r:TRect; alpha:boolean=false);
+      procedure ScaleMin(DC:HDC; const r:TRect; alpha:boolean=false);
+      procedure Mosaic(DC:HDC; const r:TRect; alpha:boolean=false);
+      procedure None(DC:HDC; r:TRect; alpha:boolean=false);
     public
       Width,Height:integer;
       Image:PBitmap;
@@ -173,14 +182,24 @@ type
 
       constructor Create;
       destructor Destroy; override;
-      procedure Draw(dc:HDC; x,y:integer; sx,sy:real);
+      procedure Draw(dc:HDC; x,y:integer; sx,sy:real; alpha:boolean=false);
 
       property FrameColor:TColor write SetFrameColor;
       property FrameStyle:byte write SetFrameStyle;
       property FrameSize:integer write SetFrameSize;
       property BackColor:TColor write SetBackColor;
       property BackStyle:boolean write SetBackStyle;
+      property AlphaBlendValue:byte write SetAlphaBlendValue;
   end;
+
+procedure ScaleRect(var r:TRect; sx, sy:real);
+
+procedure PremultAlphaTransparent(BMP: PBitmap; TransparentColor: TColor; DeleteAlpha: Boolean);
+
+function AlphaBlend(hdcDest: HDC; nXOriginDest, nYOriginDest, nWidthDest, nHeightDest: Integer;
+                    hdcSrc: HDC; nXOriginSrc, nYOriginSrc, nWidthSrc, nHeightSrc: Integer;
+                    blendFunction: TBlendFunction): BOOL; stdcall;
+                    external 'msimg32.dll' name 'AlphaBlend';
 
 implementation
 
@@ -192,18 +211,46 @@ begin
   r.Bottom := Round(r.Bottom * sy);
 end;
 
+procedure PremultAlphaTransparent(BMP: PBitmap; TransparentColor: TColor; DeleteAlpha: Boolean);
+var
+  i: Integer;
+  q: PRGBQuad;
+  Red, Green, Blue: byte;
+begin
+  Red := GetRValue(TransparentColor);
+  Green := GetGValue(TransparentColor);
+  Blue := GetBValue(TransparentColor);
+  q := BMP.ScanLine[BMP.Height - 1];
+
+  for i:=0 to BMP.Height * BMP.Width - 1 do
+  begin
+    if (q.rgbRed = Red) and (q.rgbGreen = Green) and (q.rgbBlue = Blue) then
+      q.rgbReserved := 0
+    else if DeleteAlpha then
+      q.rgbReserved := 255;
+    q.rgbBlue := q.rgbBlue * q.rgbReserved Shr 8;
+    q.rgbGreen := q.rgbGreen * q.rgbReserved Shr 8;
+    q.rgbRed := q.rgbRed * q.rgbReserved Shr 8;
+    Inc(q);
+  end;
+end;
+
 constructor TDrawTable.Create;
 begin
    inherited;
 
    FTBorderSize := 1;
-   InitTBorberPen;
+   InitTBorderPen;
 
    FColumns := NewList;
 
    FMatrix := NewList;
    old_sx := -1;
    old_sy := -1;
+   blend.BlendOp := AC_SRC_OVER;
+   blend.BlendFlags := 0;
+   blend.SourceConstantAlpha := 255;
+   blend.AlphaFormat := AC_SRC_NO_PREMULT_ALPHA;
 end;
 
 destructor TDrawTable.Destroy;
@@ -221,7 +268,12 @@ begin
    inherited;
 end;
 
-procedure TDrawTable.InitTBorberPen;
+procedure TDrawTable.SetAlphaBlendValue;
+begin
+  FAlphaBlendValue := value;
+end;
+
+procedure TDrawTable.InitTBorderPen;
 begin
    DeleteObject(FTBorderPen);
    FTBorderPen := CreatePen(FTBorderStyle, FTBorderSize, Color2RGB(FTBorderColor));
@@ -230,19 +282,19 @@ end;
 procedure TDrawTable.SetTBorderColor(value:TColor);
 begin
    FTBorderColor := value;
-   InitTBorberPen;
+   InitTBorderPen;
 end;
 
 procedure TDrawTable.SetTBorderStyle(value:byte);
 begin
    FTBorderStyle := value;
-   InitTBorberPen;
+   InitTBorderPen;
 end;
 
 procedure TDrawTable.SetTBorderSize(value:integer);
 begin
    FTBorderSize := value;
-   InitTBorberPen;
+   InitTBorderPen;
 end;
 
 procedure TDrawTable.InitTableBackground;
@@ -265,7 +317,7 @@ begin
    InitTableBackground;
 end;
 
-procedure TDrawTable.InitCellBorberPen;
+procedure TDrawTable.InitCellBorderPen;
 var p:HPEN;
     i,j:integer;
 begin
@@ -281,19 +333,19 @@ end;
 procedure TDrawTable.SetCellBorderColor(value:TColor);
 begin
    FCellBorderColor := value;
-   InitCellBorberPen;
+   InitCellBorderPen;
 end;
 
 procedure TDrawTable.SetCellBorderStyle(value:byte);
 begin
    FCellBorderStyle := value;
-   InitCellBorberPen;
+   InitCellBorderPen;
 end;
 
 procedure TDrawTable.SetCellBorderSize(value:integer);
 begin
    FCellBorderSize := value;
-   InitCellBorberPen;
+   InitCellBorderPen;
 end;
 
 procedure TDrawTable.InitCellBackground;
@@ -590,8 +642,10 @@ begin
 end;
 
 procedure TDrawTable.Draw;
-var i,j:integer;
+var i,j,x,y:integer;
     cr,r:TRect;
+    dc: HDC;
+    src: PBitmap;
 
     function DrawCell(col:integer; const Caption:string; Align:integer):boolean;
     //var f:cardinal;
@@ -600,8 +654,12 @@ var i,j:integer;
       if(col = FColumns.Count-1)or(cr.Right > x + self.Width - 1) then
         cr.Right := x + self.Width - 1;
 
+      if alpha then
+        dec(cr.Right, FTBorderSize div 2);
+
       r := cr;
-      ScaleRect(r, sx, sy);
+      if not alpha then
+        ScaleRect(r, sx, sy);
       Rectangle(dc, r.Left, r.Top, r.Right, r.Bottom);
 
       r := cr;
@@ -609,8 +667,11 @@ var i,j:integer;
       inc(r.Top, CellPadding.Top);
       dec(r.Right, CellPadding.Right);
       dec(r.Bottom, CellPadding.Bottom);
-      ScaleRect(r, sx, sy);
+      
+      if not alpha then
+        ScaleRect(r, sx, sy);
       DrawText(dc, PChar(Caption), length(caption), r, DT_SINGLELINE or Align or DT_VCENTER);
+
       cr.Left := cr.Right + CellSpacing;
       Result := cr.Left > x + self.Width - CellSpacing - 1;
     end;
@@ -621,8 +682,11 @@ var i,j:integer;
       DeleteObject(f);
       oldh := lf.lfHeight;
       oldw := lf.lfWidth;
-      lf.lfHeight := Round(lf.lfHeight * sy);
-      lf.lfWidth := Round(lf.lfWidth * sx);
+      if not alpha then
+      begin
+        lf.lfHeight := Round(lf.lfHeight * sy);
+        lf.lfWidth := Round(lf.lfWidth * sx);
+      end;
       if F = FCellFont then
         SetCellFont(lf)
       else F := CreateFontIndirect(lf);
@@ -630,6 +694,10 @@ var i,j:integer;
       lf.lfHeight := oldh;
     end;
 begin
+   DC := sDC;
+   x := xx;
+   y := yy;
+
    if(sx <> old_sx)or(sy <> old_sy)then
      begin
        old_sx := sx;
@@ -638,13 +706,37 @@ begin
        ReInitFont(FCellFont, FCellFont_orig);
      end;
 
-   SelectObject(dc, FTableBack);
-   SelectObject(dc, FTBorderPen);
+   if alpha then
+   begin
+     x := 0;
+     y := 0;
+     src := NewDIBBitmap(Width + FTBorderSize, Height + FTBorderSize, pf32bit);
+     DC := src.Canvas.Handle;
+   end
+   else
+   begin
+     x := xx;
+     y := yy;
+     DC := sDC;
+   end;
+
    cr.Left := x;
    cr.Top := y;
    cr.Right := x + Width;
    cr.Bottom := y + Height;
-   ScaleRect(cr, sx, sy);
+
+   SelectObject(dc, FTableBack);
+   SelectObject(dc, FTBorderPen);
+
+   if not alpha then
+     ScaleRect(cr, sx, sy)
+   else
+   begin
+     inc(cr.left, FTBorderSize div 2);
+     inc(cr.Top, FTBorderSize div 2);
+     dec(cr.Right, FTBorderSize div 2);
+     dec(cr.Bottom, FTBorderSize div 2);
+   end;
    Rectangle(dc, cr.Left, cr.Top, cr.Right, cr.Bottom);
 
    SetBkMode(dc, TRANSPARENT);
@@ -653,11 +745,22 @@ begin
    cr.Left := x + 1;
    cr.Top := y + 1;
 
+   if alpha then
+   begin
+     inc(cr.Left, FTBorderSize div 2);
+     inc(cr.Top, FTBorderSize div 2);
+   end;
+
    if HeadVisible then
     begin
      cr.Bottom := cr.Top + RowHeight;
-     if cr.Bottom > y + Height then
-       cr.Bottom := y + Height;
+
+     if not alpha then
+       if cr.Bottom > y + Height then
+         cr.Bottom := y + Height
+     else
+       if cr.Bottom > y + Height - FTBorderSize div 2 then
+         cr.Bottom := y + Height - FTBorderSize div 2;
 
      SelectObject(dc, FHeadBack);
      SelectObject(dc, FHeadFont);
@@ -669,14 +772,23 @@ begin
      cr.Top := cr.Bottom + CellSpacing;
     end;
 
-
    if FMatrix.Count > 0 then
     for j := 0 to FMatrix.Count-1 do
      begin
-        cr.Left := x + 1;
-        cr.Bottom := cr.Top + RowHeight;
-        if cr.Bottom > y + Height - 1 then
-          break;
+        if not alpha then
+        begin
+          cr.Left := x + 1;
+          cr.Bottom := cr.Top + RowHeight;
+          if cr.Bottom > y + Height - 1 then
+            break;
+        end
+        else
+        begin
+          cr.Left := x + 1 + FTBorderSize div 2;
+          cr.Bottom := cr.Top + RowHeight + 1;
+          if cr.Bottom > y + Height - 1 - FTBorderSize div 2 then
+            break;
+        end;
 
         for i := 0 to FColumns.Count-1 do
           begin
@@ -692,7 +804,7 @@ begin
           end;
         cr.Top := cr.Bottom + CellSpacing;
      end
-   else
+   else if not alpha then
     while cr.Top < y + Height do
      begin
         SelectObject(dc, FCellBack);
@@ -708,7 +820,42 @@ begin
           with PColumn(FColumns.Items[i])^ do
             if DrawCell(i, Caption, Align) then break;
         cr.Top := cr.Bottom + CellSpacing;
+     end
+   else if alpha then
+    while cr.Top < y + Height - FTBorderSize div 2 do
+     begin
+        SelectObject(dc, FCellBack);
+        SelectObject(dc, FCellFont);
+        SetTextColor(dc, CellColor);
+
+        cr.Left := x + 1 + FTBorderSize div 2;
+        cr.Bottom := cr.Top + RowHeight + 1;
+        if cr.Bottom > y + Height - 1 - FTBorderSize div 2 then
+          break;
+
+        for i := 0 to FColumns.Count-1 do
+          with PColumn(FColumns.Items[i])^ do
+            if DrawCell(i, Caption, Align) then break;
+        cr.Top := cr.Bottom + CellSpacing;
      end;
+
+   if alpha then
+   begin
+     cr.Left := xx;
+     cr.Top := yy;
+     cr.Right := xx + Width;
+     cr.Bottom := yy + Height;
+     
+     dec(cr.Left, FTBorderSize div 2);
+     dec(cr.Top, FTBorderSize div 2);
+     inc(cr.Right, FTBorderSize div 2);
+     inc(cr.Bottom, FTBorderSize div 2);
+     
+     ScaleRect(cr, sx, sy);
+     PremultAlphaTransparent(src, clDefault, true);
+     blend.SourceConstantAlpha := FAlphaBlendValue;
+     AlphaBlend(sDC, cr.Left, cr.Top, cr.Right - cr.Left, cr.Bottom - cr.Top, DC, 0, 0, src.width, src.height, blend);
+   end;
 end;
 
 //-------------------------------------------------------------------------------------------------
@@ -717,6 +864,10 @@ constructor TDrawImage.Create;
 begin
    inherited;
    Image := NewBitmap(0,0);
+   blend.BlendOp := AC_SRC_OVER;
+   blend.BlendFlags := 0;
+   blend.SourceConstantAlpha := 255;
+   blend.AlphaFormat := AC_SRC_NO_PREMULT_ALPHA;
 end;
 
 destructor TDrawImage.Destroy;
@@ -771,6 +922,11 @@ begin
    InitBackground;
 end;
 
+procedure TDrawImage.SetAlphaBlendValue;
+begin
+  FAlphaBlendValue := value;
+end;
+
 procedure TDrawImage.Center;
 var x,y,b:integer;
 begin
@@ -779,25 +935,37 @@ begin
 
   b := min(y + Image.Height, r.Bottom);
 
-  Fill(dc, r.Left, r.Top, r.Right, y); //up
-  Fill(dc, r.Left, b, r.Right, r.Bottom); //down
-  Fill(dc, r.Left, y, x, b);  // left
-  Fill(dc, min(x + Image.Width, r.Right), y, r.Right, b); //right
+  Fill(dc, r.Left, r.Top, r.Right, y, alpha); //up
+  Fill(dc, r.Left, b, r.Right, r.Bottom, alpha); //down
+  Fill(dc, r.Left, y, x, b, alpha);  // left
+  Fill(dc, min(x + Image.Width, r.Right), y, r.Right, b, alpha); //right
 
   r.Left := x;
   r.Top := y;
   r.Right := min(x + Image.Width, r.Right);
   r.Bottom := b;
 
-  ScaleRect(r, _sx, _sy);
-  Image.StretchDraw(DC, r);
+  if alpha then
+    AlphaBlend(dc, r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top, Image.Canvas.Handle, 0, 0, Image.Width, Image.Height, blend)
+  else
+  begin
+    ScaleRect(r, _sx, _sy);
+    StretchBlt(dc, r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top, Image.Canvas.Handle, 0, 0, Image.Width, Image.Height, SRCCOPY);
+//    Image.StretchDraw(DC, r);
+  end;
 end;
 
 procedure TDrawImage.Stretch;
 begin
-  SetStretchBltMode(DC, HALFTONE);
-  ScaleRect(r, _sx, _sy);
-  Image.StretchDraw(DC, r);
+  if alpha then
+    AlphaBlend(dc, r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top, Image.Canvas.Handle, 0, 0, Image.Width, Image.Height, blend)
+  else
+  begin
+    ScaleRect(r, _sx, _sy);
+    SetStretchBltMode(DC, HALFTONE);
+    StretchBlt(dc, r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top, Image.Canvas.Handle, 0, 0, Image.Width, Image.Height, SRCCOPY);
+//    Image.StretchDraw(DC, r);
+   end;
 end;
 
 procedure  TDrawImage.Mosaic;
@@ -814,19 +982,24 @@ begin
         rc.Bottom := min(rc.Top + Image.Height, r.Bottom);
         sw := rc.Right - rc.Left;
         sh := rc.Bottom - rc.Top;
-        ScaleRect(rc, _sx, _sy);
-        StretchBlt(dc, rc.Left, rc.Top, rc.Right - rc.Left, rc.Bottom - rc.Top, Image.Canvas.Handle, 0, 0, sw, sh, SRCCOPY);
+        if alpha then
+          AlphaBlend(dc, rc.Left, rc.Top, rc.Right - rc.Left, rc.Bottom - rc.Top, Image.Canvas.Handle, 0, 0, sw, sh, blend)
+        else
+        begin
+          ScaleRect(rc, _sx, _sy);
+          StretchBlt(dc, rc.Left, rc.Top, rc.Right - rc.Left, rc.Bottom - rc.Top, Image.Canvas.Handle, 0, 0, sw, sh, SRCCOPY);
+        end;
       end;
 end;
 
 procedure TDrawImage.ScaleMax;
 begin
-  Scale(DC, r, true);
+  Scale(DC, r, true, alpha);
 end;
 
 procedure TDrawImage.ScaleMin;
 begin
-  Scale(DC, r, false);
+  Scale(DC, r, false, alpha);
 end;
 
 procedure TDrawImage.Fill;
@@ -836,7 +1009,8 @@ begin
    r.Top := y1;
    r.Right := x2;
    r.Bottom := y2;
-   ScaleRect(r, _sx, _sy);
+   if not alpha then
+     ScaleRect(r, _sx, _sy);
    FillRect(dc, r, FBack);
 end;
 
@@ -851,8 +1025,8 @@ begin
     c := Round((Height - Width*k)/2);
     a := r.Top + c;
     b := r.Bottom - c;
-    Fill(dc,r.Left,r.Top,r.Right,a);
-    Fill(dc,r.Left,b,r.Right,r.Bottom);
+    Fill(dc,r.Left,r.Top,r.Right,a, alpha);
+    Fill(dc,r.Left,b,r.Right,r.Bottom, alpha);
     r.Top := a;
     r.Bottom := b;
    end
@@ -861,59 +1035,130 @@ begin
     c := Round((Width - Height/k)/2);
     a := r.Left + c;
     b := r.Right - c;
-    Fill(dc,r.Left,r.Top,a,r.Bottom);
-    Fill(dc,b,r.Top,r.Right,r.Bottom);
+    Fill(dc,r.Left,r.Top,a,r.Bottom, alpha);
+    Fill(dc,b,r.Top,r.Right,r.Bottom, alpha);
     r.Left := a;
     r.Right := b;
    end;
-  SetStretchBltMode(DC, HALFTONE);
-  ScaleRect(r, _sx, _sy);
-  Image.StretchDraw(DC,r);
+  if alpha then
+    AlphaBlend(dc, r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top, Image.Canvas.Handle, 0, 0, Image.Width, Image.Height, blend)
+  else
+  begin
+    ScaleRect(r, _sx, _sy);
+    SetStretchBltMode(DC, HALFTONE);
+    StretchBlt(dc, r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top, Image.Canvas.Handle, 0, 0, Image.Width, Image.Height, SRCCOPY);
+//    Image.StretchDraw(DC,r);
+  end;
 end;
 
 procedure TDrawImage.None;
 var sw,sh:integer;
 begin
-  Fill(dc,r.Left + Image.Width,r.Top,r.Right,r.Bottom);
-  Fill(dc,r.Left,r.Top + Image.Height,r.Left + Image.Width,r.Bottom);
+  Fill(dc,r.Left + Image.Width,r.Top,r.Right,r.Bottom, alpha);
+  Fill(dc,r.Left,r.Top + Image.Height,r.Left + Image.Width,r.Bottom, alpha);
   r.Right := min(r.Left + Image.Width, r.Right);
   r.Bottom := min(r.Top + Image.Height, r.Bottom);
   sw := r.Right - r.Left;
   sh := r.Bottom - r.Top;
-  ScaleRect(r, _sx, _sy);
-  StretchBlt(dc, r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top, Image.Canvas.handle,0,0,sw,sh,SRCCOPY);
+  if alpha then
+    AlphaBlend(dc, r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top, Image.Canvas.handle,0,0,sw,sh,blend)
+  else
+  begin
+    ScaleRect(r, _sx, _sy);
+    StretchBlt(dc, r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top, Image.Canvas.handle,0,0,sw,sh,SRCCOPY);
   //Image.Draw(DC,r.Left,r.Top);
+  end;
+
 end;
 
 procedure TDrawImage.Draw;
-var cr,r:TRect;
+var
+  cr,r,r1:TRect;
+  pDC: HDC;
+  src: PBitmap;
 begin
-   SelectObject(dc, FFramePen);
-   SelectObject(dc, FBack);
    cr.Left := x;
    cr.Top := y;
    cr.Right := x + Width;
    cr.Bottom := y + Height;
-   r := cr;
-   ScaleRect(r, sx, sy);
-   Rectangle(dc, r.Left, r.Top, r.Right, r.Bottom);
 
-   _sx := sx;
-   _sy := sy;
+   if not alpha then
+   begin
+     r := cr;
+     ScaleRect(r, sx, sy);
 
-   inc(cr.Left, FFrameSize);
-   inc(cr.Top, FFrameSize);
-   dec(cr.Right, FFrameSize);
-   dec(cr.Bottom, FFrameSize);
-   if not Image.Empty then
-    case ViewStyle of
-     0: Center(dc, cr);
-     1: Stretch(dc, cr);
-     2: ScaleMin(dc, cr);
-     3: Mosaic(dc, cr);
-     4: None(dc, cr);
-     5: ScaleMax(dc, cr);
+     SelectObject(dc, FFramePen);
+     SelectObject(dc, FBack);
+     Rectangle(dc, r.Left, r.Top, r.Right, r.Bottom);
+
+     _sx := sx;
+     _sy := sy;
+
+     inc(cr.Left, FFrameSize);
+     inc(cr.Top, FFrameSize);
+     dec(cr.Right, FFrameSize);
+     dec(cr.Bottom, FFrameSize);
+
+     if not Image.Empty then
+      case ViewStyle of
+       0: Center(dc, cr, alpha);
+       1: Stretch(dc, cr, alpha);
+       2: ScaleMin(dc, cr, alpha);
+       3: Mosaic(dc, cr, alpha);
+       4: None(dc, cr, alpha);
+       5: ScaleMax(dc, cr, alpha);
     end;
+   end
+   else
+   begin
+     src := NewDIBBitmap(Width + FFrameSize, Height + FFrameSize, pf32bit);
+     pDC := src.Canvas.Handle;
+
+     r.Left := FFrameSize div 2;
+     r.Top := FFrameSize div 2;
+     r.Right := src.width - FFrameSize div 2;
+     r.Bottom := src.height - FFrameSize div 2;
+
+     SelectObject(pdc, FFramePen);
+     SelectObject(pdc, FBack);
+     Rectangle(pdc, r.Left, r.Top, r.Right, r.Bottom);
+     if not ((FFrameStyle = 5) and FBackStyle) then
+       PremultAlphaTransparent(src, clDefault, true);
+
+     _sx := sx;
+     _sy := sy;
+
+     inc(r.Left, FFrameSize);
+     inc(r.Top, FFrameSize);
+     dec(r.Right, FFrameSize);
+     dec(r.Bottom, FFrameSize);
+
+     blend.SourceConstantAlpha := 255;
+     if not Image.Empty then
+      case ViewStyle of
+       0: Center(pdc, r, alpha);
+       1: Stretch(pdc, r, alpha);
+       2: ScaleMin(pdc, r, alpha);
+       3: Mosaic(pdc, r, alpha);
+       4: None(pdc, r, alpha);
+       5: ScaleMax(pdc, r, alpha);
+    end;
+
+    r1 := cr;
+    dec(r1.Left, FFrameSize div 2);
+    dec(r1.Top, FFrameSize div 2);
+    inc(r1.Right, FFrameSize div 2);
+    inc(r1.Bottom, FFrameSize div 2);
+
+    ScaleRect(r1, sx, sy);
+    blend.SourceConstantAlpha := FAlphaBlendValue;
+
+    if not ((FFrameStyle = 5) and FBackStyle) then
+      PremultAlphaTransparent(src, clDefault, true);
+
+    AlphaBlend(dc, r1.Left, r1.Top, r1.Right - r1.Left, r1.Bottom - r1.Top, pDC, 0, 0, src.width, src.height, blend);
+    src.free;
+   end;
 end;
 
 end.
