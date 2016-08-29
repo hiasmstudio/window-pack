@@ -66,9 +66,18 @@ begin
 end;
 
 procedure THIStrCase.FirstChar;
+var
+  i: integer;
 begin
   CharLower(@Str[1]);
-  CharUpperBuff(@Str[1], 1);
+  for i := 1 to length(Str) do
+    if (Str[i] = ' ') then
+      continue
+    else  
+    begin
+      CharUpperBuff(@Str[i], 1);
+      break;
+    end;
 end;
 
 end.
