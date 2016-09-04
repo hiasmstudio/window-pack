@@ -41,6 +41,8 @@ type
       _prop_ItemHeight:integer;
       _prop_ScrollBar:boolean;
       
+	  _data_ItemData: THI_Event;
+
       procedure Init; override;
       destructor Destroy; override;
       procedure _work_doSelectAll(var _Data:TData; Index:word);
@@ -51,6 +53,9 @@ type
       procedure _var_Index(var _Data:TData; Index:word);
       procedure _var_SelectArray(var _Data:TData; Index:word);
       procedure _var_ValueArray(var _Data:TData; Index:word);
+
+      procedure _work_doSelectData(var _Data:TData; Index:word);      
+      procedure _var_Data(var _Data:TData; Index:word);
   
       property _prop_IndexManager:IIndexManager read fIdxMgr write SetIndexManager;
       property _prop_BoxDrawManager:IBoxDrawManager read fBoxDrawManager write SetInitBoxDrawManager;
@@ -311,6 +316,26 @@ begin
   dt := ReadData(_Data,_data_Value);
   Control.ItemData[ind] := ToInteger(dt);  
   _hi_CreateEvent(_Data,@_event_onChange);
+end;
+
+procedure THIListBox._work_doSelectData;
+var
+  i, ItemData: integer;
+begin
+  ItemData := ReadInteger(_Data, _data_ItemData);
+  for i := 0 to Control.Count - 1 do
+  begin
+    if integer(Control.ItemData[i]) = ItemData then 
+    begin 
+      Control.CurIndex := i;
+      break; 
+    end; 
+  end;
+end;
+      
+procedure THIListBox._var_Data;
+begin
+  dtInteger(_Data, Control.ItemData[Control.CurIndex]);
 end;
 
 end.

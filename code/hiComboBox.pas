@@ -37,6 +37,8 @@ type
       _prop_EditSelectMode:byte;     
       _prop_DropDownCount:integer; // === DropDownCount
     
+	  _data_ItemData: THI_Event;
+
       _event_onChangeText: THI_Event;
       procedure Init; override;
       destructor Destroy; override;
@@ -46,6 +48,9 @@ type
       procedure _var_Index(var _Data:TData; Index:word);
       procedure _work_doDropDownCount(var _Data:TData; Index:word);
 
+      procedure _work_doSelectData(var _Data:TData; Index:word);      
+      procedure _var_Data(var _Data:TData; Index:word);
+      
       property _prop_IndexManager:IIndexManager read fIdxMgr write SetIndexManager;
       property _prop_BoxDrawManager:IBoxDrawManager read fBoxDrawManager write SetInitBoxDrawManager;
       property _prop_IconsManager:IIconsManager read fIconsManager write SetIconsManager;      
@@ -220,6 +225,26 @@ function  THIComboBox.Add(const Text:string):integer;
 begin
    Result := Control.Perform(CB_ADDSTRING, 0, cardinal(PChar(Text)));
    if (_prop_ReadOnly = 0) and (Control.CurIndex < 0) then Control.CurIndex := 0;    
+end;
+
+procedure THIComboBox._work_doSelectData;
+var
+  i, ItemData: integer;
+begin
+  ItemData := ReadInteger(_Data, _data_ItemData);
+  for i := 0 to Control.Count - 1 do
+  begin
+    if integer(Control.ItemData[i]) = ItemData then 
+    begin 
+      Control.CurIndex := i;
+      break; 
+    end; 
+  end;
+end;
+      
+procedure THIComboBox._var_Data;
+begin
+  dtInteger(_Data, Control.ItemData[Control.CurIndex]);
 end;
 
 initialization
