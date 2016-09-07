@@ -10,7 +10,7 @@ type
    THITrackBar = class(THIWin)
    private
       FOrientation,FTickMarks: byte;
-      FUseToolTip,Track, Stop: Boolean;
+      FUseToolTip,Track: Boolean;
       FFrequency, oldPos: integer;
       function  GetVal(const Index:Integer):DWord;
       procedure SetVal(const Index:Integer; const Value:DWord);
@@ -136,15 +136,13 @@ begin
    with Bar do begin
       P := Pos;
       if LoWord(Msg.wParam)= TB_ENDTRACK then begin
-         if not Stop then
+         if Track then
 		   _hi_onEvent(_event_onStop, P);
-		 Stop := true;  
          Track := false;
       end else begin
          if not Track then _hi_onEvent(_event_onStart, P);
 		 if oldPos <> P then
            _hi_onEvent(_event_onPosition, P);
-		 Stop := false; 
          Track := true;
       end;
 	  oldPos := P;
