@@ -296,9 +296,18 @@ begin
    Control.LVDelete(ToInteger(_Data));
 end;
 
-procedure THIStringTable._work_doAddColumn;
+procedure THIStringTable._work_doAddColumn; // Tad 19.09.2016
+var
+  FLeft, S: string;  
 begin
-  Control.LVColAdd(ToString(_Data),taLeft,80);
+  S := ToString(_Data);
+  if pos('=', S) = 0 then
+    Control.LVColAdd(S, taLeft, 80)
+  else 
+  begin
+    FLeft := GetTok(S, '=');
+    Control.LVColAdd(FLeft, taLeft, Str2Int(S));
+  end;
 end;
 
 function THIStringTable._OnCmpText;
