@@ -15,6 +15,7 @@ type
     _event_onChange: THI_Event;
 
     procedure _work_doClear(var _Data: TData; Index: word);
+    procedure _work_doClearAll(var _Data: TData; Index: word);    
   end;
 
 implementation
@@ -54,6 +55,9 @@ begin
   _hi_onEvent(_event_onChange);
 end;
 
-
+procedure THIMST_Clear._work_doClearAll;
+begin
+  _prop_ClearAll := ReadBool(_Data);
+end;
 
 end.

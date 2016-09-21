@@ -70,6 +70,7 @@ type
     procedure _work_doSortDigit(var _Data:TData; Index:word);
     procedure _work_doSortExtCmp(var _Data:TData; Index:word);
     procedure _work_doEnsureVisible(var _Data:TData; Index:word);
+    procedure _work_doClearAll(var _Data:TData; Index:word);
     procedure _var_Count(var _Data:TData; Index:word);
     procedure _var_Select(var _Data:TData; Index:word);
     procedure _var_Matrix(var _Data:TData; Index:word);
@@ -362,6 +363,11 @@ end;
 procedure THIStringTable._work_doEnsureVisible;
 begin
    Control.LVMakeVisible(ToInteger(_Data), False);
+end;
+
+procedure THIStringTable._work_doClearAll;
+begin
+  _prop_ClearAll := ReadBool(_Data);
 end;
 
 procedure THIStringTable._var_Count;
