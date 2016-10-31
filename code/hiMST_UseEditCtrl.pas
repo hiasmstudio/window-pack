@@ -6,6 +6,7 @@ uses Windows, Messages, Kol, Share, Debug, hiMTStrTbl;
 
 const
   HDN_FIRST        = -300;           { Header }
+  HDN_ITEMCHANGEDA = HDN_FIRST-1;
   HDN_ITEMCHANGEDW = HDN_FIRST - 21;
   
 type
@@ -112,12 +113,13 @@ var
 begin
   Result := FALSE;
   l:= Sender.LVOptions;
-  fClass := THIMST_UseEditCtrl(Sender.Tag);
+  fClass := THIMST_UseEditCtrl(LongInt(Sender.CustomData));
   with fClass do
   begin
     case Msg.message of
       WM_NOTIFY:
-        if (HD_NOTIFY(Pointer(Msg.LParam)^).Hdr.code = HDN_ITEMCHANGEDW) then
+        if (HD_NOTIFY(Pointer(Msg.LParam)^).Hdr.code = HDN_ITEMCHANGEDA) or
+           (HD_NOTIFY(Pointer(Msg.LParam)^).Hdr.code = HDN_ITEMCHANGEDW) then
           InitOnEvent;
       WM_RBUTTONDOWN, WM_LBUTTONDOWN:
       begin
@@ -226,7 +228,7 @@ begin
   FMSTControl := Value;
   sControl := FMSTControl.ctrlpoint;
   FMSTControl.detachwndproc;
-  sControl.Tag := Cardinal(Self);
+  sControl.CustomData := Pointer(Self);
   sControl.AttachProc(WndProcTabGrid);
 end;
 
