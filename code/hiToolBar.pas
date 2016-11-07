@@ -65,9 +65,9 @@ begin
    if _prop_Wrapable then
      Include(Fl,tboWrapable);
 
-   if _prop_Ctl3D = 1 then
-     Include(Fl,tbo3DBorder);
-   _prop_Ctl3D  := 1; 
+//   if _prop_Ctl3D = 1 then
+//     Include(Fl,tbo3DBorder);
+//   _prop_Ctl3D  := 1; 
 
    Include(Fl,tboTransparent);
 
