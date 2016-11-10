@@ -201,6 +201,7 @@ begin
       Dec(r.Top);
       Inc(r.Bottom);
       e := NewEditBox(LView, []);
+      e.CreateWindow;
       if a = nil then a := e;
       EList.Add(e);
       e.BoundsRect := r;
@@ -242,7 +243,7 @@ begin
    for i := 0 to EList.Count - 1 do begin
       e := EList.Items[i];
       if Store then
-         LVItems[LVCurItem, i] := e.Text;
+        LVItems[LVCurItem, i] := e.Text;
       if e.Focused then CurEdit := i + 1;
       e.Free;
       //o := False;
