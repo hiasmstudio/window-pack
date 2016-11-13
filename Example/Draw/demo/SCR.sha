@@ -1,6 +1,6 @@
 *Небольшая математическая заставка на рабочий стол.#13#10_____________#13#10Автор: svsoft#13#10E-mail: AleksandrVasilev@yandex.ru
 Make(delphi)
-Pos(94,0)
+ver(4.05 build 186)
 Add(Version,13379,-38,224)
 {
  Version="003"
@@ -42,7 +42,7 @@ Add(PointXY,64914,690,875)
  link(X,65656:Count,[])
  link(Y,60426:Count,[(703,800)(745,800)])
 }
-Add(GetDataEx,16569571,704,938)
+Add(GetDataEx,16569571,711,942)
 {
  link(Data,13675168:Var3,[(717,492)])
 }
@@ -104,7 +104,7 @@ Add(Counter,6166,865,756)
  Type=1
  Point(doMax)
 }
-Add(GetDataEx,13675168,361,483)
+Add(GetDataEx,13675168,368,487)
 {
  Angle=3
  link(Data,840925:Var3,[])
@@ -116,7 +116,7 @@ Add(Counter,27808,914,756)
  Type=1
  Point(doMax)
 }
-Add(GetDataEx,1693032,837,490)
+Add(GetDataEx,1693032,844,494)
 {
  link(Data,19203:Value,[])
 }
@@ -216,7 +216,7 @@ Add(Counter,73788,214,364)
  Point(doMax)
  link(onNext,44090:doNext,[])
 }
-Add(GetDataEx,840925,137,483)
+Add(GetDataEx,840925,144,487)
 {
  link(Data,16255954:Bitmap,[])
 }

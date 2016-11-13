@@ -1,5 +1,6 @@
 *Отрисовка восьмиугольника
 Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,6575,105,56)
 {
  Left=96
@@ -10,7 +11,7 @@ Add(MainForm,6575,105,56)
  Caption="Example"
  BorderStyle=3
 }
-Add(GetDataEx,13404495,343,413)
+Add(GetDataEx,13404495,350,417)
 {
  link(Data,10881857:Item,[])
 }
@@ -130,7 +131,7 @@ Add(Hub,18366,175,161)
  link(onEvent2,25617:doFor,[])
  link(onEvent3,16761:doFor,[(219,181)(219,272)])
 }
-Add(GetDataEx,9412376,378,231)
+Add(GetDataEx,9412376,385,235)
 {
  Angle=1
  link(Data,7629:Array,[(510,240)])
@@ -143,11 +144,11 @@ Add(ArrayRW,6195441,525,364)
 {
  link(Array,867036:Var3,[(531,303)])
 }
-Add(GetDataEx,3819273,336,420)
+Add(GetDataEx,3819273,343,424)
 {
  link(Data,8646250:Bitmap,[(349,388)(181,388)])
 }
-Add(GetDataEx,867036,413,294)
+Add(GetDataEx,867036,420,298)
 {
  link(Data,9412376:Var2,[(426,264)(391,264)])
 }

@@ -1,4 +1,5 @@
 Make(delphi)
+ver(4.05 build 186)
 Add(Font,5530815,595,217)
 {
  Point(CharSet)
@@ -47,7 +48,7 @@ Add(ArrayEnum,15521414,196,210)
  link(onEndEnum,4770313:doEvent1,[(236,223)(236,391)])
  link(Array,7031867:Var2,[])
 }
-Add(GetDataEx,12010636,749,175)
+Add(GetDataEx,12010636,756,179)
 {
  link(Data,6251451:Value,[(762,127)(762,127)])
 }
@@ -130,7 +131,7 @@ Add(MatrixRW,2169055,392,350)
  link(Matrix,13748901:Var2,[])
  link(Y,6689904:Var2,[(419,346)(419,346)])
 }
-Add(GetDataEx,5981715,364,273)
+Add(GetDataEx,5981715,371,277)
 {
  link(Data,15583572:Matrix,[])
 }
@@ -164,11 +165,11 @@ Add(Hub,5950309,700,392)
  link(onEvent1,8994161:doValue,[(789,398)(789,44)(172,44)(172,111)])
  link(onEvent2,16206739:doEvent1,[(762,405)(762,405)])
 }
-Add(HubEx,6501125,133,168)
+Add(HubEx,6501125,133,175)
 {
  link(onEvent,14353265:doReReadFonts,[(169,181)(169,160)])
 }
-Add(HubEx,6842844,147,175)
+Add(HubEx,6842844,147,182)
 {
  link(onEvent,15583572:doClear,[(329,188)(329,223)])
 }
@@ -178,11 +179,11 @@ Add(ArrayEnum,2706867,224,252)
  link(onEndEnum,4152574:doWork2,[])
  link(Array,7031867:Var3,[(230,198)])
 }
-Add(GetDataEx,7031867,189,189)
+Add(GetDataEx,7031867,196,193)
 {
  link(Data,14353265:FontsArray,[(202,186)(202,193)])
 }
-Add(HubEx,1928280,315,203)
+Add(HubEx,1928280,315,210)
 {
  link(onEvent,15583572:doAdd,[])
 }
@@ -191,7 +192,7 @@ Add(DoData,6378225,469,392)
  Data=String(1 - Все наборы)
  link(onEventData,16617052:doWork3,[(627,398)])
 }
-Add(HubEx,16617052,623,350)
+Add(HubEx,16617052,623,357)
 {
  Angle=3
  link(onEvent,4837186:doAdd,[(627,314)])
@@ -237,17 +238,17 @@ Add(Memory,9925412,721,49)
 {
  Default=Integer(0)
 }
-Add(GetDataEx,13748901,385,273)
+Add(GetDataEx,13748901,392,277)
 {
  Angle=3
  link(Data,5981715:Var3,[])
 }
-Add(GetDataEx,10716269,602,70)
+Add(GetDataEx,10716269,609,74)
 {
  Angle=3
  link(Data,7686829:Var3,[(566,79)(566,79)])
 }
-Add(GetDataEx,7686829,504,70)
+Add(GetDataEx,7686829,511,74)
 {
  Angle=3
  link(Data,7987769:Var3,[(464,79)(464,282)])
@@ -256,12 +257,12 @@ Add(Memory,734351,455,105)
 {
  link(onData,3042457:doRead,[])
 }
-Add(GetDataEx,428843,525,77)
+Add(GetDataEx,428843,532,81)
 {
  Angle=3
  link(Data,734351:Value,[(501,86)(501,149)(461,149)])
 }
-Add(GetDataEx,8578621,623,77)
+Add(GetDataEx,8578621,630,81)
 {
  Angle=3
  link(Data,428843:Var3,[])
@@ -307,12 +308,12 @@ Add(Memory,15770152,420,497)
 {
  Default=Integer(0)
 }
-Add(GetDataEx,7987769,399,273)
+Add(GetDataEx,7987769,406,277)
 {
  Angle=3
  link(Data,13748901:Var3,[])
 }
-Add(GetDataEx,6689904,406,329)
+Add(GetDataEx,6689904,413,333)
 {
  Angle=3
  link(Data,9123490:Result,[(328,338)])
@@ -356,7 +357,7 @@ Add(DoData,2637679,469,427)
  Data=String(Все шрифты)
  link(onEventData,9289784:doWork1,[(571,433)])
 }
-Add(HubEx,9289784,567,497)
+Add(HubEx,9289784,567,504)
 {
  link(onEvent,15518260:doAdd,[(582,510)(582,510)])
 }
@@ -375,7 +376,7 @@ Add(Hub,16206739,791,399)
  link(onEvent2,6842844:doWork3,[(839,412)(839,643)(151,643)])
  link(onEvent3,2706867:doEnum,[(832,419)(832,635)(207,635)(207,258)])
 }
-Add(HubEx,1977470,749,567)
+Add(HubEx,1977470,749,574)
 {
  link(onEvent,3088008:doValue,[(797,580)(797,36)(162,36)(162,76)])
 }
@@ -401,16 +402,16 @@ Add(Font,6435678,651,259)
  link(Size,2484991:Var3,[(657,205)])
  link(Name,16310857:Var2,[])
 }
-Add(GetDataEx,2484991,588,196)
+Add(GetDataEx,2484991,595,200)
 {
  link(Data,5214580:Value,[])
 }
-Add(GetDataEx,16310857,658,175)
+Add(GetDataEx,16310857,665,179)
 {
  Angle=1
  link(Data,12010636:Var1,[(716,184)(716,184)])
 }
-Add(HubEx,4152574,287,252)
+Add(HubEx,4152574,287,259)
 {
  link(onEvent,15583572:doSort,[])
 }

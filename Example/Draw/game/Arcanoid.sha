@@ -1,5 +1,6 @@
 *Прототип игры "Арканоид"
 Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,6678806,210,210)
 {
  Left=20
@@ -64,9 +65,9 @@ BEGIN_SDK
   Add(Img_Rectangle,10084868,329,231)
   {
    Point2AsOffset=0
+   Style=1
    Color=8388608
    BgColor=32896
-   Style=1
    Point(Point1)
    Point(Point2)
    link(Bitmap,15470573:Data1,[(335,199)(9,199)])
@@ -119,11 +120,11 @@ BEGIN_SDK
    link(onResult,4001815:doCompare,[])
    link(Op1,14767604:Var2,[(209,112)(286,112)])
   }
-  Add(GetDataEx,5107857,336,84)
+  Add(GetDataEx,5107857,343,88)
   {
    link(Data,4127392:Value,[])
   }
-  Add(GetDataEx,14767604,273,91)
+  Add(GetDataEx,14767604,280,95)
   {
    link(Data,5107857:Var1,[(286,93)])
   }
@@ -146,7 +147,7 @@ BEGIN_SDK
    ResultType=0
    link(onResult,1633192:doOperation,[])
   }
-  Add(HubEx,376733,315,42)
+  Add(HubEx,376733,315,49)
   {
    link(onEvent,4127392:doValue,[])
   }
@@ -208,8 +209,8 @@ BEGIN_SDK
     Add(Img_Ellipse,10271306,91,245)
     {
      Point2AsOffset=0
-     BgColor=65535
      Style=1
+     BgColor=65535
      Point(Point1)
      Point(Point2)
      link(onDraw,14448362:doEvent1,[])
@@ -271,7 +272,7 @@ BEGIN_SDK
        Op2=Integer(340)
        link(onTrue,1277010:doWork3,[(284,60)])
       }
-      Add(HubEx,1277010,294,42)
+      Add(HubEx,1277010,294,49)
       {
        link(onEvent,8043746:doSwitch,[])
       }
@@ -294,7 +295,7 @@ BEGIN_SDK
        link(Op1,2784491:Data1,[(391,17)(20,17)])
        link(Op2,115467:Value,[])
       }
-      Add(HubEx,9353368,315,112)
+      Add(HubEx,9353368,315,119)
       {
        link(onEvent,2658985:doOperation,[])
       }
@@ -324,23 +325,23 @@ BEGIN_SDK
        Height=95
       }
     END_SDK
-    Add(GetDataEx,11126075,196,133)
+    Add(GetDataEx,11126075,203,137)
     {
      link(Data,6591336:Var3,[(209,114)])
     }
-    Add(GetDataEx,5104466,91,196)
+    Add(GetDataEx,5104466,98,200)
     {
      link(Data,4655807:Point,[])
     }
-    Add(GetDataEx,6591336,119,105)
+    Add(GetDataEx,6591336,126,109)
     {
      link(Data,7646524:Value,[])
     }
-    Add(GetDataEx,16221653,238,217)
+    Add(GetDataEx,16221653,245,221)
     {
      link(Data,10129213:Collise,[(251,23)(23,23)])
     }
-    Add(GetDataEx,13022105,210,112)
+    Add(GetDataEx,13022105,217,116)
     {
      link(Data,10908804:Value,[])
     }
@@ -392,7 +393,7 @@ BEGIN_SDK
        link(onTrue,13608265:doWork3,[(368,83)])
        link(Op1,2784491:Data3,[(321,15)(35,15)])
       }
-      Add(HubEx,13608265,364,63)
+      Add(HubEx,13608265,364,70)
       {
        link(onEvent,8043746:doSwitch,[])
       }
@@ -403,7 +404,7 @@ BEGIN_SDK
        link(onFalse,13198225:doCompare,[])
        link(Op1,2784491:Data2,[(132,20)(26,20)])
       }
-      Add(HubEx,2384240,371,133)
+      Add(HubEx,2384240,371,140)
       {
        link(onEvent,2658985:doOperation,[])
       }
@@ -452,7 +453,7 @@ BEGIN_SDK
      Min=1
      link(onRandom,2811565:doWork2,[])
     }
-    Add(HubEx,2811565,77,42)
+    Add(HubEx,2811565,77,49)
     {
      link(onEvent,7646524:doValue,[])
     }
@@ -495,11 +496,11 @@ BEGIN_SDK
        link(onResult,4140590:doCompare,[])
        link(Op1,530333:Var3,[(167,65)])
       }
-      Add(GetDataEx,530333,98,56)
+      Add(GetDataEx,530333,105,60)
       {
        link(Data,10009710:Data1,[(111,32)(9,32)])
       }
-      Add(GetDataEx,3092428,112,42)
+      Add(GetDataEx,3092428,119,46)
       {
        link(Data,10009710:Data2,[(125,25)(16,25)])
       }
@@ -507,7 +508,7 @@ BEGIN_SDK
       {
        link(onIndex,4776942:doData,[(343,97)(343,151)(22,151)(22,104)])
       }
-      Add(HubEx,5595982,266,105)
+      Add(HubEx,5595982,266,112)
       {
        link(onEvent,9629589:doWork1,[(288,118)(288,97)])
       }
@@ -538,7 +539,7 @@ BEGIN_SDK
    Height=137
   }
 END_SDK
-Add(GetDataEx,6405390,399,119)
+Add(GetDataEx,6405390,406,123)
 {
  link(Data,14503369:Bitmap,[])
 }
@@ -592,8 +593,8 @@ BEGIN_SDK
     Add(Img_Rectangle,9749955,126,266)
     {
      Point2AsOffset=0
-     BgColor=8421376
      Style=1
+     BgColor=8421376
      Point(Point1)
      Point(Point2)
      link(Bitmap,10129213:Handle,[(132,12)(9,12)])
@@ -616,7 +617,7 @@ BEGIN_SDK
     Add(Memory,2660768,245,42)
     {
     }
-    Add(GetDataEx,10803475,161,231)
+    Add(GetDataEx,10803475,168,235)
     {
      link(Data,5914282:Point,[])
     }
@@ -628,7 +629,7 @@ BEGIN_SDK
      link(RPoint1,7716914:Var3,[(335,198)])
      link(RPoint2,10803475:Var3,[(342,240)])
     }
-    Add(GetDataEx,7716914,126,189)
+    Add(GetDataEx,7716914,133,193)
     {
      link(Data,4655807:Point,[])
     }
@@ -658,7 +659,7 @@ BEGIN_SDK
    link(onEvent,326209:doWork2,[])
    link(End,12832596:Var1,[(47,107)])
   }
-  Add(GetDataEx,6125187,364,126)
+  Add(GetDataEx,6125187,371,130)
   {
    link(Data,12053453:Value,[])
   }
@@ -700,11 +701,11 @@ BEGIN_SDK
    link(onEvent1,326209:doWork3,[(137,169)])
    link(onEvent2,15889519:doCheck,[(164,176)(164,77)])
   }
-  Add(HubEx,326209,133,135)
+  Add(HubEx,326209,133,142)
   {
    link(onEvent,15889519:##select,[(151,148)(151,70)])
   }
-  Add(GetDataEx,12832596,188,98)
+  Add(GetDataEx,12832596,195,102)
   {
    link(Data,15889519:##count,[])
   }

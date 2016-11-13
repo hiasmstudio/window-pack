@@ -1,5 +1,6 @@
 *ѕростейший графический редактор с одним инструментом - карандашом. #13#10ќднако его исключительна€ особенность состоит в том, что он сетевой, т.е. все пользователи в сети могут видеть, что рисуют другие.
 Make(delphi)
+ver(4.05 build 186)
 Add(PaintBox,14040495,196,77)
 {
  Left=75
@@ -45,7 +46,7 @@ Add(DoData,83944,336,84)
  link(onEventData,2309:doValue,[])
  link(Data,10380942:Var1,[(342,72)(177,72)(177,191)])
 }
-Add(HubEx,16737198,315,77)
+Add(HubEx,16737198,315,84)
 {
  link(onEvent,83944:doData,[])
 }
@@ -61,7 +62,7 @@ Add(Button,75658,21,84)
  Caption="Clear"
  link(onClick,4804926:doEvent1,[])
 }
-Add(GetDataEx,10380942,196,182)
+Add(GetDataEx,10380942,203,186)
 {
  link(Data,26249:Point,[])
 }
@@ -102,7 +103,7 @@ Add(UDP,3632778,147,399)
  LocalPort=106
  link(onReceive,8853:doSplit,[])
 }
-Add(LineBreak,6843469,119,63)
+Add(LineBreak,6604914,119,63)
 {
  Caption="ref"
  link(Out,10064163:doWork1,[(158,69)])
@@ -126,7 +127,7 @@ Add(Hub,4804926,77,84)
  link(onEvent1,14040495:doClear,[])
  link(onEvent2,10064163:doWork3,[(158,97)])
 }
-Add(HubEx,10064163,154,70)
+Add(HubEx,10064163,154,77)
 {
  link(onEvent,14040495:doRefresh,[])
 }

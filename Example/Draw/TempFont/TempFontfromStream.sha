@@ -1,4 +1,5 @@
 Make(delphi)
+ver(4.05 build 186)
 Add(TempFont,16605097,343,161)
 {
  @Hint=#12:37kiloby.ttf|
@@ -30,7 +31,7 @@ Add(Label,5393139,455,224)
  Point(doFont)
  link(Text,16377612:Var3,[(461,212)])
 }
-Add(GetDataEx,16377612,336,203)
+Add(GetDataEx,16377612,343,207)
 {
  link(Data,16605097:FontName,[])
 }
@@ -90,7 +91,7 @@ Add(Hub,2639721,210,203)
  link(onEvent1,16605097:doUninstall,[(266,209)(266,181)])
  link(onEvent2,5695369:doWork2,[])
 }
-Add(HubEx,5695369,504,203)
+Add(HubEx,5695369,504,210)
 {
  Angle=1
  link(onEvent,6950038:doEvent1,[(508,317)(247,317)(247,286)])
@@ -146,7 +147,7 @@ Add(DoData,3450,224,133)
  link(onEventData,16605097:doUninstallByFileName,[(282,139)(282,188)])
  link(Data,2172499:Var1,[(230,121)(273,121)(273,205)])
 }
-Add(GetDataEx,2172499,343,196)
+Add(GetDataEx,2172499,350,200)
 {
  link(Data,16605097:TempFileName,[])
 }
@@ -174,7 +175,7 @@ Add(ChangeMon,8427704,462,329)
 {
  link(onData,3685251:doAdd,[])
 }
-Add(HubEx,5676676,308,280)
+Add(HubEx,5676676,308,287)
 {
  link(onEvent,15143414:doReReadFonts,[])
 }

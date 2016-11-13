@@ -1,6 +1,7 @@
 *Запуск одной копии приложения с передачей параметров запуска первой копии.
 Make(delphi)
-Add(MainForm,22692,21,105)
+ver(4.05 build 186)
+Add(MainForm,22692,56,91)
 {
  Left=312
  Top=234
@@ -8,27 +9,27 @@ Add(MainForm,22692,21,105)
  SavePosName="MyProject"
  link(onCreate,66920:doCreate,[])
 }
-Add(ArrayRW,57206,175,147)
+Add(ArrayRW,57206,210,112)
 {
  Index=Integer(0)
  link(onRead,21812:doWrite,[])
  link(Array,15236238:Var2,[])
 }
-Add(MailSlot_Server,66920,70,140)
+Add(MailSlot_Server,66920,105,105)
 {
  Name="myapp"
  link(onRead,5611417:doWork2,[])
  link(onStatus,22883:doEvent,[])
 }
-Add(HubEx,5611417,273,133)
+Add(HubEx,5611417,308,105)
 {
  link(onEvent,69773:doAdd,[])
 }
-Add(GetDataEx,15236238,168,126)
+Add(GetDataEx,15236238,210,95)
 {
  link(Data,12584:Params,[])
 }
-Add(ListBox,69773,294,140)
+Add(ListBox,69773,329,105)
 {
  Left=35
  Top=20
@@ -36,23 +37,23 @@ Add(ListBox,69773,294,140)
  Height=230
  Font=[Arial,8,0,0,1]
 }
-Add(MailSlot_Client,21812,224,147)
+Add(MailSlot_Client,21812,259,112)
 {
  Name="myapp"
- link(onStatus,22692:doClose,[(289,153)(289,87)(11,87)(11,132)])
+ link(onStatus,22692:doClose,[(303,118)(303,204)(46,204)(46,118)])
 }
-Add(IndexToChanel,22883,119,147)
+Add(IndexToChanel,22883,154,112)
 {
  link(onEvent1,57206:doRead,[])
- link(onEvent2,7418:doRead,[(164,160)(164,202)])
+ link(onEvent2,7418:doRead,[(199,125)(199,167)])
 }
-Add(Application,12584,168,91)
+Add(Application,12584,203,56)
 {
  Info="HiAsm App"
 }
-Add(ArrayRW,7418,210,196)
+Add(ArrayRW,7418,245,161)
 {
  Index=Integer(0)
- link(onRead,5611417:doWork3,[(277,202)])
- link(Array,15236238:Var3,[(216,135)])
+ link(onRead,5611417:doWork3,[(312,167)])
+ link(Array,15236238:Var3,[(251,100)])
 }

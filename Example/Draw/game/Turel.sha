@@ -1,6 +1,6 @@
 *«ащита города от €дерней атаки безумного компьютера
 Make(delphi)
-ver(4.02 build 180)
+ver(4.05 build 186)
 Add(InfoTip,10533524,854,49)
 {
  Info=#4:ядро|
@@ -432,8 +432,8 @@ BEGIN_SDK
   {
    Point2=1966110
    Point2AsOffset=0
-   BgColor=12632256
    Style=1
+   BgColor=12632256
    Point(Point1)
    link(onDraw,3657695:onDraw,[(446,132)(446,27)])
    link(Bitmap,12839251:Var3,[(405,75)])
@@ -1184,9 +1184,9 @@ BEGIN_SDK
   }
   Add(Img_Ellipse,8150666,224,399)
   {
+   Style=1
    Color=51914
    BgColor=65535
-   Style=1
    Point(Point1)
    Point(Point2)
    link(Bitmap,9935676:Bitmap,[(230,389)(27,389)])

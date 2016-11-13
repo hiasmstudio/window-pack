@@ -1,6 +1,6 @@
 *Построение окружности в полярных координатах и функции логарифма
 Make(delphi)
-ver(4.02 build 179)
+ver(4.05 build 186)
 Add(MainForm,16184661,112,168)
 {
  Left=20
@@ -46,7 +46,7 @@ Add(Math,3415471,266,343)
  link(onResult,14610587:doAdd,[])
  link(Op1,9866387:Var2,[])
 }
-Add(GetDataEx,9866387,259,322)
+Add(GetDataEx,9866387,266,326)
 {
  link(Data,8323612:Result,[])
 }

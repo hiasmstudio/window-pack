@@ -1,5 +1,6 @@
 *Отрисовка ф-ции
 Make(delphi)
+ver(4.05 build 186)
 Add(PaintBox,5501852,161,91)
 {
  Width=394
@@ -40,8 +41,8 @@ Add(For,52352,161,231)
 }
 Add(Img_Line,43560,413,189)
 {
- Color=8388608
  Size=2
+ Color=8388608
  Point(Point1)
  link(Bitmap,5501852:Bitmap,[(419,130)(167,130)])
  link(Point1,35343:Result,[])
@@ -65,7 +66,7 @@ Add(Hub,90318,266,231)
  link(onEvent1,35343:doCalc,[(313,237)(313,118)])
  link(onEvent2,8413:doCalc,[(328,244)(328,195)])
 }
-Add(GetDataEx,5893632,350,77)
+Add(GetDataEx,5893632,357,81)
 {
  Angle=3
  link(Data,52352:Position,[(125,86)(125,275)(167,275)])

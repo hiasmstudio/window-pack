@@ -1,5 +1,6 @@
 *Создание и обработка движений игрока.
 Make(delphi)
+ver(4.05 build 186)
 Add(Label,24768,105,49)
 {
  Left=20
@@ -41,16 +42,16 @@ Add(PaintBox,9343800,105,133)
 Add(Img_Ellipse,50301,406,301)
 {
  Point2AsOffset=0
+ Style=1
  Color=8388608
  BgColor=12639424
- Style=1
  Point(Point1)
  Point(Point2)
  link(Bitmap,9343800:Bitmap,[(412,287)(111,287)])
  link(Point1,69673:Point,[])
  link(Point2,6583163:Point,[(433,289)(468,289)])
 }
-Add(GetDataEx,10800846,329,154)
+Add(GetDataEx,10800846,336,158)
 {
  link(Data,10092278:Var1,[(342,128)])
 }
@@ -62,11 +63,12 @@ Add(MainForm,41829,49,49)
  Font=[Arial,8,0,0,1]
  Caption="Game Player"
 }
-Add(HubEx,687957,385,189)
+Add(HubEx,687957,399,196)
 {
- link(onEvent,40878:doValue,[(410,202)(410,83)])
+ Angle=3
+ link(onEvent,40878:doValue,[(403,83)])
 }
-Add(GetDataEx,10092278,420,119)
+Add(GetDataEx,10092278,427,123)
 {
  link(Data,40878:Value,[])
 }
@@ -80,7 +82,7 @@ Add(Math,97953,336,252)
  OpType=1
  Op2=1
  ResultType=0
- link(onResult,687957:doWork3,[(389,258)])
+ link(onResult,687957:doWork3,[(403,258)])
  link(Op1,10800846:Var2,[])
 }
 Add(Case,32142,287,189)

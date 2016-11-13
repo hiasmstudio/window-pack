@@ -1,5 +1,6 @@
 *Игра "Змейка"
 Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,82891,203,210)
 {
  Left=21
@@ -63,8 +64,8 @@ BEGIN_SDK
   Add(Img_Rectangle,82283,371,357)
   {
    Point2AsOffset=0
-   BgColor=255
    Style=1
+   BgColor=255
    Point(Point1)
    Point(Point2)
    link(Bitmap,15819:Data1,[(377,343)(9,343)])
@@ -191,7 +192,7 @@ BEGIN_SDK
    link(Data2,26672:Value,[])
    link(Data3,12928094:Var3,[(412,72)])
   }
-  Add(GetDataEx,984864,455,77)
+  Add(GetDataEx,984864,462,81)
   {
    link(Data,85418:Array,[])
   }
@@ -230,8 +231,8 @@ BEGIN_SDK
   Add(Img_Rectangle,1945,560,280)
   {
    Point2AsOffset=0
-   BgColor=8388608
    Style=1
+   BgColor=8388608
    Point(Point1)
    Point(Point2)
    link(Bitmap,78989:Data1,[(566,12)(9,12)])
@@ -243,7 +244,7 @@ BEGIN_SDK
    link(onEvent1,74261:doWork1,[])
    link(onEvent2,16454841:doWork1,[(292,104)(292,104)])
   }
-  Add(GetDataEx,12069019,315,70)
+  Add(GetDataEx,12069019,322,74)
   {
    link(Data,68679:Array,[])
   }
@@ -526,7 +527,7 @@ BEGIN_SDK
      link(onResult,15200309:doEvent1,[])
      link(Op1,15202115:Data3,[(34,40)(23,40)])
     }
-    Add(GetDataEx,4298692,140,56)
+    Add(GetDataEx,4298692,147,60)
     {
      link(Data,15202115:Data1,[(153,32)(9,32)])
     }
@@ -544,12 +545,12 @@ BEGIN_SDK
      link(onRead,13161011:doAdd,[(201,139)(201,153)])
      link(Array,10003517:Var2,[])
     }
-    Add(GetDataEx,10003517,147,112)
+    Add(GetDataEx,10003517,154,116)
     {
      link(Data,15202115:Data2,[(160,60)(16,60)])
     }
   END_SDK
-  Add(GetDataEx,12928094,322,63)
+  Add(GetDataEx,12928094,329,67)
   {
    link(Data,68679:Count,[])
   }
@@ -571,7 +572,7 @@ Add(LinkTip,35260,35,84)
  Link="Расчет движения змейки=multi://36681"
  Font=[MS Sans Serif,8,0,16711680,1]
 }
-Add(GetDataEx,900366,273,98)
+Add(GetDataEx,900366,280,102)
 {
  link(Data,4042278:Bitmap,[])
 }

@@ -1,4 +1,5 @@
 Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,841979,245,196)
 {
  Left=20
@@ -84,12 +85,12 @@ BEGIN_SDK
    link(onEvent1,8786243:doCalc,[])
    link(onEvent2,13360748:doCalc,[(260,265)(260,314)])
   }
-  Add(GetDataEx,11819058,69,56)
+  Add(GetDataEx,11819058,76,60)
   {
    PColor(Data,32768)
    link(Data,8936834:x,[(82,46)(9,46)])
   }
-  Add(GetDataEx,4039732,153,203)
+  Add(GetDataEx,4039732,160,207)
   {
    PColor(Data,32768)
    link(Data,11819058:Var3,[(166,65)])
@@ -106,12 +107,12 @@ BEGIN_SDK
    link(X3,13978772:Var2,[])
    link(X4,10706858:Var2,[])
   }
-  Add(GetDataEx,10706858,167,182)
+  Add(GetDataEx,10706858,174,186)
   {
    PColor(Data,0)
    link(Data,10341368:Var3,[(180,51)])
   }
-  Add(GetDataEx,10341368,76,42)
+  Add(GetDataEx,10341368,83,46)
   {
    PColor(Data,0)
    link(Data,8936834:y,[(89,39)(16,39)])
@@ -125,11 +126,11 @@ BEGIN_SDK
    link(X1,4039732:Var3,[(285,212)])
    link(X3,5357228:Var3,[(299,205)])
   }
-  Add(GetDataEx,13978772,160,175)
+  Add(GetDataEx,13978772,167,179)
   {
    link(Data,8936834:my,[(173,25)(30,25)])
   }
-  Add(GetDataEx,5357228,146,196)
+  Add(GetDataEx,5357228,153,200)
   {
    link(Data,8936834:mx,[(159,31)(23,31)])
   }

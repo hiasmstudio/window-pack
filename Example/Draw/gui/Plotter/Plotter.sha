@@ -1,6 +1,6 @@
 *ѕример использовани€ графика дл€ отображени€ статических и динамических данных
 Make(delphi)
-ver(4.02 build 179)
+ver(4.05 build 186)
 Add(MainForm,16184661,63,161)
 {
  Left=20
@@ -53,7 +53,7 @@ BEGIN_SDK
    Min=-200
    link(onPosition,14531340:doWork3,[(249,160)])
   }
-  Add(HubEx,14531340,245,112)
+  Add(HubEx,14531340,245,119)
   {
    link(onEvent,3245134:onEvent1,[(285,125)(285,23)])
   }
@@ -131,7 +131,7 @@ Add(InfoTip,1126987,462,77)
  Info=#12:tangent axis|
  Height=116
 }
-Add(HubEx,8271532,161,168)
+Add(HubEx,8271532,161,175)
 {
  link(onEvent,14546787:doOperation,[])
 }

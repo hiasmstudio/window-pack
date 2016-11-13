@@ -1,4 +1,5 @@
 Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,5812965,112,371)
 {
  Left=20
@@ -35,7 +36,7 @@ Add(Label,5393139,434,259)
  Point(doFont)
  link(Text,16377612:Var3,[(440,247)])
 }
-Add(GetDataEx,16377612,322,238)
+Add(GetDataEx,16377612,329,242)
 {
  link(Data,14247622:FontName,[])
 }
@@ -102,7 +103,7 @@ Add(Hub,11901499,224,196)
  link(onEvent1,14247622:doClear,[(293,202)(293,188)])
  link(onEvent2,15344873:doWork2,[])
 }
-Add(HubEx,15344873,518,196)
+Add(HubEx,15344873,518,203)
 {
  Angle=1
  link(onEvent,6950038:doEvent1,[(522,313)(225,313)(225,335)])
@@ -142,7 +143,7 @@ Add(Hub,15484491,175,385)
  link(onEvent1,9569896:doWork3,[(298,391)])
  link(onEvent2,15179549:doEvent2,[])
 }
-Add(HubEx,9569896,294,329)
+Add(HubEx,9569896,294,336)
 {
  link(onEvent,15143414:doReReadFonts,[])
 }
@@ -173,12 +174,12 @@ Add(If_else,12708218,420,168)
 Add(Memory,4804810,315,112)
 {
 }
-Add(HubEx,16716672,287,126)
+Add(HubEx,16716672,287,133)
 {
  Angle=1
  link(onEvent,14247622:doInstall,[(291,167)])
 }
-Add(GetDataEx,16572019,308,245)
+Add(GetDataEx,16572019,315,249)
 {
  link(Data,5214580:Value,[])
 }

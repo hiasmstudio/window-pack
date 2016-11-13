@@ -1,6 +1,7 @@
 *Запуск одной копии приложения с передачей параметров запуска первой копии.
 Make(delphi)
-Add(MainForm,22692,49,105)
+ver(4.05 build 186)
+Add(MainForm,22692,49,126)
 {
  Left=312
  Top=234
@@ -17,7 +18,7 @@ Add(DoData,34666,161,196)
  link(onEventData,22883:doEvent,[])
  link(Data,15267150:Activate,[])
 }
-Add(HubEx,6564606,371,133)
+Add(HubEx,6564606,371,140)
 {
  link(onEvent,69773:doAdd,[])
 }
@@ -36,7 +37,7 @@ Add(ArrayEnum,665248,308,203)
  link(onItem,4505262:doSend,[])
  link(Array,2185295:Var2,[])
 }
-Add(GetDataEx,2185295,301,175)
+Add(GetDataEx,2185295,308,179)
 {
  link(Data,12584:Params,[])
 }
@@ -69,5 +70,5 @@ Add(Hub,27758,259,196)
  OutCount=3
  link(onEvent1,4505262:doOpen,[])
  link(onEvent2,665248:doEnum,[])
- link(onEvent3,22692:doClose,[(301,216)(301,245)(36,245)(36,132)])
+ link(onEvent3,22692:doClose,[(301,216)(301,245)(36,245)(36,153)])
 }

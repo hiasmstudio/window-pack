@@ -1,6 +1,6 @@
 Make(delphi)
-ver(4.03 build 180)
-Add(GE_Background,9293747,434,28)
+ver(4.05 build 186)
+Add(GE_Background,9293747,420,63)
 {
  Name="back"
  GameScene="MainScene"

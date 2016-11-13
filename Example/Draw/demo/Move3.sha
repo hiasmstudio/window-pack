@@ -1,4 +1,5 @@
 Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,841979,98,343)
 {
  Left=20
@@ -130,12 +131,12 @@ BEGIN_SDK
      link(onEvent2,3560222:doOperation,[])
      link(onEvent3,6581917:doOperation,[])
     }
-    Add(GetDataEx,11819058,49,42)
+    Add(GetDataEx,11819058,56,46)
     {
      Angle=3
      link(Data,8936834:x,[(9,51)])
     }
-    Add(GetDataEx,4039732,112,224)
+    Add(GetDataEx,4039732,119,228)
     {
      link(Data,11287552:Var2,[])
     }
@@ -149,11 +150,11 @@ BEGIN_SDK
      link(X3,13978772:Var2,[])
      link(X4,10706858:Var2,[])
     }
-    Add(GetDataEx,10706858,126,168)
+    Add(GetDataEx,10706858,133,172)
     {
      link(Data,10341368:Var3,[(139,44)])
     }
-    Add(GetDataEx,10341368,56,35)
+    Add(GetDataEx,10341368,63,39)
     {
      Angle=3
      link(Data,8936834:y,[(16,44)])
@@ -164,7 +165,7 @@ BEGIN_SDK
      link(Op1,4039732:Var3,[(279,233)])
      link(Op2,7224259:Result,[])
     }
-    Add(GetDataEx,13978772,119,175)
+    Add(GetDataEx,13978772,126,179)
     {
      link(Data,8936834:my,[(132,25)(30,25)])
     }
@@ -172,7 +173,7 @@ BEGIN_SDK
     {
      Name="l"
     }
-    Add(GetDataEx,2065411,385,112)
+    Add(GetDataEx,2065411,392,116)
     {
      link(Data,5058261:Var,[])
     }
@@ -206,23 +207,23 @@ BEGIN_SDK
      link(X7,2065411:Var2,[])
      link(X8,3833483:Var2,[])
     }
-    Add(GetDataEx,10185840,378,105)
+    Add(GetDataEx,10185840,385,109)
     {
      link(Data,8570133:Var,[])
     }
-    Add(GetDataEx,13301308,105,105)
+    Add(GetDataEx,13301308,112,109)
     {
      link(Data,8936834:mx,[(118,33)(23,33)])
     }
-    Add(GetDataEx,3833483,392,119)
+    Add(GetDataEx,3833483,399,123)
     {
      link(Data,4148444:Var,[])
     }
-    Add(GetDataEx,11287552,112,98)
+    Add(GetDataEx,11287552,119,102)
     {
      link(Data,11819058:Var3,[(125,51)])
     }
-    Add(GetDataEx,7880152,336,168)
+    Add(GetDataEx,7880152,343,172)
     {
      Angle=3
      link(Data,10706858:Var3,[])
