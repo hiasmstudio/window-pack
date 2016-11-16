@@ -1,6 +1,6 @@
 *Получение "зеркальных, металических" бликов путём включения режима генерации текстур "сферическое наложение". По мотиваи уроков NeHe.#13#10#13#10Автор MAV#13#10andreimav@yandex.ru
 Make(delphi)
-ver(4.04 build 185)
+ver(4.05 build 186)
 Add(GL_Main,12986311,238,175)
 {
  AASamples=1
@@ -139,7 +139,7 @@ Add(Hub,609645,623,175)
  link(onEvent1,3747819:doWork1,[])
  link(onEvent2,3060881:doInit,[(647,188)(647,125)])
 }
-Add(Gl_Text,3060881,665,119)
+Add(GL_Text,3060881,665,119)
 {
  Depth=0.2
  Font=[Times New Roman,5,0,32768,1]
@@ -234,14 +234,14 @@ BEGIN_SDK
    link(Data,5775196:Data1,[])
   }
 END_SDK
-Add(Gl_Scale,16035434,609,126)
+Add(GL_Scale,16035434,609,126)
 {
  X=3.5
  Y=3.5
  Z=3.5
  link(onScale,3060881:doDraw,[])
 }
-Add(Gl_Translate,4659828,567,126)
+Add(GL_Translate,4659828,567,126)
 {
  X=-4.5
  Y=-0.5
@@ -325,7 +325,7 @@ BEGIN_SDK
    Height=151
    link(doWork1,1260393:doPushMatrix,[(28,27)(28,67)])
   }
-  Add(Gl_Translate,11806612,77,61)
+  Add(GL_Translate,11806612,77,61)
   {
    Z=-5
    link(onTranslate,9982782:doWork1,[])
@@ -356,11 +356,11 @@ BEGIN_SDK
      Height=221
      link(doWork1,15522232:doEvent1,[(24,27)(24,48)])
     }
-    Add(Gl_End,5982301,476,140)
+    Add(GL_End,5982301,476,140)
     {
      link(onEnd,4313673:onEvent1,[(533,146)(533,27)])
     }
-    Add(Gl_Begin,6022708,91,140)
+    Add(GL_Begin,6022708,91,140)
     {
      BlockType=7
      link(onBegin,15523854:doTexCoord,[])

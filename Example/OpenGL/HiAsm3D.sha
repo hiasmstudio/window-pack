@@ -1,6 +1,6 @@
 *HiAsm 3D - построение SHA схем в 3D пространстве
 Make(delphi)
-Pos(0,0)
+ver(4.05 build 186)
 Add(MainForm,15261923,28,63)
 {
  Left=20
@@ -9,15 +9,17 @@ Add(MainForm,15261923,28,63)
  Height=421
  Point(MouseX)
  Point(MouseY)
- link(onResize,14551396:doWork1,[(158,97)])
- link(onCreate,16299401:doEvent1,[(86,104)(86,209)])
+ Point(onResize)
+ Point(Handle)
+ link(onCreate,16299401:doEvent1,[(89,83)(89,209)])
+ link(onResize,14551396:doWork1,[(158,90)])
 }
 Add(GL_Main,12986311,168,203)
 {
  Color=0
  link(onInit,12198675:doInit,[])
  link(onViewPort,3410847:doPerspective,[(223,216)(223,258)])
- link(Handle,15261923:Handle,[(174,176)(34,176)])
+ link(Handle,15261923:Handle,[(174,174)(48,174)])
 }
 Add(Timer,9506849,56,287)
 {
@@ -56,8 +58,8 @@ Add(MultiElement,10714674,231,154)
 {
  @Hint=#13:Поворот сцены|
  link(onEvent1,10036663:doDraw,[])
- link(Data1,15261923:MouseX,[(237,138)(41,138)])
- link(Data2,15261923:MouseY,[(244,132)(48,132)])
+ link(Data1,15261923:MouseX,[(237,137)(34,137)])
+ link(Data2,15261923:MouseY,[(244,131)(41,131)])
 }
 BEGIN_SDK
   Add(EditMulti,4359962,3,3)
@@ -112,7 +114,7 @@ BEGIN_SDK
    Point(doPushMatrix)
    link(onEvent,4271124:doTranslate,[])
   }
-  Add(Gl_Translate,4271124,175,119)
+  Add(GL_Translate,4271124,175,119)
   {
    X=-1
    Y=-1
@@ -180,7 +182,7 @@ BEGIN_SDK
      link(onSplit,4954070:doColor,[(370,41)(370,270)(79,270)(79,230)])
      link(onPart,9144448:doOperation,[(317,48)(317,118)])
     }
-    Add(GetDataEx,5727235,273,91)
+    Add(GetDataEx,5727235,280,95)
     {
      Angle=3
      link(Data,1641791:Var3,[])
@@ -200,7 +202,7 @@ BEGIN_SDK
      OpType=3
      link(Op2,2188994:Var2,[])
     }
-    Add(GetDataEx,1641791,217,91)
+    Add(GetDataEx,1641791,224,95)
     {
      Angle=3
      link(Data,2188994:Var3,[])
@@ -215,7 +217,7 @@ BEGIN_SDK
      OpType=3
      link(Op2,5727235:Var2,[])
     }
-    Add(GetDataEx,2188994,140,91)
+    Add(GetDataEx,2188994,147,95)
     {
      link(Data,6360240:Var,[])
     }
@@ -276,7 +278,7 @@ BEGIN_SDK
     {
      Name="scale"
     }
-    Add(GetDataEx,2188994,133,98)
+    Add(GetDataEx,2188994,140,102)
     {
      link(Data,6360240:Var,[])
     }
@@ -306,7 +308,7 @@ BEGIN_SDK
      Point(doPushMatrix)
      link(onEvent,11830802:doTranslate,[])
     }
-    Add(Gl_Translate,11830802,287,42)
+    Add(GL_Translate,11830802,287,42)
     {
      Z=0.02
      link(onTranslate,485636:doDraw,[])
@@ -325,17 +327,17 @@ BEGIN_SDK
      Point(doPopMatrix)
     }
   END_SDK
-  Add(GetDataEx,11129088,392,154)
+  Add(GetDataEx,11129088,399,158)
   {
    Angle=3
    link(Data,3232117:Item,[(237,163)])
   }
-  Add(Gl_BeginList,5854177,21,84)
+  Add(GL_BeginList,5854177,21,84)
   {
    Index=1020
    link(onBiginList,15059345:doEvent1,[])
   }
-  Add(Gl_EndList,9576301,287,175)
+  Add(GL_EndList,9576301,287,175)
   {
   }
   Add(Case,5414558,462,119)
@@ -373,7 +375,7 @@ BEGIN_SDK
     {
      Name="scale"
     }
-    Add(GetDataEx,2188994,476,112)
+    Add(GetDataEx,2188994,483,116)
     {
      link(Data,6360240:Var,[])
     }
@@ -402,7 +404,7 @@ BEGIN_SDK
      Color=16711680
      link(onColor,12990514:doBegin,[])
     }
-    Add(Gl_Begin,12990514,147,63)
+    Add(GL_Begin,12990514,147,63)
     {
      BlockType=3
      link(onBegin,13987498:doSplit,[])
@@ -443,7 +445,7 @@ BEGIN_SDK
     Add(Memory,6233519,301,7)
     {
     }
-    Add(LineBreak,9688955,245,7)
+    Add(LineBreak,1521771,245,7)
     {
      link(Out,6233519:doValue,[])
      Primary=[13953735,427,98]
@@ -458,11 +460,11 @@ BEGIN_SDK
     Add(Memory,7576194,357,21)
     {
     }
-    Add(HubEx,8877063,336,14)
+    Add(HubEx,8877063,336,21)
     {
      link(onEvent,7576194:doValue,[])
     }
-    Add(Gl_End,7570246,301,126)
+    Add(GL_End,7570246,301,126)
     {
      link(onEnd,13097824:doEnabled,[])
     }
@@ -470,7 +472,7 @@ BEGIN_SDK
     {
     }
   END_SDK
-  Add(GetDataEx,15663745,455,154)
+  Add(GetDataEx,15663745,462,158)
   {
    Angle=3
    link(Data,11129088:Var3,[])
@@ -505,7 +507,7 @@ BEGIN_SDK
    Height=242
    link(doTrans,5112558:doEvent1,[(15,9)(15,48)])
   }
-  Add(Gl_Translate,2535417,294,203)
+  Add(GL_Translate,2535417,294,203)
   {
    link(onTranslate,3877728:onTrans,[(345,209)(345,9)])
    link(X,7575323:Result,[])
@@ -610,12 +612,12 @@ Add(GL_Options,1101264,280,203)
 {
  link(onEvent,5851269:doEnabled,[])
 }
-Add(Gl_Axis,10036663,280,154)
+Add(GL_Axis,10036663,280,154)
 {
  TitleScale=0.5
  link(onDraw,575588:doTrans,[])
 }
-Add(HubEx,14551396,154,203)
+Add(HubEx,14551396,154,210)
 {
  link(onEvent,12986311:doViewPort,[])
 }

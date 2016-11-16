@@ -1,6 +1,6 @@
 *Пример построения ленты мебиуса и анимационной 3D модели#13#10_____________#13#10Автор: Леонид#13#10E-mail:
 Make(delphi)
-Pos(77,0)
+ver(4.05 build 186)
 Add(MainForm,15261923,-56,175)
 {
  Left=100
@@ -129,7 +129,7 @@ BEGIN_SDK
    Rings=20
    link(onDraw,1071681:doLineSize,[(247,35)(247,34)])
   }
-  Add(Gl_Begin,8902146,301,77)
+  Add(GL_Begin,8902146,301,77)
   {
    BlockType=2
    link(onBegin,14661812:doVertex,[])
@@ -149,15 +149,15 @@ BEGIN_SDK
    link(onRotate,11964574:doLineSize,[])
    link(Angle,11527902:Var2,[])
   }
-  Add(Gl_BeginList,14887042,350,28)
+  Add(GL_BeginList,14887042,350,28)
   {
    Index=100
    link(onBiginList,14038074:doFor,[(391,34)(391,67)(155,67)(155,83)])
   }
-  Add(Gl_End,7123409,455,77)
+  Add(GL_End,7123409,455,77)
   {
   }
-  Add(Gl_EndList,8857071,399,28)
+  Add(GL_EndList,8857071,399,28)
   {
    link(onEndList,8241384:doRotate,[(450,34)(450,34)])
   }
@@ -187,7 +187,7 @@ BEGIN_SDK
    Z=1
    link(onRotate,8902146:doBegin,[(293,83)(293,83)])
   }
-  Add(Gl_Translate,7870352,161,161)
+  Add(GL_Translate,7870352,161,161)
   {
    X=0.4
    link(onTranslate,8824311:doRotate,[])
@@ -197,7 +197,7 @@ BEGIN_SDK
    Index=101
    link(onCallList,3266377:doBeginList,[])
   }
-  Add(Gl_Begin,2909834,301,210)
+  Add(GL_Begin,2909834,301,210)
   {
    BlockType=2
    link(onBegin,7370278:doVertex,[])
@@ -211,15 +211,15 @@ BEGIN_SDK
    X=0.1
    link(onVertex,1799195:doEnd,[])
   }
-  Add(Gl_BeginList,3266377,350,161)
+  Add(GL_BeginList,3266377,350,161)
   {
    Index=101
    link(onBiginList,144376:doFor,[(396,167)(396,202)(155,202)(155,216)])
   }
-  Add(Gl_End,1799195,455,210)
+  Add(GL_End,1799195,455,210)
   {
   }
-  Add(Gl_EndList,8473450,406,161)
+  Add(GL_EndList,8473450,406,161)
   {
    link(onEndList,1222594:doRotate,[(450,167)(450,167)])
   }
@@ -260,7 +260,7 @@ BEGIN_SDK
    X=-0.4
    link(onVertex,10808577:doVertex,[])
   }
-  Add(Gl_Begin,11893127,126,280)
+  Add(GL_Begin,11893127,126,280)
   {
    BlockType=2
    link(onBegin,4052201:doVertex,[])
@@ -276,7 +276,7 @@ BEGIN_SDK
    Size=3
    link(onSize,11893127:doBegin,[])
   }
-  Add(Gl_End,1666757,266,280)
+  Add(GL_End,1666757,266,280)
   {
    link(onEnd,15013948:doBegin,[(312,286)(312,319)(120,319)(120,328)])
   }
@@ -293,7 +293,7 @@ BEGIN_SDK
    Z=-0.07
    link(onVertex,932233:doVertex,[])
   }
-  Add(Gl_Begin,15013948,126,322)
+  Add(GL_Begin,15013948,126,322)
   {
    BlockType=2
    link(onBegin,903591:doVertex,[])
@@ -305,7 +305,7 @@ BEGIN_SDK
    Z=0.07
    link(onVertex,5663229:doEnd,[])
   }
-  Add(Gl_End,5663229,266,322)
+  Add(GL_End,5663229,266,322)
   {
    link(onEnd,8174346:doBegin,[(312,328)(312,361)(120,361)(120,370)])
   }
@@ -315,7 +315,7 @@ BEGIN_SDK
    Y=0.15
    link(onVertex,13391938:doVertex,[])
   }
-  Add(Gl_Begin,8174346,126,364)
+  Add(GL_Begin,8174346,126,364)
   {
    BlockType=2
    link(onBegin,15064582:doVertex,[])
@@ -326,7 +326,7 @@ BEGIN_SDK
    Y=0.15
    link(onVertex,9773184:doVertex,[])
   }
-  Add(Gl_End,9402124,308,364)
+  Add(GL_End,9402124,308,364)
   {
    link(onEnd,1921420:doBegin,[(354,370)(354,406)(120,406)(120,419)])
   }
@@ -340,7 +340,7 @@ BEGIN_SDK
    X=-0.2
    link(onVertex,14363116:doVertex,[])
   }
-  Add(Gl_Begin,1921420,126,413)
+  Add(GL_Begin,1921420,126,413)
   {
    BlockType=2
    link(onBegin,14667100:doVertex,[])
@@ -349,7 +349,7 @@ BEGIN_SDK
   {
    link(onVertex,9175837:doVertex,[])
   }
-  Add(Gl_End,11240721,308,413)
+  Add(GL_End,11240721,308,413)
   {
    link(onEnd,10180865:doDraw,[])
   }
@@ -365,7 +365,7 @@ BEGIN_SDK
    outRadius=0.02
    link(onDraw,12121257:doTranslate,[])
   }
-  Add(Gl_Translate,12121257,392,413)
+  Add(GL_Translate,12121257,392,413)
   {
    X=-0.2
    link(onTranslate,13923827:doDraw,[])
@@ -382,7 +382,7 @@ BEGIN_SDK
    Z=0.08
    link(onVertex,263824:doVertex,[])
   }
-  Add(Gl_Begin,4796032,154,595)
+  Add(GL_Begin,4796032,154,595)
   {
    BlockType=3
    link(onBegin,8478586:doVertex,[])
@@ -392,7 +392,7 @@ BEGIN_SDK
    Y=0.04
    link(onVertex,13462772:doVertex,[])
   }
-  Add(Gl_End,1773476,392,595)
+  Add(GL_End,1773476,392,595)
   {
    link(onEnd,3820292:doRotate,[])
   }
@@ -414,7 +414,7 @@ BEGIN_SDK
    Y=-0.04
    link(onVertex,5939137:doVertex,[])
   }
-  Add(Gl_Begin,6662877,126,455)
+  Add(GL_Begin,6662877,126,455)
   {
    BlockType=2
    link(onBegin,5036497:doVertex,[])
@@ -425,7 +425,7 @@ BEGIN_SDK
    Y=-0.02
    link(onVertex,15750761:doEnd,[])
   }
-  Add(Gl_End,15750761,266,455)
+  Add(GL_End,15750761,266,455)
   {
    link(onEnd,15723322:doBegin,[(312,461)(312,494)(120,494)(120,503)])
   }
@@ -434,7 +434,7 @@ BEGIN_SDK
    Y=0.04
    link(onVertex,8448320:doVertex,[])
   }
-  Add(Gl_Begin,15723322,126,497)
+  Add(GL_Begin,15723322,126,497)
   {
    BlockType=2
    link(onBegin,5267123:doVertex,[])
@@ -445,7 +445,7 @@ BEGIN_SDK
    Y=0.02
    link(onVertex,6663248:doEnd,[])
   }
-  Add(Gl_End,6663248,266,497)
+  Add(GL_End,6663248,266,497)
   {
    link(onEnd,10222114:doRotate,[(312,503)(312,564)(44,564)(44,601)])
   }
@@ -494,25 +494,25 @@ BEGIN_SDK
    Width=442
    Height=67
   }
-  Add(GetDataEx,11527902,49,574)
+  Add(GetDataEx,11527902,56,578)
   {
    link(Data,1195344:Var2,[])
   }
-  Add(GetDataEx,14049486,196,140)
+  Add(GetDataEx,14049486,203,144)
   {
    Angle=3
    link(Data,1195344:Var3,[])
   }
-  Add(GetDataEx,10364114,154,7)
+  Add(GetDataEx,10364114,161,11)
   {
    Angle=3
    link(Data,16594057:Var3,[])
   }
-  Add(GetDataEx,16594057,49,7)
+  Add(GetDataEx,16594057,56,11)
   {
    link(Data,4809941:Data1,[(62,7)(42,7)])
   }
-  Add(GetDataEx,1195344,49,140)
+  Add(GetDataEx,1195344,56,144)
   {
    link(Data,16594057:Var2,[])
   }
@@ -602,7 +602,7 @@ BEGIN_SDK
    Radius=0.05
    link(onDraw,8436948:doTranslate,[])
   }
-  Add(Gl_Translate,12872763,98,35)
+  Add(GL_Translate,12872763,98,35)
   {
    X=-0.11
    Y=0.35
@@ -622,13 +622,13 @@ BEGIN_SDK
   {
    link(onSet,10039159:doDraw,[])
   }
-  Add(Gl_Translate,8436948,196,35)
+  Add(GL_Translate,8436948,196,35)
   {
    X=-0.04
    Z=0.02
    link(onTranslate,16716788:doSet,[])
   }
-  Add(Gl_Translate,8435174,364,35)
+  Add(GL_Translate,8435174,364,35)
   {
    Z=-0.04
    link(onTranslate,14066024:doDraw,[])
@@ -646,7 +646,7 @@ BEGIN_SDK
    Y=1
    link(onRotate,4763070:doSet,[])
   }
-  Add(Gl_Translate,11127253,609,35)
+  Add(GL_Translate,11127253,609,35)
   {
    X=0.01
    Y=-0.02
@@ -663,7 +663,7 @@ BEGIN_SDK
    Radius=0.04
    link(onDraw,8635074:doDraw,[])
   }
-  Add(Gl_Translate,11998386,483,35)
+  Add(GL_Translate,11998386,483,35)
   {
    X=-0.01
    Y=-0.01
@@ -686,7 +686,7 @@ BEGIN_SDK
    outRadius=0.011
    link(onDraw,12553142:doRotate,[])
   }
-  Add(Gl_Translate,15217062,140,98)
+  Add(GL_Translate,15217062,140,98)
   {
    X=0.04
    Y=0.06
@@ -712,7 +712,7 @@ BEGIN_SDK
    Height=0.2
    link(onDraw,7035961:doTranslate,[])
   }
-  Add(Gl_Translate,6011207,392,98)
+  Add(GL_Translate,6011207,392,98)
   {
    X=-0.02
    Z=0.08
@@ -731,12 +731,12 @@ BEGIN_SDK
    Height=0.02
    link(onDraw,7798755:doTranslate,[(577,104)(577,141)(91,141)(91,167)])
   }
-  Add(Gl_Translate,7035961,483,98)
+  Add(GL_Translate,7035961,483,98)
   {
    Z=-0.02
    link(onTranslate,11093144:doDraw,[])
   }
-  Add(Gl_Translate,7798755,98,161)
+  Add(GL_Translate,7798755,98,161)
   {
    Y=0.04
    Z=0.03
@@ -762,7 +762,7 @@ BEGIN_SDK
    Z=0.5
    link(onRotate,14150579:doDraw,[])
   }
-  Add(Gl_Translate,11204246,280,161)
+  Add(GL_Translate,11204246,280,161)
   {
    Z=0.13
    link(onTranslate,8596443:doDraw,[])
@@ -790,7 +790,7 @@ BEGIN_SDK
    Radius=0.015
    link(onDraw,1000978:doTranslate,[(549,167)(549,204)(89,204)(89,230)])
   }
-  Add(Gl_Translate,8470546,462,161)
+  Add(GL_Translate,8470546,462,161)
   {
    Z=0.13
    link(onTranslate,15840196:doDraw,[])
@@ -837,7 +837,7 @@ BEGIN_SDK
    Width=162
    Height=53
   }
-  Add(Gl_Translate,1000978,98,224)
+  Add(GL_Translate,1000978,98,224)
   {
    X=-0.1
    Y=-0.06
@@ -863,7 +863,7 @@ BEGIN_SDK
    Z=-0.6
    link(onRotate,9931587:doDraw,[])
   }
-  Add(Gl_Translate,1643121,280,224)
+  Add(GL_Translate,1643121,280,224)
   {
    Z=0.13
    link(onTranslate,1708096:doDraw,[])
@@ -891,7 +891,7 @@ BEGIN_SDK
    Radius=0.015
    link(onDraw,9976541:doSet,[])
   }
-  Add(Gl_Translate,12487288,462,224)
+  Add(GL_Translate,12487288,462,224)
   {
    Z=0.13
    link(onTranslate,11117491:doDraw,[])
@@ -902,14 +902,14 @@ BEGIN_SDK
    Width=470
    Height=53
   }
-  Add(Gl_Translate,15515916,623,224)
+  Add(GL_Translate,15515916,623,224)
   {
    X=-0.04
    Y=0.1
    Z=-0.18
    link(onTranslate,16637752:doDraw,[])
   }
-  Add(Gl_Translate,12460056,707,224)
+  Add(GL_Translate,12460056,707,224)
   {
    X=-0.0035
    Y=0.02
@@ -977,7 +977,7 @@ BEGIN_SDK
    Radius=0.02
    link(onDraw,7129840:doRotate,[])
   }
-  Add(Gl_Translate,7101035,413,301)
+  Add(GL_Translate,7101035,413,301)
   {
    Z=0.15
    link(onTranslate,3359047:doDraw,[])
@@ -1032,7 +1032,7 @@ BEGIN_SDK
    link(onEvent1,15476314:doOperation,[])
    link(onEvent2,957544:doOperation,[(180,293)(180,405)])
   }
-  Add(Gl_Translate,860498,623,301)
+  Add(GL_Translate,860498,623,301)
   {
    Z=0.13
    link(onTranslate,5414401:doSet,[])
@@ -1042,7 +1042,7 @@ BEGIN_SDK
    Radius=0.015
    link(onDraw,11521147:doTranslate,[])
   }
-  Add(Gl_Translate,11521147,749,301)
+  Add(GL_Translate,11521147,749,301)
   {
    X=-0.015
    Y=0.015
@@ -1081,7 +1081,7 @@ BEGIN_SDK
    Radius=0.02
    link(onDraw,11215175:doRotate,[])
   }
-  Add(Gl_Translate,4597134,511,413)
+  Add(GL_Translate,4597134,511,413)
   {
    Z=-0.15
    link(onTranslate,6074606:doRotate,[])
@@ -1105,7 +1105,7 @@ BEGIN_SDK
    Height=0.13
    link(onDraw,8538225:doSet,[])
   }
-  Add(Gl_Translate,7678704,609,539)
+  Add(GL_Translate,7678704,609,539)
   {
    Z=0.13
    link(onTranslate,5371044:doDraw,[])
@@ -1115,7 +1115,7 @@ BEGIN_SDK
    Radius=0.015
    link(onDraw,13251948:doTranslate,[])
   }
-  Add(Gl_Translate,13251948,700,539)
+  Add(GL_Translate,13251948,700,539)
   {
    X=0.005
    Y=0.015
@@ -1126,7 +1126,7 @@ BEGIN_SDK
    Radius=0.015
    link(onDraw,16472035:doTranslate,[(791,545)(791,597)(249,597)(249,629)])
   }
-  Add(Gl_Translate,9216143,364,413)
+  Add(GL_Translate,9216143,364,413)
   {
    X=0.015
    Y=-0.015
@@ -1164,7 +1164,7 @@ BEGIN_SDK
    link(onRotate,10743067:doTranslate,[])
    link(Angle,6782056:Data2,[(566,392)(244,392)])
   }
-  Add(Gl_Translate,10743067,602,413)
+  Add(GL_Translate,10743067,602,413)
   {
    X=-0.032
    Y=-0.028
@@ -1196,13 +1196,13 @@ BEGIN_SDK
    link(onRotate,3236313:doTranslate,[])
    link(Angle,10751974:Data4,[(314,548)(258,548)])
   }
-  Add(Gl_Translate,16472035,259,623)
+  Add(GL_Translate,16472035,259,623)
   {
    Y=-0.015
    Z=-0.13
    link(onTranslate,4426026:doRotate,[])
   }
-  Add(Gl_Translate,3236313,350,623)
+  Add(GL_Translate,3236313,350,623)
   {
    Y=-0.148
    Z=0.023
@@ -1226,7 +1226,7 @@ BEGIN_SDK
    Specular=8388608
    link(onSet,11171889:doDraw,[])
   }
-  Add(Gl_Translate,1548828,357,539)
+  Add(GL_Translate,1548828,357,539)
   {
    Z=0.15
    link(onTranslate,10421850:doDraw,[])
@@ -1255,7 +1255,7 @@ BEGIN_SDK
    Radius=0.05
    link(onDraw,2422740:doTranslate,[])
   }
-  Add(Gl_Translate,2422740,805,224)
+  Add(GL_Translate,2422740,805,224)
   {
    X=-0.0035
    Y=0.02
@@ -1274,7 +1274,7 @@ Add(Math,7131144,595,56)
  Op2=-5
  link(onResult,12207282:doOperation,[])
 }
-Add(Gl_Translate,1120284,553,133)
+Add(GL_Translate,1120284,553,133)
 {
  X=-0.1
  Y=0.8
@@ -1342,12 +1342,12 @@ BEGIN_SDK
    link(onEvent,11716017:doEvent1,[(75,132)(54,132)])
    link(onStop,4310053:onEvent1,[(65,139)(65,174)(450,174)(450,9)])
   }
-  Add(Gl_Begin,5253423,280,133)
+  Add(GL_Begin,5253423,280,133)
   {
    BlockType=3
    link(onBegin,12539811:doVertex,[])
   }
-  Add(Gl_End,14717691,406,133)
+  Add(GL_End,14717691,406,133)
   {
   }
   Add(Hub,11716017,70,126)
@@ -1434,12 +1434,12 @@ BEGIN_SDK
    X=0.5
    link(onVertex,1902670:doEnd,[])
   }
-  Add(Gl_Begin,11108058,140,14)
+  Add(GL_Begin,11108058,140,14)
   {
    BlockType=3
    link(onBegin,12664622:doVertex,[])
   }
-  Add(Gl_End,1902670,287,14)
+  Add(GL_End,1902670,287,14)
   {
    link(onEnd,7773277:doSet,[(329,20)(329,54)(81,54)(81,69)])
   }
@@ -1452,12 +1452,12 @@ BEGIN_SDK
    Y=0.5
    link(onVertex,11621236:doEnd,[])
   }
-  Add(Gl_Begin,9535064,140,63)
+  Add(GL_Begin,9535064,140,63)
   {
    BlockType=3
    link(onBegin,4929609:doVertex,[])
   }
-  Add(Gl_End,11621236,287,63)
+  Add(GL_End,11621236,287,63)
   {
    link(onEnd,13428877:doSet,[(329,69)(329,107)(81,107)(81,125)])
   }
@@ -1470,12 +1470,12 @@ BEGIN_SDK
    Z=0.5
    link(onVertex,15267078:doEnd,[])
   }
-  Add(Gl_Begin,10779781,140,119)
+  Add(GL_Begin,10779781,140,119)
   {
    BlockType=3
    link(onBegin,16577653:doVertex,[])
   }
-  Add(Gl_End,15267078,287,119)
+  Add(GL_End,15267078,287,119)
   {
    link(onEnd,9720606:onEvent1,[(346,125)(346,9)])
   }
@@ -1507,7 +1507,7 @@ Add(InfoTip,15595393,434,119)
  Info=#3:Оси|
  Height=53
 }
-Add(Gl_Translate,12441666,644,133)
+Add(GL_Translate,12441666,644,133)
 {
  Y=0.11
  link(onTranslate,4740796:doRotate,[])

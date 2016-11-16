@@ -1,21 +1,23 @@
-Pos(0,0)
-Add(MainForm,15261923,28,42)
+Make(delphi)
+ver(4.05 build 186)
+Add(MainForm,15261923,28,56)
 {
  Left=20
  Top=105
  Width=581
  Height=580
- Font=[MS Sans Serif,8,0,0]
  Point(MouseX)
  Point(MouseY)
- link(onResize,3377829:doWork1,[(144,76)])
- link(onCreate,16299401:doEvent1,[(68,83)(68,188)])
+ Point(onResize)
+ Point(Handle)
+ link(onCreate,16299401:doEvent1,[(68,76)(68,188)])
+ link(onResize,3377829:doWork1,[(144,83)])
 }
 Add(GL_Main,12986311,182,182)
 {
  link(onInit,4593655:doInit,[])
  link(onViewPort,3410847:doPerspective,[(230,195)(230,244)])
- link(Handle,15261923:Handle,[(188,148)(34,148)])
+ link(Handle,15261923:Handle,[(188,148)(48,148)])
 }
 Add(Timer,9506849,35,280)
 {
@@ -29,7 +31,7 @@ Add(GL_GTools,771925,140,280)
  Point(doPushMatrix)
  Point(doPopMatrix)
 }
-Add(HubEx,3377829,140,182)
+Add(HubEx,3377829,140,189)
 {
  link(onEvent,12986311:doViewPort,[])
 }
@@ -52,11 +54,10 @@ Add(Hub,16299401,77,182)
 Add(MultiElement,10714674,259,126)
 {
  link(onEvent1,8820031:doColor,[])
- link(Data1,15261923:MouseX,[(265,117)(41,117)])
- link(Data2,15261923:MouseY,[(272,111)(48,111)])
+ link(Data1,15261923:MouseX,[(265,109)(34,109)])
+ link(Data2,15261923:MouseY,[(272,102)(41,102)])
 }
 BEGIN_SDK
-Pos(0,0)
   Add(EditMulti,4359962,3,3)
   {
    EventCount=1
@@ -89,16 +90,15 @@ Add(MultiElementEx,7544160,413,126)
  link(onCubeRing,4426349:doRotate,[(474,132)(474,90)])
 }
 BEGIN_SDK
-Pos(0,0)
   Add(EditMultiEx,6468009,3,3)
   {
-   WorkCount='doCubeRing'
-   EventCount='onCubeRing'
+   WorkCount=#10:doCubeRing|
+   EventCount=#10:onCubeRing|
    Width=566
    Height=144
    link(doCubeRing,11649832:doPushMatrix,[(19,9)(19,41)])
   }
-  Add(Gl_Translate,16560880,329,35)
+  Add(GL_Translate,16560880,329,35)
   {
    Z=2
    link(onTranslate,7191475:doRotate,[])
@@ -167,16 +167,16 @@ Add(GL_GluTools,4593655,245,182)
  DrawStyle=1
  link(onInit,3060881:doInit,[])
 }
-Add(Gl_Text,3060881,315,182)
+Add(GL_Text,3060881,315,182)
 {
  Depth=0.2
- Font=[Times New Roman,5,0,8421376]
+ Font=[Times New Roman,5,0,8421376,1]
  Text="HiAsm"
  link(onInit,15876912:doEnabled,[])
  link(onDraw,254627:doPopAttrib,[(355,195)(355,258)])
  link(GLHandle,12986311:GLHandle,[(321,172)(292,172)(292,225)(188,225)])
 }
-Add(Gl_Translate,6434525,553,84)
+Add(GL_Translate,6434525,553,84)
 {
  X=-1.2
  Y=-0.2

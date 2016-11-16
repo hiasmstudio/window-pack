@@ -1,4 +1,5 @@
 Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,15261923,77,133)
 {
  Left=20
@@ -101,7 +102,7 @@ Add(GL_Perspective,3410847,280,252)
 {
  Fovy=20
 }
-Add(HubEx,14551396,196,203)
+Add(HubEx,14551396,196,210)
 {
  link(onEvent,12986311:doViewPort,[])
 }
@@ -196,11 +197,11 @@ BEGIN_SDK
   {
    link(onTexCoord,13234197:doVertex,[])
   }
-  Add(Gl_End,16226316,511,21)
+  Add(GL_End,16226316,511,21)
   {
    link(onEnd,2043290:doPopMatrix,[])
   }
-  Add(Gl_Begin,1397646,70,21)
+  Add(GL_Begin,1397646,70,21)
   {
    BlockType=7
    link(onBegin,5832741:doTexCoord,[])
@@ -221,7 +222,7 @@ BEGIN_SDK
    Point(doPopMatrix)
   }
 END_SDK
-Add(Gl_Translate,1779573,567,357)
+Add(GL_Translate,1779573,567,357)
 {
  link(onTranslate,296993:doBegin,[])
  link(X,11904365:Result,[])
@@ -259,7 +260,7 @@ Add(Math,11904365,567,266)
  OpType=3
  Op2=-4
 }
-Add(Gl_Translate,5713390,518,406)
+Add(GL_Translate,5713390,518,406)
 {
  Y=-1
  link(onTranslate,12494043:doNext,[])
@@ -359,7 +360,7 @@ BEGIN_SDK
    link(onNextCase,15436583:doOperation,[])
    link(onTrue,3220577:doClear,[(385,125)(385,151)(175,151)(175,62)])
   }
-  Add(Gl_Translate,2607755,455,112)
+  Add(GL_Translate,2607755,455,112)
   {
    Z=0.0001
    link(onTranslate,8602198:doColor,[])
@@ -413,7 +414,7 @@ Add(GL_GTools,9557879,518,357)
  Point(doPushMatrix)
  link(onEvent,1779573:doTranslate,[])
 }
-Add(GetDataEx,6875901,511,329)
+Add(GetDataEx,6875901,518,333)
 {
  link(Data,16631309:Result,[])
 }

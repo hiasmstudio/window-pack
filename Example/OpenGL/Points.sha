@@ -1,5 +1,5 @@
 Make(delphi)
-Pos(4,0)
+ver(4.05 build 186)
 Add(MainForm,15261923,52,259)
 {
  Left=20
@@ -12,7 +12,7 @@ Add(MainForm,15261923,52,259)
  link(onCreate,16299401:doEvent1,[(92,279)(92,307)])
  link(onResize,14551396:doWork1,[(161,286)])
 }
-Add(Gl_Particles,2176984,563,245)
+Add(GL_Particles,2176984,563,245)
 {
  ColorStart=16776960
  ColorEnd=8388608
@@ -68,7 +68,7 @@ Add(Hub,16299401,101,301)
  link(onEvent2,14551396:doWork2,[])
  link(onEvent3,9506849:doTimer,[(145,321)(145,367)(47,367)(47,391)])
 }
-Add(HubEx,14551396,157,301)
+Add(HubEx,14551396,157,308)
 {
  link(onEvent,12986311:doViewPort,[])
 }
@@ -486,7 +486,6 @@ Add(ScrollBar,2144124,661,189)
 {
  Left=255
  Top=80
- Max=200
  Min=1
  Position=100
  link(onPosition,15049767:doEvent1,[])

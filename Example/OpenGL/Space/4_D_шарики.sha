@@ -1,5 +1,6 @@
 *Построение 24 сфер вокруг одной сферы в 4х мерном пространстве и его проекция в 3D#13#10_____________#13#10Автор: Леонид#13#10E-mail:
 Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,15261923,35,189)
 {
  Left=150
@@ -82,12 +83,12 @@ Add(GL_Rotate,8079493,280,154)
  link(onRotate,10036663:doDraw,[])
  link(Angle,13300081:Var3,[(286,115)(188,115)])
 }
-Add(Gl_Axis,10036663,329,154)
+Add(GL_Axis,10036663,329,154)
 {
  TitleScale=0.5
  link(onDraw,2511478:doSet,[])
 }
-Add(Gl_Translate,4311387,1428,623)
+Add(GL_Translate,4311387,1428,623)
 {
  X=-0.2
  Y=-0.2
@@ -130,7 +131,7 @@ Add(GL_Sphere,13229690,476,154)
  Stacks=40
  link(onDraw,10479725:doFor,[])
 }
-Add(Gl_Translate,11348326,1330,623)
+Add(GL_Translate,11348326,1330,623)
 {
  X=0.2
  Y=0.2
@@ -415,12 +416,12 @@ Add(GetData,15814139,1505,77)
 {
  link(Data,782913:Result,[])
 }
-Add(GetDataEx,1746118,1547,364)
+Add(GetDataEx,1746118,1554,368)
 {
  Angle=1
  link(Data,10778758:Result,[(1735,373)])
 }
-Add(GetDataEx,8575814,1589,371)
+Add(GetDataEx,8575814,1596,375)
 {
  Angle=1
  link(Data,8732893:Result,[(1784,380)])
@@ -463,7 +464,7 @@ Add(Math,1195963,1463,420)
  link(onResult,16366013:doEvent1,[])
  link(Op2,5591713:Result,[(1476,402)(1721,402)])
 }
-Add(GetDataEx,13461486,1575,574)
+Add(GetDataEx,13461486,1582,578)
 {
  Angle=1
  link(Data,540045:Result,[(1616,583)])
@@ -566,7 +567,7 @@ Add(Math,14908269,1393,385)
  link(onResult,6934615:doOperation,[(1438,391)(1438,517)])
  link(Op2,8575814:Var1,[(1406,380)])
 }
-Add(GetDataEx,8827039,1218,567)
+Add(GetDataEx,8827039,1225,571)
 {
  link(Data,12746640:Result,[])
 }
@@ -612,7 +613,7 @@ Add(Math,6934615,1463,511)
  link(onResult,8156863:doOperation,[])
  link(Op2,14044960:Result,[(1476,485)(1553,485)])
 }
-Add(GetDataEx,2010714,1330,546)
+Add(GetDataEx,2010714,1337,550)
 {
  Angle=1
  link(Data,6934615:Result,[(1469,555)])

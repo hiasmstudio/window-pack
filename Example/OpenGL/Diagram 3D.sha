@@ -1,6 +1,6 @@
 *Пример построения круговой диаграммы элементом  GL_PartialDisk #13#10- - - - - - -#13#10автор: sla8a
 Make(delphi)
-ver(4.04 build 184)
+ver(4.05 build 186)
 Add(MainForm,15340401,28,42)
 {
  Width=427
@@ -211,7 +211,7 @@ Add(GetDataEx,13487493,497,266)
 {
  link(Data,10152765:Left,[])
 }
-Add(Gl_Translate,2691859,434,539)
+Add(GL_Translate,2691859,434,539)
 {
  Z=0.3
  link(onTranslate,677836:doCallList,[])
@@ -246,7 +246,7 @@ Add(GL_Cylinder,12728831,301,539)
  Stacks=2
  link(onDraw,2895704:doDraw,[])
 }
-Add(Gl_BeginList,8988601,238,182)
+Add(GL_BeginList,8988601,238,182)
 {
  Index=2
  link(onBiginList,15791049:doEnum,[])
@@ -257,7 +257,7 @@ Add(GL_CallList,677836,476,539)
  Index=2
  AddHint(5,-23,21,13,Index)
 }
-Add(Gl_EndList,5455227,357,189)
+Add(GL_EndList,5455227,357,189)
 {
  link(onEndList,12939820:doGenTextures,[])
 }

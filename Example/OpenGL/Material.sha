@@ -1,23 +1,25 @@
 *Пример создания материалов
-Pos(0,0)
-Add(MainForm,15261923,35,70)
+Make(delphi)
+ver(4.05 build 186)
+Add(MainForm,15261923,49,105)
 {
  Left=20
  Top=105
  Width=581
  Height=580
- Font=[MS Sans Serif,8,0,0,1]
  Point(MouseX)
  Point(MouseY)
- link(onResize,547163:doWork1,[(186,104)])
- link(onCreate,16299401:doEvent1,[(97,111)(97,174)])
+ Point(onResize)
+ Point(Handle)
+ link(onCreate,16299401:doEvent1,[(93,125)(93,174)])
+ link(onResize,547163:doWork1,[(186,132)])
 }
 Add(GL_Main,12986311,210,168)
 {
  Color=0
  link(onInit,14782293:doEnabled,[])
  link(onViewPort,3410847:doPerspective,[(251,181)(251,223)])
- link(Handle,15261923:Handle,[(216,134)(41,134)])
+ link(Handle,15261923:Handle,[(216,152)(69,152)])
 }
 Add(Timer,9506849,63,266)
 {
@@ -71,11 +73,11 @@ Add(GL_GluTools,4593655,364,168)
 {
  link(onInit,6505538:doEnabled,[])
 }
-Add(HubEx,547163,182,168)
+Add(HubEx,547163,182,175)
 {
  link(onEvent,12986311:doViewPort,[])
 }
-Add(Gl_Translate,16629135,238,280)
+Add(GL_Translate,16629135,238,280)
 {
  X=-2
  Y=2
@@ -88,7 +90,7 @@ Add(GL_Sphere,2644451,511,280)
  Stacks=30
  link(onDraw,15327737:doTranslate,[])
 }
-Add(Gl_Translate,16152719,413,280)
+Add(GL_Translate,16152719,413,280)
 {
  X=2
  link(onTranslate,1210077:doSet,[])
@@ -111,7 +113,7 @@ Add(GL_Sphere,1045615,681,280)
  Stacks=30
  link(onDraw,11889454:doTranslate,[(723,286)(723,334)(573,334)(573,363)])
 }
-Add(Gl_Translate,15327737,583,280)
+Add(GL_Translate,15327737,583,280)
 {
  X=2
  link(onTranslate,6372705:doSet,[])
@@ -130,7 +132,7 @@ Add(GL_Sphere,1797354,681,357)
  Stacks=30
  link(onDraw,15472308:doTranslate,[(723,363)(723,347)(402,347)(402,363)])
 }
-Add(Gl_Translate,11889454,583,357)
+Add(GL_Translate,11889454,583,357)
 {
  Y=-2
  link(onTranslate,11994468:doSet,[])
@@ -150,7 +152,7 @@ Add(GL_Sphere,14337766,510,357)
  Stacks=30
  link(onDraw,11315832:doTranslate,[(552,363)(552,403)(227,403)(227,363)])
 }
-Add(Gl_Translate,15472308,412,357)
+Add(GL_Translate,15472308,412,357)
 {
  X=-2
  link(onTranslate,8281868:doSet,[])
@@ -168,7 +170,7 @@ Add(GL_Sphere,11777899,337,357)
  Slices=30
  link(onDraw,13027562:doTranslate,[(379,363)(379,415)(229,415)(229,447)])
 }
-Add(Gl_Translate,11315832,239,357)
+Add(GL_Translate,11315832,239,357)
 {
  X=-2
  link(onTranslate,5199807:doSet,[])
@@ -185,7 +187,7 @@ Add(GL_Sphere,3436598,337,441)
  Slices=30
  link(onDraw,6777366:doTranslate,[])
 }
-Add(Gl_Translate,13027562,239,441)
+Add(GL_Translate,13027562,239,441)
 {
  Y=-2
  link(onTranslate,15363172:doSet,[])
@@ -203,7 +205,7 @@ Add(GL_Sphere,4060553,510,441)
  Stacks=30
  link(onDraw,185293:doTranslate,[])
 }
-Add(Gl_Translate,6777366,412,441)
+Add(GL_Translate,6777366,412,441)
 {
  X=2
  link(onTranslate,189181:doSet,[])
@@ -220,7 +222,7 @@ Add(GL_Sphere,248373,681,441)
  Slices=30
  Stacks=30
 }
-Add(Gl_Translate,185293,583,441)
+Add(GL_Translate,185293,583,441)
 {
  X=2
  link(onTranslate,14331738:doSet,[])
@@ -243,7 +245,7 @@ Add(GL_Options,5301287,315,168)
 }
 Add(InfoTip,7166267,168,35)
 {
- Info='Материалы в OpenGL'
+ Info=#18:Материалы в OpenGL|
  Font=[MS Sans Serif,18,1,0,1]
  Frame=1
  Transparent=1

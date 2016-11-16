@@ -1,7 +1,7 @@
 *Логотип Конструктора программ выполненый с использованием анимации в OpenGL#13#10_________#13#10Автор: sla8a#13#10
 Make(delphi)
-ver(4.04 build 182)
-Add(MainForm,15261923,42,399)
+ver(4.05 build 186)
+Add(MainForm,15261923,42,392)
 {
  Left=20
  Top=105
@@ -13,9 +13,9 @@ Add(MainForm,15261923,42,399)
  Point(Handle)
  Point(onResize)
  Point(onMouseDown)
- link(onCreate,16299401:doEvent1,[(86,419)(86,517)])
- link(onResize,10927276:doWork1,[(151,426)])
- link(onMouseDown,15261923:doClose,[(86,433)(86,429)(30,429)(30,426)])
+ link(onCreate,16299401:doEvent1,[(86,412)(86,517)])
+ link(onResize,10927276:doWork1,[(151,419)])
+ link(onMouseDown,15261923:doClose,[(86,426)(86,422)(30,422)(30,419)])
 }
 Add(GL_Main,12986311,371,518)
 {
@@ -130,7 +130,7 @@ Add(Math,3682357,679,203)
  link(onResult,8137367:doNext,[])
  link(Op1,2748387:Position,[(685,179)(590,179)(590,247)(559,247)])
 }
-Add(Gl_Translate,677432,378,385)
+Add(GL_Translate,677432,378,385)
 {
  X=-1.1
  link(onTranslate,2063444:doRotate,[])
@@ -165,7 +165,7 @@ BEGIN_SDK
    Y=0.5
    Z=0.08
   }
-  Add(Gl_Translate,15551815,343,315)
+  Add(GL_Translate,15551815,343,315)
   {
    link(onTranslate,10404180:doColor,[])
    link(X,3459572:Value1,[])
@@ -315,7 +315,7 @@ Add(Hub,12692170,553,385)
  link(onEvent1,11729797:doEvent,[(574,391)(574,335)])
  link(onEvent2,6752431:doFor,[])
 }
-Add(Gl_Translate,141857,630,301)
+Add(GL_Translate,141857,630,301)
 {
  X=1.65
  link(onTranslate,704518:doRotate,[])
@@ -331,7 +331,7 @@ Add(IndexToChanel,11729797,581,329)
  link(onEvent2,141857:doTranslate,[(622,342)(622,307)])
  link(onEvent3,13155092:doTranslate,[])
 }
-Add(Gl_Translate,13155092,630,343)
+Add(GL_Translate,13155092,630,343)
 {
  Y=1.65
  link(onTranslate,3585856:doRotate,[])
@@ -373,7 +373,7 @@ Add(HubEx,14174212,847,210)
 {
  link(onEvent,3824621:doAdd,[(863,216)(863,242)(660,242)(660,258)])
 }
-Add(Gl_Text,3060881,427,518)
+Add(GL_Text,3060881,427,518)
 {
  Font=[Tahoma,11,1,32768,204]
  Text="HiAsm Studio"
@@ -381,7 +381,7 @@ Add(Gl_Text,3060881,427,518)
  link(onDraw,5929094:doWork2,[(493,531)(493,615)])
  link(GLHandle,12986311:GLHandle,[(433,506)(405,506)(405,562)(377,562)])
 }
-Add(Gl_Translate,15799898,777,427)
+Add(GL_Translate,15799898,777,427)
 {
  X=-2.4
  Y=-2
@@ -402,25 +402,25 @@ Add(GL_Color,8200048,889,434)
  Color=255
  link(onColor,3060881:doDraw,[(932,440)(932,564)(420,564)(420,531)])
 }
-Add(Gl_Text,12726367,742,602)
+Add(GL_Text,12726367,742,602)
 {
  Depth=0.1
  Font=[Tahoma,8,0,32768,204]
  Text="CONSTRUCTOR OF THE PROGRAMS"
 }
-Add(Gl_Translate,5455212,546,602)
+Add(GL_Translate,5455212,546,602)
 {
  X=-5.2
  Y=-0.7
  link(onTranslate,8036207:doScale,[])
 }
-Add(Gl_Scale,8036207,588,602)
+Add(GL_Scale,8036207,588,602)
 {
  X=0.4
  Y=0.6
  link(onScale,15715337:doEvent1,[])
 }
-Add(Gl_Scale,15034609,294,385)
+Add(GL_Scale,15034609,294,385)
 {
  X=1
  Y=1
@@ -726,19 +726,19 @@ Add(HubEx,7733288,343,140)
 {
  link(onEvent,3468554:doPlay,[])
 }
-Add(LineBreak,11425679,455,602)
+Add(LineBreak,3807812,455,602)
 {
  Caption="on"
  link(Out,5929094:doWork1,[])
  Primary=[5535654,-98,-511]
 }
-Add(LineBreak,9535187,693,427)
+Add(LineBreak,1693628,693,427)
 {
  Caption="on"
  link(Out,14436581:doWork1,[])
  Primary=[5483943,-336,-308]
 }
-Add(LineBreak,11050955,203,385)
+Add(LineBreak,1148200,203,385)
 {
  Caption="on"
  link(Out,5469126:doWork1,[])

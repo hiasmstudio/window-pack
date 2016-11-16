@@ -1,4 +1,5 @@
 Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,6112295,40,84)
 {
  Left=20
@@ -48,7 +49,7 @@ Add(Hub,16299401,110,203)
  link(onEvent2,14551396:doWork2,[])
  link(onEvent3,9506849:doTimer,[(153,223)(153,268)(59,268)(59,293)])
 }
-Add(HubEx,14551396,166,203)
+Add(HubEx,14551396,166,210)
 {
  link(onEvent,12986311:doViewPort,[])
 }
@@ -85,7 +86,7 @@ Add(GL_Perspective,3410847,243,252)
 {
  Fovy=20
 }
-Add(Gl_Axis,10036663,292,154)
+Add(GL_Axis,10036663,292,154)
 {
  TitleScale=0.5
  link(onDraw,7474758:doStencilFunc,[])
@@ -145,7 +146,7 @@ Add(GL_Color,14199235,700,154)
  Color=16711935
  link(onColor,11757565:doBegin,[])
 }
-Add(Gl_Begin,11757565,756,154)
+Add(GL_Begin,11757565,756,154)
 {
  BlockType=7
  link(onBegin,4473937:doVertex,[])
@@ -170,7 +171,7 @@ Add(GL_Vertex3D,9242816,952,154)
  Y=1
  link(onVertex,6414993:doEnd,[])
 }
-Add(Gl_End,6414993,1001,154)
+Add(GL_End,6414993,1001,154)
 {
 }
 Add(GL_Options,15226729,397,203)

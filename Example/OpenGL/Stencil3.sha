@@ -1,5 +1,6 @@
 *Автор: MAV#13#10Зеркало + объект с текстурой
 Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,15261923,42,77)
 {
  Left=20
@@ -47,7 +48,7 @@ Add(Hub,16299401,91,112)
  link(onEvent2,3213527:doWork2,[])
  link(onEvent3,9506849:doTimer,[(135,132)(135,164)(30,164)(30,195)])
 }
-Add(HubEx,3213527,175,112)
+Add(HubEx,3213527,175,119)
 {
  link(onEvent,12986311:doViewPort,[])
 }
@@ -185,7 +186,7 @@ Add(GL_StencilFunc,2156549,637,315)
  Ref=1
  link(onStencilFunc,16000784:doCallList,[(674,321)(674,359)(184,359)(184,384)])
 }
-Add(Gl_Translate,16460065,441,378)
+Add(GL_Translate,16460065,441,378)
 {
  Z=0.2
  link(onTranslate,16487823:doDraw,[])
@@ -202,7 +203,6 @@ Add(GL_GTools,16348534,539,378)
 Add(GL_Main,12986311,217,112)
 {
  Color=32896
- StencilBits=1
  link(onInit,16663485:doEnabled,[])
  link(Handle,10677880:Var1,[])
 }
@@ -272,7 +272,7 @@ Add(GL_Sphere,12768047,294,378)
  Stacks=50
  link(onDraw,1130235:doDisabled,[(334,384)(334,391)])
 }
-Add(Gl_Translate,7355728,245,378)
+Add(GL_Translate,7355728,245,378)
 {
  Z=0.1
  link(onTranslate,12768047:doDraw,[])

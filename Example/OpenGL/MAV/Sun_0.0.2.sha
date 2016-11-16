@@ -1,5 +1,6 @@
 *Упращенная модель солнца как пример построения эффекта плазмы в HiAsm#13#10___________#13#10Автор: MAV#13#10e-mail: andreimaw@yandex.ru
 Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,15261923,77,42)
 {
  Width=0
@@ -55,7 +56,7 @@ Add(Hub,16299401,98,126)
  link(onEvent2,3213527:doWork2,[])
  link(onEvent3,9506849:doTimer,[(144,146)(144,191)(50,191)(50,230)])
 }
-Add(HubEx,3213527,175,126)
+Add(HubEx,3213527,175,133)
 {
  link(onEvent,12986311:doViewPort,[])
 }
@@ -456,12 +457,12 @@ BEGIN_SDK
    Height=452
    link(doWork1,16559994:doBeginList,[(26,16)(26,34)])
   }
-  Add(Gl_BeginList,16559994,42,28)
+  Add(GL_BeginList,16559994,42,28)
   {
    Index=100
    link(onBiginList,14707504:doFor,[])
   }
-  Add(Gl_EndList,1171600,105,77)
+  Add(GL_EndList,1171600,105,77)
   {
   }
   Add(For,14707504,105,28)
@@ -483,7 +484,7 @@ BEGIN_SDK
    link(onResult,2665182:doValue,[])
    link(Op1,7264854:Random,[])
   }
-  Add(Gl_Translate,8776,497,119)
+  Add(GL_Translate,8776,497,119)
   {
    link(onTranslate,4135705:doColor,[])
    link(X,13258062:Result,[(503,107)(427,107)(427,161)(349,161)])

@@ -1,6 +1,6 @@
 *Заставка для рабочего стола на тему Новый год#13#10___________#13#10Автор: MAV#13#10e-mail: andreimaw@yandex.ru
 Make(delphi)
-ver(4.04 build 185)
+ver(4.05 build 186)
 Add(GL_GluTools,4593655,476,91)
 {
  Texture=0
@@ -75,12 +75,12 @@ BEGIN_SDK
    Stacks=5
    link(onDraw,603530:doTranslate,[])
   }
-  Add(Gl_Translate,4780842,435,154)
+  Add(GL_Translate,4780842,435,154)
   {
    Z=0.3
    link(onTranslate,7796517:doDraw,[])
   }
-  Add(Gl_Translate,603530,519,154)
+  Add(GL_Translate,603530,519,154)
   {
    Z=-0.4
    link(onTranslate,10830010:doDraw,[])
@@ -114,7 +114,7 @@ BEGIN_SDK
    link(onEvent,9408788:doData,[])
    link(onStop,12716925:doEndList,[(203,55)(203,90)])
   }
-  Add(Gl_Translate,9610703,260,42)
+  Add(GL_Translate,9610703,260,42)
   {
    Z=0.035
    link(onTranslate,16389840:doRotate,[])
@@ -124,7 +124,7 @@ BEGIN_SDK
    Point(doPushMatrix)
    link(onEvent,7776995:doRotate,[])
   }
-  Add(Gl_Translate,949580,344,154)
+  Add(GL_Translate,949580,344,154)
   {
    Z=0.15
    link(onTranslate,4090203:doDraw,[])
@@ -137,12 +137,12 @@ BEGIN_SDK
   {
    Point(doPopMatrix)
   }
-  Add(Gl_BeginList,3451282,113,42)
+  Add(GL_BeginList,3451282,113,42)
   {
    Index=100
    link(onBiginList,15443581:doFor,[])
   }
-  Add(Gl_EndList,12716925,211,84)
+  Add(GL_EndList,12716925,211,84)
   {
    link(onEndList,632759:onEvent1,[(468,90)(468,27)])
   }
@@ -197,12 +197,12 @@ Add(GL_CallList,1034581,588,231)
  Index=100
  link(onCallList,2318620:doPopMatrix,[])
 }
-Add(Gl_Translate,9215560,462,175)
+Add(GL_Translate,9215560,462,175)
 {
  Z=-1.5
  link(onTranslate,7237191:doPointSize,[(499,181)(499,188)])
 }
-Add(Gl_Particles,2942892,546,175)
+Add(GL_Particles,2942892,546,175)
 {
  ColorStart=15793151
  ColorEnd=16711680
@@ -255,7 +255,7 @@ Add(GL_GTools,6086571,378,231)
  Point(doPushMatrix)
  link(onEvent,6810553:doRotate,[])
 }
-Add(Gl_Translate,1755496,672,231)
+Add(GL_Translate,1755496,672,231)
 {
  Z=1.8
  link(onTranslate,9751460:doCallList,[])
@@ -435,12 +435,12 @@ BEGIN_SDK
    Flag=10
    link(onEvent,5177670:doColor,[])
   }
-  Add(Gl_BeginList,5105849,48,49)
+  Add(GL_BeginList,5105849,48,49)
   {
    Index=101
    link(onBiginList,14977469:doColor,[])
   }
-  Add(Gl_EndList,13516320,398,49)
+  Add(GL_EndList,13516320,398,49)
   {
    link(onEndList,7987971:onEvent1,[(442,55)(442,27)])
   }
@@ -458,12 +458,12 @@ Add(GL_Options,14720182,434,91)
  Flag=9
  link(onEvent,4593655:doInit,[])
 }
-Add(Gl_Begin,6614034,504,287)
+Add(GL_Begin,6614034,504,287)
 {
  BlockType=1
  link(onBegin,11676982:doVertex,[])
 }
-Add(Gl_End,15602546,630,287)
+Add(GL_End,15602546,630,287)
 {
  link(onEnd,10403522:doEnabled,[])
 }
@@ -508,7 +508,7 @@ Add(GL_Cylinder,16256965,840,287)
  Slices=20
  Stacks=20
 }
-Add(Gl_Translate,6026552,756,287)
+Add(GL_Translate,6026552,756,287)
 {
  Z=-0.8
  link(onTranslate,1938026:doColor,[])
@@ -814,7 +814,7 @@ BEGIN_SDK
    link(Data,7951566:Width,[])
   }
 END_SDK
-Add(LineBreak,16284542,35,126)
+Add(LineBreak,12158150,35,126)
 {
  Caption="Aspect"
  Type=1
@@ -822,7 +822,7 @@ Add(LineBreak,16284542,35,126)
  link(Data,12025328:Var1,[])
  Primary=[9358857,175,-21]
 }
-Add(LineBreak,3136276,28,49)
+Add(LineBreak,3247638,28,49)
 {
  Caption="Close"
  Color=14280447

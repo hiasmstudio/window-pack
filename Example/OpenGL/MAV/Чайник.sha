@@ -1,6 +1,6 @@
 *ѕример построени€ 3D модели, по заданным спискам координат вершин и нормалей.#13#10#13#10јвтор MAV#13#10andreimav@yandex.ru
 Make(delphi)
-ver(4.0 build 173)
+ver(4.05 build 186)
 Add(MainForm,15261923,49,7)
 {
  Left=20
@@ -100,7 +100,7 @@ Add(GL_Perspective,3410847,252,161)
 {
  Fovy=25
 }
-Add(Gl_Begin,8902146,567,112)
+Add(GL_Begin,8902146,567,112)
 {
  BlockType=4
  link(onBegin,12642073:doEnum,[])
@@ -111,21 +111,21 @@ Add(GL_Vertex3D,14661812,588,490)
  link(Y,15785727:Result,[])
  link(Z,11600973:Result,[(608,478)(650,478)])
 }
-Add(Gl_End,5982301,665,112)
+Add(GL_End,5982301,665,112)
 {
  link(onEnd,15886906:doEndList,[])
 }
-Add(HubEx,16131419,161,112)
+Add(HubEx,16131419,161,119)
 {
  link(onEvent,12986311:doViewPort,[])
 }
-Add(Gl_BeginList,4429253,525,112)
+Add(GL_BeginList,4429253,525,112)
 {
  Index=1
  Mode=1
  link(onBiginList,8902146:doBegin,[])
 }
-Add(Gl_EndList,15886906,707,112)
+Add(GL_EndList,15886906,707,112)
 {
 }
 Add(GL_CallList,10231433,378,63)

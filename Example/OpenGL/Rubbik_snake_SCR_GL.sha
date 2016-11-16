@@ -1,6 +1,6 @@
-*«мейка –убика - головоломка,придуманна€ ЁрнЄ –убиком, представл€юща€ собой 24 шарнирно соединЄнных между собой призмы в сечении равнобедренного треугольника.#13#10_________#13#10јвтор: tig-rrr#13#10E-Mail: 
+*«мейка –убика - головоломка,придуманна€ ЁрнЄ –убиком, представл€юща€ собой 24 шарнирно соединЄнных между собой призмы в сечении равнобедренного треугольника.#13#10_________#13#10јвтор: tig-rrr#13#10E-Mail:
 Make(delphi)
-ver(4.04 build 182)
+ver(4.05 build 186)
 Add(MainForm,15261923,119,63)
 {
  Width=1026
@@ -21,7 +21,6 @@ Add(GL_Main,12986311,336,147)
 {
  Color=0
  TwoSide=0
- TexFilter=1
  link(onInit,8488240:doWork1,[])
  link(onViewPort,3410847:doPerspective,[(380,160)(380,174)])
  link(Handle,15261923:Handle,[(342,136)(125,136)])
@@ -235,7 +234,7 @@ BEGIN_SDK
    link(onEvent,4359962:onEvent1,[(395,20)])
   }
 END_SDK
-Add(LineBreak,3523189,63,133)
+Add(LineBreak,5974109,63,133)
 {
  Caption="as"
  Type=1
@@ -337,7 +336,7 @@ BEGIN_SDK
      Height=424
      link(doWork1,8356881:doTranslate,[(42,13)(42,27)])
     }
-    Add(Gl_Begin,8902146,196,21)
+    Add(GL_Begin,8902146,196,21)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -356,7 +355,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,364,21)
+    Add(GL_End,5982301,364,21)
     {
      link(onEnd,12308252:doBegin,[(408,27)(408,58)(58,58)(58,76)])
     }
@@ -381,12 +380,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,70,70)
+    Add(GL_Begin,12308252,70,70)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,238,70)
+    Add(GL_End,3756352,238,70)
     {
      link(onEnd,9789035:doBegin,[(282,76)(282,112)(58,112)(58,132)])
     }
@@ -418,12 +417,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,70,126)
+    Add(GL_Begin,9789035,70,126)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,280,126)
+    Add(GL_End,14858577,280,126)
     {
      link(onEnd,7595408:doBegin,[(324,132)(324,164)(58,164)(58,195)])
     }
@@ -455,12 +454,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,70,189)
+    Add(GL_Begin,7595408,70,189)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,280,189)
+    Add(GL_End,16406398,280,189)
     {
      link(onEnd,4971883:doBegin,[(331,195)(331,229)(58,229)(58,251)])
     }
@@ -499,12 +498,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,70,245)
+    Add(GL_Begin,4971883,70,245)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,280,245)
+    Add(GL_End,10621099,280,245)
     {
      link(onEnd,8670403:doEnabled,[(339,251)(339,288)(53,288)(53,307)])
     }
@@ -524,22 +523,22 @@ BEGIN_SDK
      Point(doPopMatrix)
      link(onEvent,10770939:doTranslate,[])
     }
-    Add(Gl_Translate,8356881,70,21)
+    Add(GL_Translate,8356881,70,21)
     {
      X=1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,10770939,399,364)
+    Add(GL_Translate,10770939,399,364)
     {
      Y=-1.01
      link(onTranslate,14339129:onEvent1,[(636,370)(636,13)])
     }
-    Add(Gl_Begin,1349823,154,301)
+    Add(GL_Begin,1349823,154,301)
     {
      BlockType=9
      link(onBegin,12765509:doTexCoord,[])
     }
-    Add(Gl_End,6605685,532,301)
+    Add(GL_End,6605685,532,301)
     {
      link(onEnd,13061908:doDisabled,[])
     }
@@ -634,12 +633,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,5126419:doVertex,[])
     }
-    Add(Gl_Begin,6091258,63,364)
+    Add(GL_Begin,6091258,63,364)
     {
      BlockType=6
      link(onBegin,16451054:doColor,[])
     }
-    Add(Gl_End,11658826,315,364)
+    Add(GL_End,11658826,315,364)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -664,7 +663,7 @@ BEGIN_SDK
      Height=347
      link(doWork1,2434493:doTranslate,[(52,34)(52,62)])
     }
-    Add(Gl_Begin,8902146,245,56)
+    Add(GL_Begin,8902146,245,56)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -683,7 +682,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,413,56)
+    Add(GL_End,5982301,413,56)
     {
      link(onEnd,12308252:doBegin,[(455,62)(455,96)(65,96)(65,111)])
     }
@@ -708,12 +707,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,77,105)
+    Add(GL_Begin,12308252,77,105)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,245,105)
+    Add(GL_End,3756352,245,105)
     {
      link(onEnd,9789035:doBegin,[(290,111)(290,147)(65,147)(65,167)])
     }
@@ -745,12 +744,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,77,161)
+    Add(GL_Begin,9789035,77,161)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,287,161)
+    Add(GL_End,14858577,287,161)
     {
      link(onEnd,4971883:doBegin,[(327,167)(327,203)(65,203)(65,223)])
     }
@@ -782,12 +781,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,77,266)
+    Add(GL_Begin,7595408,77,266)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,287,266)
+    Add(GL_End,16406398,287,266)
     {
      link(onEnd,5279476:doBegin,[(331,272)(331,310)(58,310)(58,328)])
     }
@@ -826,12 +825,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,77,217)
+    Add(GL_Begin,4971883,77,217)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,287,217)
+    Add(GL_End,10621099,287,217)
     {
      link(onEnd,7595408:doBegin,[(331,223)(331,255)(65,255)(65,272)])
     }
@@ -863,12 +862,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,77,322)
+    Add(GL_Begin,5279476,77,322)
     {
      BlockType=6
      link(onBegin,10418853:doColor,[])
     }
-    Add(Gl_End,4974648,329,322)
+    Add(GL_End,4974648,329,322)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -900,12 +899,12 @@ BEGIN_SDK
      Z=1
      link(onRotate,14611661:doColor,[])
     }
-    Add(Gl_Translate,2434493,77,56)
+    Add(GL_Translate,2434493,77,56)
     {
      Y=-1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,60904,413,322)
+    Add(GL_Translate,60904,413,322)
     {
      X=1.01
      link(onTranslate,14339129:onEvent1,[(462,328)(462,34)])
@@ -924,7 +923,7 @@ BEGIN_SDK
      Height=354
      link(doWork1,8356881:doTranslate,[(42,13)(42,27)])
     }
-    Add(Gl_Begin,8902146,196,21)
+    Add(GL_Begin,8902146,196,21)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -943,7 +942,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,364,21)
+    Add(GL_End,5982301,364,21)
     {
      link(onEnd,12308252:doBegin,[(408,27)(408,58)(58,58)(58,76)])
     }
@@ -968,12 +967,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,70,70)
+    Add(GL_Begin,12308252,70,70)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,238,70)
+    Add(GL_End,3756352,238,70)
     {
      link(onEnd,9789035:doBegin,[(282,76)(282,112)(58,112)(58,132)])
     }
@@ -1005,12 +1004,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,70,126)
+    Add(GL_Begin,9789035,70,126)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,280,126)
+    Add(GL_End,14858577,280,126)
     {
      link(onEnd,4971883:doBegin,[(325,132)(325,167)(58,167)(58,188)])
     }
@@ -1042,12 +1041,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,70,245)
+    Add(GL_Begin,7595408,70,245)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,280,245)
+    Add(GL_End,16406398,280,245)
     {
      link(onEnd,5279476:doBegin,[(324,251)(324,283)(51,283)(51,314)])
     }
@@ -1086,12 +1085,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,70,182)
+    Add(GL_Begin,4971883,70,182)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,280,182)
+    Add(GL_End,10621099,280,182)
     {
      link(onEnd,7595408:doBegin,[(324,188)(324,220)(58,220)(58,251)])
     }
@@ -1123,12 +1122,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,70,308)
+    Add(GL_Begin,5279476,70,308)
     {
      BlockType=6
      link(onBegin,14611661:doColor,[])
     }
-    Add(Gl_End,4974648,322,308)
+    Add(GL_End,4974648,322,308)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -1154,12 +1153,12 @@ BEGIN_SDK
      Point(doPopMatrix)
      link(onEvent,10770939:doTranslate,[])
     }
-    Add(Gl_Translate,8356881,70,21)
+    Add(GL_Translate,8356881,70,21)
     {
      X=1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,10770939,406,308)
+    Add(GL_Translate,10770939,406,308)
     {
      Y=-1.01
      link(onTranslate,14339129:onEvent1,[(453,314)(453,13)])
@@ -1179,7 +1178,7 @@ BEGIN_SDK
      Height=347
      link(doWork1,2434493:doTranslate,[(52,34)(52,62)])
     }
-    Add(Gl_Begin,8902146,245,56)
+    Add(GL_Begin,8902146,245,56)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -1198,7 +1197,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,413,56)
+    Add(GL_End,5982301,413,56)
     {
      link(onEnd,12308252:doBegin,[(455,62)(455,96)(65,96)(65,111)])
     }
@@ -1223,12 +1222,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,77,105)
+    Add(GL_Begin,12308252,77,105)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,245,105)
+    Add(GL_End,3756352,245,105)
     {
      link(onEnd,9789035:doBegin,[(290,111)(290,147)(65,147)(65,167)])
     }
@@ -1260,12 +1259,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,77,161)
+    Add(GL_Begin,9789035,77,161)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,287,161)
+    Add(GL_End,14858577,287,161)
     {
      link(onEnd,4971883:doBegin,[(327,167)(327,203)(65,203)(65,223)])
     }
@@ -1297,12 +1296,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,77,266)
+    Add(GL_Begin,7595408,77,266)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,287,266)
+    Add(GL_End,16406398,287,266)
     {
      link(onEnd,5279476:doBegin,[(331,272)(331,310)(58,310)(58,328)])
     }
@@ -1341,12 +1340,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,77,217)
+    Add(GL_Begin,4971883,77,217)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,287,217)
+    Add(GL_End,10621099,287,217)
     {
      link(onEnd,7595408:doBegin,[(331,223)(331,255)(65,255)(65,272)])
     }
@@ -1378,12 +1377,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,77,322)
+    Add(GL_Begin,5279476,77,322)
     {
      BlockType=6
      link(onBegin,10418853:doColor,[])
     }
-    Add(Gl_End,4974648,329,322)
+    Add(GL_End,4974648,329,322)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -1415,12 +1414,12 @@ BEGIN_SDK
      Z=1
      link(onRotate,14611661:doColor,[])
     }
-    Add(Gl_Translate,2434493,77,56)
+    Add(GL_Translate,2434493,77,56)
     {
      Y=-1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,60904,413,322)
+    Add(GL_Translate,60904,413,322)
     {
      X=1.01
      link(onTranslate,14339129:onEvent1,[(462,328)(462,34)])
@@ -1439,7 +1438,7 @@ BEGIN_SDK
      Height=354
      link(doWork1,8356881:doTranslate,[(42,13)(42,27)])
     }
-    Add(Gl_Begin,8902146,196,21)
+    Add(GL_Begin,8902146,196,21)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -1458,7 +1457,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,364,21)
+    Add(GL_End,5982301,364,21)
     {
      link(onEnd,12308252:doBegin,[(408,27)(408,58)(58,58)(58,76)])
     }
@@ -1483,12 +1482,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,70,70)
+    Add(GL_Begin,12308252,70,70)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,238,70)
+    Add(GL_End,3756352,238,70)
     {
      link(onEnd,9789035:doBegin,[(282,76)(282,112)(58,112)(58,132)])
     }
@@ -1520,12 +1519,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,70,126)
+    Add(GL_Begin,9789035,70,126)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,280,126)
+    Add(GL_End,14858577,280,126)
     {
      link(onEnd,4971883:doBegin,[(325,132)(325,167)(58,167)(58,188)])
     }
@@ -1557,12 +1556,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,70,245)
+    Add(GL_Begin,7595408,70,245)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,280,245)
+    Add(GL_End,16406398,280,245)
     {
      link(onEnd,5279476:doBegin,[(324,251)(324,283)(51,283)(51,314)])
     }
@@ -1601,12 +1600,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,70,182)
+    Add(GL_Begin,4971883,70,182)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,280,182)
+    Add(GL_End,10621099,280,182)
     {
      link(onEnd,7595408:doBegin,[(324,188)(324,220)(58,220)(58,251)])
     }
@@ -1638,12 +1637,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,70,308)
+    Add(GL_Begin,5279476,70,308)
     {
      BlockType=6
      link(onBegin,14611661:doColor,[])
     }
-    Add(Gl_End,4974648,322,308)
+    Add(GL_End,4974648,322,308)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -1669,12 +1668,12 @@ BEGIN_SDK
      Point(doPopMatrix)
      link(onEvent,10770939:doTranslate,[])
     }
-    Add(Gl_Translate,8356881,70,21)
+    Add(GL_Translate,8356881,70,21)
     {
      X=1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,10770939,406,308)
+    Add(GL_Translate,10770939,406,308)
     {
      Y=-1.01
      link(onTranslate,14339129:onEvent1,[(453,314)(453,13)])
@@ -1694,7 +1693,7 @@ BEGIN_SDK
      Height=347
      link(doWork1,2434493:doTranslate,[(52,34)(52,62)])
     }
-    Add(Gl_Begin,8902146,245,56)
+    Add(GL_Begin,8902146,245,56)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -1713,7 +1712,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,413,56)
+    Add(GL_End,5982301,413,56)
     {
      link(onEnd,12308252:doBegin,[(455,62)(455,96)(65,96)(65,111)])
     }
@@ -1738,12 +1737,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,77,105)
+    Add(GL_Begin,12308252,77,105)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,245,105)
+    Add(GL_End,3756352,245,105)
     {
      link(onEnd,9789035:doBegin,[(290,111)(290,147)(65,147)(65,167)])
     }
@@ -1775,12 +1774,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,77,161)
+    Add(GL_Begin,9789035,77,161)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,287,161)
+    Add(GL_End,14858577,287,161)
     {
      link(onEnd,4971883:doBegin,[(327,167)(327,203)(65,203)(65,223)])
     }
@@ -1812,12 +1811,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,77,266)
+    Add(GL_Begin,7595408,77,266)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,287,266)
+    Add(GL_End,16406398,287,266)
     {
      link(onEnd,5279476:doBegin,[(331,272)(331,310)(58,310)(58,328)])
     }
@@ -1856,12 +1855,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,77,217)
+    Add(GL_Begin,4971883,77,217)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,287,217)
+    Add(GL_End,10621099,287,217)
     {
      link(onEnd,7595408:doBegin,[(331,223)(331,255)(65,255)(65,272)])
     }
@@ -1893,12 +1892,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,77,322)
+    Add(GL_Begin,5279476,77,322)
     {
      BlockType=6
      link(onBegin,10418853:doColor,[])
     }
-    Add(Gl_End,4974648,329,322)
+    Add(GL_End,4974648,329,322)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -1930,12 +1929,12 @@ BEGIN_SDK
      Z=1
      link(onRotate,14611661:doColor,[])
     }
-    Add(Gl_Translate,2434493,77,56)
+    Add(GL_Translate,2434493,77,56)
     {
      Y=-1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,60904,413,322)
+    Add(GL_Translate,60904,413,322)
     {
      X=1.01
      link(onTranslate,14339129:onEvent1,[(462,328)(462,34)])
@@ -1954,7 +1953,7 @@ BEGIN_SDK
      Height=354
      link(doWork1,8356881:doTranslate,[(42,13)(42,27)])
     }
-    Add(Gl_Begin,8902146,196,21)
+    Add(GL_Begin,8902146,196,21)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -1973,7 +1972,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,364,21)
+    Add(GL_End,5982301,364,21)
     {
      link(onEnd,12308252:doBegin,[(408,27)(408,58)(58,58)(58,76)])
     }
@@ -1998,12 +1997,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,70,70)
+    Add(GL_Begin,12308252,70,70)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,238,70)
+    Add(GL_End,3756352,238,70)
     {
      link(onEnd,9789035:doBegin,[(282,76)(282,112)(58,112)(58,132)])
     }
@@ -2035,12 +2034,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,70,126)
+    Add(GL_Begin,9789035,70,126)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,280,126)
+    Add(GL_End,14858577,280,126)
     {
      link(onEnd,4971883:doBegin,[(325,132)(325,167)(58,167)(58,188)])
     }
@@ -2072,12 +2071,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,70,245)
+    Add(GL_Begin,7595408,70,245)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,280,245)
+    Add(GL_End,16406398,280,245)
     {
      link(onEnd,5279476:doBegin,[(324,251)(324,283)(51,283)(51,314)])
     }
@@ -2116,12 +2115,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,70,182)
+    Add(GL_Begin,4971883,70,182)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,280,182)
+    Add(GL_End,10621099,280,182)
     {
      link(onEnd,7595408:doBegin,[(324,188)(324,220)(58,220)(58,251)])
     }
@@ -2153,12 +2152,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,70,308)
+    Add(GL_Begin,5279476,70,308)
     {
      BlockType=6
      link(onBegin,14611661:doColor,[])
     }
-    Add(Gl_End,4974648,322,308)
+    Add(GL_End,4974648,322,308)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -2184,12 +2183,12 @@ BEGIN_SDK
      Point(doPopMatrix)
      link(onEvent,10770939:doTranslate,[])
     }
-    Add(Gl_Translate,8356881,70,21)
+    Add(GL_Translate,8356881,70,21)
     {
      X=1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,10770939,406,308)
+    Add(GL_Translate,10770939,406,308)
     {
      Y=-1.01
      link(onTranslate,14339129:onEvent1,[(453,314)(453,13)])
@@ -2209,7 +2208,7 @@ BEGIN_SDK
      Height=347
      link(doWork1,2434493:doTranslate,[(52,34)(52,62)])
     }
-    Add(Gl_Begin,8902146,245,56)
+    Add(GL_Begin,8902146,245,56)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -2228,7 +2227,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,413,56)
+    Add(GL_End,5982301,413,56)
     {
      link(onEnd,12308252:doBegin,[(455,62)(455,96)(65,96)(65,111)])
     }
@@ -2253,12 +2252,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,77,105)
+    Add(GL_Begin,12308252,77,105)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,245,105)
+    Add(GL_End,3756352,245,105)
     {
      link(onEnd,9789035:doBegin,[(290,111)(290,147)(65,147)(65,167)])
     }
@@ -2290,12 +2289,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,77,161)
+    Add(GL_Begin,9789035,77,161)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,287,161)
+    Add(GL_End,14858577,287,161)
     {
      link(onEnd,4971883:doBegin,[(327,167)(327,203)(65,203)(65,223)])
     }
@@ -2327,12 +2326,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,77,266)
+    Add(GL_Begin,7595408,77,266)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,287,266)
+    Add(GL_End,16406398,287,266)
     {
      link(onEnd,5279476:doBegin,[(331,272)(331,310)(58,310)(58,328)])
     }
@@ -2371,12 +2370,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,77,217)
+    Add(GL_Begin,4971883,77,217)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,287,217)
+    Add(GL_End,10621099,287,217)
     {
      link(onEnd,7595408:doBegin,[(331,223)(331,255)(65,255)(65,272)])
     }
@@ -2408,12 +2407,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,77,322)
+    Add(GL_Begin,5279476,77,322)
     {
      BlockType=6
      link(onBegin,10418853:doColor,[])
     }
-    Add(Gl_End,4974648,329,322)
+    Add(GL_End,4974648,329,322)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -2445,12 +2444,12 @@ BEGIN_SDK
      Z=1
      link(onRotate,14611661:doColor,[])
     }
-    Add(Gl_Translate,2434493,77,56)
+    Add(GL_Translate,2434493,77,56)
     {
      Y=-1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,60904,413,322)
+    Add(GL_Translate,60904,413,322)
     {
      X=1.01
      link(onTranslate,14339129:onEvent1,[(462,328)(462,34)])
@@ -2517,7 +2516,7 @@ BEGIN_SDK
      Height=354
      link(doWork1,8356881:doTranslate,[(42,13)(42,27)])
     }
-    Add(Gl_Begin,8902146,196,21)
+    Add(GL_Begin,8902146,196,21)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -2536,7 +2535,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,364,21)
+    Add(GL_End,5982301,364,21)
     {
      link(onEnd,12308252:doBegin,[(408,27)(408,58)(58,58)(58,76)])
     }
@@ -2561,12 +2560,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,70,70)
+    Add(GL_Begin,12308252,70,70)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,238,70)
+    Add(GL_End,3756352,238,70)
     {
      link(onEnd,9789035:doBegin,[(282,76)(282,112)(58,112)(58,132)])
     }
@@ -2598,12 +2597,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,70,126)
+    Add(GL_Begin,9789035,70,126)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,280,126)
+    Add(GL_End,14858577,280,126)
     {
      link(onEnd,4971883:doBegin,[(325,132)(325,167)(58,167)(58,188)])
     }
@@ -2635,12 +2634,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,70,245)
+    Add(GL_Begin,7595408,70,245)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,280,245)
+    Add(GL_End,16406398,280,245)
     {
      link(onEnd,5279476:doBegin,[(324,251)(324,283)(51,283)(51,314)])
     }
@@ -2679,12 +2678,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,70,182)
+    Add(GL_Begin,4971883,70,182)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,280,182)
+    Add(GL_End,10621099,280,182)
     {
      link(onEnd,7595408:doBegin,[(324,188)(324,220)(58,220)(58,251)])
     }
@@ -2716,12 +2715,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,70,308)
+    Add(GL_Begin,5279476,70,308)
     {
      BlockType=6
      link(onBegin,14611661:doColor,[])
     }
-    Add(Gl_End,4974648,322,308)
+    Add(GL_End,4974648,322,308)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -2747,12 +2746,12 @@ BEGIN_SDK
      Point(doPopMatrix)
      link(onEvent,10770939:doTranslate,[])
     }
-    Add(Gl_Translate,8356881,70,21)
+    Add(GL_Translate,8356881,70,21)
     {
      X=1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,10770939,406,308)
+    Add(GL_Translate,10770939,406,308)
     {
      Y=-1.01
      link(onTranslate,14339129:onEvent1,[(453,314)(453,13)])
@@ -2772,7 +2771,7 @@ BEGIN_SDK
      Height=347
      link(doWork1,2434493:doTranslate,[(52,34)(52,62)])
     }
-    Add(Gl_Begin,8902146,245,56)
+    Add(GL_Begin,8902146,245,56)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -2791,7 +2790,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,413,56)
+    Add(GL_End,5982301,413,56)
     {
      link(onEnd,12308252:doBegin,[(455,62)(455,96)(65,96)(65,111)])
     }
@@ -2816,12 +2815,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,77,105)
+    Add(GL_Begin,12308252,77,105)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,245,105)
+    Add(GL_End,3756352,245,105)
     {
      link(onEnd,9789035:doBegin,[(290,111)(290,147)(65,147)(65,167)])
     }
@@ -2853,12 +2852,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,77,161)
+    Add(GL_Begin,9789035,77,161)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,287,161)
+    Add(GL_End,14858577,287,161)
     {
      link(onEnd,4971883:doBegin,[(327,167)(327,203)(65,203)(65,223)])
     }
@@ -2890,12 +2889,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,77,266)
+    Add(GL_Begin,7595408,77,266)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,287,266)
+    Add(GL_End,16406398,287,266)
     {
      link(onEnd,5279476:doBegin,[(331,272)(331,310)(58,310)(58,328)])
     }
@@ -2934,12 +2933,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,77,217)
+    Add(GL_Begin,4971883,77,217)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,287,217)
+    Add(GL_End,10621099,287,217)
     {
      link(onEnd,7595408:doBegin,[(331,223)(331,255)(65,255)(65,272)])
     }
@@ -2971,12 +2970,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,77,322)
+    Add(GL_Begin,5279476,77,322)
     {
      BlockType=6
      link(onBegin,10418853:doColor,[])
     }
-    Add(Gl_End,4974648,329,322)
+    Add(GL_End,4974648,329,322)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -3008,12 +3007,12 @@ BEGIN_SDK
      Z=1
      link(onRotate,14611661:doColor,[])
     }
-    Add(Gl_Translate,2434493,77,56)
+    Add(GL_Translate,2434493,77,56)
     {
      Y=-1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,60904,413,322)
+    Add(GL_Translate,60904,413,322)
     {
      X=1.01
      link(onTranslate,14339129:onEvent1,[(462,328)(462,34)])
@@ -3032,7 +3031,7 @@ BEGIN_SDK
      Height=354
      link(doWork1,8356881:doTranslate,[(42,13)(42,27)])
     }
-    Add(Gl_Begin,8902146,196,21)
+    Add(GL_Begin,8902146,196,21)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -3051,7 +3050,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,364,21)
+    Add(GL_End,5982301,364,21)
     {
      link(onEnd,12308252:doBegin,[(408,27)(408,58)(58,58)(58,76)])
     }
@@ -3076,12 +3075,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,70,70)
+    Add(GL_Begin,12308252,70,70)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,238,70)
+    Add(GL_End,3756352,238,70)
     {
      link(onEnd,9789035:doBegin,[(282,76)(282,112)(58,112)(58,132)])
     }
@@ -3113,12 +3112,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,70,126)
+    Add(GL_Begin,9789035,70,126)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,280,126)
+    Add(GL_End,14858577,280,126)
     {
      link(onEnd,4971883:doBegin,[(325,132)(325,167)(58,167)(58,188)])
     }
@@ -3150,12 +3149,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,70,245)
+    Add(GL_Begin,7595408,70,245)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,280,245)
+    Add(GL_End,16406398,280,245)
     {
      link(onEnd,5279476:doBegin,[(324,251)(324,283)(51,283)(51,314)])
     }
@@ -3194,12 +3193,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,70,182)
+    Add(GL_Begin,4971883,70,182)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,280,182)
+    Add(GL_End,10621099,280,182)
     {
      link(onEnd,7595408:doBegin,[(324,188)(324,220)(58,220)(58,251)])
     }
@@ -3231,12 +3230,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,70,308)
+    Add(GL_Begin,5279476,70,308)
     {
      BlockType=6
      link(onBegin,14611661:doColor,[])
     }
-    Add(Gl_End,4974648,322,308)
+    Add(GL_End,4974648,322,308)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -3262,12 +3261,12 @@ BEGIN_SDK
      Point(doPopMatrix)
      link(onEvent,10770939:doTranslate,[])
     }
-    Add(Gl_Translate,8356881,70,21)
+    Add(GL_Translate,8356881,70,21)
     {
      X=1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,10770939,406,308)
+    Add(GL_Translate,10770939,406,308)
     {
      Y=-1.01
      link(onTranslate,14339129:onEvent1,[(453,314)(453,13)])
@@ -3287,7 +3286,7 @@ BEGIN_SDK
      Height=347
      link(doWork1,2434493:doTranslate,[(52,34)(52,62)])
     }
-    Add(Gl_Begin,8902146,245,56)
+    Add(GL_Begin,8902146,245,56)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -3306,7 +3305,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,413,56)
+    Add(GL_End,5982301,413,56)
     {
      link(onEnd,12308252:doBegin,[(455,62)(455,96)(65,96)(65,111)])
     }
@@ -3331,12 +3330,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,77,105)
+    Add(GL_Begin,12308252,77,105)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,245,105)
+    Add(GL_End,3756352,245,105)
     {
      link(onEnd,9789035:doBegin,[(290,111)(290,147)(65,147)(65,167)])
     }
@@ -3368,12 +3367,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,77,161)
+    Add(GL_Begin,9789035,77,161)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,287,161)
+    Add(GL_End,14858577,287,161)
     {
      link(onEnd,4971883:doBegin,[(327,167)(327,203)(65,203)(65,223)])
     }
@@ -3405,12 +3404,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,77,266)
+    Add(GL_Begin,7595408,77,266)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,287,266)
+    Add(GL_End,16406398,287,266)
     {
      link(onEnd,5279476:doBegin,[(331,272)(331,310)(58,310)(58,328)])
     }
@@ -3449,12 +3448,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,77,217)
+    Add(GL_Begin,4971883,77,217)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,287,217)
+    Add(GL_End,10621099,287,217)
     {
      link(onEnd,7595408:doBegin,[(331,223)(331,255)(65,255)(65,272)])
     }
@@ -3486,12 +3485,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,77,322)
+    Add(GL_Begin,5279476,77,322)
     {
      BlockType=6
      link(onBegin,10418853:doColor,[])
     }
-    Add(Gl_End,4974648,329,322)
+    Add(GL_End,4974648,329,322)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -3523,12 +3522,12 @@ BEGIN_SDK
      Z=1
      link(onRotate,14611661:doColor,[])
     }
-    Add(Gl_Translate,2434493,77,56)
+    Add(GL_Translate,2434493,77,56)
     {
      Y=-1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,60904,413,322)
+    Add(GL_Translate,60904,413,322)
     {
      X=1.01
      link(onTranslate,14339129:onEvent1,[(462,328)(462,34)])
@@ -3547,7 +3546,7 @@ BEGIN_SDK
      Height=354
      link(doWork1,8356881:doTranslate,[(42,13)(42,27)])
     }
-    Add(Gl_Begin,8902146,196,21)
+    Add(GL_Begin,8902146,196,21)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -3566,7 +3565,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,364,21)
+    Add(GL_End,5982301,364,21)
     {
      link(onEnd,12308252:doBegin,[(408,27)(408,58)(58,58)(58,76)])
     }
@@ -3591,12 +3590,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,70,70)
+    Add(GL_Begin,12308252,70,70)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,238,70)
+    Add(GL_End,3756352,238,70)
     {
      link(onEnd,9789035:doBegin,[(282,76)(282,112)(58,112)(58,132)])
     }
@@ -3628,12 +3627,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,70,126)
+    Add(GL_Begin,9789035,70,126)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,280,126)
+    Add(GL_End,14858577,280,126)
     {
      link(onEnd,4971883:doBegin,[(325,132)(325,167)(58,167)(58,188)])
     }
@@ -3665,12 +3664,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,70,245)
+    Add(GL_Begin,7595408,70,245)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,280,245)
+    Add(GL_End,16406398,280,245)
     {
      link(onEnd,5279476:doBegin,[(324,251)(324,283)(51,283)(51,314)])
     }
@@ -3709,12 +3708,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,70,182)
+    Add(GL_Begin,4971883,70,182)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,280,182)
+    Add(GL_End,10621099,280,182)
     {
      link(onEnd,7595408:doBegin,[(324,188)(324,220)(58,220)(58,251)])
     }
@@ -3746,12 +3745,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,70,308)
+    Add(GL_Begin,5279476,70,308)
     {
      BlockType=6
      link(onBegin,14611661:doColor,[])
     }
-    Add(Gl_End,4974648,322,308)
+    Add(GL_End,4974648,322,308)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -3777,12 +3776,12 @@ BEGIN_SDK
      Point(doPopMatrix)
      link(onEvent,10770939:doTranslate,[])
     }
-    Add(Gl_Translate,8356881,70,21)
+    Add(GL_Translate,8356881,70,21)
     {
      X=1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,10770939,406,308)
+    Add(GL_Translate,10770939,406,308)
     {
      Y=-1.01
      link(onTranslate,14339129:onEvent1,[(453,314)(453,13)])
@@ -3802,7 +3801,7 @@ BEGIN_SDK
      Height=347
      link(doWork1,2434493:doTranslate,[(52,34)(52,62)])
     }
-    Add(Gl_Begin,8902146,245,56)
+    Add(GL_Begin,8902146,245,56)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -3821,7 +3820,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,413,56)
+    Add(GL_End,5982301,413,56)
     {
      link(onEnd,12308252:doBegin,[(455,62)(455,96)(65,96)(65,111)])
     }
@@ -3846,12 +3845,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,77,105)
+    Add(GL_Begin,12308252,77,105)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,245,105)
+    Add(GL_End,3756352,245,105)
     {
      link(onEnd,9789035:doBegin,[(290,111)(290,147)(65,147)(65,167)])
     }
@@ -3883,12 +3882,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,77,161)
+    Add(GL_Begin,9789035,77,161)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,287,161)
+    Add(GL_End,14858577,287,161)
     {
      link(onEnd,4971883:doBegin,[(327,167)(327,203)(65,203)(65,223)])
     }
@@ -3920,12 +3919,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,77,266)
+    Add(GL_Begin,7595408,77,266)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,287,266)
+    Add(GL_End,16406398,287,266)
     {
      link(onEnd,5279476:doBegin,[(331,272)(331,310)(58,310)(58,328)])
     }
@@ -3964,12 +3963,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,77,217)
+    Add(GL_Begin,4971883,77,217)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,287,217)
+    Add(GL_End,10621099,287,217)
     {
      link(onEnd,7595408:doBegin,[(331,223)(331,255)(65,255)(65,272)])
     }
@@ -4001,12 +4000,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,77,322)
+    Add(GL_Begin,5279476,77,322)
     {
      BlockType=6
      link(onBegin,10418853:doColor,[])
     }
-    Add(Gl_End,4974648,329,322)
+    Add(GL_End,4974648,329,322)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -4038,12 +4037,12 @@ BEGIN_SDK
      Z=1
      link(onRotate,14611661:doColor,[])
     }
-    Add(Gl_Translate,2434493,77,56)
+    Add(GL_Translate,2434493,77,56)
     {
      Y=-1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,60904,413,322)
+    Add(GL_Translate,60904,413,322)
     {
      X=1.01
      link(onTranslate,14339129:onEvent1,[(462,328)(462,34)])
@@ -4062,7 +4061,7 @@ BEGIN_SDK
      Height=354
      link(doWork1,8356881:doTranslate,[(42,13)(42,27)])
     }
-    Add(Gl_Begin,8902146,196,21)
+    Add(GL_Begin,8902146,196,21)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -4081,7 +4080,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,364,21)
+    Add(GL_End,5982301,364,21)
     {
      link(onEnd,12308252:doBegin,[(408,27)(408,58)(58,58)(58,76)])
     }
@@ -4106,12 +4105,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,70,70)
+    Add(GL_Begin,12308252,70,70)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,238,70)
+    Add(GL_End,3756352,238,70)
     {
      link(onEnd,9789035:doBegin,[(282,76)(282,112)(58,112)(58,132)])
     }
@@ -4143,12 +4142,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,70,126)
+    Add(GL_Begin,9789035,70,126)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,280,126)
+    Add(GL_End,14858577,280,126)
     {
      link(onEnd,4971883:doBegin,[(325,132)(325,167)(58,167)(58,188)])
     }
@@ -4180,12 +4179,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,70,245)
+    Add(GL_Begin,7595408,70,245)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,280,245)
+    Add(GL_End,16406398,280,245)
     {
      link(onEnd,5279476:doBegin,[(324,251)(324,283)(51,283)(51,314)])
     }
@@ -4224,12 +4223,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,70,182)
+    Add(GL_Begin,4971883,70,182)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,280,182)
+    Add(GL_End,10621099,280,182)
     {
      link(onEnd,7595408:doBegin,[(324,188)(324,220)(58,220)(58,251)])
     }
@@ -4261,12 +4260,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,70,308)
+    Add(GL_Begin,5279476,70,308)
     {
      BlockType=6
      link(onBegin,14611661:doColor,[])
     }
-    Add(Gl_End,4974648,322,308)
+    Add(GL_End,4974648,322,308)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -4292,12 +4291,12 @@ BEGIN_SDK
      Point(doPopMatrix)
      link(onEvent,10770939:doTranslate,[])
     }
-    Add(Gl_Translate,8356881,70,21)
+    Add(GL_Translate,8356881,70,21)
     {
      X=1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,10770939,406,308)
+    Add(GL_Translate,10770939,406,308)
     {
      Y=-1.01
      link(onTranslate,14339129:onEvent1,[(453,314)(453,13)])
@@ -4317,7 +4316,7 @@ BEGIN_SDK
      Height=347
      link(doWork1,2434493:doTranslate,[(52,34)(52,62)])
     }
-    Add(Gl_Begin,8902146,245,56)
+    Add(GL_Begin,8902146,245,56)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -4336,7 +4335,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,413,56)
+    Add(GL_End,5982301,413,56)
     {
      link(onEnd,12308252:doBegin,[(455,62)(455,96)(65,96)(65,111)])
     }
@@ -4361,12 +4360,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,77,105)
+    Add(GL_Begin,12308252,77,105)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,245,105)
+    Add(GL_End,3756352,245,105)
     {
      link(onEnd,9789035:doBegin,[(290,111)(290,147)(65,147)(65,167)])
     }
@@ -4398,12 +4397,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,77,161)
+    Add(GL_Begin,9789035,77,161)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,287,161)
+    Add(GL_End,14858577,287,161)
     {
      link(onEnd,4971883:doBegin,[(327,167)(327,203)(65,203)(65,223)])
     }
@@ -4435,12 +4434,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,77,266)
+    Add(GL_Begin,7595408,77,266)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,287,266)
+    Add(GL_End,16406398,287,266)
     {
      link(onEnd,5279476:doBegin,[(331,272)(331,310)(58,310)(58,328)])
     }
@@ -4479,12 +4478,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,77,217)
+    Add(GL_Begin,4971883,77,217)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,287,217)
+    Add(GL_End,10621099,287,217)
     {
      link(onEnd,7595408:doBegin,[(331,223)(331,255)(65,255)(65,272)])
     }
@@ -4516,12 +4515,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,77,322)
+    Add(GL_Begin,5279476,77,322)
     {
      BlockType=6
      link(onBegin,10418853:doColor,[])
     }
-    Add(Gl_End,4974648,329,322)
+    Add(GL_End,4974648,329,322)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -4553,12 +4552,12 @@ BEGIN_SDK
      Z=1
      link(onRotate,14611661:doColor,[])
     }
-    Add(Gl_Translate,2434493,77,56)
+    Add(GL_Translate,2434493,77,56)
     {
      Y=-1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,60904,413,322)
+    Add(GL_Translate,60904,413,322)
     {
      X=1.01
      link(onTranslate,14339129:onEvent1,[(462,328)(462,34)])
@@ -4625,7 +4624,7 @@ BEGIN_SDK
      Height=354
      link(doWork1,8356881:doTranslate,[(42,13)(42,27)])
     }
-    Add(Gl_Begin,8902146,196,21)
+    Add(GL_Begin,8902146,196,21)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -4644,7 +4643,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,364,21)
+    Add(GL_End,5982301,364,21)
     {
      link(onEnd,12308252:doBegin,[(408,27)(408,58)(58,58)(58,76)])
     }
@@ -4669,12 +4668,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,70,70)
+    Add(GL_Begin,12308252,70,70)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,238,70)
+    Add(GL_End,3756352,238,70)
     {
      link(onEnd,9789035:doBegin,[(282,76)(282,112)(58,112)(58,132)])
     }
@@ -4706,12 +4705,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,70,126)
+    Add(GL_Begin,9789035,70,126)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,280,126)
+    Add(GL_End,14858577,280,126)
     {
      link(onEnd,4971883:doBegin,[(325,132)(325,167)(58,167)(58,188)])
     }
@@ -4743,12 +4742,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,70,245)
+    Add(GL_Begin,7595408,70,245)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,280,245)
+    Add(GL_End,16406398,280,245)
     {
      link(onEnd,5279476:doBegin,[(324,251)(324,283)(51,283)(51,314)])
     }
@@ -4787,12 +4786,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,70,182)
+    Add(GL_Begin,4971883,70,182)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,280,182)
+    Add(GL_End,10621099,280,182)
     {
      link(onEnd,7595408:doBegin,[(324,188)(324,220)(58,220)(58,251)])
     }
@@ -4824,12 +4823,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,70,308)
+    Add(GL_Begin,5279476,70,308)
     {
      BlockType=6
      link(onBegin,14611661:doColor,[])
     }
-    Add(Gl_End,4974648,322,308)
+    Add(GL_End,4974648,322,308)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -4855,12 +4854,12 @@ BEGIN_SDK
      Point(doPopMatrix)
      link(onEvent,10770939:doTranslate,[])
     }
-    Add(Gl_Translate,8356881,70,21)
+    Add(GL_Translate,8356881,70,21)
     {
      X=1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,10770939,406,308)
+    Add(GL_Translate,10770939,406,308)
     {
      Y=-1.01
      link(onTranslate,14339129:onEvent1,[(453,314)(453,13)])
@@ -4880,7 +4879,7 @@ BEGIN_SDK
      Height=347
      link(doWork1,2434493:doTranslate,[(52,34)(52,62)])
     }
-    Add(Gl_Begin,8902146,245,56)
+    Add(GL_Begin,8902146,245,56)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -4899,7 +4898,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,413,56)
+    Add(GL_End,5982301,413,56)
     {
      link(onEnd,12308252:doBegin,[(455,62)(455,96)(65,96)(65,111)])
     }
@@ -4924,12 +4923,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,77,105)
+    Add(GL_Begin,12308252,77,105)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,245,105)
+    Add(GL_End,3756352,245,105)
     {
      link(onEnd,9789035:doBegin,[(290,111)(290,147)(65,147)(65,167)])
     }
@@ -4961,12 +4960,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,77,161)
+    Add(GL_Begin,9789035,77,161)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,287,161)
+    Add(GL_End,14858577,287,161)
     {
      link(onEnd,4971883:doBegin,[(327,167)(327,203)(65,203)(65,223)])
     }
@@ -4998,12 +4997,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,77,266)
+    Add(GL_Begin,7595408,77,266)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,287,266)
+    Add(GL_End,16406398,287,266)
     {
      link(onEnd,5279476:doBegin,[(331,272)(331,310)(58,310)(58,328)])
     }
@@ -5042,12 +5041,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,77,217)
+    Add(GL_Begin,4971883,77,217)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,287,217)
+    Add(GL_End,10621099,287,217)
     {
      link(onEnd,7595408:doBegin,[(331,223)(331,255)(65,255)(65,272)])
     }
@@ -5079,12 +5078,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,77,322)
+    Add(GL_Begin,5279476,77,322)
     {
      BlockType=6
      link(onBegin,10418853:doColor,[])
     }
-    Add(Gl_End,4974648,329,322)
+    Add(GL_End,4974648,329,322)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -5116,12 +5115,12 @@ BEGIN_SDK
      Z=1
      link(onRotate,14611661:doColor,[])
     }
-    Add(Gl_Translate,2434493,77,56)
+    Add(GL_Translate,2434493,77,56)
     {
      Y=-1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,60904,413,322)
+    Add(GL_Translate,60904,413,322)
     {
      X=1.01
      link(onTranslate,14339129:onEvent1,[(462,328)(462,34)])
@@ -5140,7 +5139,7 @@ BEGIN_SDK
      Height=354
      link(doWork1,8356881:doTranslate,[(42,13)(42,27)])
     }
-    Add(Gl_Begin,8902146,196,21)
+    Add(GL_Begin,8902146,196,21)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -5159,7 +5158,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,364,21)
+    Add(GL_End,5982301,364,21)
     {
      link(onEnd,12308252:doBegin,[(408,27)(408,58)(58,58)(58,76)])
     }
@@ -5184,12 +5183,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,70,70)
+    Add(GL_Begin,12308252,70,70)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,238,70)
+    Add(GL_End,3756352,238,70)
     {
      link(onEnd,9789035:doBegin,[(282,76)(282,112)(58,112)(58,132)])
     }
@@ -5221,12 +5220,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,70,126)
+    Add(GL_Begin,9789035,70,126)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,280,126)
+    Add(GL_End,14858577,280,126)
     {
      link(onEnd,4971883:doBegin,[(325,132)(325,167)(58,167)(58,188)])
     }
@@ -5258,12 +5257,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,70,245)
+    Add(GL_Begin,7595408,70,245)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,280,245)
+    Add(GL_End,16406398,280,245)
     {
      link(onEnd,5279476:doBegin,[(324,251)(324,283)(51,283)(51,314)])
     }
@@ -5302,12 +5301,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,70,182)
+    Add(GL_Begin,4971883,70,182)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,280,182)
+    Add(GL_End,10621099,280,182)
     {
      link(onEnd,7595408:doBegin,[(324,188)(324,220)(58,220)(58,251)])
     }
@@ -5339,12 +5338,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,70,308)
+    Add(GL_Begin,5279476,70,308)
     {
      BlockType=6
      link(onBegin,14611661:doColor,[])
     }
-    Add(Gl_End,4974648,322,308)
+    Add(GL_End,4974648,322,308)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -5370,12 +5369,12 @@ BEGIN_SDK
      Point(doPopMatrix)
      link(onEvent,10770939:doTranslate,[])
     }
-    Add(Gl_Translate,8356881,70,21)
+    Add(GL_Translate,8356881,70,21)
     {
      X=1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,10770939,406,308)
+    Add(GL_Translate,10770939,406,308)
     {
      Y=-1.01
      link(onTranslate,14339129:onEvent1,[(453,314)(453,13)])
@@ -5395,7 +5394,7 @@ BEGIN_SDK
      Height=347
      link(doWork1,2434493:doTranslate,[(52,34)(52,62)])
     }
-    Add(Gl_Begin,8902146,245,56)
+    Add(GL_Begin,8902146,245,56)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -5414,7 +5413,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,413,56)
+    Add(GL_End,5982301,413,56)
     {
      link(onEnd,12308252:doBegin,[(455,62)(455,96)(65,96)(65,111)])
     }
@@ -5439,12 +5438,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,77,105)
+    Add(GL_Begin,12308252,77,105)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,245,105)
+    Add(GL_End,3756352,245,105)
     {
      link(onEnd,9789035:doBegin,[(290,111)(290,147)(65,147)(65,167)])
     }
@@ -5476,12 +5475,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,77,161)
+    Add(GL_Begin,9789035,77,161)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,287,161)
+    Add(GL_End,14858577,287,161)
     {
      link(onEnd,4971883:doBegin,[(327,167)(327,203)(65,203)(65,223)])
     }
@@ -5513,12 +5512,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,77,266)
+    Add(GL_Begin,7595408,77,266)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,287,266)
+    Add(GL_End,16406398,287,266)
     {
      link(onEnd,5279476:doBegin,[(331,272)(331,310)(58,310)(58,328)])
     }
@@ -5557,12 +5556,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,77,217)
+    Add(GL_Begin,4971883,77,217)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,287,217)
+    Add(GL_End,10621099,287,217)
     {
      link(onEnd,7595408:doBegin,[(331,223)(331,255)(65,255)(65,272)])
     }
@@ -5594,12 +5593,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,77,322)
+    Add(GL_Begin,5279476,77,322)
     {
      BlockType=6
      link(onBegin,10418853:doColor,[])
     }
-    Add(Gl_End,4974648,329,322)
+    Add(GL_End,4974648,329,322)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -5631,12 +5630,12 @@ BEGIN_SDK
      Z=1
      link(onRotate,14611661:doColor,[])
     }
-    Add(Gl_Translate,2434493,77,56)
+    Add(GL_Translate,2434493,77,56)
     {
      Y=-1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,60904,413,322)
+    Add(GL_Translate,60904,413,322)
     {
      X=1.01
      link(onTranslate,14339129:onEvent1,[(462,328)(462,34)])
@@ -5655,7 +5654,7 @@ BEGIN_SDK
      Height=354
      link(doWork1,8356881:doTranslate,[(42,13)(42,27)])
     }
-    Add(Gl_Begin,8902146,196,21)
+    Add(GL_Begin,8902146,196,21)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -5674,7 +5673,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,364,21)
+    Add(GL_End,5982301,364,21)
     {
      link(onEnd,12308252:doBegin,[(408,27)(408,58)(58,58)(58,76)])
     }
@@ -5699,12 +5698,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,70,70)
+    Add(GL_Begin,12308252,70,70)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,238,70)
+    Add(GL_End,3756352,238,70)
     {
      link(onEnd,9789035:doBegin,[(282,76)(282,112)(58,112)(58,132)])
     }
@@ -5736,12 +5735,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,70,126)
+    Add(GL_Begin,9789035,70,126)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,280,126)
+    Add(GL_End,14858577,280,126)
     {
      link(onEnd,4971883:doBegin,[(325,132)(325,167)(58,167)(58,188)])
     }
@@ -5773,12 +5772,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,70,245)
+    Add(GL_Begin,7595408,70,245)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,280,245)
+    Add(GL_End,16406398,280,245)
     {
      link(onEnd,5279476:doBegin,[(324,251)(324,283)(51,283)(51,314)])
     }
@@ -5817,12 +5816,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,70,182)
+    Add(GL_Begin,4971883,70,182)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,280,182)
+    Add(GL_End,10621099,280,182)
     {
      link(onEnd,7595408:doBegin,[(324,188)(324,220)(58,220)(58,251)])
     }
@@ -5854,12 +5853,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,70,308)
+    Add(GL_Begin,5279476,70,308)
     {
      BlockType=6
      link(onBegin,14611661:doColor,[])
     }
-    Add(Gl_End,4974648,322,308)
+    Add(GL_End,4974648,322,308)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -5885,12 +5884,12 @@ BEGIN_SDK
      Point(doPopMatrix)
      link(onEvent,10770939:doTranslate,[])
     }
-    Add(Gl_Translate,8356881,70,21)
+    Add(GL_Translate,8356881,70,21)
     {
      X=1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,10770939,406,308)
+    Add(GL_Translate,10770939,406,308)
     {
      Y=-1.01
      link(onTranslate,14339129:onEvent1,[(453,314)(453,13)])
@@ -5910,7 +5909,7 @@ BEGIN_SDK
      Height=347
      link(doWork1,2434493:doTranslate,[(52,34)(52,62)])
     }
-    Add(Gl_Begin,8902146,245,56)
+    Add(GL_Begin,8902146,245,56)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -5929,7 +5928,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,413,56)
+    Add(GL_End,5982301,413,56)
     {
      link(onEnd,12308252:doBegin,[(455,62)(455,96)(65,96)(65,111)])
     }
@@ -5954,12 +5953,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,77,105)
+    Add(GL_Begin,12308252,77,105)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,245,105)
+    Add(GL_End,3756352,245,105)
     {
      link(onEnd,9789035:doBegin,[(290,111)(290,147)(65,147)(65,167)])
     }
@@ -5991,12 +5990,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,77,161)
+    Add(GL_Begin,9789035,77,161)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,287,161)
+    Add(GL_End,14858577,287,161)
     {
      link(onEnd,4971883:doBegin,[(327,167)(327,203)(65,203)(65,223)])
     }
@@ -6028,12 +6027,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,77,266)
+    Add(GL_Begin,7595408,77,266)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,287,266)
+    Add(GL_End,16406398,287,266)
     {
      link(onEnd,5279476:doBegin,[(331,272)(331,310)(58,310)(58,328)])
     }
@@ -6072,12 +6071,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,77,217)
+    Add(GL_Begin,4971883,77,217)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,287,217)
+    Add(GL_End,10621099,287,217)
     {
      link(onEnd,7595408:doBegin,[(331,223)(331,255)(65,255)(65,272)])
     }
@@ -6109,12 +6108,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,77,322)
+    Add(GL_Begin,5279476,77,322)
     {
      BlockType=6
      link(onBegin,10418853:doColor,[])
     }
-    Add(Gl_End,4974648,329,322)
+    Add(GL_End,4974648,329,322)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -6146,12 +6145,12 @@ BEGIN_SDK
      Z=1
      link(onRotate,14611661:doColor,[])
     }
-    Add(Gl_Translate,2434493,77,56)
+    Add(GL_Translate,2434493,77,56)
     {
      Y=-1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,60904,413,322)
+    Add(GL_Translate,60904,413,322)
     {
      X=1.01
      link(onTranslate,14339129:onEvent1,[(462,328)(462,34)])
@@ -6170,7 +6169,7 @@ BEGIN_SDK
      Height=354
      link(doWork1,8356881:doTranslate,[(42,13)(42,27)])
     }
-    Add(Gl_Begin,8902146,196,21)
+    Add(GL_Begin,8902146,196,21)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -6189,7 +6188,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,364,21)
+    Add(GL_End,5982301,364,21)
     {
      link(onEnd,12308252:doBegin,[(408,27)(408,58)(58,58)(58,76)])
     }
@@ -6214,12 +6213,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,70,70)
+    Add(GL_Begin,12308252,70,70)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,238,70)
+    Add(GL_End,3756352,238,70)
     {
      link(onEnd,9789035:doBegin,[(282,76)(282,112)(58,112)(58,132)])
     }
@@ -6251,12 +6250,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,70,126)
+    Add(GL_Begin,9789035,70,126)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,280,126)
+    Add(GL_End,14858577,280,126)
     {
      link(onEnd,4971883:doBegin,[(325,132)(325,167)(58,167)(58,188)])
     }
@@ -6288,12 +6287,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,70,245)
+    Add(GL_Begin,7595408,70,245)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,280,245)
+    Add(GL_End,16406398,280,245)
     {
      link(onEnd,5279476:doBegin,[(324,251)(324,283)(51,283)(51,314)])
     }
@@ -6332,12 +6331,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,70,182)
+    Add(GL_Begin,4971883,70,182)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,280,182)
+    Add(GL_End,10621099,280,182)
     {
      link(onEnd,7595408:doBegin,[(324,188)(324,220)(58,220)(58,251)])
     }
@@ -6369,12 +6368,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,70,308)
+    Add(GL_Begin,5279476,70,308)
     {
      BlockType=6
      link(onBegin,14611661:doColor,[])
     }
-    Add(Gl_End,4974648,322,308)
+    Add(GL_End,4974648,322,308)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -6400,12 +6399,12 @@ BEGIN_SDK
      Point(doPopMatrix)
      link(onEvent,10770939:doTranslate,[])
     }
-    Add(Gl_Translate,8356881,70,21)
+    Add(GL_Translate,8356881,70,21)
     {
      X=1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,10770939,406,308)
+    Add(GL_Translate,10770939,406,308)
     {
      Y=-1.01
      link(onTranslate,14339129:onEvent1,[(453,314)(453,13)])
@@ -6425,7 +6424,7 @@ BEGIN_SDK
      Height=347
      link(doWork1,2434493:doTranslate,[(52,34)(52,62)])
     }
-    Add(Gl_Begin,8902146,245,56)
+    Add(GL_Begin,8902146,245,56)
     {
      BlockType=6
      link(onBegin,14661812:doVertex,[])
@@ -6444,7 +6443,7 @@ BEGIN_SDK
      Z=1
      link(onVertex,8395271:doVertex,[])
     }
-    Add(Gl_End,5982301,413,56)
+    Add(GL_End,5982301,413,56)
     {
      link(onEnd,12308252:doBegin,[(455,62)(455,96)(65,96)(65,111)])
     }
@@ -6469,12 +6468,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,13068937:doVertex,[])
     }
-    Add(Gl_Begin,12308252,77,105)
+    Add(GL_Begin,12308252,77,105)
     {
      BlockType=6
      link(onBegin,11341713:doVertex,[])
     }
-    Add(Gl_End,3756352,245,105)
+    Add(GL_End,3756352,245,105)
     {
      link(onEnd,9789035:doBegin,[(290,111)(290,147)(65,147)(65,167)])
     }
@@ -6506,12 +6505,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11331931:doVertex,[])
     }
-    Add(Gl_Begin,9789035,77,161)
+    Add(GL_Begin,9789035,77,161)
     {
      BlockType=6
      link(onBegin,7129911:doVertex,[])
     }
-    Add(Gl_End,14858577,287,161)
+    Add(GL_End,14858577,287,161)
     {
      link(onEnd,4971883:doBegin,[(327,167)(327,203)(65,203)(65,223)])
     }
@@ -6543,12 +6542,12 @@ BEGIN_SDK
      Z=-1
      link(onVertex,11893661:doVertex,[])
     }
-    Add(Gl_Begin,7595408,77,266)
+    Add(GL_Begin,7595408,77,266)
     {
      BlockType=6
      link(onBegin,2383392:doVertex,[])
     }
-    Add(Gl_End,16406398,287,266)
+    Add(GL_End,16406398,287,266)
     {
      link(onEnd,5279476:doBegin,[(331,272)(331,310)(58,310)(58,328)])
     }
@@ -6587,12 +6586,12 @@ BEGIN_SDK
      Z=1
      link(onVertex,10621099:doEnd,[])
     }
-    Add(Gl_Begin,4971883,77,217)
+    Add(GL_Begin,4971883,77,217)
     {
      BlockType=6
      link(onBegin,9232091:doVertex,[])
     }
-    Add(Gl_End,10621099,287,217)
+    Add(GL_End,10621099,287,217)
     {
      link(onEnd,7595408:doBegin,[(331,223)(331,255)(65,255)(65,272)])
     }
@@ -6624,12 +6623,12 @@ BEGIN_SDK
      Z=-0.9
      link(onVertex,8184577:doVertex,[])
     }
-    Add(Gl_Begin,5279476,77,322)
+    Add(GL_Begin,5279476,77,322)
     {
      BlockType=6
      link(onBegin,10418853:doColor,[])
     }
-    Add(Gl_End,4974648,329,322)
+    Add(GL_End,4974648,329,322)
     {
      link(onEnd,581423:doPopMatrix,[])
     }
@@ -6661,12 +6660,12 @@ BEGIN_SDK
      Z=1
      link(onRotate,14611661:doColor,[])
     }
-    Add(Gl_Translate,2434493,77,56)
+    Add(GL_Translate,2434493,77,56)
     {
      Y=-1
      link(onTranslate,9100003:doPushMatrix,[])
     }
-    Add(Gl_Translate,60904,413,322)
+    Add(GL_Translate,60904,413,322)
     {
      X=1.01
      link(onTranslate,14339129:onEvent1,[(462,328)(462,34)])
@@ -6718,168 +6717,168 @@ BEGIN_SDK
   {
    Count=28
   }
-  Add(LineBreak,6286298,77,77)
+  Add(LineBreak,1300774,77,77)
   {
    Caption="1"
    Type=1
    link(Data,9622733:Value1,[])
    Primary=[3206417,154,56]
   }
-  Add(LineBreak,2539505,84,77)
+  Add(LineBreak,4620510,84,77)
   {
    Caption="2"
    Type=1
    link(Data,9622733:Value2,[])
    Primary=[2675587,231,56]
   }
-  Add(LineBreak,8798105,91,77)
+  Add(LineBreak,6511720,91,77)
   {
    Caption="3"
    Type=1
    link(Data,9622733:Value3,[])
    Primary=[2587418,308,56]
   }
-  Add(LineBreak,8213989,98,77)
+  Add(LineBreak,16735966,98,77)
   {
    Caption="4"
    Type=1
    link(Data,9622733:Value4,[])
    Primary=[14424528,385,56]
   }
-  Add(LineBreak,5426546,105,77)
+  Add(LineBreak,11212546,105,77)
   {
    Caption="5"
    Type=1
    link(Data,9622733:Value5,[])
    Primary=[4288770,462,56]
   }
-  Add(LineBreak,5413783,112,77)
+  Add(LineBreak,6118104,112,77)
   {
    Caption="6"
    Type=1
    link(Data,9622733:Value6,[])
    Primary=[15630033,539,56]
   }
-  Add(LineBreak,11242563,119,77)
+  Add(LineBreak,15570364,119,77)
   {
    Caption="7"
    Type=1
    link(Data,9622733:Value7,[])
    Primary=[9359492,616,56]
   }
-  Add(LineBreak,7053668,126,77)
+  Add(LineBreak,4199089,126,77)
   {
    Caption="8"
    Type=1
    link(Data,9622733:Value8,[])
    Primary=[6393315,693,56]
   }
-  Add(LineBreak,12977120,133,77)
+  Add(LineBreak,2049041,133,77)
   {
    Caption="9"
    Type=1
    link(Data,9622733:Value9,[])
    Primary=[4756892,98,133]
   }
-  Add(LineBreak,7937136,140,77)
+  Add(LineBreak,11881939,140,77)
   {
    Caption="10"
    Type=1
    link(Data,9622733:Value10,[])
    Primary=[9519777,175,133]
   }
-  Add(LineBreak,8848370,147,77)
+  Add(LineBreak,10710289,147,77)
   {
    Caption="11"
    Type=1
    link(Data,9622733:Value11,[])
    Primary=[4633223,252,133]
   }
-  Add(LineBreak,4290814,154,77)
+  Add(LineBreak,14516619,154,77)
   {
    Caption="12"
    Type=1
    link(Data,9622733:Value12,[])
    Primary=[1680615,329,133]
   }
-  Add(LineBreak,13533138,161,77)
+  Add(LineBreak,282943,161,77)
   {
    Caption="13"
    Type=1
    link(Data,9622733:Value13,[])
    Primary=[13388735,406,133]
   }
-  Add(LineBreak,8103386,168,77)
+  Add(LineBreak,13352554,168,77)
   {
    Caption="14"
    Type=1
    link(Data,9622733:Value14,[])
    Primary=[2663633,483,133]
   }
-  Add(LineBreak,10159986,175,77)
+  Add(LineBreak,12077427,175,77)
   {
    Caption="15"
    Type=1
    link(Data,9622733:Value15,[])
    Primary=[15086594,560,133]
   }
-  Add(LineBreak,13889711,182,77)
+  Add(LineBreak,5955238,182,77)
   {
    Caption="16"
    Type=1
    link(Data,9622733:Value16,[])
    Primary=[1586876,637,133]
   }
-  Add(LineBreak,12817715,189,77)
+  Add(LineBreak,3485369,189,77)
   {
    Caption="17"
    Type=1
    link(Data,9622733:Value17,[])
    Primary=[14133324,42,210]
   }
-  Add(LineBreak,11832175,196,77)
+  Add(LineBreak,1969529,196,77)
   {
    Caption="18"
    Type=1
    link(Data,9622733:Value18,[])
    Primary=[7122755,119,210]
   }
-  Add(LineBreak,10987727,203,77)
+  Add(LineBreak,7372591,203,77)
   {
    Caption="19"
    Type=1
    link(Data,9622733:Value19,[])
    Primary=[5327831,196,210]
   }
-  Add(LineBreak,9540273,210,77)
+  Add(LineBreak,15007616,210,77)
   {
    Caption="20"
    Type=1
    link(Data,9622733:Value20,[])
    Primary=[9658178,273,210]
   }
-  Add(LineBreak,16049968,217,77)
+  Add(LineBreak,8779753,217,77)
   {
    Caption="21"
    Type=1
    link(Data,9622733:Value21,[])
    Primary=[7234593,350,210]
   }
-  Add(LineBreak,3452174,224,77)
+  Add(LineBreak,5534748,224,77)
   {
    Caption="22"
    Type=1
    link(Data,9622733:Value22,[])
    Primary=[16609237,427,210]
   }
-  Add(LineBreak,5158742,231,77)
+  Add(LineBreak,6790096,231,77)
   {
    Caption="23"
    Type=1
    link(Data,9622733:Value23,[])
    Primary=[11818213,504,210]
   }
-  Add(Gl_Scale,223580,147,161)
+  Add(GL_Scale,223580,147,161)
   {
    X=0.2
    Y=0.2
@@ -6889,7 +6888,7 @@ BEGIN_SDK
    link(Y,12692300:Var1,[(160,145)])
    link(Z,12692300:Var2,[])
   }
-  Add(Gl_Translate,424069,63,161)
+  Add(GL_Translate,424069,63,161)
   {
    Y=0.8
    link(onTranslate,7536217:doRotate,[])
@@ -6912,28 +6911,28 @@ BEGIN_SDK
   {
    link(Data,2886154:Var,[])
   }
-  Add(LineBreak,15113090,238,77)
+  Add(LineBreak,14800852,238,77)
   {
    Caption="L"
    Type=1
    link(Data,9622733:Value24,[])
    Primary=[758959,-133,35]
   }
-  Add(LineBreak,9409588,245,77)
+  Add(LineBreak,8478589,245,77)
   {
    Caption="x"
    Type=1
    link(Data,9622733:Value25,[])
    Primary=[13366855,-182,28]
   }
-  Add(LineBreak,15553232,252,77)
+  Add(LineBreak,10821552,252,77)
   {
    Caption="y"
    Type=1
    link(Data,9622733:Value26,[])
    Primary=[7179289,-182,42]
   }
-  Add(LineBreak,5573521,266,77)
+  Add(LineBreak,15725090,266,77)
   {
    Caption="zoom"
    Type=1
@@ -6946,7 +6945,7 @@ BEGIN_SDK
    Width=687
    Height=256
   }
-  Add(LineBreak,11761117,259,77)
+  Add(LineBreak,16659870,259,77)
   {
    Caption="z"
    Type=1
@@ -7084,7 +7083,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(314,145)])
     }
-    Add(LineBreak,13439822,581,7)
+    Add(LineBreak,1533489,581,7)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-434,133]
@@ -7103,7 +7102,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(639,181)(639,20)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,5338814,518,175)
+    Add(LineBreak,7716123,518,175)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-434,-161]
@@ -7244,7 +7243,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,12598385,490,49)
+    Add(LineBreak,3156056,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -7263,7 +7262,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,11967897,448,217)
+    Add(LineBreak,1931593,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -7393,7 +7392,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,16564834,490,49)
+    Add(LineBreak,12976132,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,126]
@@ -7412,7 +7411,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,7558600,448,217)
+    Add(LineBreak,1843556,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-322,-21]
@@ -7542,7 +7541,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,14875459,490,49)
+    Add(LineBreak,9875802,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -7561,7 +7560,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,6860987,448,217)
+    Add(LineBreak,15102173,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -7691,7 +7690,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,1303621,490,49)
+    Add(LineBreak,3709958,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -7710,7 +7709,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,4708383,448,217)
+    Add(LineBreak,11071958,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -7840,7 +7839,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,7369487,490,49)
+    Add(LineBreak,4180154,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -7859,7 +7858,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,14799103,448,217)
+    Add(LineBreak,13413507,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -7989,7 +7988,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,7486210,490,49)
+    Add(LineBreak,4071993,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -8008,7 +8007,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,995831,448,217)
+    Add(LineBreak,14418043,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -8138,7 +8137,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,9203958,490,49)
+    Add(LineBreak,10970543,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -8157,7 +8156,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,10338824,448,217)
+    Add(LineBreak,7938644,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -8287,7 +8286,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,14402935,490,49)
+    Add(LineBreak,4144947,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -8306,7 +8305,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,16521129,448,217)
+    Add(LineBreak,7489093,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -8436,7 +8435,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,4384156,490,49)
+    Add(LineBreak,650166,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -8455,7 +8454,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,1116429,448,217)
+    Add(LineBreak,4847039,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -8585,7 +8584,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,166391,490,49)
+    Add(LineBreak,9383103,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -8604,7 +8603,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,6238928,448,217)
+    Add(LineBreak,2903592,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -8734,7 +8733,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,11752777,490,49)
+    Add(LineBreak,6398127,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -8753,7 +8752,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,5414263,448,217)
+    Add(LineBreak,3032615,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -8883,7 +8882,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,13751784,490,49)
+    Add(LineBreak,4972411,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -8902,7 +8901,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,15589486,448,217)
+    Add(LineBreak,11901244,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -9032,7 +9031,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,5138698,490,49)
+    Add(LineBreak,4486144,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -9051,7 +9050,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,2375302,448,217)
+    Add(LineBreak,10982019,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -9181,7 +9180,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,12556901,490,49)
+    Add(LineBreak,3260794,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -9200,7 +9199,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,1802248,448,217)
+    Add(LineBreak,115679,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -9330,7 +9329,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,9152720,490,49)
+    Add(LineBreak,6921904,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -9349,7 +9348,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,7837163,448,217)
+    Add(LineBreak,16144892,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -9479,7 +9478,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,5623260,490,49)
+    Add(LineBreak,3170786,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -9498,7 +9497,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,2022340,448,217)
+    Add(LineBreak,12743632,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -9628,7 +9627,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,5613199,490,49)
+    Add(LineBreak,189581,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -9647,7 +9646,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,13078382,448,217)
+    Add(LineBreak,7135634,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -9777,7 +9776,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,12384945,490,49)
+    Add(LineBreak,8438158,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -9796,7 +9795,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,3240337,448,217)
+    Add(LineBreak,5855060,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -9926,7 +9925,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,4530784,490,49)
+    Add(LineBreak,14384710,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -9945,7 +9944,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,14716296,448,217)
+    Add(LineBreak,12732086,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -10075,7 +10074,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,10642136,490,49)
+    Add(LineBreak,13313196,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -10094,7 +10093,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,7120191,448,217)
+    Add(LineBreak,11255124,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -10224,7 +10223,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,11530142,490,49)
+    Add(LineBreak,6747280,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -10243,7 +10242,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,5202697,448,217)
+    Add(LineBreak,5850864,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -10373,7 +10372,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,3104893,490,49)
+    Add(LineBreak,6394208,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -10392,7 +10391,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,7414689,448,217)
+    Add(LineBreak,9539196,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -10522,7 +10521,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,2007819,490,49)
+    Add(LineBreak,2389059,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -10541,7 +10540,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,7748019,448,217)
+    Add(LineBreak,9528441,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -10671,7 +10670,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(293,187)])
     }
-    Add(LineBreak,3992479,490,49)
+    Add(LineBreak,353118,490,49)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-364,133]
@@ -10690,7 +10689,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(541,223)(541,62)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,5177009,448,217)
+    Add(LineBreak,13610844,448,217)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-378,-161]
@@ -10822,7 +10821,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(314,145)])
     }
-    Add(LineBreak,16536044,581,7)
+    Add(LineBreak,484221,581,7)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-434,133]
@@ -10841,7 +10840,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(639,181)(639,20)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,8900060,518,175)
+    Add(LineBreak,11948001,518,175)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-434,-161]
@@ -10982,7 +10981,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(314,145)])
     }
-    Add(LineBreak,5074095,581,7)
+    Add(LineBreak,15309970,581,7)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-434,133]
@@ -11001,7 +11000,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(639,181)(639,20)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,84651,518,175)
+    Add(LineBreak,11932553,518,175)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-434,-161]
@@ -11080,7 +11079,7 @@ BEGIN_SDK
    Width=974
    Height=60
   }
-  Add(LineBreak,12604938,294,70)
+  Add(LineBreak,2965905,294,70)
   {
    Caption="delay"
    Type=1
@@ -11157,7 +11156,7 @@ BEGIN_SDK
      link(onEventData,2538078:doMax,[])
      link(Data,12680651:Var3,[(314,145)])
     }
-    Add(LineBreak,3450639,581,7)
+    Add(LineBreak,13156010,581,7)
     {
      link(Out,15406859:onEvent1,[])
      Primary=[283905,-434,133]
@@ -11176,7 +11175,7 @@ BEGIN_SDK
      link(onEvent1,15406859:onEvent2,[(639,181)(639,20)])
      link(Index,5844717:Value,[])
     }
-    Add(LineBreak,16245047,518,175)
+    Add(LineBreak,12661167,518,175)
     {
      link(Out,13583262:doEvent,[])
      Primary=[5316012,-434,-161]
@@ -11369,7 +11368,7 @@ BEGIN_SDK
    Char="="
    link(onPart1,9439791:doMT,[])
   }
-  Add(LineBreak,13517872,28,224)
+  Add(LineBreak,2361788,28,224)
   {
    link(Out,8724214:doData,[])
    Primary=[15758476,441,-175]
@@ -11379,12 +11378,12 @@ BEGIN_SDK
    link(onEvent,15758476:In,[])
   }
 END_SDK
-Add(LineBreak,10397993,385,210)
+Add(LineBreak,15560088,385,210)
 {
  link(Out,1682437:doWork2,[])
  Primary=[681286,-140,-161]
 }
-Add(Version,10776440,56,42)
+Add(Version,10776440,63,42)
 {
  Version="0,01"
  E-mail="tig-rrr@mail.ru"

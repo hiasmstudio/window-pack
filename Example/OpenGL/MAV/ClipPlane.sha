@@ -1,5 +1,5 @@
 Make(delphi)
-ver(4.04 build 184)
+ver(4.05 build 186)
 Add(MainForm,15261923,35,35)
 {
  Left=20
@@ -82,7 +82,7 @@ Add(HubEx,16131419,119,70)
 {
  link(onEvent,12986311:doViewPort,[])
 }
-Add(Gl_Axis,4296558,105,252)
+Add(GL_Axis,4296558,105,252)
 {
  TitleScale=0.4
  link(onDraw,5484296:doEvent1,[])
@@ -115,7 +115,7 @@ Add(GL_Color,13419557,231,315)
  Alpha=0.1
  link(onColor,883993:doSet,[])
 }
-Add(Gl_Translate,13036140,532,182)
+Add(GL_Translate,13036140,532,182)
 {
  link(onTranslate,2520753:doRotate,[])
  link(X,16318177:Var1,[(538,166)])
@@ -155,7 +155,7 @@ Add(GL_GTools,12555355,532,224)
  Point(doPopMatrix)
  link(onEvent,5925099:doRotate,[])
 }
-Add(Gl_Translate,11348309,707,224)
+Add(GL_Translate,11348309,707,224)
 {
  link(onTranslate,11257959:doRotate,[])
  link(X,853762:Var1,[(713,208)])
@@ -212,7 +212,7 @@ Add(GL_Material,539342,315,161)
  Emission=89
  link(onSet,4341366:doPushMatrix,[])
 }
-Add(Gl_Translate,12961218,182,315)
+Add(GL_Translate,12961218,182,315)
 {
  link(onTranslate,13419557:doColor,[])
  link(Y,1713317:Result,[])
@@ -358,12 +358,12 @@ BEGIN_SDK
    Flag=15
    link(onEvent,2318679:doEndList,[])
   }
-  Add(Gl_BeginList,2815265,43,56)
+  Add(GL_BeginList,2815265,43,56)
   {
    Index=1
    link(onBiginList,13290200:doEnabled,[])
   }
-  Add(Gl_EndList,2318679,568,56)
+  Add(GL_EndList,2318679,568,56)
   {
    link(onEndList,10832971:onEvent1,[(622,62)(622,27)])
   }
@@ -441,12 +441,12 @@ BEGIN_SDK
    Flag=15
    link(onEvent,4842888:doEndList,[])
   }
-  Add(Gl_BeginList,9195218,43,42)
+  Add(GL_BeginList,9195218,43,42)
   {
    Index=2
    link(onBiginList,8052121:doEnabled,[])
   }
-  Add(Gl_EndList,4842888,568,42)
+  Add(GL_EndList,4842888,568,42)
   {
    link(onEndList,10968849:onEvent1,[(618,48)(618,27)])
   }
@@ -463,7 +463,7 @@ BEGIN_SDK
    link(onDraw,13470799:doDisabled,[(419,48)(419,55)])
   }
 END_SDK
-Add(LineBreak,11101914,434,119)
+Add(LineBreak,13821902,434,119)
 {
  Caption="c"
  link(Out,6703304:doValue,[])
@@ -495,7 +495,7 @@ Add(GL_Rotate,8096544,574,336)
  X=1
  link(onRotate,15217423:doCallList,[])
 }
-Add(Gl_Translate,16243531,532,336)
+Add(GL_Translate,16243531,532,336)
 {
  link(onTranslate,8096544:doRotate,[])
  link(X,11557814:Var1,[(538,320)])
@@ -535,7 +535,7 @@ Add(GL_GTools,5530464,532,378)
  Point(doPopMatrix)
  link(onEvent,14314736:doRotate,[])
 }
-Add(Gl_Translate,13167636,707,378)
+Add(GL_Translate,13167636,707,378)
 {
  link(onTranslate,1800419:doRotate,[])
  link(X,11407398:Var1,[(713,362)])
@@ -595,7 +595,7 @@ Add(IndexToChanel,16106042,476,315)
  link(onEvent2,10429757:doNext,[(520,328)(520,279)])
  link(Index,367475:Value,[])
 }
-Add(LineBreak,15935082,14,252)
+Add(LineBreak,3763674,14,252)
 {
  Caption="draw"
  Color=5151158

@@ -1,5 +1,5 @@
 Make(delphi)
-Pos(27,0)
+ver(4.05 build 186)
 Add(MainForm,15261923,16,49)
 {
  Left=20
@@ -48,7 +48,7 @@ Add(Hub,16299401,72,168)
  link(onEvent2,14551396:doWork2,[])
  link(onEvent3,9506849:doTimer,[(114,188)(114,226)(20,226)(20,258)])
 }
-Add(HubEx,14551396,128,168)
+Add(HubEx,14551396,128,175)
 {
  link(onEvent,12986311:doViewPort,[])
 }
@@ -113,16 +113,16 @@ BEGIN_SDK
    link(Angle,4359962:Data2,[(139,8)(16,8)])
   }
 END_SDK
-Add(Gl_Axis,10036663,268,266)
+Add(GL_Axis,10036663,268,266)
 {
  TitleScale=0.5
  link(onDraw,575588:doTrans,[])
 }
-Add(Gl_Begin,2541415,365,266)
+Add(GL_Begin,2541415,365,266)
 {
  link(onBegin,3503222:doFor,[])
 }
-Add(Gl_End,16761055,477,336)
+Add(GL_End,16761055,477,336)
 {
 }
 Add(GL_Vertex3D,9017389,708,266)
@@ -156,7 +156,7 @@ BEGIN_SDK
    Height=242
    link(doTrans,5112558:doEvent1,[(15,9)(15,48)])
   }
-  Add(Gl_Translate,2535417,294,203)
+  Add(GL_Translate,2535417,294,203)
   {
    link(onTranslate,3877728:onTrans,[(345,209)(345,9)])
    link(X,7575323:Result,[])
@@ -262,7 +262,7 @@ Add(RGB,15035670,610,266)
  link(G,12417777:Var2,[])
  link(B,12417777:Var3,[(630,254)])
 }
-Add(GetDataEx,12417777,610,245)
+Add(GetDataEx,12417777,617,249)
 {
  link(Data,13418336:Random,[(623,239)(699,239)(699,308)(763,308)])
 }

@@ -1,5 +1,6 @@
 *Моделирование системы тел и гравитационного взаимодействия между ними
 Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,15261923,28,35)
 {
  Left=20
@@ -60,7 +61,7 @@ Add(Hub,16299401,98,147)
  link(onEvent2,14551396:doWork2,[])
  link(onEvent3,9506849:doTimer,[(140,167)(140,205)(46,205)(46,237)])
 }
-Add(Gl_Translate,14058394,329,98)
+Add(GL_Translate,14058394,329,98)
 {
  link(onTranslate,7224192:doDraw,[(386,104)(386,174)])
 }
@@ -73,7 +74,7 @@ Add(GL_Options,5809249,329,147)
 {
  Flag=2
 }
-Add(HubEx,14551396,154,147)
+Add(HubEx,14551396,154,154)
 {
  link(onEvent,12986311:doViewPort,[])
 }

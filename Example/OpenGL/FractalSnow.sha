@@ -1,5 +1,5 @@
 Make(delphi)
-ver(4.04 build 184)
+ver(4.05 build 186)
 Add(SimpleForm,2953706,98,56)
 {
  Width=511
@@ -87,13 +87,13 @@ BEGIN_SDK
    Height=109
    link(doWork1,188025:doTranslate,[(37,23)(37,69)])
   }
-  Add(Gl_Translate,188025,56,63)
+  Add(GL_Translate,188025,56,63)
   {
    link(onTranslate,15065164:doScale,[])
    link(X,4359962:Data1,[(62,40)(23,40)])
    link(Y,4359962:Data2,[(69,40)(30,40)])
   }
-  Add(Gl_Scale,15065164,105,63)
+  Add(GL_Scale,15065164,105,63)
   {
    link(onScale,4359962:onEvent1,[(213,69)(213,23)])
    link(X,4247964:Var2,[])
@@ -124,12 +124,12 @@ Add(GL_GluTools,12198675,315,280)
  Texture=0
  link(onInit,5851269:doEnabled,[])
 }
-Add(Gl_BeginList,11450348,567,280)
+Add(GL_BeginList,11450348,567,280)
 {
  Index=1
  link(onBiginList,11214287:doEvent1,[])
 }
-Add(Gl_EndList,2979237,651,350)
+Add(GL_EndList,2979237,651,350)
 {
  link(onEndList,15114014:doData,[])
 }
@@ -174,12 +174,12 @@ BEGIN_SDK
      Height=130
      link(doWork1,5441814:doOperation,[(31,27)(31,97)])
     }
-    Add(Gl_Begin,14701665,182,91)
+    Add(GL_Begin,14701665,182,91)
     {
      BlockType=1
      link(onBegin,4255698:doData,[])
     }
-    Add(Gl_End,6335969,448,91)
+    Add(GL_End,6335969,448,91)
     {
      link(onEnd,9100006:onEvent1,[(492,97)(492,27)])
     }
@@ -303,13 +303,13 @@ BEGIN_SDK
    link(onEvent2,5984824:doPushMatrix,[(278,97)(278,153)(184,153)(184,209)])
    link(onEvent3,6911768:doPopMatrix,[])
   }
-  Add(Gl_Translate,2247469,490,203)
+  Add(GL_Translate,2247469,490,203)
   {
    Y=0.2
    link(onTranslate,2782709:doAdd,[])
    link(Y,13508334:Var3,[(503,127)])
   }
-  Add(Gl_Translate,12232718,490,252)
+  Add(GL_Translate,12232718,490,252)
   {
    link(onTranslate,8948848:doAdd,[])
    link(Y,7154028:Result,[(503,244)(363,244)])
@@ -486,7 +486,7 @@ Add(GetDataEx,5722181,812,329)
  Angle=1
  link(Data,2828855:Result,[(832,334)])
 }
-Add(LineBreak,8551036,49,63)
+Add(LineBreak,869770,49,63)
 {
  link(Out,2953706:doCaption,[])
  Primary=[8675645,805,287]

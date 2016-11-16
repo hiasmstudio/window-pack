@@ -1,21 +1,23 @@
-Pos(0,0)
-Add(MainForm,15261923,28,35)
+Make(delphi)
+ver(4.05 build 186)
+Add(MainForm,15261923,28,56)
 {
  Left=20
  Top=105
  Width=440
  Height=421
- Font=[MS Sans Serif,8,0,0]
  Point(MouseX)
  Point(MouseY)
- link(onResize,16131419:doWork1,[(144,69)])
+ Point(onResize)
+ Point(Handle)
  link(onCreate,16299401:doEvent1,[(72,76)(72,181)])
+ link(onResize,16131419:doWork1,[(144,83)])
 }
 Add(GL_Main,12986311,168,175)
 {
  link(onInit,12198675:doInit,[])
  link(onViewPort,3410847:doPerspective,[(223,188)(223,230)])
- link(Handle,15261923:Handle,[(174,148)(34,148)])
+ link(Handle,15261923:Handle,[(174,148)(48,148)])
 }
 Add(Timer,9506849,56,259)
 {
@@ -69,38 +71,38 @@ Add(GL_Options,5809249,378,175)
 Add(MultiElement,10714674,231,126)
 {
  link(onEvent1,8902146:doBegin,[])
- link(Data1,15261923:MouseX,[(237,110)(41,110)])
- link(Data2,15261923:MouseY,[(244,104)(48,104)])
+ link(Data1,15261923:MouseX,[(237,110)(34,110)])
+ link(Data2,15261923:MouseY,[(244,104)(41,104)])
 }
 BEGIN_SDK
-Pos(0,0)
-  Add(EditMulti,4359962,3,3)
+  Add(EditMulti,4359962,10,10)
   {
    EventCount=1
    WorkCount=1
    DataCount=2
    Width=223
-   Height=109
-   link(doWork1,3276760:doRotate,[(19,9)(19,55)])
+   Height=74
+   VOffset=25
+   link(doWork1,3276760:doRotate,[])
   }
-  Add(GL_Rotate,3276760,35,49)
+  Add(GL_Rotate,3276760,35,35)
   {
    Y=1
    link(onRotate,8079493:doRotate,[])
-   link(Angle,4359962:Data1,[(62,15)(9,15)])
+   link(Angle,4359962:Data1,[(41,15)(16,15)])
   }
-  Add(GL_Rotate,8079493,112,49)
+  Add(GL_Rotate,8079493,105,35)
   {
    X=1
-   link(onRotate,4359962:onEvent1,[(189,55)(189,9)])
-   link(Angle,4359962:Data2,[(139,8)(16,8)])
+   link(onRotate,4359962:onEvent1,[])
+   link(Angle,4359962:Data2,[(111,15)(23,15)])
   }
 END_SDK
 Add(GL_Perspective,3410847,231,224)
 {
  Fovy=20
 }
-Add(Gl_Begin,8902146,280,126)
+Add(GL_Begin,8902146,280,126)
 {
  BlockType=2
  link(onBegin,14661812:doVertex,[])
@@ -121,7 +123,7 @@ Add(GL_Vertex3D,6069265,427,126)
  Y=1
  link(onVertex,11517546:doVertex,[])
 }
-Add(Gl_End,5982301,973,126)
+Add(GL_End,5982301,973,126)
 {
 }
 Add(GL_Vertex3D,11517546,490,126)
@@ -172,7 +174,7 @@ Add(GL_Vertex3D,14503650,749,126)
  Y=-1
  link(onVertex,9593150:doVertex,[])
 }
-Add(HubEx,16131419,140,175)
+Add(HubEx,16131419,140,182)
 {
  link(onEvent,12986311:doViewPort,[])
 }

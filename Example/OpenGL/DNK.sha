@@ -1,6 +1,6 @@
 *Спираль ДНК
 Make(delphi)
-Pos(2,0)
+ver(4.05 build 186)
 Add(MainForm,15261923,19,49)
 {
  Left=20
@@ -50,7 +50,7 @@ Add(Hub,16299401,89,168)
  link(onEvent2,14551396:doWork2,[])
  link(onEvent3,9506849:doTimer,[(132,188)(132,233)(38,233)(38,258)])
 }
-Add(HubEx,14551396,145,168)
+Add(HubEx,14551396,145,175)
 {
  link(onEvent,12986311:doViewPort,[])
 }
@@ -87,7 +87,7 @@ Add(GL_Perspective,3410847,222,217)
 {
  Fovy=20
 }
-Add(Gl_Axis,10036663,271,119)
+Add(GL_Axis,10036663,271,119)
 {
  TitleScale=0.5
  link(onDraw,575588:doTrans,[])
@@ -145,16 +145,16 @@ Add(GL_Rotate,3785375,880,168)
  link(onRotate,13379841:doTranslate,[])
  link(Angle,5467469:Result,[(886,158)(756,158)(756,211)(711,211)])
 }
-Add(Gl_BeginList,11036229,572,168)
+Add(GL_BeginList,11036229,572,168)
 {
  Index=1050
  link(onBiginList,5786334:doFor,[])
 }
-Add(Gl_EndList,3633824,705,224)
+Add(GL_EndList,3633824,705,224)
 {
  link(onEndList,14257444:doEnabled,[])
 }
-Add(Gl_Translate,6268410,1230,168)
+Add(GL_Translate,6268410,1230,168)
 {
  X=0.2
  link(onTranslate,10808679:doColor,[])
@@ -204,7 +204,7 @@ BEGIN_SDK
    Height=242
    link(doTrans,5112558:doEvent1,[(15,9)(15,48)])
   }
-  Add(Gl_Translate,2535417,294,203)
+  Add(GL_Translate,2535417,294,203)
   {
    link(onTranslate,3877728:onTrans,[(345,209)(345,9)])
    link(X,7575323:Result,[])
@@ -294,7 +294,7 @@ Add(GL_Color,6287003,1531,168)
  Color=255
  link(onColor,6127297:doDraw,[])
 }
-Add(Gl_Translate,9656755,1384,168)
+Add(GL_Translate,9656755,1384,168)
 {
  X=-0.2
  link(onTranslate,13757517:doRotate,[])
@@ -305,17 +305,17 @@ Add(GL_Rotate,13757517,1433,168)
  Y=1
  link(onRotate,14467333:doTranslate,[])
 }
-Add(Gl_Translate,14467333,1482,168)
+Add(GL_Translate,14467333,1482,168)
 {
  X=0.2
  link(onTranslate,6287003:doColor,[])
 }
-Add(Gl_Begin,8163325,1027,168)
+Add(GL_Begin,8163325,1027,168)
 {
  BlockType=1
  link(onBegin,399441:doVertex,[])
 }
-Add(Gl_End,14958170,1174,168)
+Add(GL_End,14958170,1174,168)
 {
  link(onEnd,6268410:doTranslate,[])
 }
@@ -329,7 +329,7 @@ Add(GL_Vertex3D,3351769,1125,168)
  X=-0.2
  link(onVertex,14958170:doEnd,[])
 }
-Add(Gl_Translate,13379841,929,168)
+Add(GL_Translate,13379841,929,168)
 {
  link(onTranslate,5777758:doColor,[])
  link(Y,3897635:Result,[(942,158)(919,158)(919,209)(774,209)])
@@ -350,7 +350,7 @@ Add(Counter,15762577,418,119)
  Step=3
  link(onNext,7716861:doRotate,[])
 }
-Add(Gl_Translate,6293116,369,119)
+Add(GL_Translate,6293116,369,119)
 {
  Y=-1.2
  link(onTranslate,15762577:doNext,[])
@@ -371,12 +371,12 @@ Add(GL_Vertex3D,3652044,903,224)
  Z=-0.4
  link(onVertex,13810871:doVertex,[])
 }
-Add(Gl_BeginList,10286315,805,224)
+Add(GL_BeginList,10286315,805,224)
 {
  Index=2
  link(onBiginList,7222455:doBegin,[])
 }
-Add(Gl_Begin,7222455,854,224)
+Add(GL_Begin,7222455,854,224)
 {
  BlockType=7
  link(onBegin,3652044:doVertex,[])
@@ -402,11 +402,11 @@ Add(GL_Vertex3D,875687,1050,224)
  Z=-0.4
  link(onVertex,6901366:doEnd,[])
 }
-Add(Gl_End,6901366,1099,224)
+Add(GL_End,6901366,1099,224)
 {
  link(onEnd,258936:doEndList,[])
 }
-Add(Gl_EndList,258936,1148,224)
+Add(GL_EndList,258936,1148,224)
 {
  link(onEndList,16037297:doEnabled,[])
 }

@@ -1,23 +1,25 @@
 *Построение динамических объектов
-Pos(0,0)
-Add(MainForm,15261923,14,28)
+Make(delphi)
+ver(4.05 build 186)
+Add(MainForm,15261923,28,56)
 {
  Left=20
  Top=105
  Width=440
  Height=421
- Font=[MS Sans Serif,8,0,0,1]
  Point(MouseX)
  Point(MouseY)
- link(onResize,14551396:doWork1,[(137,62)])
- link(onCreate,16299401:doEvent1,[(74,69)(74,174)])
+ Point(onResize)
+ Point(Handle)
+ link(onCreate,16299401:doEvent1,[(74,76)(74,174)])
+ link(onResize,14551396:doWork1,[(137,83)])
 }
 Add(GL_Main,12986311,147,168)
 {
  Color=0
  link(onInit,12198675:doInit,[])
  link(onViewPort,3410847:doPerspective,[(202,181)(202,223)])
- link(Handle,15261923:Handle,[(153,141)(20,141)])
+ link(Handle,15261923:Handle,[(153,141)(48,141)])
 }
 Add(Timer,9506849,42,252)
 {
@@ -66,7 +68,7 @@ Add(GL_Options,5809249,308,168)
  Flag=2
  link(onEvent,4378486:doEnabled,[])
 }
-Add(HubEx,14551396,133,168)
+Add(HubEx,14551396,133,175)
 {
  link(onEvent,12986311:doViewPort,[])
 }
@@ -85,25 +87,24 @@ Add(GL_Options,1101264,259,168)
 }
 Add(MultiElementEx,7914646,406,217)
 {
- @Hint='Создание дисплейного списка звезд'
+ @Hint=#33:Создание дисплейного списка звезд|
  link(onStars,201321:doPlay,[])
 }
 BEGIN_SDK
-Pos(0,0)
   Add(EditMultiEx,5772154,3,3)
   {
-   WorkCount='doStars'
-   EventCount='onStars'
+   WorkCount=#7:doStars|
+   EventCount=#7:onStars|
    Width=650
    Height=179
    link(doStars,16559994:doBeginList,[(12,9)(12,69)])
   }
-  Add(Gl_BeginList,16559994,28,63)
+  Add(GL_BeginList,16559994,28,63)
   {
    Index=30
    link(onBiginList,13470138:doDisabled,[(70,69)(70,76)])
   }
-  Add(Gl_EndList,1171600,378,126)
+  Add(GL_EndList,1171600,378,126)
   {
    link(onEndList,5772154:onStars,[(532,132)(532,9)])
   }
@@ -129,11 +130,11 @@ Pos(0,0)
    Op2=50
    link(onResult,9845580:doVertex,[])
   }
-  Add(Gl_Begin,1112320,168,63)
+  Add(GL_Begin,1112320,168,63)
   {
    link(onBegin,14707504:doFor,[])
   }
-  Add(Gl_End,6095764,280,126)
+  Add(GL_End,6095764,280,126)
   {
    link(onEnd,15093483:doEnabled,[])
   }
@@ -176,11 +177,10 @@ END_SDK
 Add(MultiElement,10714674,182,119)
 {
  link(onEvent1,10915253:doCallList,[])
- link(Data1,15261923:MouseX,[(188,103)(27,103)])
- link(Data2,15261923:MouseY,[(195,97)(34,97)])
+ link(Data1,15261923:MouseX,[(188,103)(34,103)])
+ link(Data2,15261923:MouseY,[(195,97)(41,97)])
 }
 BEGIN_SDK
-Pos(0,0)
   Add(EditMulti,4359962,3,3)
   {
    EventCount=1
@@ -217,22 +217,22 @@ Add(GL_Sphere,919344,581,119)
  Stacks=30
  link(onDraw,8308293:doColor,[])
 }
-Add(Gl_Translate,12106961,441,119)
+Add(GL_Translate,12106961,441,119)
 {
  Y=1
  link(onTranslate,13275828:doDraw,[])
 }
-Add(Gl_Translate,12862713,539,119)
+Add(GL_Translate,12862713,539,119)
 {
  Y=-2
  link(onTranslate,919344:doDraw,[])
 }
-Add(Gl_Begin,10349015,763,119)
+Add(GL_Begin,10349015,763,119)
 {
  BlockType=3
  link(onBegin,1956626:doFor,[])
 }
-Add(Gl_End,6513702,854,182)
+Add(GL_End,6513702,854,182)
 {
 }
 Add(For,1956626,805,119)
@@ -336,7 +336,7 @@ Add(GL_Rotate,7003154,329,119)
 }
 Add(InfoTip,7166267,189,21)
 {
- Info='Искровой разряд'
+ Info=#15:Искровой разряд|
  Font=[MS Sans Serif,18,1,0,1]
  Frame=1
  Transparent=1

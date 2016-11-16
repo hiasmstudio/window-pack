@@ -1,5 +1,6 @@
 *Проекция 4х мерного куба в 3D#13#10_____________#13#10Автор: Леонид#13#10E-mail:
 Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,15261923,266,161)
 {
  Left=20
@@ -84,7 +85,7 @@ Add(GL_Rotate,8079493,581,126)
  link(onRotate,10036663:doDraw,[])
  link(Angle,16172552:Count,[(587,91)(349,91)])
 }
-Add(Gl_Axis,10036663,630,126)
+Add(GL_Axis,10036663,630,126)
 {
  XColor=32768
  TitleScale=0.5
@@ -147,7 +148,7 @@ Add(GL_Vertex3D,1756498,819,462)
  Z=0.5
  link(onVertex,8924870:doVertex,[])
 }
-Add(Gl_Begin,12096318,770,462)
+Add(GL_Begin,12096318,770,462)
 {
  BlockType=2
  link(onBegin,1756498:doVertex,[])
@@ -166,7 +167,7 @@ Add(GL_Vertex3D,9921008,945,462)
  Z=0.5
  link(onVertex,16578062:doVertex,[])
 }
-Add(Gl_End,1940102,1575,462)
+Add(GL_End,1940102,1575,462)
 {
 }
 Add(GL_PrimSizes,15429184,728,462)

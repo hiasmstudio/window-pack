@@ -1,5 +1,6 @@
 *Автор: MAV#13#10Зеркало
 Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,15261923,42,77)
 {
  Left=20
@@ -46,7 +47,7 @@ Add(Hub,16299401,91,112)
  link(onEvent2,3213527:doWork2,[])
  link(onEvent3,9506849:doTimer,[(135,132)(135,164)(30,164)(30,195)])
 }
-Add(HubEx,3213527,175,112)
+Add(HubEx,3213527,175,119)
 {
  link(onEvent,12986311:doViewPort,[])
 }
@@ -184,7 +185,7 @@ Add(GL_StencilFunc,2156549,595,315)
  Ref=1
  link(onStencilFunc,4082630:doDraw,[(635,321)(635,364)(242,364)(242,384)])
 }
-Add(Gl_Translate,16460065,399,378)
+Add(GL_Translate,16460065,399,378)
 {
  Z=0.2
  link(onTranslate,8474916:doDraw,[])
@@ -201,7 +202,6 @@ Add(GL_GTools,16348534,497,378)
 Add(GL_Main,12986311,217,112)
 {
  Color=32896
- StencilBits=1
  link(onInit,16663485:doEnabled,[])
  link(Handle,10677880:Var1,[])
 }

@@ -1,6 +1,6 @@
 *Кубик Рубика#13#10_____________#13#10Автор: Леонид#13#10E-mail: alina3@com2com.ru
 Make(delphi)
-ver(4.02 build 179)
+ver(4.05 build 186)
 Add(MainForm,11996042,203,182)
 {
  Left=20
@@ -110,7 +110,7 @@ BEGIN_SDK
    Flag=2
    link(onEvent,4378486:doEnabled,[])
   }
-  Add(HubEx,14551396,126,42)
+  Add(HubEx,14551396,126,49)
   {
    link(onEvent,12986311:doViewPort,[])
   }
@@ -176,7 +176,7 @@ BEGIN_SDK
   {
    Strings=#87:0;0;0;0.5;0.5;0.5;0.005;0;0;-0.005;0.005;0;0;-0.005;0.005;0;0;-0.005;255;65535;16776960|90:0;0;0;0.5;0.5;-0.5;0;0;-0.005;0;0.005;0.005;0.005;-0.005;0;-0.005;0;0;16776960;65535;65280|88:0;0;0;0.5;-0.5;0.5;0.005;0;0;-0.005;-0.005;0;0;0.005;0.005;0;0;-0.005;255;32768;16776960|91:0;0;0;0.5;-0.5;-0.5;0.005;0;0;-0.005;-0.005;0;0;0.005;-0.005;0;0;0.005;65280;32768;16776960|88:0;0;0;-0.5;0.5;0.5;-0.005;0;0;0.005;0.005;0;0;-0.005;0.005;0;0;-0.005;255;65535;16711680|91:0;0;0;-0.5;0.5;-0.5;-0.005;0;0;0.005;0.005;0;0;-0.005;-0.005;0;0;0.005;65280;65535;16711680|89:0;0;0;-0.5;-0.5;0.5;-0.005;0;0;0.005;-0.005;0;0;0.005;0.005;0;0;-0.005;255;32768;16711680|92:0;0;0;-0.5;-0.5;-0.5;-0.005;0;0;0.005;-0.005;0;0;0.005;-0.005;0;0;0.005;65280;32768;16711680|69:0;0;0;0;0.5;0.5;0;0;0;0;0.005;0;0;-0.005;0.005;0;0;-0.005;255;65535;0|72:0;0;0;0;0.5;-0.5;0;0;0;0;0.005;0;0;-0.005;-0.005;0;0;0.005;65280;65535;0|70:0;0;0;0;-0.5;0.5;0;0;0;0;-0.005;0;0;0.005;0.005;0;0;-0.005;255;32768;0|73:0;0;0;0;-0.5;-0.5;0;0;0;0;-0.005;0;0;0.005;-0.005;0;0;0.005;65280;32768;0|72:0;0;0;0.5;0;0.5;0.005;0;0;-0.005;0;0;0;0;0.005;0;0;-0.005;255;0;16776960|75:0;0;0;0.5;0;-0.5;0.005;0;0;-0.005;0;0;0;0;-0.005;0;0;0.005;65280;0;16776960|73:0;0;0;-0.5;0;0.5;-0.005;0;0;0.005;0;0;0;0;0.005;0;0;-0.005;255;0;16711680|76:0;0;0;-0.5;0;-0.5;-0.005;0;0;0.005;0;0;0;0;-0.005;0;0;0.005;65280;0;16711680|75:0;0;0;-0.5;0.5;0;-0.005;0;0;0.005;0.005;0;0;-0.005;0;0;0;0;0;65535;16711680|74:0;0;0;0.5;0.5;0;0.005;0;0;-0.005;0.005;0;0;-0.005;0;0;0;0;0;65535;16776960|76:0;0;0;-0.5;-0.5;0;-0.005;0;0;0.005;-0.005;0;0;0.005;0;0;0;0;0;32768;16711680|75:0;0;0;0.5;-0.5;0;0.005;0;0;-0.005;-0.005;0;0;0.005;0;0;0;0;0;32768;16776960|54:0;0;0;0;0;0.5;0;0;0;0;0;0;0;0;0.005;0;0;-0.005;255;0;0|57:0;0;0;0;0;-0.5;0;0;0;0;0;0;0;0;-0.005;0;0;0.005;65280;0;0|56:0;0;0;0;0.5;0;0;0;0;0;0.005;0;0;-0.005;0;0;0;0;0;65535;0|57:0;0;0;0;-0.5;0;0;0;0;0;-0.005;0;0;0.005;0;0;0;0;0;32768;0|59:0;0;0;0.5;0;0;0.005;0;0;-0.005;0;0;0;0;0;0;0;0;0;0;16776960|60:0;0;0;-0.5;0;0;-0.005;0;0;0.005;0;0;0;0;0;0;0;0;0;0;16711680|
   }
-  Add(Gl_Translate,7615240,574,749)
+  Add(GL_Translate,7615240,574,749)
   {
    link(onTranslate,12064289:doRotate,[])
    link(X,12962575:Var2,[])
@@ -200,14 +200,14 @@ BEGIN_SDK
    link(onRotate,7554552:doTranslate,[])
    link(Angle,3344633:Var2,[])
   }
-  Add(Gl_Translate,7554552,1323,749)
+  Add(GL_Translate,7554552,1323,749)
   {
    link(onTranslate,9734236:doString,[])
    link(X,12110481:Result,[(1329,434)(1070,434)])
    link(Y,7901653:Result,[(1336,443)(1210,443)])
    link(Z,9920870:Result,[(1343,440)(1350,440)])
   }
-  Add(Gl_Translate,16339820,889,749)
+  Add(GL_Translate,16339820,889,749)
   {
    link(onTranslate,2729471:doColor,[])
    link(X,6670226:Var2,[])
@@ -219,7 +219,7 @@ BEGIN_SDK
    Size=0.49
    link(onDraw,13406245:doTranslate,[])
   }
-  Add(Gl_Translate,13406245,1015,749)
+  Add(GL_Translate,13406245,1015,749)
   {
    link(onTranslate,9328990:doColor,[])
    link(X,9209062:Var2,[])
@@ -249,14 +249,14 @@ BEGIN_SDK
    link(onColor,959044:doDraw,[])
    link(Color,1769945:Var2,[])
   }
-  Add(Gl_Translate,1100704,763,749)
+  Add(GL_Translate,1100704,763,749)
   {
    link(onTranslate,10081734:doColor,[])
    link(X,12570305:Var2,[])
    link(Y,2648177:Var2,[])
    link(Z,8308680:Var2,[])
   }
-  Add(Gl_Translate,330811,1141,749)
+  Add(GL_Translate,330811,1141,749)
   {
    link(onTranslate,6529481:doRotate,[])
    link(X,3736992:Var2,[])
@@ -401,7 +401,7 @@ BEGIN_SDK
    Step=9
    link(onNext,6113759:doCompare,[])
   }
-  Add(HubEx,4625376,357,77)
+  Add(HubEx,4625376,357,84)
   {
    link(onEvent,11646856:doNext,[])
   }
@@ -457,51 +457,51 @@ BEGIN_SDK
    link(onEvent1,13607915:doClear,[(55,223)(55,741)])
    link(onEvent2,7698197:doEnum,[])
   }
-  Add(GetDataEx,15042845,1190,728)
+  Add(GetDataEx,15042845,1197,732)
   {
    link(Data,11220213:Var2,[(1203,495)(1623,495)])
   }
-  Add(GetDataEx,15222076,1232,721)
+  Add(GetDataEx,15222076,1239,725)
   {
    link(Data,4109789:Var2,[(1245,501)(1532,501)])
   }
-  Add(GetDataEx,3344633,1274,714)
+  Add(GetDataEx,3344633,1281,718)
   {
    link(Data,12067212:Var2,[(1287,508)(1441,508)])
   }
-  Add(GetDataEx,15261536,581,707)
+  Add(GetDataEx,15261536,588,711)
   {
    link(Data,16771945:Var2,[(594,487)(1308,487)])
   }
-  Add(GetDataEx,4125156,574,700)
+  Add(GetDataEx,4125156,581,704)
   {
    link(Data,9642618:Var2,[(587,480)(1168,480)])
   }
-  Add(GetDataEx,12962575,567,693)
+  Add(GetDataEx,12962575,574,697)
   {
    link(Data,4303154:Var2,[(580,474)(1028,474)])
   }
-  Add(GetDataEx,8308680,770,672)
+  Add(GetDataEx,8308680,777,676)
   {
    link(Data,14456107:Var2,[(783,495)(937,495)])
   }
-  Add(GetDataEx,1769945,924,658)
+  Add(GetDataEx,1769945,931,662)
   {
    link(Data,929385:Value,[(937,501)(244,501)])
   }
-  Add(GetDataEx,2648177,763,679)
+  Add(GetDataEx,2648177,770,683)
   {
    link(Data,14271363:Var2,[(776,502)(888,502)])
   }
-  Add(GetDataEx,12570305,756,686)
+  Add(GetDataEx,12570305,763,690)
   {
    link(Data,9148891:Var2,[(769,512)(839,512)])
   }
-  Add(GetDataEx,3807475,1050,665)
+  Add(GetDataEx,3807475,1057,669)
   {
    link(Data,14444920:Value,[(1063,493)(286,493)])
   }
-  Add(GetDataEx,13930783,798,651)
+  Add(GetDataEx,13930783,805,655)
   {
    link(Data,8068880:Value,[(811,509)(195,509)])
   }
@@ -527,19 +527,19 @@ BEGIN_SDK
    Point(doClear)
    link(onResult,6713896:doAngleAdd,[(531,48)(531,132)(377,132)(377,552)])
   }
-  Add(GetDataEx,12067212,1428,273)
+  Add(GetDataEx,12067212,1435,277)
   {
    link(Data,9599028:Value,[])
   }
-  Add(HubEx,15082334,1148,245)
+  Add(HubEx,15082334,1148,252)
   {
    link(onEvent,8558354:doValue,[])
   }
-  Add(HubEx,1364708,1288,238)
+  Add(HubEx,1364708,1288,245)
   {
    link(onEvent,6247873:doValue,[])
   }
-  Add(HubEx,15988594,1421,231)
+  Add(HubEx,15988594,1421,238)
   {
    link(onEvent,9599028:doValue,[])
   }
@@ -662,20 +662,20 @@ BEGIN_SDK
     {
      link(onData,12978752:doOperation,[])
     }
-    Add(GetDataEx,5782489,273,70)
+    Add(GetDataEx,5782489,280,74)
     {
      Angle=3
      link(Data,2471607:Value,[(195,79)])
     }
-    Add(GetDataEx,13450295,294,105)
+    Add(GetDataEx,13450295,301,109)
     {
      link(Data,7078948:Result,[(307,106)(356,106)])
     }
-    Add(GetDataEx,12676998,238,126)
+    Add(GetDataEx,12676998,245,130)
     {
      link(Data,5339503:Var3,[(251,100)])
     }
-    Add(GetDataEx,2211509,245,119)
+    Add(GetDataEx,2211509,252,123)
     {
      link(Data,6866399:Var3,[(258,93)])
     }
@@ -686,11 +686,11 @@ BEGIN_SDK
      link(onTrue,9019646:doWork3,[(186,195)])
      link(Op1,11596317:Var1,[(146,128)])
     }
-    Add(GetDataEx,11596317,140,119)
+    Add(GetDataEx,11596317,147,123)
     {
      link(Data,12934306:OldX,[(153,72)(146,72)])
     }
-    Add(HubEx,9019646,182,133)
+    Add(HubEx,9019646,182,140)
     {
      link(onEvent,12580310:doEvent1,[])
     }
@@ -743,7 +743,7 @@ BEGIN_SDK
      link(onEventData,12786211:doWork3,[(459,321)])
      link(Data,11583349:Result,[])
     }
-    Add(GetDataEx,15137392,245,238)
+    Add(GetDataEx,15137392,252,242)
     {
      link(Data,11596317:Var3,[(227,242)(227,128)])
     }
@@ -754,7 +754,7 @@ BEGIN_SDK
      link(onTrue,9296519:doWork3,[(186,314)])
      link(Op1,9755504:Var2,[])
     }
-    Add(HubEx,9296519,182,252)
+    Add(HubEx,9296519,182,259)
     {
      link(onEvent,12550200:doEvent1,[])
     }
@@ -814,7 +814,7 @@ BEGIN_SDK
      link(onTrue,10124390:doWork3,[(186,433)])
      link(Op1,5182783:Var2,[])
     }
-    Add(HubEx,10124390,182,371)
+    Add(HubEx,10124390,182,378)
     {
      link(onEvent,16109034:doEvent1,[])
     }
@@ -835,62 +835,62 @@ BEGIN_SDK
      link(onEventData,1394206:doCase,[(159,55)(159,115)(65,115)(65,139)])
      link(Data,12934306:Rotat_If,[(125,43)(55,43)])
     }
-    Add(GetDataEx,9703410,294,343)
+    Add(GetDataEx,9703410,301,347)
     {
      link(Data,4867658:Var2,[])
     }
-    Add(GetDataEx,4867658,294,224)
+    Add(GetDataEx,4867658,301,228)
     {
      link(Data,13450295:Var2,[])
     }
-    Add(GetDataEx,4930498,287,112)
+    Add(GetDataEx,4930498,294,116)
     {
      link(Data,12978752:Result,[(300,85)(251,85)])
     }
-    Add(GetDataEx,14184652,287,350)
+    Add(GetDataEx,14184652,294,354)
     {
      link(Data,4958850:Var2,[])
     }
-    Add(GetDataEx,4958850,287,231)
+    Add(GetDataEx,4958850,294,235)
     {
      link(Data,4930498:Var2,[])
     }
-    Add(GetDataEx,2477476,399,119)
+    Add(GetDataEx,2477476,406,123)
     {
      link(Data,5782489:Var3,[(412,79)])
     }
-    Add(GetDataEx,6216243,399,238)
+    Add(GetDataEx,6216243,406,242)
     {
      link(Data,2477476:Var2,[])
     }
-    Add(GetDataEx,5339503,126,91)
+    Add(GetDataEx,5339503,133,95)
     {
      Angle=3
      link(Data,12934306:OldY,[(134,60)(153,60)])
     }
-    Add(GetDataEx,9755504,126,238)
+    Add(GetDataEx,9755504,133,242)
     {
      link(Data,5339503:Var2,[])
     }
-    Add(GetDataEx,6866399,119,84)
+    Add(GetDataEx,6866399,126,88)
     {
      Angle=3
      link(Data,12934306:OldZ,[(127,57)(160,57)])
     }
-    Add(GetDataEx,5182783,119,350)
+    Add(GetDataEx,5182783,126,354)
     {
      link(Data,6866399:Var2,[])
     }
-    Add(HubEx,12786211,455,210)
+    Add(HubEx,12786211,455,217)
     {
      link(onEvent,12934306:onNewZ,[(467,223)(467,62)])
     }
-    Add(HubEx,13605544,399,210)
+    Add(HubEx,13605544,399,217)
     {
      Angle=3
      link(onEvent,12934306:onNewX,[(403,48)])
     }
-    Add(HubEx,4355493,392,189)
+    Add(HubEx,4355493,392,196)
     {
      Angle=3
      link(onEvent,12934306:onNewY,[(396,55)])
@@ -918,16 +918,16 @@ BEGIN_SDK
      Value=Integer(2)
      link(onTrue,1765195:doCompare,[])
     }
-    Add(GetDataEx,16672984,238,245)
+    Add(GetDataEx,16672984,245,249)
     {
      link(Data,2211509:Var1,[(236,249)(236,128)])
     }
-    Add(GetDataEx,13437308,252,357)
+    Add(GetDataEx,13437308,259,361)
     {
      Angle=3
      link(Data,12676998:Var1,[(220,366)(220,135)])
     }
-    Add(GetDataEx,16337480,245,364)
+    Add(GetDataEx,16337480,252,368)
     {
      Angle=3
      link(Data,15137392:Var1,[(230,373)(230,247)])
@@ -953,15 +953,15 @@ BEGIN_SDK
      Op2=Integer(90)
      link(onFalse,9715300:doEvent1,[])
     }
-    Add(HubEx,11798099,728,14)
+    Add(HubEx,11798099,728,21)
     {
      link(onEvent,12934306:onNewAngleX,[])
     }
-    Add(HubEx,15995307,735,21)
+    Add(HubEx,15995307,735,28)
     {
      link(onEvent,12934306:onNewAngleY,[])
     }
-    Add(HubEx,3824410,742,28)
+    Add(HubEx,3824410,742,35)
     {
      link(onEvent,12934306:onNewAngleZ,[])
     }
@@ -1029,7 +1029,7 @@ BEGIN_SDK
      link(onEvent2,13451029:doWork1,[(670,167)(670,125)])
      link(onEvent3,1668266:doWork2,[])
     }
-    Add(HubEx,1668266,665,161)
+    Add(HubEx,1668266,665,168)
     {
      link(onEvent,3189635:doData,[(684,174)(684,153)])
     }
@@ -1043,11 +1043,11 @@ BEGIN_SDK
      Data=String(%2;-%1;%4;-%3;%6;-%5;%8;-%7)
      link(onEventData,9223261:doWork3,[(564,111)])
     }
-    Add(HubEx,9223261,560,84)
+    Add(HubEx,9223261,560,91)
     {
      link(onEvent,1184776:doMask,[])
     }
-    Add(HubEx,13451029,567,112)
+    Add(HubEx,13451029,567,119)
     {
      Angle=3
      link(onEvent,1184776:doString,[(571,90)])
@@ -1122,7 +1122,7 @@ BEGIN_SDK
      link(onEvent2,11476159:doWork1,[(670,286)(670,244)])
      link(onEvent3,15302509:doWork2,[])
     }
-    Add(HubEx,15302509,665,280)
+    Add(HubEx,15302509,665,287)
     {
      link(onEvent,2659865:doData,[(680,293)(680,272)])
     }
@@ -1136,44 +1136,44 @@ BEGIN_SDK
      Data=String(%2;-%1;%4;-%3;%6;-%5;%8;-%7)
      link(onEventData,270487:doWork3,[(564,230)])
     }
-    Add(HubEx,270487,560,203)
+    Add(HubEx,270487,560,210)
     {
      link(onEvent,13907117:doMask,[])
     }
-    Add(HubEx,11476159,574,231)
+    Add(HubEx,11476159,574,238)
     {
      Angle=3
      link(onEvent,13907117:doString,[(578,209)])
     }
-    Add(GetDataEx,11876668,581,63)
+    Add(GetDataEx,11876668,588,67)
     {
      link(Data,12934306:OldShiftZColor1,[(594,44)(76,44)])
     }
-    Add(GetDataEx,7898676,595,63)
+    Add(GetDataEx,7898676,602,67)
     {
      link(Data,12934306:OldShiftZColor2,[(608,44)(97,44)])
     }
-    Add(GetDataEx,14471069,609,63)
+    Add(GetDataEx,14471069,616,67)
     {
      link(Data,12934306:OldShiftZColor3,[(622,44)(118,44)])
     }
-    Add(GetDataEx,12679569,623,63)
+    Add(GetDataEx,12679569,630,67)
     {
      link(Data,12934306:OldShiftZ,[(636,44)(139,44)])
     }
-    Add(HubEx,6455753,798,84)
+    Add(HubEx,6455753,798,91)
     {
      link(onEvent,12934306:onNewShiftZColor1,[(844,97)(844,83)])
     }
-    Add(HubEx,789285,805,98)
+    Add(HubEx,789285,805,105)
     {
      link(onEvent,12934306:onNewShiftZColor2,[(844,111)(844,104)])
     }
-    Add(HubEx,11840324,812,112)
+    Add(HubEx,11840324,812,119)
     {
      link(onEvent,12934306:onNewShiftZColor3,[])
     }
-    Add(HubEx,14081867,819,126)
+    Add(HubEx,14081867,819,133)
     {
      link(onEvent,12934306:onNewShiftZ,[(845,139)(845,146)])
     }
@@ -1247,7 +1247,7 @@ BEGIN_SDK
      link(onEvent2,6712956:doWork1,[(670,405)(670,363)])
      link(onEvent3,5709924:doWork2,[])
     }
-    Add(HubEx,5709924,665,399)
+    Add(HubEx,5709924,665,406)
     {
      link(onEvent,1913789:doData,[(680,412)(680,391)])
     }
@@ -1261,109 +1261,109 @@ BEGIN_SDK
      Data=String(%2;-%1;%4;-%3;%6;-%5;%8;-%7)
      link(onEventData,1046915:doWork3,[(564,349)])
     }
-    Add(HubEx,1046915,560,322)
+    Add(HubEx,1046915,560,329)
     {
      link(onEvent,4952197:doMask,[])
     }
-    Add(HubEx,6712956,574,350)
+    Add(HubEx,6712956,574,357)
     {
      Angle=3
      link(onEvent,4952197:doString,[(578,328)])
     }
-    Add(GetDataEx,10140559,588,182)
+    Add(GetDataEx,10140559,595,186)
     {
      link(Data,12934306:OldShiftXColor1,[(601,104)(62,104)])
     }
-    Add(GetDataEx,16720371,602,182)
+    Add(GetDataEx,16720371,609,186)
     {
      link(Data,12934306:OldShiftXColor2,[(615,104)(83,104)])
     }
-    Add(GetDataEx,371449,616,182)
+    Add(GetDataEx,371449,623,186)
     {
      link(Data,12934306:OldShiftXColor3,[(629,104)(104,104)])
     }
-    Add(GetDataEx,13063548,630,182)
+    Add(GetDataEx,13063548,637,186)
     {
      link(Data,12934306:OldShiftX,[(643,104)(125,104)])
     }
-    Add(GetDataEx,13156694,574,56)
+    Add(GetDataEx,13156694,581,60)
     {
      link(Data,12934306:OldShiftYColor1,[(587,40)(69,40)])
     }
-    Add(GetDataEx,1741015,588,56)
+    Add(GetDataEx,1741015,595,60)
     {
      link(Data,12934306:OldShiftYColor2,[(601,40)(90,40)])
     }
-    Add(GetDataEx,229249,602,56)
+    Add(GetDataEx,229249,609,60)
     {
      link(Data,12934306:OldShiftYColor3,[(615,37)(111,37)])
     }
-    Add(GetDataEx,5643910,616,56)
+    Add(GetDataEx,5643910,623,60)
     {
      link(Data,12934306:OldShiftY,[(629,37)(132,37)])
     }
-    Add(HubEx,2217507,798,203)
+    Add(HubEx,2217507,798,210)
     {
      link(onEvent,12934306:onNewShiftXColor1,[(843,216)(843,69)])
     }
-    Add(HubEx,14256840,805,217)
+    Add(HubEx,14256840,805,224)
     {
      link(onEvent,12934306:onNewShiftXColor2,[(845,230)(845,90)])
     }
-    Add(HubEx,8780517,812,231)
+    Add(HubEx,8780517,812,238)
     {
      link(onEvent,12934306:onNewShiftXColor3,[(845,244)(845,111)])
     }
-    Add(HubEx,8865773,819,245)
+    Add(HubEx,8865773,819,252)
     {
      link(onEvent,12934306:onNewShiftX,[(848,258)(848,132)])
     }
-    Add(HubEx,599894,826,77)
+    Add(HubEx,599894,826,84)
     {
      link(onEvent,12934306:onNewShiftYColor1,[(840,90)(840,76)])
     }
-    Add(HubEx,11955128,826,91)
+    Add(HubEx,11955128,826,98)
     {
      link(onEvent,12934306:onNewShiftYColor2,[(844,104)(844,97)])
     }
-    Add(HubEx,11769414,826,105)
+    Add(HubEx,11769414,826,112)
     {
      link(onEvent,12934306:onNewShiftYColor3,[])
     }
-    Add(HubEx,7348801,826,119)
+    Add(HubEx,7348801,826,126)
     {
      link(onEvent,12934306:onNewShiftY,[(844,132)(844,139)])
     }
   END_SDK
-  Add(GetDataEx,4109789,1519,266)
+  Add(GetDataEx,4109789,1526,270)
   {
    link(Data,9359028:Value,[])
   }
-  Add(GetDataEx,11220213,1610,357)
+  Add(GetDataEx,11220213,1617,361)
   {
    link(Data,4364497:Value,[])
   }
-  Add(HubEx,1501039,1512,224)
+  Add(HubEx,1501039,1512,231)
   {
    link(onEvent,9359028:doValue,[])
   }
-  Add(HubEx,3245798,1603,217)
+  Add(HubEx,3245798,1603,224)
   {
    link(onEvent,4364497:doValue,[])
   }
-  Add(HubEx,7185308,1008,252)
+  Add(HubEx,7185308,1008,259)
   {
    link(onEvent,11894822:doValue,[])
   }
-  Add(GetDataEx,4303154,1015,294)
+  Add(GetDataEx,4303154,1022,298)
   {
    link(Data,11894822:Value,[])
   }
-  Add(GetDataEx,9642618,1155,287)
+  Add(GetDataEx,9642618,1162,291)
   {
    link(Data,8558354:Value,[])
   }
-  Add(GetDataEx,16771945,1295,280)
+  Add(GetDataEx,16771945,1302,284)
   {
    link(Data,6247873:Value,[])
   }
@@ -1424,135 +1424,135 @@ BEGIN_SDK
   Add(Memory,1919961,343,343)
   {
   }
-  Add(GetDataEx,3736992,1134,644)
+  Add(GetDataEx,3736992,1141,648)
   {
    link(Data,5881257:Var2,[(1147,540)(349,540)])
   }
-  Add(GetDataEx,14045259,1141,637)
+  Add(GetDataEx,14045259,1148,641)
   {
    link(Data,5054028:Var2,[(1154,533)(398,533)])
   }
-  Add(GetDataEx,675527,1148,630)
+  Add(GetDataEx,675527,1155,634)
   {
    link(Data,14529004:Var2,[(1161,526)(447,526)])
   }
-  Add(GetDataEx,9209062,1008,623)
+  Add(GetDataEx,9209062,1015,627)
   {
    link(Data,13618155:Var2,[(1021,491)(510,491)])
   }
-  Add(GetDataEx,16750597,1015,616)
+  Add(GetDataEx,16750597,1022,620)
   {
    link(Data,812441:Var2,[(1028,495)(559,495)])
   }
-  Add(GetDataEx,3874356,1022,609)
+  Add(GetDataEx,3874356,1029,613)
   {
    link(Data,15804035:Var2,[(1035,488)(608,488)])
   }
-  Add(GetDataEx,2359197,896,588)
+  Add(GetDataEx,2359197,903,592)
   {
    link(Data,14892012:Var2,[(909,467)(769,467)])
   }
-  Add(GetDataEx,4017085,889,595)
+  Add(GetDataEx,4017085,896,599)
   {
    link(Data,9335642:Var2,[(902,474)(720,474)])
   }
-  Add(GetDataEx,6670226,882,602)
+  Add(GetDataEx,6670226,889,606)
   {
    link(Data,3032167:Var2,[(895,481)(671,481)])
   }
-  Add(GetDataEx,9148891,826,315)
+  Add(GetDataEx,9148891,833,319)
   {
    link(Data,3010614:Value,[])
   }
-  Add(GetDataEx,14271363,875,308)
+  Add(GetDataEx,14271363,882,312)
   {
    link(Data,5463485:Value,[])
   }
-  Add(GetDataEx,14456107,924,301)
+  Add(GetDataEx,14456107,931,305)
   {
    link(Data,7628247:Value,[])
   }
-  Add(GetDataEx,3032167,658,336)
+  Add(GetDataEx,3032167,665,340)
   {
    link(Data,6101567:Value,[])
   }
-  Add(GetDataEx,9335642,707,329)
+  Add(GetDataEx,9335642,714,333)
   {
    link(Data,4651504:Value,[])
   }
-  Add(GetDataEx,14892012,756,322)
+  Add(GetDataEx,14892012,763,326)
   {
    link(Data,15808283:Value,[])
   }
-  Add(GetDataEx,13618155,497,357)
+  Add(GetDataEx,13618155,504,361)
   {
    link(Data,6554260:Value,[])
   }
-  Add(GetDataEx,812441,546,350)
+  Add(GetDataEx,812441,553,354)
   {
    link(Data,8292671:Value,[])
   }
-  Add(GetDataEx,15804035,595,343)
+  Add(GetDataEx,15804035,602,347)
   {
    link(Data,5564031:Value,[])
   }
-  Add(GetDataEx,5881257,336,378)
+  Add(GetDataEx,5881257,343,382)
   {
    link(Data,1919961:Value,[])
   }
-  Add(GetDataEx,5054028,385,371)
+  Add(GetDataEx,5054028,392,375)
   {
    link(Data,10516321:Value,[])
   }
-  Add(GetDataEx,14529004,434,364)
+  Add(GetDataEx,14529004,441,368)
   {
    link(Data,14822179:Value,[])
   }
-  Add(HubEx,3329036,917,259)
+  Add(HubEx,3329036,917,266)
   {
    link(onEvent,7628247:doValue,[])
   }
-  Add(HubEx,7725295,868,266)
+  Add(HubEx,7725295,868,273)
   {
    link(onEvent,5463485:doValue,[])
   }
-  Add(HubEx,2602144,749,280)
+  Add(HubEx,2602144,749,287)
   {
    link(onEvent,15808283:doValue,[])
   }
-  Add(HubEx,16514924,700,287)
+  Add(HubEx,16514924,700,294)
   {
    link(onEvent,4651504:doValue,[])
   }
-  Add(HubEx,5541640,588,301)
+  Add(HubEx,5541640,588,308)
   {
    link(onEvent,5564031:doValue,[])
   }
-  Add(HubEx,6778186,539,308)
+  Add(HubEx,6778186,539,315)
   {
    link(onEvent,8292671:doValue,[])
   }
-  Add(HubEx,7923097,427,322)
+  Add(HubEx,7923097,427,329)
   {
    link(onEvent,14822179:doValue,[])
   }
-  Add(HubEx,7730230,378,329)
+  Add(HubEx,7730230,378,336)
   {
    link(onEvent,10516321:doValue,[])
   }
-  Add(HubEx,4089858,819,273)
+  Add(HubEx,4089858,819,280)
   {
    link(onEvent,3010614:doValue,[])
   }
-  Add(HubEx,12483126,651,294)
+  Add(HubEx,12483126,651,301)
   {
    link(onEvent,6101567:doValue,[])
   }
-  Add(HubEx,11495026,490,315)
+  Add(HubEx,11495026,490,322)
   {
    link(onEvent,6554260:doValue,[])
   }
-  Add(HubEx,1419679,329,336)
+  Add(HubEx,1419679,329,343)
   {
    link(onEvent,1919961:doValue,[])
   }
@@ -1571,7 +1571,7 @@ BEGIN_SDK
    link(onStrCat,818667:doWork2,[])
    link(Str1,12913857:Var2,[(62,76)(125,76)])
   }
-  Add(HubEx,818667,105,84)
+  Add(HubEx,818667,105,91)
   {
    Angle=1
    link(onEvent,13352129:doLoad,[(109,137)(37,137)(37,181)])
@@ -1582,7 +1582,7 @@ BEGIN_SDK
    link(onStrCat,13352129:doSave,[(190,83)(190,127)(31,127)(31,188)])
    link(Str1,12913857:Var3,[(153,65)])
   }
-  Add(GetDataEx,12913857,112,56)
+  Add(GetDataEx,12913857,119,60)
   {
    link(Data,14137040:CurrentDir,[])
   }
@@ -1633,7 +1633,7 @@ BEGIN_SDK
   {
    Default=Integer(0)
   }
-  Add(GetDataEx,3579096,280,147)
+  Add(GetDataEx,3579096,287,151)
   {
    link(Data,15113616:Result,[])
   }
@@ -1679,7 +1679,7 @@ BEGIN_SDK
   {
    Default=Integer(0)
   }
-  Add(GetDataEx,8051022,154,126)
+  Add(GetDataEx,8051022,161,130)
   {
    link(Data,7096406:Value,[])
   }
@@ -1707,11 +1707,11 @@ BEGIN_SDK
    link(onTrue,9856487:doWork3,[(256,251)])
    link(Op1,14339272:Var1,[(174,226)])
   }
-  Add(GetDataEx,14339272,280,217)
+  Add(GetDataEx,14339272,287,221)
   {
    link(Data,8500406:Result,[])
   }
-  Add(HubEx,9856487,252,161)
+  Add(HubEx,9856487,252,168)
   {
    link(onEvent,15113616:doCalc,[(267,174)(267,118)])
   }
@@ -1720,7 +1720,7 @@ BEGIN_SDK
    link(onEvent1,13124761:doClear,[(369,34)(369,76)])
    link(onEvent2,14415022:doClear,[(275,41)(275,76)])
   }
-  Add(GetDataEx,15943543,371,154)
+  Add(GetDataEx,15943543,378,158)
   {
    link(Data,3146457:Result,[])
   }
@@ -1742,7 +1742,7 @@ BEGIN_SDK
    link(X1,13124761:Value,[])
    link(X2,5019789:Var3,[(391,100)(421,100)(421,233)])
   }
-  Add(GetDataEx,5019789,371,224)
+  Add(GetDataEx,5019789,378,228)
   {
    link(Data,12569932:Result,[])
   }
@@ -1759,7 +1759,7 @@ BEGIN_SDK
    link(onEvent1,9856487:doWork2,[])
    link(onEvent2,2741394:doWork2,[])
   }
-  Add(HubEx,2741394,266,168)
+  Add(HubEx,2741394,266,175)
   {
    link(onEvent,3146457:doCalc,[(349,181)(349,118)])
   }
@@ -2017,37 +2017,37 @@ BEGIN_SDK
    link(onEvent1,73933:doColor,[(402,314)(402,363)])
    link(onEvent2,2072307:doColor,[])
   }
-  Add(HubEx,3441608,693,287)
+  Add(HubEx,3441608,693,294)
   {
    Angle=2
    link(onEvent,9344212:doWork2,[])
   }
-  Add(HubEx,9344212,532,287)
+  Add(HubEx,9344212,532,294)
   {
    Angle=2
    link(onEvent,15120966:doWork2,[])
   }
-  Add(HubEx,15120966,476,287)
+  Add(HubEx,15120966,476,294)
   {
    Angle=2
    link(onEvent,8869509:doWork2,[])
   }
-  Add(HubEx,8869509,455,287)
+  Add(HubEx,8869509,455,294)
   {
    Angle=2
    link(onEvent,5757138:doWork2,[])
   }
-  Add(HubEx,5757138,392,287)
+  Add(HubEx,5757138,392,294)
   {
    Angle=2
    link(onEvent,13368760:doWork2,[])
   }
-  Add(HubEx,13368760,329,287)
+  Add(HubEx,13368760,329,294)
   {
    Angle=2
    link(onEvent,5238774:doEvent1,[(93,300)(93,307)])
   }
-  Add(HubEx,3163435,630,427)
+  Add(HubEx,3163435,630,434)
   {
    link(onEvent,3441608:doWork2,[(702,440)])
   }
@@ -2146,7 +2146,7 @@ BEGIN_SDK
    link(onEventData,143810:doWork3,[(592,321)])
    link(Data,11653986:Var1,[(496,310)])
   }
-  Add(GetDataEx,11653986,532,301)
+  Add(GetDataEx,11653986,539,305)
   {
    link(Data,870905:Left,[(545,189)(412,189)])
   }
@@ -2162,7 +2162,7 @@ BEGIN_SDK
    link(onEventData,143810:doWork1,[(592,209)])
    link(Data,156997:Var2,[])
   }
-  Add(GetDataEx,156997,546,175)
+  Add(GetDataEx,156997,553,179)
   {
    link(Data,9060969:Left,[])
   }
@@ -2178,7 +2178,7 @@ BEGIN_SDK
    link(onEventData,11405519:doWork2,[])
    link(Data,3341245:Var1,[(342,261)])
   }
-  Add(GetDataEx,3341245,357,252)
+  Add(GetDataEx,3341245,364,256)
   {
    link(Data,1393122:Left,[(370,165)(461,165)])
   }
@@ -2194,7 +2194,7 @@ BEGIN_SDK
    link(onEventData,13177896:doWork3,[(781,405)])
    link(Data,7071407:Var2,[])
   }
-  Add(GetDataEx,7071407,728,259)
+  Add(GetDataEx,7071407,735,263)
   {
    link(Data,369637:Left,[(741,179)(510,179)])
   }
@@ -2210,7 +2210,7 @@ BEGIN_SDK
    link(onEventData,687476:doWork1,[(610,475)(610,267)(613,267)])
    link(Data,11453063:Var2,[])
   }
-  Add(GetDataEx,11453063,567,427)
+  Add(GetDataEx,11453063,574,431)
   {
    link(Data,9060969:Right,[(580,253)(566,253)])
   }
@@ -2221,23 +2221,23 @@ BEGIN_SDK
    link(onResult,687476:doWork3,[(613,447)])
    link(Op2,11453063:Var1,[(552,436)])
   }
-  Add(HubEx,11405519,399,259)
+  Add(HubEx,11405519,399,266)
   {
    link(onEvent,4014519:doWork2,[])
   }
-  Add(HubEx,4014519,581,259)
+  Add(HubEx,4014519,581,266)
   {
    link(onEvent,143810:doWork2,[(590,272)(590,272)(588,272)(588,272)])
   }
-  Add(HubEx,687476,609,259)
+  Add(HubEx,687476,609,266)
   {
    link(onEvent,13177896:doWork2,[])
   }
-  Add(HubEx,13177896,777,259)
+  Add(HubEx,13177896,777,266)
   {
    link(onEvent,16655316:doWork3,[(893,272)])
   }
-  Add(HubEx,143810,588,259)
+  Add(HubEx,143810,588,266)
   {
    link(onEvent,687476:doWork2,[])
   }
@@ -2289,7 +2289,7 @@ BEGIN_SDK
    Data=Integer(33)
    link(onEventData,265176:doEvent1,[])
   }
-  Add(HubEx,3716454,826,21)
+  Add(HubEx,3716454,826,28)
   {
    link(onEvent,6281121:onEvent2,[(879,34)(879,20)])
   }
@@ -2398,11 +2398,11 @@ BEGIN_SDK
    Data=Integer(12)
    link(onEventData,3724387:doWork3,[(722,132)(722,164)(95,164)])
   }
-  Add(HubEx,3724387,91,70)
+  Add(HubEx,3724387,91,77)
   {
    link(onEvent,13534561:doGetString,[])
   }
-  Add(HubEx,16655316,889,105)
+  Add(HubEx,16655316,889,112)
   {
    Angle=3
    link(onEvent,6281121:onEvent1,[(893,13)])
@@ -2417,7 +2417,7 @@ BEGIN_SDK
    link(onEvent1,6923335:doReset,[(57,468)(57,447)])
    link(onEvent2,4741286:doWork3,[(116,475)])
   }
-  Add(HubEx,4741286,112,420)
+  Add(HubEx,4741286,112,427)
   {
    link(onEvent,3667011:doConvert,[])
   }
@@ -2466,7 +2466,7 @@ BEGIN_SDK
    link(onEvent1,16597756:onEvent1,[(228,55)(228,27)])
    link(onEvent2,2369897:doWork1,[(228,62)])
   }
-  Add(HubEx,2369897,224,56)
+  Add(HubEx,2369897,224,63)
   {
    link(onEvent,7547174:doData,[])
   }

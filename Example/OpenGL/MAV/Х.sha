@@ -1,6 +1,7 @@
 *Пример построения точечной модели в HiAsm по списку заданных координат#13#10___________#13#10Автор: MAV#13#10e-mail: andreimaw@yandex.ru
 Make(delphi)
-Add(MainForm,15261923,35,42)
+ver(4.05 build 186)
+Add(MainForm,15261923,35,35)
 {
  Left=20
  Top=105
@@ -11,8 +12,8 @@ Add(MainForm,15261923,35,42)
  Point(MouseY)
  Point(onResize)
  Point(Handle)
- link(onCreate,16299401:doEvent1,[(79,62)(79,153)])
- link(onResize,16131419:doWork1,[(165,69)])
+ link(onCreate,16299401:doEvent1,[(79,55)(79,153)])
+ link(onResize,16131419:doWork1,[(165,62)])
 }
 Add(GL_Main,12986311,189,147)
 {
@@ -97,7 +98,7 @@ Add(GL_Perspective,3410847,252,196)
 {
  Fovy=25
 }
-Add(Gl_Begin,8902146,448,147)
+Add(GL_Begin,8902146,448,147)
 {
  link(onBegin,12642073:doEnum,[])
 }
@@ -107,21 +108,21 @@ Add(GL_Vertex3D,14661812,693,189)
  link(Y,162250:Result,[(706,177)(762,177)])
  link(Z,7166422:Result,[(713,177)(825,177)])
 }
-Add(Gl_End,5982301,504,196)
+Add(GL_End,5982301,504,196)
 {
  link(onEnd,15886906:doEndList,[])
 }
-Add(HubEx,16131419,161,147)
+Add(HubEx,16131419,161,154)
 {
  link(onEvent,12986311:doViewPort,[])
 }
-Add(Gl_BeginList,4429253,399,147)
+Add(GL_BeginList,4429253,399,147)
 {
  Index=1
  Mode=1
  link(onBiginList,8902146:doBegin,[])
 }
-Add(Gl_EndList,15886906,567,196)
+Add(GL_EndList,15886906,567,196)
 {
 }
 Add(GL_CallList,10231433,350,98)
@@ -185,7 +186,7 @@ Add(GL_Color,13731034,637,189)
  Color=65280
  link(onColor,14661812:doVertex,[])
 }
-Add(Gl_Translate,701947,301,98)
+Add(GL_Translate,701947,301,98)
 {
  Y=-0.8
  link(onTranslate,10231433:doCallList,[])

@@ -1,5 +1,6 @@
 *Использование тумана
 Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,15261923,14,63)
 {
  Left=20
@@ -103,7 +104,7 @@ BEGIN_SDK
    link(Angle,4359962:Data2,[(90,18)(16,18)])
   }
 END_SDK
-Add(HubEx,5169264,126,168)
+Add(HubEx,5169264,126,175)
 {
  link(onEvent,12986311:doViewPort,[])
 }
@@ -131,7 +132,7 @@ Add(GL_GTools,16770343,707,266)
  Point(doPushMatrix)
  link(onEvent,15791438:doTranslate,[])
 }
-Add(Gl_Translate,15791438,756,266)
+Add(GL_Translate,15791438,756,266)
 {
  link(onTranslate,5727587:doDraw,[])
  link(X,756551:Position,[(762,244)(585,244)(585,308)(538,308)])

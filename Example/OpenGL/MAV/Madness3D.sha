@@ -1,6 +1,6 @@
 *Кривая Миллера.#13#10(По мотивам статьи  А.Колесникова "Сложность и красота". andr61@mail.ru )#13#10-----------------------------#13#10Автор MAV#13#10andreimav@yandex.ru
 Make(delphi)
-ver(4.01 build 174)
+ver(4.05 build 186)
 Add(MathParse,1320664,583,280)
 {
  DataCount=1
@@ -21,7 +21,7 @@ Add(For,735409,478,280)
  link(onEvent,7127396:doOperation,[])
  link(onStop,11663766:doEndList,[(522,293)(522,321)(473,321)(473,342)])
 }
-Add(GetDataEx,13170476,548,245)
+Add(GetDataEx,13170476,555,249)
 {
  link(Data,7127396:Result,[(561,240)(532,240)(532,320)(547,320)])
 }
@@ -41,7 +41,7 @@ Add(MathParse,6285378,681,280)
  link(onResult,7664355:doBegin,[(725,286)(725,321)(557,321)(557,342)])
  link(X1,7336555:Var3,[(687,268)])
 }
-Add(GetDataEx,7336555,618,259)
+Add(GetDataEx,7336555,625,263)
 {
  link(Data,13170476:Var3,[(631,254)])
 }
@@ -131,7 +131,7 @@ Add(GL_Perspective,3410847,429,231)
 {
  Fovy=30
 }
-Add(HubEx,16131419,338,182)
+Add(HubEx,16131419,338,189)
 {
  link(onEvent,12986311:doViewPort,[])
 }
@@ -159,19 +159,19 @@ Add(GL_Vertex3D,9410730,618,336)
  link(Y,11018812:Result,[])
  link(Z,6285378:Result,[(638,327)(687,327)])
 }
-Add(Gl_Begin,7664355,569,336)
+Add(GL_Begin,7664355,569,336)
 {
  link(onBegin,9410730:doVertex,[])
 }
-Add(Gl_End,13233351,674,336)
+Add(GL_End,13233351,674,336)
 {
 }
-Add(Gl_BeginList,1241102,429,280)
+Add(GL_BeginList,1241102,429,280)
 {
  Index=1
  link(onBiginList,735409:doFor,[])
 }
-Add(Gl_EndList,11663766,485,336)
+Add(GL_EndList,11663766,485,336)
 {
 }
 Add(GL_CallList,6133489,527,133)

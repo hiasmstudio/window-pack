@@ -1,6 +1,6 @@
 *Радар - отображаем пользователей
 Make(delphi)
-ver(4.04 build 183)
+ver(4.05 build 186)
 Add(MainForm,15261923,21,77)
 {
  Left=20
@@ -84,7 +84,7 @@ Add(GL_Perspective,3410847,224,224)
 {
  Fovy=20
 }
-Add(Gl_EndList,13807074,518,273)
+Add(GL_EndList,13807074,518,273)
 {
  link(onEndList,1555668:doBeginList,[(559,279)(559,312)(312,312)(312,335)])
 }
@@ -93,7 +93,7 @@ Add(GL_GluTools,12198675,224,175)
  Texture=0
  link(onInit,5851269:doEnabled,[])
 }
-Add(Gl_End,14692656,861,119)
+Add(GL_End,14692656,861,119)
 {
 }
 Add(GL_Options,10513853,420,175)
@@ -126,7 +126,7 @@ Add(GL_Vertex3D,13823482,714,119)
 {
  link(onVertex,11863830:doVertex,[])
 }
-Add(Gl_Begin,16243406,665,119)
+Add(GL_Begin,16243406,665,119)
 {
  BlockType=4
  link(onBegin,13823482:doVertex,[])
@@ -214,7 +214,7 @@ BEGIN_SDK
    Index=1
    link(onCallList,4929147:doPopMatrix,[])
   }
-  Add(Gl_Scale,8594840,511,35)
+  Add(GL_Scale,8594840,511,35)
   {
    X=0.95
    Y=0.95
@@ -236,7 +236,7 @@ BEGIN_SDK
    Index=1
    link(onCallList,6607780:doPopMatrix,[])
   }
-  Add(Gl_Scale,8965384,854,35)
+  Add(GL_Scale,8965384,854,35)
   {
    X=0.8
    Y=0.8
@@ -245,7 +245,7 @@ BEGIN_SDK
    link(X,16289721:Var2,[])
    link(Y,16289721:Var3,[(867,23)])
   }
-  Add(Gl_Begin,13965954,903,84)
+  Add(GL_Begin,13965954,903,84)
   {
    BlockType=3
    link(onBegin,14711754:doVertex,[])
@@ -262,7 +262,7 @@ BEGIN_SDK
    Z=-0.1
    link(onVertex,9014830:doEnd,[])
   }
-  Add(Gl_End,9014830,1050,84)
+  Add(GL_End,9014830,1050,84)
   {
   }
   Add(For,14106268,756,84)
@@ -292,12 +292,12 @@ BEGIN_SDK
    Stacks=5
    link(onDraw,10404541:doTranslate,[])
   }
-  Add(Gl_Translate,1016609,70,35)
+  Add(GL_Translate,1016609,70,35)
   {
    Z=-0.3
    link(onTranslate,1826597:doColor,[])
   }
-  Add(Gl_Translate,10404541,217,35)
+  Add(GL_Translate,10404541,217,35)
   {
    Z=0.1
    link(onTranslate,11279011:doLineSize,[])
@@ -461,7 +461,7 @@ Add(GL_Options,15104080,518,175)
  Flag=6
  link(onEvent,5789747:doEnabled,[])
 }
-Add(Gl_BeginList,8423090,322,224)
+Add(GL_BeginList,8423090,322,224)
 {
  Index=1
  link(onBiginList,15174855:doBegin,[])
@@ -472,7 +472,7 @@ Add(For,6005511,420,224)
  link(onEvent,547168:doCalc,[])
  link(onStop,13723747:doEnd,[(461,237)(461,279)])
 }
-Add(Gl_Begin,15174855,371,224)
+Add(GL_Begin,15174855,371,224)
 {
  BlockType=2
  link(onBegin,6005511:doFor,[])
@@ -495,7 +495,7 @@ Add(MathParse,1772560,518,224)
  link(onResult,9137398:doVertex,[])
  link(X1,6005511:Position,[(524,214)(466,214)(466,266)(426,266)])
 }
-Add(Gl_End,13723747,469,273)
+Add(GL_End,13723747,469,273)
 {
  link(onEnd,13807074:doEndList,[])
 }
@@ -509,7 +509,7 @@ Add(GL_Options,5789747,567,175)
  Flag=7
  link(onEvent,3498423:doInit,[])
 }
-Add(Gl_Text,3498423,616,175)
+Add(GL_Text,3498423,616,175)
 {
  Font=[Times New Roman,8,0,32896,1]
  link(onInit,8423090:doBeginList,[(658,181)(658,211)(312,211)(312,230)])
@@ -546,11 +546,11 @@ BEGIN_SDK
    link(##select,1885792:doCompare,[(36,16)(36,167)])
    link(doCompare,4468510:doCompare,[(11,23)(11,118)])
   }
-  Add(Gl_Begin,6784383,266,63)
+  Add(GL_Begin,6784383,266,63)
   {
    link(onBegin,15544539:doVertex,[])
   }
-  Add(Gl_End,8341139,364,63)
+  Add(GL_End,8341139,364,63)
   {
    link(onEnd,8426070:doPointSize,[(404,69)(404,76)])
   }
@@ -569,7 +569,7 @@ BEGIN_SDK
   {
    link(onSize,4151713:doTranslate,[])
   }
-  Add(Gl_Text,3498423,609,63)
+  Add(GL_Text,3498423,609,63)
   {
    Depth=0.2
    Font=[MS Sans Serif,1,0,32768,1]
@@ -585,14 +585,14 @@ BEGIN_SDK
   {
    Point(doPopMatrix)
   }
-  Add(Gl_Scale,13809058,511,63)
+  Add(GL_Scale,13809058,511,63)
   {
    X=0.1
    Y=0.1
    Z=0.1
    link(onScale,281085:doRotate,[])
   }
-  Add(Gl_Translate,4151713,462,63)
+  Add(GL_Translate,4151713,462,63)
   {
    link(onTranslate,13809058:doScale,[])
    link(X,13845441:Var2,[])
@@ -738,7 +738,7 @@ BEGIN_SDK
   {
    link(onEvent1,1461668:doRandom,[])
   }
-  Add(Gl_Begin,1397646,560,168)
+  Add(GL_Begin,1397646,560,168)
   {
    BlockType=7
    link(onBegin,5832741:doTexCoord,[])
@@ -796,7 +796,7 @@ BEGIN_SDK
   {
    link(onTexCoord,13234197:doVertex,[])
   }
-  Add(Gl_End,16226316,1001,168)
+  Add(GL_End,16226316,1001,168)
   {
   }
   Add(GL_Options,5851269,511,119)
@@ -847,10 +847,10 @@ Add(GL_Vertex3D,8703977,714,329)
  link(X,12957903:Result,[(720,319)(633,319)(633,371)(475,371)])
  link(Y,12599389:Result,[(727,319)(682,319)(682,371)(573,371)])
 }
-Add(Gl_EndList,14697901,420,378)
+Add(GL_EndList,14697901,420,378)
 {
 }
-Add(Gl_BeginList,1555668,322,329)
+Add(GL_BeginList,1555668,322,329)
 {
  Index=2
  link(onBiginList,5794520:doFor,[])
@@ -861,7 +861,7 @@ Add(For,5794520,371,329)
  link(onEvent,8373660:doCalc,[])
  link(onStop,14697901:doEndList,[(412,342)(412,384)])
 }
-Add(Gl_Begin,2073665,616,329)
+Add(GL_Begin,2073665,616,329)
 {
  BlockType=3
  link(onBegin,3027954:doVertex,[])
@@ -886,7 +886,7 @@ Add(MathParse,9059825,518,329)
  link(onResult,12599389:doOperation,[])
  link(X1,5794520:Position,[(524,319)(417,319)(417,371)(377,371)])
 }
-Add(Gl_End,10340272,763,329)
+Add(GL_End,10340272,763,329)
 {
 }
 Add(Math,12957903,469,329)
@@ -954,7 +954,7 @@ Add(LinkTip,9734389,532,70)
 }
 Add(InfoTip,6685351,14,343)
 {
- @Group=152808136
+ @Group=20062608
  Info=#9:Внимание!|
  Font=[MS Sans Serif,10,1,255,1]
  Transparent=1
@@ -964,7 +964,7 @@ Add(InfoTip,6685351,14,343)
 }
 Add(InfoTip,12075799,21,364)
 {
- @Group=152808136
+ @Group=20062608
  Info=#133:Полноценная работа примера может быть обеспечена только при наличие выхода в Internet. Если такового нет, то на радаре не будет целей|
  Frame=1
  HAlign=0

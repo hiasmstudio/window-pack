@@ -1,6 +1,6 @@
 Make(delphi)
-Pos(13,0)
-Add(MainForm,15261923,29,49)
+ver(4.05 build 186)
+Add(MainForm,15261923,36,70)
 {
  Left=20
  Top=105
@@ -8,15 +8,17 @@ Add(MainForm,15261923,29,49)
  Height=421
  Point(MouseX)
  Point(MouseY)
- link(onResize,14551396:doWork1,[(159,83)])
- link(onCreate,16299401:doEvent1,[(76,90)(76,195)])
+ Point(onResize)
+ Point(Handle)
+ link(onCreate,16299401:doEvent1,[(84,90)(84,195)])
+ link(onResize,14551396:doWork1,[(159,97)])
 }
 Add(GL_Main,12986311,169,189)
 {
  Color=0
  link(onInit,12198675:doInit,[])
  link(onViewPort,3410847:doPerspective,[(213,202)(213,244)])
- link(Handle,15261923:Handle,[(175,169)(35,169)])
+ link(Handle,15261923:Handle,[(175,169)(56,169)])
 }
 Add(Timer,9506849,57,273)
 {
@@ -46,7 +48,7 @@ Add(Hub,16299401,99,189)
  link(onEvent2,14551396:doWork2,[])
  link(onEvent3,9506849:doTimer,[(142,209)(142,254)(36,254)(36,279)])
 }
-Add(HubEx,14551396,155,189)
+Add(HubEx,14551396,155,196)
 {
  link(onEvent,12986311:doViewPort,[])
 }
@@ -122,7 +124,7 @@ Add(For,3674057,281,140)
  End=50
  link(onEvent,6066870:doOperation,[])
 }
-Add(Gl_Translate,15225057,673,140)
+Add(GL_Translate,15225057,673,140)
 {
  link(onTranslate,13787516:doDraw,[])
  link(Y,6066870:Result,[(686,123)(469,123)(469,182)(336,182)])
@@ -148,8 +150,8 @@ Add(GL_Sphere,13787516,722,140)
 }
 Add(MultiElement,10738370,575,140)
 {
- link(Data1,3674057:Position,[(581,130)(320,130)(320,181)(287,181)])
  link(onEvent1,9834808:doRotate,[])
+ link(Data1,3674057:Position,[(581,130)(320,130)(320,181)(287,181)])
 }
 BEGIN_SDK
   Add(EditMulti,15179153,6,6)

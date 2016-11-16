@@ -1,5 +1,5 @@
 Make(delphi)
-ver(4.04 build 182)
+ver(4.05 build 186)
 Add(GL_Options,10513853,490,266)
 {
  Flag=2
@@ -88,13 +88,13 @@ BEGIN_SDK
    Height=109
    link(doWork1,188025:doTranslate,[(37,23)(37,69)])
   }
-  Add(Gl_Translate,188025,56,63)
+  Add(GL_Translate,188025,56,63)
   {
    link(onTranslate,15065164:doScale,[])
    link(X,4359962:Data1,[(62,40)(23,40)])
    link(Y,4359962:Data2,[(69,40)(30,40)])
   }
-  Add(Gl_Scale,15065164,105,63)
+  Add(GL_Scale,15065164,105,63)
   {
    link(onScale,4359962:onEvent1,[(213,69)(213,23)])
    link(X,4247964:Var2,[])
@@ -125,12 +125,12 @@ Add(GL_GluTools,12198675,294,266)
  Texture=0
  link(onInit,5851269:doEnabled,[])
 }
-Add(Gl_BeginList,11450348,546,266)
+Add(GL_BeginList,11450348,546,266)
 {
  Index=1
  link(onBiginList,11214287:doEvent1,[])
 }
-Add(Gl_EndList,2979237,630,336)
+Add(GL_EndList,2979237,630,336)
 {
  link(onEndList,15114014:doData,[])
 }
@@ -168,12 +168,12 @@ BEGIN_SDK
      Height=130
      link(doWork1,5441814:doOperation,[(28,27)(28,97)])
     }
-    Add(Gl_Begin,14701665,182,91)
+    Add(GL_Begin,14701665,182,91)
     {
      BlockType=1
      link(onBegin,15772613:doVertex,[])
     }
-    Add(Gl_End,6335969,329,91)
+    Add(GL_End,6335969,329,91)
     {
      link(onEnd,9100006:onEvent1,[(387,97)(387,27)])
     }
@@ -524,7 +524,7 @@ Add(GetDataEx,5722181,791,315)
  Angle=1
  link(Data,2828855:Result,[(811,320)])
 }
-Add(LineBreak,5221736,28,35)
+Add(LineBreak,4815680,28,35)
 {
  link(Out,7746353:doCaption,[])
  Primary=[8675645,805,301]

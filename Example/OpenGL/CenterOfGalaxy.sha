@@ -1,5 +1,5 @@
 Make(delphi)
-ver(4.04 build 183)
+ver(4.05 build 186)
 Add(MainForm,15261923,28,56)
 {
  Left=20
@@ -108,12 +108,12 @@ Add(GL_Vertex3D,3652044,679,175)
  Z=-0.4
  link(onVertex,13810871:doVertex,[])
 }
-Add(Gl_BeginList,10286315,581,175)
+Add(GL_BeginList,10286315,581,175)
 {
  Index=2
  link(onBiginList,7222455:doBegin,[])
 }
-Add(Gl_Begin,7222455,630,175)
+Add(GL_Begin,7222455,630,175)
 {
  BlockType=7
  link(onBegin,3652044:doVertex,[])
@@ -139,11 +139,11 @@ Add(GL_Vertex3D,875687,826,175)
  Z=-0.4
  link(onVertex,6901366:doEnd,[])
 }
-Add(Gl_End,6901366,875,175)
+Add(GL_End,6901366,875,175)
 {
  link(onEnd,258936:doEndList,[])
 }
-Add(Gl_EndList,258936,924,175)
+Add(GL_EndList,258936,924,175)
 {
  link(onEndList,16037297:doEnabled,[])
 }
@@ -180,7 +180,7 @@ BEGIN_SDK
   Add(Memory,14020852,259,84)
   {
   }
-  Add(Gl_Begin,11067850,182,273)
+  Add(GL_Begin,11067850,182,273)
   {
    link(onBegin,9949051:doVertex,[])
   }
@@ -191,7 +191,7 @@ BEGIN_SDK
    link(Y,9388557:Var2,[(265,259)(370,259)])
    link(Z,9129347:Value,[(272,246)(160,246)])
   }
-  Add(Gl_End,10897047,315,273)
+  Add(GL_End,10897047,315,273)
   {
    link(onEnd,6398081:doRandom,[])
   }
@@ -495,41 +495,41 @@ Add(MathParse,4516823,1127,91)
  link(X1,13484898:Var,[])
  link(X2,3925869:Var,[])
 }
-Add(LineBreak,10983078,28,105)
+Add(LineBreak,2684042,28,105)
 {
  Caption="x"
  Type=1
  link(Data,15261923:MouseX,[])
  Primary=[15290388,1057,-70]
 }
-Add(LineBreak,7365286,35,126)
+Add(LineBreak,155867,35,126)
 {
  Caption="y"
  Type=1
  link(Data,15261923:MouseY,[])
  Primary=[13484898,1092,-84]
 }
-Add(LineBreak,14146764,49,105)
+Add(LineBreak,15507349,49,105)
 {
  Caption="w"
  Type=1
  link(Data,15261923:Width,[])
  Primary=[14965433,1043,-49]
 }
-Add(LineBreak,7423550,56,126)
+Add(LineBreak,921322,56,126)
 {
  Caption="h"
  Type=1
  link(Data,15261923:Height,[])
  Primary=[3925869,1078,-63]
 }
-Add(LineBreak,6899454,966,84)
+Add(LineBreak,13441047,966,84)
 {
  Caption="create"
  link(Out,1242491:doEvent1,[])
  Primary=[15558308,-889,0]
 }
-Add(Gl_Text,3060881,329,175)
+Add(GL_Text,3060881,329,175)
 {
  Depth=0.2
  Font=[Times New Roman,5,0,32768,1]
@@ -537,7 +537,7 @@ Add(Gl_Text,3060881,329,175)
  link(onInit,5809249:doEnabled,[])
  link(GLHandle,12986311:GLHandle,[(335,163)(371,163)(371,219)(174,219)])
 }
-Add(Gl_Scale,15125776,280,133)
+Add(GL_Scale,15125776,280,133)
 {
  X=0.2
  Y=0.2
@@ -561,7 +561,7 @@ Add(GL_Color,9569537,224,133)
  Alpha=0.8
  link(onColor,15125776:doScale,[])
 }
-Add(Gl_Translate,4735152,175,133)
+Add(GL_Translate,4735152,175,133)
 {
  X=-0.2
  link(onTranslate,9569537:doColor,[])
@@ -1709,12 +1709,12 @@ BEGIN_SDK
     }
   END_SDK
 END_SDK
-Add(Gl_BeginList,7296785,1127,252)
+Add(GL_BeginList,7296785,1127,252)
 {
  Index=3
  link(onBiginList,13402434:doColor,[])
 }
-Add(Gl_EndList,14389816,1232,252)
+Add(GL_EndList,14389816,1232,252)
 {
 }
 Add(GL_CallList,12045822,553,21)
@@ -1722,7 +1722,7 @@ Add(GL_CallList,12045822,553,21)
  Index=3
  link(onCallList,3800534:doPopMatrix,[])
 }
-Add(Gl_Scale,3304690,497,21)
+Add(GL_Scale,3304690,497,21)
 {
  X=0.2
  Y=0.2
@@ -1738,7 +1738,7 @@ Add(GL_GTools,3800534,602,21)
 {
  Point(doPopMatrix)
 }
-Add(Gl_Particles,12207200,518,231)
+Add(GL_Particles,12207200,518,231)
 {
  ColorStart=65535
  Speed=0.03
@@ -1754,7 +1754,7 @@ Add(GL_PrimSizes,10455141,616,231)
 {
  Size=2
 }
-Add(Gl_Particles,14526036,567,231)
+Add(GL_Particles,14526036,567,231)
 {
  ColorStart=65535
  Speed=-0.03

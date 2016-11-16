@@ -1,6 +1,6 @@
 *Пример использования элемента GL_Scissor#13#10- - - - - - -#13#10автор: sla8a
 Make(delphi)
-ver(4.04 build 184)
+ver(4.05 build 186)
 Add(MainForm,15340401,28,98)
 {
  Height=400
@@ -106,7 +106,7 @@ Add(GL_Color,7496322,476,280)
  Color=8421376
  link(onColor,3278875:doDraw,[])
 }
-Add(Gl_Translate,5310185,434,280)
+Add(GL_Translate,5310185,434,280)
 {
  Y=0.1
  Z=0.1
@@ -130,7 +130,7 @@ Add(GL_Color,13347956,770,280)
  Color=8388608
  link(onColor,3144640:doDraw,[])
 }
-Add(Gl_Translate,1721296,686,280)
+Add(GL_Translate,1721296,686,280)
 {
  Y=0.1
  Z=0.8
@@ -217,7 +217,7 @@ Add(GL_Torus,7822957,469,399)
  outRadius=0.4
  link(onDraw,2431299:doColor,[])
 }
-Add(Gl_Translate,1793082,385,399)
+Add(GL_Translate,1793082,385,399)
 {
  Y=1.2
  Z=1.5
@@ -228,7 +228,7 @@ Add(GL_Color,6150687,427,399)
  Color=8388736
  link(onColor,7822957:doDraw,[])
 }
-Add(Gl_Translate,11045903,553,399)
+Add(GL_Translate,11045903,553,399)
 {
  Y=-2
  link(onTranslate,14746624:doDraw,[])
