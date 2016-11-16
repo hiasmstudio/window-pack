@@ -1,5 +1,5 @@
-Make(Delphi)
-Pos(0,0)
+Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,56019,377,70)
 {
  Left=227
@@ -7,12 +7,6 @@ Add(MainForm,56019,377,70)
  Width=570
  Height=510
  Caption="Mini Web Browser"
-}
-Add(Hub,86708,238,154)
-{
- InCount=2
- OutCount=1
- link(onEvent1,6447:doNavigate,[(278,160)(278,104)])
 }
 Add(ChildPanel,87995,378,140)
 {
@@ -36,9 +30,9 @@ BEGIN_SDK
    Point(doColor)
   }
 END_SDK
-Add(ChildPanel,83544,91,161)
+Add(ChildPanel,83544,196,147)
 {
- link(onEvent1,86708:doEvent2,[])
+ link(onEvent1,12814847:doWork3,[(256,153)])
 }
 BEGIN_SDK
   Add(EditMulti,23674,3,3)
@@ -59,8 +53,8 @@ BEGIN_SDK
   {
    Left=2
    Width=95
-   Hint="http://hiasm.spb.ru"
    Font=[Arial,8,0,0,1]
+   Hint="http://hiasm.spb.ru"
    Frame=1
    Caption="Home"
    Data=String(http://www.hiasm.com)
@@ -77,11 +71,11 @@ BEGIN_SDK
    Left=2
    Top=20
    Width=95
-   Hint="http://hiasm.spb.ru/forum"
    Font=[Arial,8,0,0,1]
+   Hint="http://forum.hiasm.com"
    Frame=1
    Caption="Forum"
-   Data=String(http://www.hiasm.com/forum)
+   Data=String(http://forum.hiasm.com/)
    link(onClick,22728:doEvent2,[])
   }
   Add(BitBtn,75406,70,112)
@@ -89,8 +83,8 @@ BEGIN_SDK
    Left=2
    Top=40
    Width=95
-   Hint="ya.ru"
    Font=[Arial,8,0,0,1]
+   Hint="ya.ru"
    Frame=1
    Caption="ya.ru"
    Data=String(http://ya.ru)
@@ -102,7 +96,7 @@ Add(ChildPanel,76754,196,105)
  link(onEvent1,6447:doRefresh,[])
  link(onEvent2,6447:doBack,[])
  link(onEvent3,6447:doForward,[])
- link(onEvent4,86708:doEvent1,[(233,132)(233,160)])
+ link(onEvent4,12814847:doWork2,[])
 }
 BEGIN_SDK
   Add(EditMulti,32470,3,3)
@@ -127,8 +121,8 @@ BEGIN_SDK
    Top=2
    Width=26
    Height=26
-   Hint="Forward"
    Font=[Arial,8,0,0,1]
+   Hint="Forward"
    Frame=1
    Caption=""
    Bitmap=[ZIP3604000078DA73F235636100033320D600620128666450804840E591C1FFFFFF47311198D2B02226BC890594EAC76506A5F653EA7F5A86FF28C68E01E8F08FFA]
@@ -140,8 +134,8 @@ BEGIN_SDK
    Top=2
    Width=26
    Height=26
-   Hint="Back"
    Font=[Arial,8,0,0,1]
+   Hint="Back"
    Frame=1
    FrameColor=15780518
    Caption=""
@@ -164,8 +158,8 @@ BEGIN_SDK
    Top=2
    Width=26
    Height=26
-   Hint="Refresh"
    Font=[Arial,8,0,0,1]
+   Hint="Refresh"
    Frame=1
    Caption=""
    Bitmap=[ZIP3604000078DA73F235636100033320D600620128666450804840E591C1FFFFFF8715A6C44F948409B18012BDF43283183F921BFEA486313A686868205A3F297EA7A6DEA18401B15343C8]
@@ -183,4 +177,8 @@ Add(WebBrowser,6447,287,98)
  link(onNavigate,76754:doWork1,[(329,104)(329,88)(186,88)(186,111)])
  link(onTitle,56019:doCaption,[(348,111)(348,76)])
  link(onStatus,87995:doWork1,[(348,118)(348,146)])
+}
+Add(HubEx,12814847,252,126)
+{
+ link(onEvent,6447:doNavigate,[(278,132)(278,104)])
 }

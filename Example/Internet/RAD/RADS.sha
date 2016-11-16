@@ -1,5 +1,6 @@
 *Автор: Sniper36#13#10E-mail: Sniper36@sibnet.ru#13#10-------------------------------------------#13#10Сервер для удаленного управления компьютером
 Make(delphi)
+ver(4.05 build 186)
 Add(Service,4630569,21,126)
 {
  Wait=0
@@ -57,16 +58,16 @@ BEGIN_SDK
    link(onEventData,8982561:doValue,[])
   }
 END_SDK
-Add(HubEx,10984169,119,77)
+Add(HubEx,10984169,119,84)
 {
  Angle=2
  link(onEvent,4630569:doStop,[(9,90)(9,132)])
 }
-Add(LineBreak,7188648,42,175)
+Add(LineBreak,1516706,42,175)
 {
  Caption="TCP-Send"
  link(Out,5257400:doSend,[(119,181)(119,153)])
- Primary=[12185193,322,-35]
+ Primary=[12185193,315,-35]
 }
 Add(MultiElementEx,1319006,70,126)
 {
@@ -197,7 +198,7 @@ BEGIN_SDK
        link(onEventData,5172056:onEvent1,[(412,201)(412,1)])
        link(Data,8599772:Text,[])
       }
-      Add(HubEx,16483996,259,154)
+      Add(HubEx,16483996,259,161)
       {
        link(onEvent,8599772:doText,[])
       }
@@ -668,11 +669,11 @@ BEGIN_SDK
        Data=Integer(0)
        link(onEventData,1907248:doWork3,[(473,181)])
       }
-      Add(HubEx,1907248,469,161)
+      Add(HubEx,1907248,469,168)
       {
        link(onEvent,11987544:doValue,[])
       }
-      Add(GetDataEx,7073567,217,112)
+      Add(GetDataEx,7073567,224,116)
       {
        link(Data,93822:Stream,[])
       }
@@ -914,7 +915,7 @@ BEGIN_SDK
            link(Str,5020548:Var2,[(328,121)(111,121)])
            link(Target,5997314:Value,[])
           }
-          Add(GetDataEx,5020548,98,72)
+          Add(GetDataEx,5020548,105,76)
           {
            link(Data,1313960:Str,[(111,58)(9,58)])
           }
@@ -949,7 +950,7 @@ BEGIN_SDK
            link(onLength,12771827:doOperation,[(203,218)(203,251)(151,251)(151,265)])
            link(Str,8452367:Var1,[(167,163)])
           }
-          Add(GetDataEx,8452367,168,154)
+          Add(GetDataEx,8452367,175,158)
           {
            link(Data,3762158:Содержит правую часть выражения,[(181,152)(139,152)])
           }
@@ -1047,7 +1048,7 @@ BEGIN_SDK
        link(Str2,13572281:Result,[])
        link(Str3,7728773:Data2,[])
       }
-      Add(HubEx,4020598,224,98)
+      Add(HubEx,4020598,224,105)
       {
        link(onEvent,15456203:doAdd,[])
       }
@@ -1143,7 +1144,7 @@ BEGIN_SDK
        link(onEvent1,3741128:doQuit,[])
        link(onEvent2,2696186:doString,[])
       }
-      Add(GetDataEx,9051226,119,119)
+      Add(GetDataEx,9051226,126,123)
       {
        Angle=3
        link(Data,11169081:Value,[(105,128)(105,205)(83,205)])
@@ -1165,7 +1166,7 @@ BEGIN_SDK
        Data=String(You must specify process ID.)
        link(onEventData,3057662:doWork3,[(389,216)])
       }
-      Add(HubEx,3057662,385,161)
+      Add(HubEx,3057662,385,168)
       {
        link(onEvent,13034223:onFString,[(440,174)(440,9)])
       }
@@ -1186,7 +1187,7 @@ BEGIN_SDK
    link(onTrue,5141308:doEvent,[(432,146)(432,188)(236,188)(236,230)])
    link(Str,6700195:Var3,[(394,110)(142,110)(142,184)])
   }
-  Add(GetDataEx,6700195,94,175)
+  Add(GetDataEx,6700195,101,179)
   {
    link(Data,3404427:Value,[])
   }
@@ -1219,7 +1220,7 @@ BEGIN_SDK
    link(Data,5676976:Var2,[])
    link(Index,16617176:Var2,[])
   }
-  Add(GetDataEx,5676976,241,196)
+  Add(GetDataEx,5676976,248,200)
   {
    Angle=3
    link(Data,6700195:Var2,[(107,205)])
@@ -1229,7 +1230,7 @@ BEGIN_SDK
    End=15
    link(onEvent,8101568:doRead,[])
   }
-  Add(GetDataEx,16617176,248,112)
+  Add(GetDataEx,16617176,255,116)
   {
    Angle=3
    link(Data,551597:Position,[(220,121)(220,184)(184,184)])

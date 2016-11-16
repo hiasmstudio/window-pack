@@ -1,5 +1,5 @@
 Make(delphi)
-ver(4.04 build 185)
+ver(4.05 build 186)
 Add(MTStrTbl,3395867,189,280)
 {
  Left=5

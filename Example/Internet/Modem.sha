@@ -1,23 +1,12 @@
 *Программа для дозвона по модему к выбранному провайдеру.
-Pos(0,0)
+Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,42776,21,105)
 {
  Left=312
  Top=234
  Width=323
  Height=293
- Align=0
- Color=-16777201
- AlphaBlendValue=255
- Caption="Form"
- BorderStyle=2
- WindowsState=0
- Icon=[]
- ShowType=0
- TaskBar=0
- DragForm=1
- Visible=0
- Picture=[]
 }
 Add(ListBox,68351,294,84)
 {
@@ -25,24 +14,11 @@ Add(ListBox,68351,294,84)
  Top=20
  Width=240
  Height=65
- Align=0
- TabOrder=0
- Color=-16777211
- Ctl3D=0
- Hint=""
- Font=[Arial,8,0,0]
- Transparent=1
- FileName=""
- Strings=
- AddType=0
- DataType=0
- SelectAdd=1
- Sort=1
+ Font=[Arial,8,0,0,1]
  Point(String)
 }
 Add(DoData,41310,154,147)
 {
- Data=Null()
  link(onEventData,58502:doDial,[(193,153)(193,97)])
  link(Data,68351:String,[(160,138)(321,138)])
 }
@@ -50,14 +26,9 @@ Add(Button,22330,147,210)
 {
  Left=5
  Top=130
- Width=55
- Height=20
- Align=0
- TabOrder=0
+ Font=[Arial,8,0,0,1]
  Hint="Бросить трубку"
- Font=[Arial,8,0,0]
  Caption="Close"
- Data=Null()
  link(onClick,58502:doHandUp,[(200,216)(200,104)])
 }
 Add(ModemDial,58502,210,84)
@@ -69,28 +40,18 @@ Add(Button,64701,147,84)
 {
  Left=5
  Top=20
- Width=55
- Height=20
- Align=0
- TabOrder=0
+ Font=[Arial,8,0,0,1]
  Hint="Обновить список подключений"
- Font=[Arial,8,0,0]
  Caption="Enum"
- Data=Null()
  link(onClick,58502:doEnum,[])
 }
 Add(Button,45180,98,147)
 {
  Left=5
  Top=105
- Width=55
- Height=20
- Align=0
- TabOrder=0
+ Font=[Arial,8,0,0,1]
  Hint="Дозвон"
- Font=[Arial,8,0,0]
  Caption="Dial"
- Data=Null()
  link(onClick,41310:doData,[])
 }
 Add(RichEdit,48725,294,189)
@@ -99,14 +60,6 @@ Add(RichEdit,48725,294,189)
  Top=95
  Width=240
  Height=170
- Align=0
- TabOrder=0
- Color=-16777211
- Hint=""
- Font=[Arial,8,0,0]
- FileName=""
- Strings=
- AddType=0
+ Font=[Arial,8,0,0,1]
  ScrollBars=3
- ReadOnly=1
 }

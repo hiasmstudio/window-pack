@@ -1,6 +1,6 @@
 *Пример работы компонента Host
 Make(delphi)
-ver(4.01 build 174)
+ver(4.05 build 186)
 Add(MainForm,5276837,70,252)
 {
  Left=20
@@ -57,7 +57,7 @@ Add(Label,4705794,126,161)
  Font=[Georgia,8,1,32768,204]
  Caption="Найденные данные"
 }
-Add(HubEx,9783563,266,196)
+Add(HubEx,9783563,266,203)
 {
  link(onEvent,10209306:doAdd,[])
 }

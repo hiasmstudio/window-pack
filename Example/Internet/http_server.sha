@@ -1,11 +1,12 @@
 Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,3006772,105,112)
 {
  Left=20
  Top=105
  link(onCreate,4557003:##open,[])
 }
-Add(TCP_ServerEx,4557003,154,126)
+Add(TCP_ServerEx,4557003,161,126)
 {
 }
 BEGIN_SDK
@@ -51,7 +52,7 @@ BEGIN_SDK
    link(onEvent3,8776093:doConvert,[(485,188)(485,279)])
    link(onEvent4,6544603:doClose,[(500,195)(500,181)])
   }
-  Add(HubEx,2954087,609,105)
+  Add(HubEx,2954087,609,112)
   {
    Angle=3
    link(onEvent,916654:doSend,[(613,37)(30,37)(30,69)])
@@ -75,7 +76,7 @@ BEGIN_SDK
   {
    link(FileName,14307555:Value,[(517,152)(258,152)])
   }
-  Add(HubEx,5832223,609,224)
+  Add(HubEx,5832223,609,231)
   {
    Angle=3
    link(onEvent,2954087:doWork3,[])

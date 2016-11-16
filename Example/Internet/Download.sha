@@ -1,5 +1,6 @@
 *Закачка файлов из Internet
 Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,91136,278,243)
 {
  Left=312
@@ -25,9 +26,9 @@ Add(Label,21437,397,195)
  Font=[Arial,8,0,0,1]
  Caption="0Kb/0Kb"
 }
-Add(Hub,59971,147,195)
+Add(Hub,59971,147,188)
 {
- link(onEvent1,27891:GetURLSize,[(198,201)(198,215)])
+ link(onEvent1,27891:GetURLSize,[(198,194)(198,215)])
  link(onEvent2,27891:doDownload,[])
 }
 Add(Math,98541,277,140)
@@ -51,7 +52,7 @@ Add(Label,5398,97,85)
  Font=[Arial,8,0,0,1]
  Caption="URL"
 }
-Add(Button,53054,97,195)
+Add(Button,53054,97,188)
 {
  Left=5
  Top=35

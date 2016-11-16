@@ -1,5 +1,5 @@
 Make(delphi)
-ver(4.02 build 179)
+ver(4.05 build 186)
 Add(MainForm,2953706,21,105)
 {
  link(onCreate,1632778:doEvent1,[])
@@ -16,7 +16,6 @@ Add(TCP_Server,9478494,133,210)
 Add(GVarContainer,11119299,133,119)
 {
  Section="net"
- FilleName="settings.ini"
  VarList=#4:port|
  link(onLoad,9634353:doOpen,[])
 }
@@ -129,7 +128,7 @@ BEGIN_SDK
   {
    link(dbHandle,6156621:Var3,[(447,107)])
   }
-  Add(GetDataEx,6156621,238,98)
+  Add(GetDataEx,6156621,245,102)
   {
    link(Data,1956226:Var,[])
   }
@@ -144,16 +143,16 @@ BEGIN_SDK
   {
    link(onData,1421351:doString,[])
   }
-  Add(HubEx,4921664,427,168)
+  Add(HubEx,4921664,427,175)
   {
    link(onEvent,1917150:doExec,[])
   }
-  Add(GetDataEx,9387334,364,154)
+  Add(GetDataEx,9387334,371,158)
   {
    Angle=3
    link(Data,14570403:Value,[(139,163)])
   }
-  Add(GetDataEx,12401460,378,140)
+  Add(GetDataEx,12401460,385,144)
   {
    link(Data,4953200:Var3,[(391,72)])
   }
@@ -161,7 +160,7 @@ BEGIN_SDK
   {
    Name="ip"
   }
-  Add(GetDataEx,4953200,182,63)
+  Add(GetDataEx,4953200,189,67)
   {
    link(Data,7816751:Var,[])
   }
@@ -209,17 +208,17 @@ BEGIN_SDK
    link(onFString,4538611:doSend,[])
    link(Str2,11276923:Var3,[(510,212)])
   }
-  Add(GetDataEx,11276923,378,203)
+  Add(GetDataEx,11276923,385,207)
   {
    Angle=3
    link(Data,9387334:Var2,[(377,212)])
   }
-  Add(GetDataEx,12562354,413,210)
+  Add(GetDataEx,12562354,420,214)
   {
    link(Data,12401460:Var3,[(426,149)])
   }
 END_SDK
-Add(GetDataEx,11765244,287,245)
+Add(GetDataEx,11765244,294,249)
 {
  link(Data,12951795:Stream,[])
 }
@@ -384,7 +383,7 @@ BEGIN_SDK
    link(onStrCat,1801492:doSend,[])
   }
 END_SDK
-Add(HubEx,8018344,231,364)
+Add(HubEx,8018344,231,371)
 {
  link(onEvent,13673111:doAdd,[])
 }
@@ -437,7 +436,7 @@ BEGIN_SDK
    link(onQuery,3185799:doWork3,[(186,181)])
    link(dbHandle,3956946:Var1,[(90,163)(76,163)(76,107)])
   }
-  Add(GetDataEx,3956946,77,98)
+  Add(GetDataEx,3956946,84,102)
   {
    link(Data,1956226:Var,[])
   }
@@ -447,7 +446,7 @@ BEGIN_SDK
    InputMT=1
    link(onAdd,3185799:doWork2,[])
   }
-  Add(HubEx,3185799,182,112)
+  Add(HubEx,3185799,182,119)
   {
    link(onEvent,3263725:doStr,[])
   }
@@ -478,7 +477,7 @@ BEGIN_SDK
    link(onEventData,14579849:onList,[(355,272)(355,27)])
    link(Data,2171176:Var3,[(307,240)])
   }
-  Add(GetDataEx,2171176,245,231)
+  Add(GetDataEx,2171176,252,235)
   {
    link(Data,13370581:Stream,[])
   }
@@ -602,7 +601,7 @@ BEGIN_SDK
    Type=5
    link(Stream,4061183:Var1,[(153,93)])
   }
-  Add(GetDataEx,4061183,154,84)
+  Add(GetDataEx,4061183,161,88)
   {
    link(Data,10092057:Stream,[])
   }
@@ -625,7 +624,7 @@ BEGIN_SDK
    link(Data,4061183:Var3,[(209,93)])
   }
 END_SDK
-Add(GetDataEx,15578973,469,245)
+Add(GetDataEx,15578973,476,249)
 {
  Angle=3
  link(Data,11765244:Var3,[])
@@ -662,13 +661,13 @@ Add(SQLite_Exec,4411198,259,140)
 {
  SQL="update users set state = 0"
 }
-Add(LineBreak,16629901,56,224)
+Add(LineBreak,6227615,56,224)
 {
  Caption="send"
  link(Out,9478494:doSend,[])
  Primary=[10482618,497,140]
 }
-Add(LineBreak,5242968,49,245)
+Add(LineBreak,1563082,49,245)
 {
  Caption="sendip"
  link(Out,9478494:doSendByIp,[(114,251)(114,237)])
@@ -690,15 +689,15 @@ Add(FormatStr,9923059,77,343)
  link(onFString,2953706:doCaption,[(121,349)(121,301)(10,301)(10,111)])
  link(Str1,9478494:Count,[(83,313)(139,313)])
 }
-Add(HubEx,13254618,532,357)
+Add(HubEx,13254618,532,364)
 {
  link(onEvent,10482618:In,[])
 }
-Add(HubEx,15108127,245,413)
+Add(HubEx,15108127,245,420)
 {
  link(onEvent,15519426:doWork3,[(536,426)])
 }
-Add(HubEx,13278574,231,406)
+Add(HubEx,13278574,231,413)
 {
  Angle=3
  link(onEvent,8018344:doWork3,[])
@@ -781,12 +780,12 @@ BEGIN_SDK
    link(Str1,6573905:Var,[])
   }
 END_SDK
-Add(HubEx,15519426,532,399)
+Add(HubEx,15519426,532,406)
 {
  Angle=3
  link(onEvent,13254618:doWork3,[])
 }
-Add(GetDataEx,540601,469,343)
+Add(GetDataEx,540601,476,347)
 {
  link(Data,15578973:Var2,[])
 }

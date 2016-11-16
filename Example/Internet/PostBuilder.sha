@@ -1,5 +1,5 @@
 Make(delphi)
-ver(4.01 build 174)
+ver(4.05 build 186)
 Add(RichEdit,11256652,560,280)
 {
  Left=10
@@ -37,7 +37,7 @@ Add(HTTP_PostBuilder,13551532,413,280)
  Host="www.whois-service.ru"
  link(onBuild,3473778:doEvent1,[])
 }
-Add(HBoxLayout,4506754,350,161)
+Add(HBoxLayout,4506754,350,168)
 {
  Name="vert"
  Space=3

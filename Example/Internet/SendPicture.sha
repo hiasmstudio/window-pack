@@ -1,6 +1,7 @@
 *Отсылка скриншотов между компьютерами в сети или в Internet.
 Make(delphi)
-Add(MainForm,68161,28,98)
+ver(4.05 build 186)
+Add(MainForm,68161,28,119)
 {
  Left=21
  Top=106
@@ -23,7 +24,7 @@ Add(BitmapStream,30541,329,49)
 {
  link(onRead,19361:doLoad,[])
 }
-Add(GetDataEx,2160953,196,161)
+Add(GetDataEx,2160953,203,165)
 {
  link(Data,93822:Stream,[])
 }

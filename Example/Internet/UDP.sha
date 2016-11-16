@@ -1,5 +1,6 @@
 Make(delphi)
-Add(MainForm,7696190,21,105)
+ver(4.05 build 186)
+Add(MainForm,7696190,21,126)
 {
  Left=20
  Top=105

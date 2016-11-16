@@ -1,5 +1,6 @@
 *Автор: Sniper36#13#10E-mail: Sniper36@sibnet.ru#13#10-------------------------------------------#13#10Клиент для удаленного управления компьютером
 Make(delphi)
+ver(4.05 build 186)
 Add(ChildGroupBox,7338188,238,49)
 {
  link(onEvent1,7517816:doSend,[(305,55)(305,167)])
@@ -8,7 +9,6 @@ Add(ChildGroupBox,7338188,238,49)
  link(Data1,7517816:Active,[(244,26)(232,26)(232,186)(328,186)])
 }
 BEGIN_SDK
-Pos(90,0)
   Add(EditMulti,6190188,-87,3)
   {
    EventCount=3
@@ -102,7 +102,7 @@ Pos(90,0)
    Point(doEnabled)
    link(onClick,6190188:onEvent3,[(305,139)(305,23)])
   }
-  Add(HubEx,10104689,267,0)
+  Add(HubEx,10104689,267,7)
   {
    link(onEvent,6190188:onEvent1,[(314,13)(314,9)])
   }
@@ -477,7 +477,7 @@ BEGIN_SDK
      Name="Time"
     }
   END_SDK
-  Add(HubEx,13262853,287,140)
+  Add(HubEx,13262853,287,147)
   {
    link(onEvent,6634149:doAdd,[])
   }
@@ -490,7 +490,7 @@ BEGIN_SDK
    Default=Integer(1)
   }
 END_SDK
-Add(HubEx,12004886,280,140)
+Add(HubEx,12004886,280,147)
 {
  link(onEvent,7517816:doOpen,[])
 }
@@ -765,7 +765,7 @@ Add(Timer,5162488,49,238)
 {
  link(onTimer,12968526:doWork2,[])
 }
-Add(HubEx,12968526,91,231)
+Add(HubEx,12968526,91,238)
 {
  link(onEvent,16066643:doData,[])
 }

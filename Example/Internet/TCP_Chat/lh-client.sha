@@ -1,5 +1,5 @@
 Make(delphi)
-ver(4.01 build 174)
+ver(4.05 build 186)
 Add(MainForm,2953706,21,105)
 {
  Width=423
@@ -61,7 +61,7 @@ BEGIN_SDK
    Type=5
    link(Stream,4061183:Var1,[(160,128)])
   }
-  Add(GetDataEx,4061183,161,119)
+  Add(GetDataEx,4061183,168,123)
   {
    link(Data,10092057:Stream,[])
   }
@@ -109,7 +109,7 @@ BEGIN_SDK
    Data=String(list)
    link(onEventData,14579944:doPut,[])
   }
-  Add(GetDataEx,4061183,161,119)
+  Add(GetDataEx,4061183,168,123)
   {
    link(Data,10092057:Stream,[])
   }
@@ -119,7 +119,7 @@ BEGIN_SDK
    link(Data,4061183:Var3,[(209,128)])
   }
 END_SDK
-Add(HubEx,2966025,315,315)
+Add(HubEx,2966025,315,322)
 {
  Angle=3
  link(onEvent,11603059:doSend,[(319,255)(255,255)(255,230)])
@@ -217,7 +217,7 @@ BEGIN_SDK
    TreeView="parent.maintree"
   }
 END_SDK
-Add(GetDataEx,5049677,385,245)
+Add(GetDataEx,5049677,392,249)
 {
  link(Data,12951795:Stream,[])
 }
@@ -229,9 +229,9 @@ Add(IconsManager,12525499,616,224)
 Add(ChildPanelEx,2554133,560,322)
 {
  link(onSend,2416804:doWork2,[(604,328)(604,349)])
- link(Stream,16067546:Var3,[(566,303)])
  link(onConnect,3998240:In,[])
  link(onAuth,6415664:doWork1,[(604,342)(604,311)(256,311)])
+ link(Stream,16067546:Var3,[(566,303)])
 }
 BEGIN_SDK
   Add(EditMultiEx,14089529,21,21)
@@ -286,7 +286,7 @@ BEGIN_SDK
      Type=5
      link(Stream,4061183:Var1,[(153,93)])
     }
-    Add(GetDataEx,4061183,154,84)
+    Add(GetDataEx,4061183,161,88)
     {
      link(Data,10092057:Stream,[])
     }
@@ -461,7 +461,7 @@ BEGIN_SDK
      link(Array,2928097:Array,[(146,156)(160,156)])
      link(Index,5255678:Index,[(153,154)(128,154)(128,212)(104,212)])
     }
-    Add(HubEx,9728779,210,42)
+    Add(HubEx,9728779,210,49)
     {
      link(onEvent,2794497:doValue,[])
     }
@@ -470,7 +470,7 @@ BEGIN_SDK
      link(onEventData,4788467:onReplace,[(334,230)(334,27)])
      link(Data,3873782:Var3,[(293,100)])
     }
-    Add(GetDataEx,3873782,238,91)
+    Add(GetDataEx,3873782,245,95)
     {
      link(Data,2794497:Value,[])
     }
@@ -574,7 +574,7 @@ BEGIN_SDK
      link(onEvent1,8389045:doData,[])
      link(onEvent2,4379268:doWork1,[(228,132)])
     }
-    Add(HubEx,4379268,224,140)
+    Add(HubEx,4379268,224,147)
     {
      Angle=2
      link(onEvent,14507594:doClose,[(72,153)(72,132)])
@@ -632,7 +632,7 @@ BEGIN_SDK
    Type=5
    link(Stream,4061183:Var1,[(153,93)])
   }
-  Add(GetDataEx,4061183,154,84)
+  Add(GetDataEx,4061183,161,88)
   {
    link(Data,10092057:Stream,[])
   }
@@ -655,12 +655,12 @@ BEGIN_SDK
    link(Data,4061183:Var3,[(209,93)])
   }
 END_SDK
-Add(GetDataEx,9175330,539,245)
+Add(GetDataEx,9175330,546,249)
 {
  Angle=3
  link(Data,5049677:Var3,[])
 }
-Add(HubEx,11523344,595,259)
+Add(HubEx,11523344,595,266)
 {
  link(onEvent,8952025:doClear,[])
 }
@@ -710,11 +710,11 @@ BEGIN_SDK
    Default=Integer(-1)
   }
 END_SDK
-Add(GetDataEx,16067546,539,294)
+Add(GetDataEx,16067546,546,298)
 {
  link(Data,9175330:Var2,[])
 }
-Add(HubEx,9779199,315,336)
+Add(HubEx,9779199,315,343)
 {
  Angle=3
  link(onEvent,2966025:doWork3,[])
@@ -722,7 +722,6 @@ Add(HubEx,9779199,315,336)
 Add(GVarContainer,12458043,77,119)
 {
  Section="server"
- FilleName="lh-client.ini"
  VarList=#2:ip|4:port|4:name|
  link(onLoad,258002:doCompare,[])
 }
@@ -766,13 +765,13 @@ Add(IndexToChanel,69143,203,210)
  link(onEvent1,11603059:doOpen,[])
  link(onEvent2,11603059:doClose,[])
 }
-Add(LineBreak,3608152,140,210)
+Add(LineBreak,1861680,140,210)
 {
  Caption="online"
  link(Out,69143:doEvent,[])
  Primary=[3998240,476,119]
 }
-Add(HubEx,6415664,252,315)
+Add(HubEx,6415664,252,322)
 {
  link(onEvent,14145238:doAuth,[])
 }
@@ -822,7 +821,7 @@ BEGIN_SDK
    Default=String()
   }
 END_SDK
-Add(GetDataEx,1239326,539,357)
+Add(GetDataEx,1239326,546,361)
 {
  link(Data,16067546:Var2,[])
 }
@@ -903,7 +902,7 @@ Add(DoData,2610150,301,476)
  Data=Integer(3)
  link(onEventData,13558154:doWork1,[(344,482)(344,516)(235,516)])
 }
-Add(HubEx,13558154,231,581)
+Add(HubEx,13558154,231,588)
 {
  link(onEvent,11357722:doData,[])
 }
@@ -915,7 +914,7 @@ Add(Memory,13177487,294,588)
 {
  link(onData,9297149:doSend,[])
 }
-Add(HubEx,2416804,385,336)
+Add(HubEx,2416804,385,343)
 {
  Angle=2
  link(onEvent,9779199:doWork1,[])

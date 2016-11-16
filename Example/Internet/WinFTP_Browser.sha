@@ -1,6 +1,6 @@
 *Пример работы компонента WinFTP в режиме браузера с возможностью закачки файлов
 Make(delphi)
-ver(4.01 build 174)
+ver(4.05 build 186)
 Add(MainForm,2953706,28,189)
 {
  Width=355
@@ -383,37 +383,37 @@ BEGIN_SDK
   {
    Icon=[ZIP7E03000078DA63606004420101062029C190C1CCC020C6C0C0A001C440210605068838083830330C59A073345C737F10EF3229F7090104557A3DAE0DFFD0E57AB79C78C54092A062887AA0B1C4980C014037DB5E2B002222D503CD373D9D0644DAEB22F12803CA024D062A46437874196C8A95DF618B8C8022041D2FB2561382806C62DCAFBACB1318474092F898753F503D80E9EAFF7F24CCCFC0F0479E81E1873D10D723F001A0D803A0D807101FA8EE2F921E00C10A5B68]
   }
-  Add(HubEx,1406171,476,140)
+  Add(HubEx,1406171,476,147)
   {
    Angle=3
    link(onEvent,10294293:doWork3,[])
   }
-  Add(HubEx,10294293,476,105)
+  Add(HubEx,10294293,476,112)
   {
    Angle=3
    link(onEvent,10714895:InserIcon,[(480,34)])
   }
-  Add(GetDataEx,9938925,364,35)
+  Add(GetDataEx,9938925,371,39)
   {
    Angle=3
    link(Data,10714895:IdxIcon,[(34,44)])
   }
-  Add(GetDataEx,8106406,392,35)
+  Add(GetDataEx,8106406,399,39)
   {
    Angle=3
    link(Data,9938925:Var3,[])
   }
-  Add(HubEx,15184602,469,112)
+  Add(HubEx,15184602,469,119)
   {
    Angle=3
    link(onEvent,10714895:AddTable,[(473,27)])
   }
-  Add(HubEx,465856,469,147)
+  Add(HubEx,465856,469,154)
   {
    Angle=3
    link(onEvent,15184602:doWork3,[])
   }
-  Add(GetDataEx,13805234,371,28)
+  Add(GetDataEx,13805234,378,32)
   {
    Angle=3
    link(Data,10714895:FoundFile,[(41,37)])
@@ -424,7 +424,7 @@ BEGIN_SDK
    link(Data1,7359735:Var2,[])
    link(Data2,12726663:Icon,[])
   }
-  Add(GetDataEx,7359735,182,42)
+  Add(GetDataEx,7359735,189,46)
   {
    Angle=3
    link(Data,10714895:CountIcon,[(27,51)])
@@ -435,7 +435,7 @@ BEGIN_SDK
    link(Data1,3924106:Var2,[])
    link(Data2,4478638:Icon,[])
   }
-  Add(GetDataEx,3924106,231,42)
+  Add(GetDataEx,3924106,238,46)
   {
    Angle=3
    link(Data,7359735:Var3,[])
@@ -453,7 +453,7 @@ Add(DoData,15764066,420,154)
  link(onEventData,15293281:doWork2,[])
  link(Data,3653777:Var2,[])
 }
-Add(HubEx,9719045,616,252)
+Add(HubEx,9719045,616,259)
 {
  link(onEvent,11596973:doProcessMessages,[])
 }
@@ -467,7 +467,7 @@ Add(Button,4239912,355,304)
  Caption="ReadFile"
  link(onClick,1471333:doWork1,[(410,310)])
 }
-Add(HubEx,1471333,406,343)
+Add(HubEx,1471333,406,350)
 {
  link(onEvent,3867472:doSplit,[])
 }
@@ -485,23 +485,23 @@ Add(SDialog,2544973,553,357)
  link(onExecute,224026:doValue,[])
  link(FileName,3688905:Var3,[(559,331)])
 }
-Add(HubEx,15293281,462,147)
+Add(HubEx,15293281,462,154)
 {
  link(onEvent,15653931:doText,[])
 }
-Add(GetDataEx,3688905,504,322)
+Add(GetDataEx,3688905,511,326)
 {
  Angle=2
  PColor(Data,16711935)
  link(Data,3867472:Left,[(517,393)(433,393)])
 }
-Add(GetDataEx,3653777,413,77)
+Add(GetDataEx,3653777,420,81)
 {
  Angle=1
  PColor(Data,16711935)
  link(Data,3688905:Var2,[(517,86)])
 }
-Add(GetDataEx,10337905,126,77)
+Add(GetDataEx,10337905,133,81)
 {
  Angle=1
  PColor(Data,16711935)

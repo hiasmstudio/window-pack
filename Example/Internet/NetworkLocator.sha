@@ -1,5 +1,5 @@
 Make(delphi)
-ver(4.03 build 180)
+ver(4.05 build 186)
 Add(MainForm,2953706,84,119)
 {
  Caption="Scan local network"

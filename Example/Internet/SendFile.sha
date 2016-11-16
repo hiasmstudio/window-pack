@@ -1,6 +1,7 @@
 *Отсылка файлов между компьютерами в сети или в Internet.
 Make(delphi)
-Add(MainForm,89020,28,105)
+ver(4.05 build 186)
+Add(MainForm,89020,35,119)
 {
  Left=21
  Top=105

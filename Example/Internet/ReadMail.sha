@@ -1,5 +1,6 @@
-Pos(0,54)
-Add(MainForm,19160,21,51)
+Make(delphi)
+ver(4.05 build 186)
+Add(MainForm,19160,21,49)
 {
  Left=21
  Top=105
@@ -8,15 +9,15 @@ Add(MainForm,19160,21,51)
  Font=[Arial,8,0,0,1]
  Caption="Mailer"
 }
-Add(Button,87804,84,23)
+Add(Button,87804,84,49)
 {
  Left=10
  Top=10
  Font=[Arial,8,0,0,1]
  Caption="Connect"
- link(onClick,34270:doConnect,[(135,29)(135,106)])
+ link(onClick,34270:doConnect,[(135,55)(135,104)])
 }
-Add(Memo,37677,273,149)
+Add(Memo,37677,273,147)
 {
  Left=10
  Top=35
@@ -25,97 +26,125 @@ Add(Memo,37677,273,149)
  Font=[Arial,8,0,0,1]
  ScrollBars=3
 }
-Add(POP3,34270,154,100)
+Add(POP3,34270,154,98)
 {
+ Server="q-mail"
+ Login="puux"
+ Password="kuper_os"
  link(onConnect,1969106:doStrCat,[])
- link(onRead,14704815:doEvent1,[(205,113)(205,176)])
+ link(onRead,14704815:doEvent1,[(202,111)(202,174)])
 }
-Add(Label,2225581,308,100)
+Add(Label,2225581,882,112)
 {
  Left=145
  Top=15
- Font=[MS Sans Serif,8,0,0,1]
  Caption="Count:"
 }
-Add(Button,24970,84,107)
+Add(Button,24970,84,105)
 {
  Left=70
  Top=10
  Font=[Arial,8,0,0,1]
  Caption="Read"
- Data=Integer(1)
+ Data=Integer(56)
  link(onClick,34270:doRead,[])
 }
-Add(StrCat,1969106,238,100)
+Add(StrCat,1969106,238,98)
 {
  Str1="Count: "
- link(onStrCat,2225581:doText,[])
 }
-Add(POP3_Parse,2707666,273,219)
-{
-}
-Add(Edit,9890082,273,282)
-{
- Left=10
- Top=145
- Width=155
- Font=[MS Sans Serif,8,0,0,1]
- link(Str,2707666:From,[])
-}
-Add(Edit,814934,280,331)
-{
- Left=175
- Top=145
- Width=165
- Font=[MS Sans Serif,8,0,0,1]
- link(Str,2707666:Subject,[])
-}
-Add(Memo,9723279,294,380)
-{
- Left=10
- Top=170
- Width=365
- Height=135
- Font=[MS Sans Serif,8,0,0,1]
- ScrollBars=3
-}
-Add(Hub,14704815,217,170)
+Add(Hub,14704815,217,168)
 {
  OutCount=3
  link(onEvent1,37677:doText,[])
- link(onEvent2,2707666:doParse,[(264,183)(264,225)])
- link(onEvent3,2378853:doEvent1,[(259,190)(259,242)(186,242)(186,288)])
+ link(onEvent2,13836136:doValue,[(315,181)(315,118)])
 }
-Add(Hub,2378853,196,282)
+Add(BlockFind,11609142,637,112)
 {
- OutCount=3
- link(onEvent1,9890082:doText,[])
- link(onEvent2,814934:doText,[(254,295)(254,337)])
- link(onEvent3,15676420:doData,[(236,302)(236,407)])
+ IncludeBlock=1
+ StartBlock="password:"
+ EndBlock="To make"
+ link(onSearch,10494569:doReplace,[])
 }
-Add(DoData,15676420,245,401)
+Add(Replace,10494569,686,112)
 {
- link(onEventData,9723279:doText,[])
- link(Data,2707666:Text,[(251,326)(293,326)])
+ SubStr="=\r\n"
+ link(onReplace,7917415:doReplace,[])
 }
-Add(Memory,224257,392,219)
+Add(Replace,16238498,833,112)
 {
- link(onData,89292:doData,[])
+ SubStr="=3D"
+ DestStr="="
+ link(onReplace,2225581:doText,[])
 }
-Add(FileStream,14014400,504,205)
+Add(Position,8573125,413,112)
 {
- Mode=1
- AutoCopy=0
- Point(doCopyFromStream)
- link(FileName,224257:Value,[(510,195)(482,195)(482,264)(398,264)])
+ Target="Content-Transfer-Encoding: base64"
+ ZeroPos=0
+ ShortSearch=1
+ link(onSearch,11582092:doCompare,[])
 }
-Add(DoData,89292,441,219)
+Add(If_else,11582092,469,112)
 {
- link(onEventData,14014400:doCopyFromStream,[])
- link(Data,2707666:Attach,[(447,209)(376,209)(376,261)(307,261)])
+ Op2=Integer(0)
+ link(onTrue,7445341:doData,[])
+ link(onFalse,10304715:doSearch,[(614,125)(614,202)])
 }
-Add(StrCat,4314815,329,219)
+Add(BlockFind,10304715,637,196)
 {
- Str1="d:\"
- link(onStrCat,224257:doValue,[])
+ IncludeBlock=1
+ StartBlock="Content-Type: text/plain; charset=UTF-8\r\n\r\n"
+ EndBlock="\r\n\r\n"
+ link(onSearch,7602747:doReplace,[])
+ link(Text,157302:Var3,[(643,170)])
+}
+Add(Memo,10784731,812,182)
+{
+ Left=10
+ Top=140
+ Width=365
+ Height=160
+}
+Add(Memory,13836136,350,112)
+{
+ link(onData,8573125:doSearch,[])
+}
+Add(Replace,7602747,686,196)
+{
+ SubStr="\r\n"
+ link(onReplace,12343527:doCharset,[])
+}
+Add(Charset,12343527,735,196)
+{
+ Type=4
+ link(onCharset,15718724:doEvent1,[])
+}
+Add(DoData,7445341,525,112)
+{
+ link(onEventData,8420616:doWork2,[])
+ link(Data,157302:Var1,[(531,100)(517,100)])
+}
+Add(GetDataEx,157302,511,165)
+{
+ Angle=3
+ link(Data,13836136:Value,[(356,170)])
+}
+Add(HubEx,8420616,616,112)
+{
+ link(onEvent,11609142:doSearch,[])
+}
+Add(Hub,15718724,770,196)
+{
+ link(onEvent1,8420616:doWork3,[(791,202)(791,162)(620,162)])
+ link(onEvent2,10784731:doText,[])
+}
+Add(Replace,7917415,735,112)
+{
+ SubStr="\r"
+ link(onReplace,11549403:doReplace,[])
+}
+Add(Replace,11549403,784,112)
+{
+ SubStr="\n"
+ link(onReplace,16238498:doReplace,[])
 }

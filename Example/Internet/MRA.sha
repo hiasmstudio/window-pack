@@ -1,6 +1,5 @@
 Make(delphi)
-ver(4.0 build 173)
-Pos(1,0)
+ver(4.05 build 186)
 Add(MainForm,2953706,27,322)
 {
  Width=298
@@ -28,7 +27,7 @@ Add(FormatStr,15816293,286,238)
  Mask="Error (code: %1)"
  link(onFString,1640121:doWork3,[(430,244)])
 }
-Add(HubEx,4098213,426,147)
+Add(HubEx,4098213,426,154)
 {
  link(onEvent,4205443:doAdd,[])
 }
@@ -50,7 +49,7 @@ Add(Hub,12324994,237,154)
  link(onEvent1,15638279:doData,[])
  link(onEvent2,3318322:doAuthorize,[(281,167)(281,202)])
 }
-Add(HubEx,1640121,426,189)
+Add(HubEx,1640121,426,196)
 {
  Angle=3
  link(onEvent,4098213:doWork3,[])
@@ -60,7 +59,7 @@ Add(DoData,16477950,342,196)
  Data=String(Authorization succesfull)
  link(onEventData,6178397:doWork2,[])
 }
-Add(HubEx,6178397,405,189)
+Add(HubEx,6178397,405,196)
 {
  link(onEvent,1640121:doWork2,[])
 }
@@ -89,11 +88,11 @@ Add(MRA_MessageReciever,15964210,699,343)
  link(onSystemMessage,7068585:doWork2,[])
  link(onContactAuthorize,7068585:doWork3,[(745,370)])
 }
-Add(HubEx,7555084,741,336)
+Add(HubEx,7555084,741,343)
 {
  link(onEvent,7495395:doEvent1,[])
 }
-Add(HubEx,7414227,741,343)
+Add(HubEx,7414227,741,350)
 {
  Angle=3
  link(onEvent,7555084:doWork3,[])
@@ -216,7 +215,7 @@ BEGIN_SDK
    link(onRead,7058981:doEvent1,[])
    link(Array,108508:Var3,[(153,268)])
   }
-  Add(GetDataEx,108508,42,259)
+  Add(GetDataEx,108508,49,263)
   {
    link(Data,9924371:Message,[(55,142)(27,142)])
   }
@@ -255,15 +254,15 @@ BEGIN_SDK
    link(onAdd,9924371:onSendMessage,[(579,356)(579,27)])
    link(Data,2699659:Var3,[(531,338)])
   }
-  Add(GetDataEx,2699659,357,329)
+  Add(GetDataEx,2699659,364,333)
   {
    link(Data,12224560:Text,[])
   }
-  Add(GetDataEx,9447144,91,231)
+  Add(GetDataEx,9447144,98,235)
   {
    link(Data,66275:Value,[])
   }
-  Add(HubEx,4547008,504,259)
+  Add(HubEx,4547008,504,266)
   {
    link(onEvent,8438405:doString,[])
   }
@@ -272,7 +271,7 @@ BEGIN_SDK
    link(onEventData,942210:doAdd,[])
    link(Data,3711323:Var2,[])
   }
-  Add(GetDataEx,10005178,364,231)
+  Add(GetDataEx,10005178,371,235)
   {
    Angle=3
    link(Data,9447144:Var3,[])
@@ -282,7 +281,7 @@ BEGIN_SDK
    link(onAdd,13252955:doAdd,[])
    link(Data,3711323:Var3,[(419,436)])
   }
-  Add(GetDataEx,3711323,364,427)
+  Add(GetDataEx,3711323,371,431)
   {
    link(Data,10005178:Var2,[])
   }
@@ -329,7 +328,7 @@ BEGIN_SDK
    link(onEvent2,2885579:doData,[(230,293)(230,34)])
    link(onEvent3,7559025:doVisible,[(235,300)(235,97)])
   }
-  Add(HubEx,13947497,28,28)
+  Add(HubEx,13947497,28,35)
   {
    Angle=1
    link(onEvent,13431671:doRead,[(32,286)])
@@ -391,7 +390,7 @@ Add(FormatStr,11199535,1042,308)
  Mask="Add ok: %1 - %4"
  link(onFString,985209:doWork3,[(1088,314)])
 }
-Add(HubEx,985209,1084,217)
+Add(HubEx,985209,1084,224)
 {
  Angle=3
  link(onEvent,4098213:doWork1,[(1088,133)(430,133)])
@@ -406,7 +405,7 @@ Add(MT_Add,13252955,643,210)
  Data=String()
  link(onAdd,7555084:doWork1,[(745,216)])
 }
-Add(GetDataEx,6275200,496,140)
+Add(GetDataEx,6275200,503,144)
 {
  link(Data,13498311:Value,[])
 }
@@ -726,7 +725,7 @@ Add(Memory,9094173,643,252)
 {
  Default=Integer(-1)
 }
-Add(GetDataEx,4773273,636,287)
+Add(GetDataEx,4773273,643,291)
 {
  link(Data,9094173:Value,[])
 }
@@ -756,12 +755,12 @@ Add(Memory,3833452,657,392)
 {
  Default=Integer(4)
 }
-Add(GetDataEx,1588328,587,434)
+Add(GetDataEx,1588328,594,438)
 {
  Angle=1
  link(Data,10485971:Value,[(621,443)])
 }
-Add(HubEx,7068585,741,350)
+Add(HubEx,7068585,741,357)
 {
  Angle=3
  link(onEvent,7414227:doWork3,[])
@@ -770,7 +769,7 @@ Add(MRA_ContactDelete,8937439,328,588)
 {
  MailAgent="Mail.ru_Agent"
 }
-Add(GetDataEx,3058101,545,140)
+Add(GetDataEx,3058101,552,144)
 {
  Angle=3
  link(Data,6275200:Var3,[])
@@ -796,7 +795,7 @@ Add(Memory,5172683,1112,308)
 {
  Default=Integer(0)
 }
-Add(GetDataEx,1093762,1063,343)
+Add(GetDataEx,1093762,1070,347)
 {
  Angle=1
  link(Data,5172683:Value,[(1118,352)])
@@ -943,7 +942,7 @@ Add(Message,8932024,510,462)
  Caption="Error"
  Icon=1
 }
-Add(HubEx,4221577,489,378)
+Add(HubEx,4221577,489,385)
 {
  link(onEvent,11628807:doGet,[])
 }
