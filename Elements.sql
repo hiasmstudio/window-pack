@@ -8,7 +8,7 @@ INSERT INTO "groups" VALUES(6,'System','Система',7);
 INSERT INTO "groups" VALUES(7,'Media','Мультимедиа',9);
 INSERT INTO "groups" VALUES(9,'Internet','Интернет',10);
 INSERT INTO "groups" VALUES(10,'DataBase','Базы данных',11);
-INSERT INTO "groups" VALUES(11,'Strings','Сроки',12);
+INSERT INTO "groups" VALUES(11,'Strings','Строки',12);
 INSERT INTO "groups" VALUES(12,'Files','Файлы',13);
 INSERT INTO "groups" VALUES(13,'Logic','Логика',14);
 INSERT INTO "groups" VALUES(14,'Arrays','Массивы',15);
