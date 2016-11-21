@@ -1,6 +1,6 @@
 *Удаление комментариев из HTML страницы #13#10<!--   -->
 Make(delphi)
-Pos(0,0)
+ver(4.05 build 186)
 Add(MainForm,96649,102,165)
 {
  Left=312
@@ -105,7 +105,7 @@ BEGIN_SDK
   Add(Memory,87433,231,126)
   {
   }
-  Add(GetDataEx,10866070,119,105)
+  Add(GetDataEx,10866070,126,109)
   {
    link(Data,2029:Value,[])
   }

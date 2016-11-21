@@ -1,11 +1,11 @@
-Pos(0,0)
+Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,34480,14,105)
 {
  Left=223
  Top=355
  Width=418
  Height=138
- Font=[MS Sans Serif,8,0,0]
  BorderStyle=3
 }
 Add(Clipboard,33280,259,168)
@@ -27,7 +27,6 @@ Add(Edit,69003,98,91)
  Width=30
  Height=21
  TabOrder=1
- Font=[MS Sans Serif,8,0,0]
  Text=""
 }
 Add(Edit,26462,147,91)
@@ -37,7 +36,6 @@ Add(Edit,26462,147,91)
  Width=30
  Height=21
  TabOrder=2
- Font=[MS Sans Serif,8,0,0]
  Text=""
 }
 Add(Message,16958,378,49)
@@ -51,7 +49,6 @@ Add(Label,83259,259,105)
  Top=85
  Width=75
  Height=20
- Font=[MS Sans Serif,8,0,0]
  Caption="Результат"
 }
 Add(Label,87447,98,49)
@@ -59,7 +56,6 @@ Add(Label,87447,98,49)
  Top=5
  Width=55
  Height=20
- Font=[MS Sans Serif,8,0,0]
  Caption="Градусы"
 }
 Add(Label,91000,147,49)
@@ -68,7 +64,6 @@ Add(Label,91000,147,49)
  Top=5
  Width=55
  Height=20
- Font=[MS Sans Serif,8,0,0]
  Caption="Минуты"
 }
 Add(Button,95892,70,168)
@@ -77,7 +72,6 @@ Add(Button,95892,70,168)
  Width=75
  Height=25
  TabOrder=4
- Font=[MS Sans Serif,8,0,0]
  Caption="Cчитать"
  link(onClick,5727:doCalc,[])
 }
@@ -87,7 +81,6 @@ Add(Label,92600,196,49)
  Top=5
  Width=65
  Height=20
- Font=[MS Sans Serif,8,0,0]
  Caption="Секунды"
 }
 Add(Edit,52056,196,91)
@@ -97,7 +90,6 @@ Add(Edit,52056,196,91)
  Width=35
  Height=21
  TabOrder=3
- Font=[MS Sans Serif,8,0,0]
  Text=""
 }
 Add(Edit,19009,203,168)
@@ -106,7 +98,6 @@ Add(Edit,19009,203,168)
  Top=60
  Width=130
  Height=21
- Font=[MS Sans Serif,8,0,0]
  Text=""
  link(onChange,33280:doPutText,[(276,175)(276,175)])
 }
@@ -114,7 +105,6 @@ Add(Button,10507,322,49)
 {
  Top=90
  Width=75
- Font=[MS Sans Serif,8,0,0]
  Caption="Справка"
  link(onClick,16958:doMessage,[])
 }
@@ -125,8 +115,7 @@ Add(Memo,15381,259,49)
  Width=180
  Height=90
  Ctl3D=1
- Font=[MS Sans Serif,8,0,0]
- Strings='Внимание, после нажатия клавиши "Считать" результат автоматически заносится в буфер обмена.'
+ Strings=#91:Внимание, после нажатия клавиши "Считать" результат автоматически заносится в буфер обмена.|
  AddType=1
  ReadOnly=0
 }

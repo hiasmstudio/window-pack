@@ -1,6 +1,6 @@
 *ѕример динамического изменени€ размеров элементов шаблона печати
 Make(delphi)
-ver(4.02 build 179)
+ver(4.05 build 186)
 Add(MainForm,2953706,91,126)
 {
  Width=362
@@ -128,7 +128,7 @@ Add(PaintBox,13572165,175,168)
  ClearBeforeDraw=0
  link(onBeforeDraw,49600:doEvent1,[])
 }
-Add(HubEx,9568852,147,161)
+Add(HubEx,9568852,147,168)
 {
  link(onEvent,13572165:doRefresh,[])
 }

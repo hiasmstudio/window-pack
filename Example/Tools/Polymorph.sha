@@ -1,5 +1,5 @@
 Make(delphi)
-ver(4.01 build 174)
+ver(4.05 build 186)
 Add(MainForm,2953706,42,105)
 {
  link(onCreate,15525783:doEvent1,[])
@@ -29,6 +29,7 @@ BEGIN_SDK
   {
    WorkCount=#59:##Add=Создает дочерний контейнер по указанному имени класса|6:doDraw|7:doCheck|
    EventCount=#6:onTrue|
+   Point(##Add)
   }
 END_SDK
 BEGIN_SDK
@@ -38,6 +39,7 @@ BEGIN_SDK
    EventCount=#6:onTrue|
    Width=265
    Height=277
+   Point(##Add)
    link(##Add,15978066:doRandom,[(56,27)(56,55)])
    link(doDraw,3464998:doDraw,[(56,34)(56,181)])
    link(doCheck,755789:doCalc,[(56,41)(56,251)])
@@ -82,11 +84,11 @@ BEGIN_SDK
    ResultType=0
    link(onResult,2858558:doCheck,[])
   }
-  Add(GetDataEx,3622762,98,154)
+  Add(GetDataEx,3622762,105,158)
   {
    link(Data,14495459:Point,[(111,151)(97,151)])
   }
-  Add(GetDataEx,13382430,133,147)
+  Add(GetDataEx,13382430,140,151)
   {
    link(Data,6924954:Point,[])
   }
@@ -103,6 +105,7 @@ BEGIN_SDK
    EventCount=#6:onTrue|
    Width=398
    Height=263
+   Point(##Add)
    link(##Add,15978066:doRandom,[(53,27)(53,48)])
    link(doDraw,9553048:doDraw,[(53,34)(53,174)])
    link(doCheck,4007400:doGet,[(53,41)(53,237)])
@@ -143,7 +146,7 @@ BEGIN_SDK
    MathStr="%2 - (%1 + 15)"
    link(X1,13297102:Var3,[(139,100)])
   }
-  Add(GetDataEx,7181077,77,77)
+  Add(GetDataEx,7181077,84,81)
   {
    link(Data,15978066:Random,[])
   }
@@ -153,7 +156,7 @@ BEGIN_SDK
    link(onResult,11493549:doCalc,[])
    link(X1,7181077:Var3,[(188,86)])
   }
-  Add(GetDataEx,13297102,84,91)
+  Add(GetDataEx,13297102,91,95)
   {
    link(Data,3649181:Random,[(97,82)(139,82)])
   }

@@ -1,5 +1,5 @@
 Make(delphi)
-Pos(1,1139)
+ver(4.05 build 186)
 Add(InfoTip,12763557,83,563)
 {
  Info=#13:Как работает:|
@@ -178,7 +178,7 @@ BEGIN_SDK
    Height=20
    Caption="Красный, Зеленый, Синий"
   }
-  Add(GetDataEx,8657400,77,42)
+  Add(GetDataEx,8657400,84,46)
   {
    PColor(Data,16744448)
    link(Data,7971950:Cable,[(90,4)(9,4)])
@@ -378,7 +378,7 @@ Add(Button,3995271,111,452)
  Data=String(Нажата кнопка 2)
  link(onClick,13636893:Panel2.SetText,[(155,458)(155,437)])
 }
-Add(HubEx,13960903,489,-278)
+Add(HubEx,13960903,489,-271)
 {
  PColor(onEvent,16744448)
  link(onEvent,9237293:Cable,[])
@@ -461,7 +461,7 @@ Add(InfoTip,9620575,384,457)
  Height=74
  Margin=3
 }
-Add(GetDataEx,5739982,496,437)
+Add(GetDataEx,5739982,503,441)
 {
  PColor(Data,16744448)
  link(Data,7362271:Cable,[])
@@ -1235,7 +1235,7 @@ Add(CableVar,9890514,755,-180)
  PColor(Cable,16744448)
  link(Cable,16740440:Var2,[])
 }
-Add(GetDataEx,16740440,748,-229)
+Add(GetDataEx,16740440,755,-225)
 {
  PColor(Data,16744448)
  link(Data,246779:Cable,[])

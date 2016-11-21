@@ -1,6 +1,6 @@
 *Быстрое формирование строки из нескольких подстрок
-Make(Delphi)
-Pos(0,0)
+Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,12195,216,209)
 {
  Left=378
@@ -10,7 +10,7 @@ Add(MainForm,12195,216,209)
  Caption=""
  BorderStyle=5
  TaskBar=1
- link(onCreate,8372:doEvent4,[(279,250)(279,126)])
+ link(onCreate,8372:doEvent4,[(274,229)(274,126)])
 }
 Add(Edit,1805,158,106)
 {

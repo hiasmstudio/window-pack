@@ -1,15 +1,16 @@
 *Очень простой и несовсем традиционный калькулятор. Это конечно не Microsoft Super Calculator, но считает он ничуть не хуже.
-Pos(0,28)
+Make(delphi)
+ver(4.05 build 186)
 Add(InfoTip,72700,21,7)
 {
- Info='Очень простой и не слишком функциональный калькулятор'
- Font=[Times New Roman,12,2,8388736]
+ Info=#53:Очень простой и не слишком функциональный калькулятор|
+ Font=[Times New Roman,12,2,8388736,1]
  Width=288
  Height=95
 }
 Add(Memory,83527,413,294)
 {
- @Hint='Тут хранится код операции'
+ @Hint=#25:Тут хранится код операции|
 }
 Add(Button,83167,126,231)
 {
@@ -17,7 +18,7 @@ Add(Button,83167,126,231)
  Top=110
  Width=25
  Height=25
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  Caption="2"
  link(onClick,91049:doWork8,[(167,237)(167,268)(249,268)(249,167)])
 }
@@ -27,7 +28,7 @@ Add(Button,81875,126,168)
  Top=80
  Width=25
  Height=25
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  Caption="5"
  link(onClick,91049:doWork5,[(167,174)(167,208)(231,208)(231,146)])
 }
@@ -37,7 +38,7 @@ Add(Button,76205,175,168)
  Top=80
  Width=25
  Height=25
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  Caption="6"
  link(onClick,91049:doWork4,[(226,174)(226,139)])
 }
@@ -47,7 +48,7 @@ Add(Button,6804,77,231)
  Top=110
  Width=25
  Height=25
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  Caption="1"
  link(onClick,91049:doWork9,[(119,237)(119,279)(255,279)(255,174)])
 }
@@ -67,7 +68,7 @@ Add(Button,52080,77,168)
  Top=80
  Width=25
  Height=25
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  Caption="4"
  link(onClick,91049:doWork6,[(117,174)(117,219)(238,219)(238,153)])
 }
@@ -77,7 +78,7 @@ Add(Button,82548,77,112)
  Top=50
  Width=25
  Height=25
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  Caption="7"
  link(onClick,91049:doWork3,[(117,118)(117,160)(221,160)(221,132)])
 }
@@ -87,7 +88,7 @@ Add(Button,94032,175,112)
  Top=50
  Width=25
  Height=25
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  Caption="9"
  link(onClick,91049:doWork1,[])
 }
@@ -97,7 +98,7 @@ Add(Button,57736,126,112)
  Top=50
  Width=25
  Height=25
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  Caption="8"
  link(onClick,91049:doWork2,[(168,118)(168,154)(211,154)(211,125)])
 }
@@ -107,7 +108,7 @@ Add(Button,34976,175,231)
  Top=110
  Width=25
  Height=25
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  Caption="3"
  link(onClick,91049:doWork7,[(243,237)(243,160)])
 }
@@ -117,7 +118,6 @@ Add(MainForm,76096,21,112)
  Top=234
  Width=234
  Height=201
- Font=[MS Sans Serif,8,0,0]
  Caption="Easy Calc"
  BorderStyle=3
 }
@@ -127,7 +127,7 @@ Add(Button,77974,77,294)
  Top=140
  Width=25
  Height=25
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  Caption="0"
  link(onClick,91049:doWork10,[(118,300)(118,290)(263,290)(263,181)])
 }
@@ -138,10 +138,9 @@ Add(ChanelToIndex,91049,280,112)
 }
 Add(ChildPanel,56626,406,14)
 {
- @Hint='Дисплей'
+ @Hint=#7:Дисплей|
 }
 BEGIN_SDK
-Pos(0,0)
   Add(EditMulti,745,3,3)
   {
    WorkCount=1
@@ -155,7 +154,7 @@ Pos(0,0)
    Top=25
    Width=190
    Height=20
-   Font=[Arial,8,0,0]
+   Font=[Arial,8,0,0,1]
    Caption="0"
    BevelInner=1
    Alignment=1
@@ -167,7 +166,7 @@ Add(Button,26676,175,308)
  Top=140
  Width=25
  Height=25
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  Caption="="
  link(onClick,99331:doWork1,[(220,314)(220,384)])
 }
@@ -178,14 +177,13 @@ Add(DoData,55572,406,245)
 }
 Add(MultiElement,99331,413,378)
 {
- @Hint='Вычисление результата по коду операции и двум операндам'
+ @Hint=#55:Вычисление результата по коду операции и двум операндам|
  link(onEvent1,78346:doEvent2,[(450,384)(450,125)])
  link(Data1,83527:Value,[])
  link(Data2,38053:Caption,[(426,337)(496,337)])
  link(Data3,79288:Data3,[(433,103)(356,103)])
 }
 BEGIN_SDK
-Pos(0,0)
   Add(EditMulti,5421,3,3)
   {
    EventCount=1
@@ -215,7 +213,7 @@ Pos(0,0)
   }
   Add(StrList,51243,154,35)
   {
-   Strings='%1+%2','%1-%2','%1*%2','%1/%2'
+   Strings=#5:%1+%2|5:%1-%2|5:%1*%2|5:%1/%2|
   }
   Add(ArrayRW,77642,168,105)
   {
@@ -229,7 +227,7 @@ Add(Button,66303,231,308)
  Top=50
  Width=25
  Height=25
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  Caption="+"
  link(onClick,8353:doWork1,[])
 }
@@ -244,7 +242,7 @@ Add(Button,99724,231,434)
  Top=140
  Width=25
  Height=25
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  Caption="/"
  link(onClick,8353:doWork4,[(284,440)(284,335)])
 }
@@ -254,7 +252,7 @@ Add(Button,17108,231,350)
  Top=80
  Width=25
  Height=25
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  Caption="-"
  link(onClick,8353:doWork2,[(270,356)(270,321)])
 }
@@ -264,7 +262,7 @@ Add(Button,13193,231,392)
  Top=110
  Width=25
  Height=25
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  Caption="*"
  link(onClick,8353:doWork3,[(275,398)(275,328)])
 }
@@ -297,7 +295,7 @@ Add(Label,38053,490,245)
  Top=5
  Width=190
  Color=-16777204
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  Caption="0"
  AutoSize=1
  Alignment=1
@@ -308,20 +306,19 @@ Add(Button,87247,126,294)
  Top=140
  Width=25
  Height=25
+ Font=[Arial,8,0,0,1]
  Hint="Отчистить"
- Font=[Arial,8,0,0]
  Caption="CE"
  Data=Integer(-1)
  link(onClick,75995:doEvent1,[(272,300)(272,202)])
 }
 Add(MultiElement,67284,336,112)
 {
- @Hint='Обработчик вывода числа на дисплей'
+ @Hint=#34:Обработчик вывода числа на дисплей|
  link(onEvent1,78346:doEvent1,[])
  link(Data1,79288:Data1,[])
 }
 BEGIN_SDK
-Pos(0,0)
   Add(EditMulti,132,3,3)
   {
    EventCount=1

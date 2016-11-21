@@ -1,5 +1,6 @@
 *Пример использования некоторых возможностей компонента RichEdit
 Make(delphi)
+ver(4.05 build 186)
 Add(MainForm,6560,21,105)
 {
  Left=21
@@ -14,7 +15,7 @@ Add(Edit,92657,196,56)
  Height=21
  Font=[Arial,8,0,0,1]
 }
-Add(HubEx,14810186,175,154)
+Add(HubEx,14810186,175,161)
 {
  link(onEvent,23272:doAdd,[])
 }
@@ -44,7 +45,7 @@ Add(Hub,64747,126,154)
  link(onEvent1,6777491:doWork3,[(172,160)])
  link(onEvent2,14810186:doWork2,[])
 }
-Add(HubEx,6777491,168,98)
+Add(HubEx,6777491,168,105)
 {
  link(onEvent,4665:doValue,[])
 }

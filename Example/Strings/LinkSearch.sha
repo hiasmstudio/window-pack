@@ -1,9 +1,10 @@
 ************************************************************************************************#13#10** Использование компонента BlockFind для поиска ссылок на странице**#13#10** Бросте файл с расширением html на форму и нажмите кнопку Search   **#13#10***********************************************************************************************
-Pos(0,0)
+Make(delphi)
+ver(4.05 build 186)
 Add(InfoTip,84090,168,195)
 {
- Info="Ядро программы"
- Font=[Times New Roman,9,0,0]
+ Info=#14:Ядро программы|
+ Font=[Times New Roman,9,0,0,1]
  VAlign=2
  Width=127
  Height=67
@@ -26,13 +27,13 @@ Add(ListBox,86104,217,70)
  Width=390
  Height=143
  Align=5
- Font=[Arial,8,0,0]
+ Font=[Arial,8,0,0,1]
  AddType=1
 }
 Add(InfoTip,22680,315,42)
 {
- Info="Небольшая демонстрация возможностей компонента BlockFind(поиск блоков). Как Вы сможете убедиться он очень удобен и прост при удаление или замене одинаковых частей в тексте - блоков."
- Font=[Times New Roman,10,0,0]
+ Info=#181:Небольшая демонстрация возможностей компонента BlockFind(поиск блоков). Как Вы сможете убедиться он очень удобен и прост при удаление или замене одинаковых частей в тексте - блоков.|
+ Font=[Times New Roman,10,0,0,1]
  Width=232
  Height=102
 }
@@ -46,7 +47,6 @@ Add(ChildPanel,16179,95,77)
  link(onEvent1,89538:doEvent1,[])
 }
 BEGIN_SDK
-Pos(0,0)
   Add(EditMulti,67165,3,3)
   {
    EventCount=1
@@ -60,15 +60,14 @@ Pos(0,0)
    Width=390
    Height=30
    Align=2
-   Font=[Arial,8,0,0]
-   Caption=""
+   Font=[Arial,8,0,0,1]
   }
   Add(Button,47479,60,15)
   {
    Left=5
    Top=5
    Width=75
-   Font=[Arial,8,0,0]
+   Font=[Arial,8,0,0,1]
    Caption="Search"
    link(onClick,67165:onEvent1,[])
   }
@@ -77,7 +76,7 @@ Pos(0,0)
    Left=90
    Top=10
    Width=65
-   Font=[Arial,8,0,0]
+   Font=[Arial,8,0,0,1]
    Caption=""
   }
 END_SDK
@@ -89,7 +88,7 @@ Add(BlockFind,37223,217,205)
  link(onSearch,86104:doAdd,[(261,211)(261,63)(207,63)(207,76)])
  link(Text,42567:Text,[])
 }
-Add(MainForm,3137,28,237)
+Add(MainForm,3137,28,230)
 {
  Left=312
  Top=286

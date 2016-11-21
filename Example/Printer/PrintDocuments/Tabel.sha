@@ -1,5 +1,5 @@
 Make(delphi)
-ver(4.01 build 177)
+ver(4.05 build 186)
 Add(MainForm,12413584,42,245)
 {
  Width=931
@@ -49,16 +49,16 @@ BEGIN_SDK
    Width=903
    Height=203
    Columns=#9:‘»Œ|217|0|6:1|21|1|6:2|21|1|6:3|21|1|6:4|21|1|6:5|21|1|6:6|21|1|6:7|21|1|6:8|21|1|6:9|21|1|7:10|21|1|7:11|21|1|7:12|21|1|7:13|21|1|7:14|21|1|7:15|21|1|7:16|21|1|7:17|21|1|7:18|21|1|7:19|21|1|7:20|21|1|7:21|21|1|7:22|21|1|7:23|21|1|7:24|21|1|7:25|21|1|7:26|21|1|7:27|21|1|7:28|21|1|7:29|21|1|7:30|21|1|7:31|21|1|
+   RowHeight=20
+   Spacing=1
+   TableTrans=0
+   TBorderStyle=5
    HeadFont=[Comic Sans MS,10,1,0,1]
    HeadBackColor=12303291
    CellBackColor=15658734
-   RowHeight=20
-   Spacing=1
-   TBorderStyle=5
-   TableTrans=0
   }
 END_SDK
-Add(Time,10633387,329,133)
+Add(Time,10633387,329,140)
 {
  Format="W:M:Y  h:m:s"
 }
@@ -168,12 +168,12 @@ Add(PC_TableCellStyle,16269631,749,392)
  link(Col,7768189:Var3,[(755,359)])
  link(Row,10751545:Var3,[(762,296)])
 }
-Add(GetDataEx,7768189,602,350)
+Add(GetDataEx,7768189,609,354)
 {
  Angle=3
  link(Data,13831645:Position,[(531,359)])
 }
-Add(GetDataEx,10751545,693,287)
+Add(GetDataEx,10751545,700,291)
 {
  Angle=3
  link(Data,1179918:Row,[(447,296)])

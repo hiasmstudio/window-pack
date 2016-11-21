@@ -1,5 +1,5 @@
 Make(delphi)
-ver(4.04 build 183)
+ver(4.05 build 186)
 Add(MainForm,12413584,84,203)
 {
  Width=271
@@ -38,14 +38,14 @@ BEGIN_SDK
    Width=154
    Height=154
    Columns=#7:пн|21|1|7:вт|21|1|7:ср|21|1|7:чт|21|1|7:пт|21|1|7:сб|21|1|7:вс|21|1|
+   RowHeight=20
+   Spacing=1
+   TableTrans=0
+   TBorderStyle=5
    HeadFont=[Comic Sans MS,10,1,0,1]
    HeadBackColor=12303291
    Cells=#0:|0:|0:|0:|0:|0:|0:|
    CellBackColor=15658734
-   RowHeight=20
-   Spacing=1
-   TBorderStyle=5
-   TableTrans=0
   }
 END_SDK
 Add(PaintBox,13572165,266,147)

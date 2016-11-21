@@ -1,5 +1,5 @@
 Make(delphi)
-ver(4.04 build 183)
+ver(4.05 build 186)
 Add(MainForm,2953706,98,175)
 {
  Height=360
