@@ -12,107 +12,300 @@ const
 
 type
   THICharset = class(TDebug)
-   private
-   public
-    _prop_Type:byte;
-    _prop_OutTypeUnicode:byte;
-    _prop_InTypeUnicode:byte;
-    _prop_URLMode:byte;
+    private
     
-    _prop_CodePage1:integer;
-    _prop_CodePage2:integer;    
+    public
+      _prop_Type: Byte;
+      _prop_OutTypeUnicode: Byte;
+      _prop_InTypeUnicode: Byte;
+      _prop_URLMode: Byte;
+      
+      _prop_CodePage1: Integer;
+      _prop_CodePage2: Integer;    
 
-    _data_Text:THI_Event;
-    _data_CodePage1:THI_Event;
-    _data_CodePage2:THI_Event;    
-    _event_onCharset:THI_Event;
+      _data_Text: THI_Event;
+      _data_CodePage1: THI_Event;
+      _data_CodePage2: THI_Event;    
+      
+      _event_onCharset: THI_Event;
+      _event_onError: THI_Event;
 
-    procedure _work_doCharset0(var _Data:TData; Index:word);
-    procedure _work_doCharset1(var _Data:TData; Index:word);
-    procedure _work_doCharset2(var _Data:TData; Index:word);
-    procedure _work_doCharset3(var _Data:TData; Index:word);
-    procedure _work_doCharset4(var _Data:TData; Index:word);
-    procedure _work_doCharset5(var _Data:TData; Index:word);
-    procedure _work_doCharset6(var _Data:TData; Index:word);
-    procedure _work_doCharset7(var _Data:TData; Index:word);    
-    procedure _work_doCharset8(var _Data:TData; Index:word);
-    procedure _work_doCharset9(var _Data:TData; Index:word);
-    procedure _work_doCharset10(var _Data:TData; Index:word);    
-    procedure _work_doCharset11(var _Data:TData; Index:word);
-    procedure _work_doCharset12(var _Data:TData; Index:word);    
+      procedure _work_doCharset0(var _Data: TData; Index: Word); // DOS_WIN
+      procedure _work_doCharset1(var _Data: TData; Index: Word); // WIN_DOS
+      procedure _work_doCharset2(var _Data: TData; Index: Word); // EN_RU
+      procedure _work_doCharset3(var _Data: TData; Index: Word); // KOI8_WIN
+      procedure _work_doCharset4(var _Data: TData; Index: Word); // BASE64_WIN
+      procedure _work_doCharset5(var _Data: TData; Index: Word); // WIN_BASE64
+      procedure _work_doCharset6(var _Data: TData; Index: Word); // ANSI_UTF8
+      procedure _work_doCharset7(var _Data: TData; Index: Word); // UTF8_ANSI
+      procedure _work_doCharset8(var _Data: TData; Index: Word); // CP1_CP2
+      procedure _work_doCharset9(var _Data: TData; Index: Word); // UNICODE_ANSI
+      procedure _work_doCharset10(var _Data: TData; Index: Word); // ANSI_UNICODE
+      procedure _work_doCharset11(var _Data: TData; Index: Word); // URL_ANSI
+      procedure _work_doCharset12(var _Data: TData; Index: Word); // ANSI_URL
   end;
 
-function Base64_Code(const s:string):string;
-function Base64_Decode(const s:string):string;
-function CodePage1ToCodePage2(const s: String; codePage1,codePage2: Word): String;
-function URLEncode(const S: string; URLMode: byte): string;
+// Преобразовывает строку в Base64
+function Base64_Code(const S: string): string;
+
+// Преобразовывает строку из Base64 в оригинальный вид
+// Если исходная строка непустая, а результат - пустая,
+// значит, ошибка декодирования 
+function Base64_Decode(const S: string): string;
+
+// Функция возвращает размер выходного буфера
+// для заданного размера входного буфера при кодировании в Base64 
+function TextSizeForBase64Enc(const DataSize: Integer): Integer;
+
+// Функция возвращает размер выходного буфера
+// для заданного размера входного буфера при декодировании в Base64
+// Возвращает 0, если размер входного буфера некратный 4 или равен 0
+function BufSizeForBase64Dec(const TextSize: Integer): Integer;
+
+// Преобразование в Base64 данных в буфере Buffer
+// и занесение результата в буфер Text.
+// Возвращает количество данных, записанных в Text.
+// Размер Text должен быть не меньше (BufSize * 4) div 3 
+function BinToBase64(Buffer, Text: PChar; BufSize: Integer): Integer;
+
+// Преобразование в оригинальный вид из Base64 
+// данных в буфере Text и занесение результата в буфер Buffer.
+// Возвращает количество данных, записанных в Buffer, или 0,
+// если TextSize некратный 4 или недопустимый символ в Text.
+// Размер Buffer не меньше (TextSize div 4) * 3 
+// TextSize должно быть кратно 4
+function Base64ToBin(Text, Buffer: PChar; TextSize: Integer): Integer;
+
+
+
+function CodePage1ToCodePage2(const S: string; codePage1, codePage2: Word): string;
+function URLEncode(const S: string; URLMode: Byte): string;
 function URLDecode(const S: string): string;
+
+
+
 implementation
 
-const base64ABC: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
-function Base64_Code(const s:string):string; // standard MIME-Version: 1.0
-var   rlen,len,i:cardinal;
-      strIn:string;
+
+// ====================================================== //
+//  Реализация кодирования/декодирования данных в Base64  //
+//                 Автор: Netspirit                       //
+//             Редакция от 01.12.2016                     //
+// ====================================================== //
+  
+const  
+  // Алфавит Base64
+  Base64Chars: array [0..63] of Char = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';  
+
+var
+  // Таблица индексов для декодирования Base64
+  Base64Indexes: array [0..255] of Byte;
+
+function TextSizeForBase64Enc(const DataSize: Integer): Integer;
 begin
-   Result := '';
-   if s = '' then exit;
-   rlen := Length(s);
-   if rlen mod 3 = 1 then
-      strIn := s + #0#0
-   else if rlen mod 3 = 2 then
-      strIn := s + #0
-   else strIn := s;
-   len := Length(strIn);
-   i := 1;
-   while i <= len-2 do begin
-      Result := Result + base64ABC[byte(strIn[i]) shr 2 + 1] +
-                         base64ABC[(byte(strIn[i]) and $03) shl 4 + byte(strIn[i+1]) shr 4 + 1] +
-                         base64ABC[(byte(strIn[i+1]) and $0f) shl 2 + byte(strIn[i+2]) shr 6 + 1] +
-                         base64ABC[(byte(strIn[i+2]) and $3f) + 1];
-      inc(i,3);
-   end;
-   if rlen mod 3 = 1 then
-      Result[length(result)-1] := '=';
-   if rlen mod 3 > 0 then
-      Result[length(result)] := '=';
+  Result := DataSize div 3;
+  if Result * 3 <> DataSize then Inc(Result);
+  Result := Result * 4;
 end;
 
-function Base64_DeCode(const s:string):string; // standard MIME-Version: 1.0
-var   i,len:cardinal;
-      strIn:string;
+function BufSizeForBase64Dec(const TextSize: Integer): Integer;
+begin
+  if TextSize mod 4 <> 0 then
+    Result := 0
+  else
+    Result := TextSize div 4 * 3;
+end;
 
-      function Index(c:char):byte;
-      var   i:byte;
-      begin
-         Result := 0;
-         if c = '=' then exit;
-         for i := 1 to 64 do
-            if base64ABC[i] = c then begin
-               Result := i - 1;
-               break;
-            end;
-      end;
+// Процедура заполняет таблицу индексов для декодера Base64
+// В Base64Indexes по смещению (Буква) содержится индекс
+// этой (Буквы) в алфавите Base64Chars.
+// Символы, не входящие в алфавит Base64 при заполнении будут иметь индекс 255.
+// Ищется индекс входящего символа по таблице, символ не входящий в алфавит
+// имеет индекс 255 и считается ошибочным
+
+procedure FillBase64DecodeTable;
+var
+  I: Integer;
+begin
+  FillChar(Base64Indexes[0], Length(Base64Indexes), 255);
+  for I := 0 to High(Base64Chars) do
+    Base64Indexes[Byte(Base64Chars[I])] := I;
+end;
+
+function BinToBase64(Buffer, Text: PChar; BufSize: Integer): Integer;
+var
+  I: Integer;
+  B: Integer;
+  L: Integer;
+begin
+  Result := 0;
+  I := 0;
+  L := (BufSize div 3) * 3;
+  while I < L do
+  begin
+    B := (Byte(Buffer[0]) shl 16) or (Byte(Buffer[1]) shl 8) or (Byte(Buffer[2]));
+    
+    Text[Result] := Base64Chars[(B shr 18) and 63];
+    Text[Result + 1] := Base64Chars[(B shr 12) and 63];
+    Text[Result + 2] := Base64Chars[(B shr 6) and 63];
+    Text[Result + 3] := Base64Chars[B and 63];
+    
+    Inc(Result, 4);
+    Inc(Buffer, 3);
+    Inc(I, 3);
+  end;
+  
+  //=====================================================================//
+  // Исходные данные нужно дополнить 0-ми до кратных 3-ом                //
+  // Результирующие данные нужно дополнить символом "=" до кратных 4-ом  //
+  //=====================================================================//
+
+  I := BufSize mod 3;
+  if I <> 0 then
+  begin
+    B := Byte(Buffer[0]) shl 16; // I = 1 или 2. B = $00xx0000
+    if I = 2 then B := B or (Byte(Buffer[1]) shl 8); // I = 2 - так должно быть! B = $00xxyy00
+    
+    // I = 1 или 2:
+    Text[Result] := Base64Chars[(B shr 18) and 63];
+    Text[Result + 1] := Base64Chars[(B shr 12) and 63];
+    
+    if I = 2 then
+    begin   
+      Text[Result + 2] := Base64Chars[(B shr 6) and 63];
+    end
+    else
+      Text[Result + 2] := '=';
       
-begin
-   Result := '';
-   if (s = '') or (length(s) < 4) then exit;
-   strIn := s;
-   len := length(strIn);
-   i := 1;
-   while i <= len-3 do begin
-      Result := Result + char(Index(strIn[i]) shl 2 + Index(strIn[i+1]) shr 4) +
-                         char((Index(strIn[i+1]) and $0f) shl 4 + Index(strIn[i+2]) shr 2) +
-                         char((Index(strIn[i+2]) and $03) shl 6 + Index(strIn[i+3]));
-      inc(i,4);
-   end;
-   if strIn[len-1] = '=' then
-      SetLength(Result,Length(Result)-2)
-   else if strIn[len] = '=' then
-      SetLength(Result,Length(Result)-1);
+    Text[Result + 3] := '=';
+    
+    // При I = 1 Text[0..3] = 'AB=='
+    // При I = 2 Text[0..3] = 'ABC='
+    
+    
+    Inc(Result, 4);
+  end;
 end;
 
-function CodePage1ToCodePage2(const s: String; codePage1,codePage2: Word): String;
+function Base64ToBin(Text, Buffer: PChar; TextSize: Integer): Integer;
+var
+  I: Integer;
+  B0, B1, B2, B3: Byte;
+  L: Integer;
+begin
+  Result := 0;
+  if (TextSize = 0) or (TextSize mod 4 <> 0) then exit;
+  I := 0;
+  L := TextSize - 4;
+  while I < L do
+  begin
+    B0 := Base64Indexes[Byte(Text[I])];
+    B1 := Base64Indexes[Byte(Text[I + 1])];
+    B2 := Base64Indexes[Byte(Text[I + 2])]; 
+    B3 := Base64Indexes[Byte(Text[I + 3])];
+    
+    if (B0 = 255) or (B1 = 255) or (B2 = 255) or (B3 = 255) // Недопустимый символ
+    then 
+    begin
+      Result := 0;
+      exit;
+    end;
+    
+    Buffer[0] := Char((B0 shl 2) or (B1 shr 4));
+    Buffer[1] := Char((B1 shl 4) or (B2 shr 2));
+    Buffer[2] := Char((B2 shl 6) or (B3));
+    
+    Inc(Buffer, 3);
+    Inc(Result, 3);
+    Inc(I, 4);
+  end;
+  
+  //=============================================================//
+  // Если исходные данные оканчиваются на 1-2 символа "=",       //
+  // в результирующие данные не добавляется последние 1-2 байта  //
+  //=============================================================//
+  
+  B0 := Base64Indexes[Byte(Text[I])];
+  B1 := Base64Indexes[Byte(Text[I + 1])];
+  
+  if (B0 = 255) or (B1 = 255) // Недопустимый символ
+  then 
+  begin
+    Result := 0;
+    exit;
+  end;
+  
+  Buffer[0] := Char((B0 shl 2) or (B1 shr 4));
+  Inc(Result);
+  
+  if Text[I + 2] <> '=' then
+  begin 
+    B2 := Base64Indexes[Byte(Text[I + 2])];
+    if (B2 = 255) // Недопустимый символ
+    then 
+    begin
+      Result := 0;
+      exit;
+    end;
+    Buffer[1] := Char((B1 shl 4) or (B2 shr 2));
+    Inc(Result);
+    
+     if Text[I + 3] <> '=' then
+     begin
+       B3 := Base64Indexes[Byte(Text[I + 3])];
+       if (B3 = 255) // Недопустимый символ
+       then 
+       begin
+         Result := 0;
+         exit;
+       end;
+       Buffer[2] := Char((B2 shl 6) or (B3));
+       Inc(Result);
+     end; 
+  end;
+end;
+
+// Преобразовывает строку в Base64
+function Base64_Code(const S: string): string;
+var
+  L: Integer;
+begin
+  L := Length(S);
+  if L = 0 then exit;
+  
+  SetLength(Result, TextSizeForBase64Enc(L));
+  BinToBase64(Pointer(S), Pointer(Result), L);
+end;
+
+// Преобразовывает строку из Base64 в оригинальный вид
+// Если исходная строка непустая, а результат - пустая,
+// значит, ошибка декодирования 
+function Base64_Decode(const S: string): string;
+var
+  L, C: Integer;
+begin
+  L := Length(S);
+  C := BufSizeForBase64Dec(L); // Исходная строка должна быть кратной 4
+  if C = 0 then exit;
+  
+  // Чтобы избежать подгонки размера строки,
+  // заранее определяем точный размер результата
+  if S[L-1] = '=' then Dec(C, 2)
+  else if S[L] = '=' then Dec(C);
+  
+  SetLength(Result, C);
+  Base64ToBin(Pointer(S), Pointer(Result), L);
+  
+  // Если оригинальная строка некратная 3-м - подправляем результат
+  //SetLength(Result, C);
+  //L := Base64ToBin(Pointer(S), Pointer(Result), L);
+  //if L <> C then SetLength(Result, L);
+end;
+
+// ====================================================== //
+
+function CodePage1ToCodePage2(const S: string; codePage1, codePage2: Word): string;
 var   buffer: PWideChar;
       BufLen: integer;
 begin
@@ -241,19 +434,19 @@ begin
   end;
 end; // URLDecode
 
-procedure THICharset._work_doCharset0;
+procedure THICharset._work_doCharset0; // DOS_WIN
 begin
    _hi_OnEvent(_event_onCharset,CodePage1ToCodePage2(ReadString(_Data,_data_Text,''),
                CP_DOS, CP_WIN));
 end;
 
-procedure THICharset._work_doCharset1;
+procedure THICharset._work_doCharset1; // WIN_DOS
 begin
    _hi_OnEvent(_event_onCharset,CodePage1ToCodePage2(ReadString(_Data,_data_Text,''),
                CP_WIN, CP_DOS));
 end;
 
-procedure THICharset._work_doCharset2;
+procedure THICharset._work_doCharset2; // EN_RU
 const en:string = 'qwertyuiop[]asdfghjkl;''zxcvbnm,./QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>?';
       ru:string = 'йцукенгшщзхъфывапролджэячсмитьбю.ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ,';
 var i,p:cardinal;
@@ -270,42 +463,49 @@ begin
    _hi_OnEvent(_event_onCharset,Result);
 end;
 
-procedure THICharset._work_doCharset3;
+procedure THICharset._work_doCharset3; // KOI8_WIN
 begin
    _hi_OnEvent(_event_onCharset,CodePage1ToCodePage2(ReadString(_Data,_data_Text,''),
                CP_KOI8, CP_WIN));
 end;
 
-procedure THICharset._work_doCharset4;
+procedure THICharset._work_doCharset4; // BASE64_WIN
+var
+  S1, S2: string;
 begin
-   _hi_OnEvent(_event_onCharset,Base64_DeCode(ReadString(_Data,_data_Text,'')));
+  S1 := ReadString(_Data, _data_Text, '');
+  S2 := Base64_Decode(S1);
+  if (S1 <> '') and (S2 = '') then
+    _hi_CreateEvent(_Data, @_event_onError)
+  else
+    _hi_CreateEvent(_Data, @_event_onCharset, S2);
 end;
 
-procedure THICharset._work_doCharset5;
+procedure THICharset._work_doCharset5; // WIN_BASE64
 begin
-   _hi_OnEvent(_event_onCharset,Base64_Code(ReadString(_Data,_data_Text,'')));
+  _hi_CreateEvent(_Data, @_event_onCharset, Base64_Code(ReadString(_Data, _data_Text, '')));
 end;
 
-procedure THICharset._work_doCharset6;
+procedure THICharset._work_doCharset6; // ANSI_UTF8
 begin
    _hi_OnEvent(_event_onCharset,CodePage1ToCodePage2(ReadString(_Data,_data_Text,''),
                CP_ACP, CP_UTF8));
 end;
 
-procedure THICharset._work_doCharset7;
+procedure THICharset._work_doCharset7; // UTF8_ANSI
 begin
    _hi_OnEvent(_event_onCharset,CodePage1ToCodePage2(ReadString(_Data,_data_Text,''),
                CP_UTF8, CP_ACP));
 end;
 
-procedure THICharset._work_doCharset8;
+procedure THICharset._work_doCharset8; // CP1_CP2
 begin
    _hi_OnEvent(_event_onCharset,CodePage1ToCodePage2(ReadString(_Data,_data_Text,''),
                 ReadInteger(_Data, _data_CodePage1, _prop_CodePage1),
                 ReadInteger(_Data, _data_CodePage2, _prop_CodePage2)));
 end;
 
-procedure THICharset._work_doCharset9;
+procedure THICharset._work_doCharset9; // UNICODE_ANSI
 var 
   BufLen: integer;
   res, s:string;
@@ -348,7 +548,7 @@ begin
   _hi_OnEvent(_event_onCharset, res);
 end;
 
-procedure THICharset._work_doCharset10;
+procedure THICharset._work_doCharset10; // ANSI_UNICODE
 var
   BufLen: integer;
   s, res: string;
@@ -382,14 +582,17 @@ begin
   _hi_OnEvent(_event_onCharset, res); 
 end;
 
-procedure THICharset._work_doCharset11;
+procedure THICharset._work_doCharset11; // URL_ANSI
 begin
   _hi_OnEvent(_event_onCharset, URLDecode(ReadString(_Data,_data_Text,'')));
 end;
 
-procedure THICharset._work_doCharset12;
+procedure THICharset._work_doCharset12; // ANSI_URL
 begin
   _hi_OnEvent(_event_onCharset, URLEncode(ReadString(_Data,_data_Text,''), _prop_URLMode));
 end;
+
+initialization
+  FillBase64DecodeTable;
 
 end.
