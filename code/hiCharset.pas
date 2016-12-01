@@ -251,18 +251,18 @@ begin
     Buffer[1] := Char((B1 shl 4) or (B2 shr 2));
     Inc(Result);
     
-     if Text[I + 3] <> '=' then
-     begin
-       B3 := Base64Indexes[Byte(Text[I + 3])];
-       if (B3 = 255) // Недопустимый символ
-       then 
-       begin
-         Result := 0;
-         exit;
-       end;
-       Buffer[2] := Char((B2 shl 6) or (B3));
-       Inc(Result);
-     end; 
+    if Text[I + 3] <> '=' then
+    begin
+      B3 := Base64Indexes[Byte(Text[I + 3])];
+      if (B3 = 255) // Недопустимый символ
+      then 
+      begin
+        Result := 0;
+        exit;
+      end;
+      Buffer[2] := Char((B2 shl 6) or (B3));
+      Inc(Result);
+    end;
   end;
 end;
 
@@ -289,18 +289,14 @@ begin
   C := BufSizeForBase64Dec(L); // Исходная строка должна быть кратной 4
   if C = 0 then exit;
   
-  // Чтобы избежать подгонки размера строки,
+  // Чтобы избежать лишней подгонки размера строки,
   // заранее определяем точный размер результата
   if S[L-1] = '=' then Dec(C, 2)
   else if S[L] = '=' then Dec(C);
   
   SetLength(Result, C);
-  Base64ToBin(Pointer(S), Pointer(Result), L);
-  
-  // Если оригинальная строка некратная 3-м - подправляем результат
-  //SetLength(Result, C);
-  //L := Base64ToBin(Pointer(S), Pointer(Result), L);
-  //if L <> C then SetLength(Result, L);
+  L := Base64ToBin(Pointer(S), Pointer(Result), L);
+  if L <> C then SetLength(Result, L); // После предыдущей подгонки L <> C только в случае ошибки (L = 0)
 end;
 
 // ====================================================== //
