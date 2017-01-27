@@ -11,6 +11,7 @@ type
    private
     PageSetupDialog1: TKOLPageSetupDialog;
     PrintDialog1: TKOLPrintDialog;
+	Copies: integer;
    public
     _prop_Title:string;
     _prop_PrnFileName:string;    
@@ -24,6 +25,7 @@ type
     procedure _work_doSettings(var _Data:TData; Index:word);
     procedure _work_doPrintDlg(var _Data:TData; Index:word);    
     procedure _work_doPrint(var _Data:TData; Index:word);
+    procedure _work_doCopies(var _Data:TData; Index:word);
     procedure _work_doPrnFileName(var _Data:TData; Index:word);    
     procedure _var_Context(var _Data:TData; Index:word);
     procedure _var_CurDPIX(var _Data:TData; Index:word);
@@ -54,6 +56,7 @@ begin
   PrintDialog1.MinPage :=1;
   PrintDialog1.MaxPage :=200;
   PrintDialog1.Advanced := 1;
+  PrintDialog1.Copies := max(1, Copies);
   if PrintDialog1.Execute then
   begin
     Printer.Assign(PrintDialog1.Info);
@@ -99,6 +102,12 @@ begin
           end;
        end;
     end;
+end;
+
+procedure THIPrinter._work_doCopies;
+begin
+  Copies := max(1, ToInteger(_Data)); 
+  Printer.Copies := Copies;
 end;
 
 procedure THIPrinter._var_Context;
