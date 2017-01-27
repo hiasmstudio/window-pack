@@ -87,14 +87,21 @@ begin
   Result := (ror64(x, 14) xor ror64(x, 18) xor ror64(x, 41));
 end;
 
+{$ifdef VER120}
+function shr64(const a: Int64; b: Byte): Int64;
+begin
+  Result := a shr b;
+end;
+{$endif}
+
 function Gamma0(x: Int64): Int64;
 begin
-  Result := (ror64(x, 1) xor ror64(x, 8) xor (x shr 7));
+  Result := (ror64(x, 1) xor ror64(x, 8) xor {$ifdef VER120}shr64(x, 7){$else}(x shr 7){$endif});
 end;
 
 function Gamma1(x: Int64): Int64;
 begin
-  Result := (ror64(x, 19) xor ror64(x, 61) xor (x shr 6));
+  Result := (ror64(x, 19) xor ror64(x, 61) xor {$ifdef VER120}shr64(x, 6){$else}(x shr 6){$endif});
 end;
 
 {$IFDEF USE_ASM}
