@@ -39,12 +39,13 @@ type
     procedure _work_doSetError(var _Data:TData; Index:word);
 
     procedure _var_TopicName(var _Data:TData; Index:word);
+    procedure _var_TopicList(var _Data:TData; Index:word);
     procedure _var_TopicIndex(var _Data:TData; Index:word);
     procedure _var_ItemName(var _Data:TData; Index:word);
 
     procedure _work_doServiceName(var _Data:TData; Index:word);
     procedure _work_doTopicList(var _Data:TData; Index:word);
-    
+
     property _prop_TopicList:string write SetTopicList;
   end;
 
@@ -205,6 +206,11 @@ end;
 procedure THIDDEServer._var_ItemName;
 begin
   dtString(_Data, FLastItem);
+end;
+
+procedure THIDDEServer._var_TopicList;
+begin
+  dtString(_Data, FTopicList.Text);
 end;
 
 procedure THIDDEServer._work_doServiceName;
