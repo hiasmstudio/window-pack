@@ -19,6 +19,7 @@ type
     _prop_ServiceName:string;
     _prop_TopicName:string;
     _prop_AutoUpdate:integer;
+    _prop_AutoConnect:boolean;
     _prop_ServerApp:string;
     _prop_Timeout:integer;
 
@@ -48,6 +49,7 @@ type
     procedure _work_doTopicName(var _Data:TData; Index:word);
     procedure _work_doItems(var _Data:TData; Index:word);
     procedure _work_doAutoUpdate(var _Data:TData; Index:word);
+    procedure _work_doAutoConnect(var _Data:TData; Index:word);
     procedure _work_doServerApp(var _Data:TData; Index:word);
     procedure _work_doTimeout(var _Data:TData; Index:word);
 
@@ -155,7 +157,8 @@ end;
 procedure THIDDEClient._work_doGetItem;
 var hszItem,hData:THandle; dwRes:DWORD;
 begin
-  CheckOpenLink; if FConv=0 then Exit;
+  if _prop_AutoConnect then CheckOpenLink;
+  if FConv=0 then Exit;
   hszItem := DdeCreateStringHandle(g_DdeInstance,PChar(ReadString(_Data,_data_Name,'')),CP_WINANSI);
   hData := DdeClientTransaction(nil,0,FConv,hszItem,CF_TEXT,XTYP_REQUEST,_prop_Timeout,dwRes);
   MyCallback(XTYP_ADVDATA,CF_TEXT,FConv,0,hszItem,hData,0,0);
@@ -166,7 +169,8 @@ end;
 procedure THIDDEClient._work_doPutItem;
 var s:string; hszItem,hData:THandle; dwRes:DWORD;
 begin
-  CheckOpenLink; if FConv=0 then Exit;
+  if _prop_AutoConnect then CheckOpenLink;
+  if FConv=0 then Exit;
   hszItem := DdeCreateStringHandle(g_DdeInstance,PChar(ReadString(_Data,_data_Name,'')),CP_WINANSI);
   s := ReadString(_Data,_data_Value,'');
   hData := DdeClientTransaction(PChar(s),Length(s){+1},FConv,hszItem,CF_TEXT,XTYP_POKE,_prop_Timeout,dwRes);
@@ -177,7 +181,8 @@ end;
 procedure THIDDEClient._work_doExecute;
 var s:string; hData:THandle; dwRes:DWORD;
 begin
-  CheckOpenLink; if FConv=0 then Exit;
+  if _prop_AutoConnect then CheckOpenLink;
+  if FConv=0 then Exit;
   s := ToString(_Data);
   hData := DdeClientTransaction(PChar(s),Length(s){+1},FConv,0,CF_TEXT,XTYP_EXECUTE,_prop_Timeout,dwRes);
   _hi_CreateEvent(_Data, @_event_onExecute, integer(hData));
@@ -212,6 +217,11 @@ procedure THIDDEClient._work_doAutoUpdate;
 begin
   _prop_AutoUpdate := ToInteger(_Data);
   CheckAutoUpdate(_prop_AutoUpdate);
+end;
+
+procedure THIDDEClient._work_doAutoConnect;
+begin
+  _prop_AutoConnect := ReadBool(_Data);
 end;
 
 procedure THIDDEClient._work_doServerApp;
