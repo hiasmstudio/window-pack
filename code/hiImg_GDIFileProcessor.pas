@@ -353,7 +353,7 @@ begin
   Bitmap.free;
   Thumbnail.free;
   Frame.free;
-  imgFileLoad.free;  
+  if imgFileLoad <> nil then imgFileLoad.free;  
   inherited;
 end;
 
@@ -370,6 +370,7 @@ var
 begin
   imgFileThumb := nil; 
   imgFileLoad.free;//уничтожаем предыдущий класс изображения
+  imgFileLoad := nil;
   fCount := 0;
 
   if not FileExists(aFile) and ((Method = _FILE) or (Method = _THUMBFILE)) then exit;
@@ -670,7 +671,9 @@ begin
   end
   else
     imgFile.Save(StringToWideString(aFileNew), encoderClsid);
-  _hi_onEvent(_event_onConvert);    
+  _hi_onEvent(_event_onConvert);
+
+  imgFile.free;      
 end;
 
 procedure THIImg_GDIFileProcessor._work_doCreateMultiTIFF;
