@@ -70,22 +70,22 @@ type
     _prop_Digits: integer;
     _prop_Method: byte;    
 
-    _data_SBitmap: THI_Event;
-    _data_Stream: THI_Event;
-    _data_FileName: THI_Event;
-    _data_FileNameNew: THI_Event;
-    _data_FrameIdx: THI_Event;
+    _data_SBitmap,
+    _data_Stream,
+    _data_FileName,
+    _data_FileNameNew,
+    _data_FrameIdx,
     _data_FileList: THI_Event;
 
-    _event_onLoad: THI_Event;
-    _event_onSave: THI_Event;
-    _event_onConvert: THI_Event;
-    _event_onGetParam: THI_Event;
-    _event_onGetThumb: THI_Event;
-    _event_onGetFrameIdx: THI_Event;
-    _event_onCreateMultiTIFF: THI_Event;	    
+    _event_onLoad,
+    _event_onSave,
+    _event_onConvert,
+    _event_onGetParam,
+    _event_onGetThumb,
+    _event_onGetFrameIdx,
+    _event_onCreateMultiTIFF,	    
     _event_onUnPackMultiFile: THI_Event;
-		       
+
      constructor Create;
      destructor Destroy; override;
      procedure _work_doLoadFrom(var _Data:TData; Index:word);
@@ -309,6 +309,7 @@ begin
   DimensionCount:=GPImage.GetFrameDimensionsCount;
   SetLength(DimensionIDs, DimensionCount);
   GPImage.GetFrameDimensionsList(@DimensionIDs[0], DimensionCount);
+  if not Assigned(DimensionIDs) then exit;
   if IsEqualGUID(DimensionIDs[0],FrameDimensionTime) then
     FrameGUID := FrameDimensionTime else  //Фрейм анимации
   if IsEqualGUID(DimensionIDs[0],FrameDimensionResolution) then
@@ -340,6 +341,7 @@ end;
 constructor THIImg_GDIFileProcessor.Create;
 begin
   inherited;
+  imgFileLoad := nil;
   Bitmap    := NewBitmap(0, 0);
   Thumbnail := NewBitmap(0, 0);
   Frame     := NewBitmap(0, 0);
@@ -366,10 +368,10 @@ var
   encoderClsid : TGUID;    //GUID - класса изображений
   n            : Largeint;
   sWidth       : integer;
-  sHeight      : integer;  
+  sHeight      : integer;
 begin
   imgFileThumb := nil; 
-  imgFileLoad.free;//уничтожаем предыдущий класс изображения
+  if imgFileLoad <> nil then imgFileLoad.free;;//уничтожаем предыдущий класс изображения
   imgFileLoad := nil;
   fCount := 0;
 
@@ -419,7 +421,6 @@ begin
       imgFileLoad := imgFileThumb.GetThumbnailImage(_prop_ThumbnailSize, _prop_ThumbnailSize);
     ThumbLoad := true;
   end;
-	   
   GetMultuFrameInfo(imgFileLoad, fCount, fFrameGUID);
   mem  := NewMemoryStream;//Создаем поток
   aptr := TStreamAdapter.Create(mem, soReference) as IStream;
@@ -433,8 +434,8 @@ begin
     Bitmap.LoadFromStream(mem)//Загружаем данные из потока в битмап
   else
     Thumbnail.LoadFromStream(mem);//Загружаем данные из потока в битмап
-
-  imgFileThumb.free;//уничтожаем класс эскиза
+  
+  if imgFileThumb <> nil then imgFileThumb.free;//уничтожаем класс эскиза
   aptr   := nil;//Освобождаем интерфейс
   aptrin := nil;//Освобождаем интерфейс  
   mem.Free;//уничтожаем поток в памяти.
@@ -466,6 +467,8 @@ begin
   PixelFormat := PixelFormatString(imgFile.GetPixelFormat);
   Replace(PixelFormat, 'PixelFormat', '');
   GetMultuFrameInfo(imgFile, sCount, sFrameGUID);
+  
+  imgFormat := 'Undefined';
   
   imgFile.GetRAWFormat(sFrameGUID);
   
