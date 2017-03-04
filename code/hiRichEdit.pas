@@ -223,6 +223,7 @@ begin
   Control.RE_FmtBold := p and 1 > 0;
   Control.RE_FmtItalic := p and 2 > 0;
   Control.RE_FmtUnderline := p and 4 > 0;
+  Control.RE_FmtStrikeout := p and 8 > 0;   
 
   if _prop_AddType = 0 then
    begin
