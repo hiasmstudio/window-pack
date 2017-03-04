@@ -10,7 +10,7 @@ type
     FFont:HFont;
     FBrush:HBRUSH;
     FPen:HPEN;
-//    FInit:boolean;
+    FInit:boolean;
     
     procedure ApplyTo(x,y:integer);
     procedure InitGraph; 
@@ -146,9 +146,9 @@ end;
 procedure THIPC_TableCellStyle._work_doSetStyle;
 var col,row,i:integer;
 begin
-//  if FInit = false then begin InitGraph; FInit := true; end;
+  if FInit = false then begin InitGraph; FInit := true; end;
     
-  InitGraph;
+//  InitGraph;
 
   col := ReadInteger(_Data, _data_Col, _prop_Col);
   row := ReadInteger(_Data, _data_Row, _prop_Row);
