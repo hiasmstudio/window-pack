@@ -10,7 +10,8 @@ type
     FFont:HFont;
     FBrush:HBRUSH;
     FPen:HPEN;
-    FInit:boolean;
+//    FInit:boolean;
+    HList: PStrListEx;
     
     procedure ApplyTo(x,y:integer);
     procedure InitGraph; 
@@ -57,6 +58,7 @@ type
     _data_Object:THI_Event;
     _event_onSetStyle:THI_Event;
 
+    constructor Create;
     destructor Destroy; override;
 
     procedure _work_doSetStyle(var _Data:TData; Index:word);
@@ -102,28 +104,42 @@ procedure THIPC_TableCellStyle.InitGraph;
 begin
   if _prop_FontApply then
   begin
-    DeleteObject(FFont);
+//    DeleteObject(FFont);
     FFont := CreateFontIndirect(CreateLogFont(_prop_Font));
+    Hlist.AddObject('', FFont);    
   end;
   if _prop_BgApply then
   begin
-    DeleteObject(FBrush);
+//    DeleteObject(FBrush);
     if _prop_Transparent then
       FBrush := GetStockObject(NULL_BRUSH)
     else FBrush := CreateSolidBrush(Color2RGB(_prop_Background));
+    Hlist.AddObject('', FBrush);
   end;
   if _prop_BorderApply then
   begin
-    DeleteObject(FPen);
+//    DeleteObject(FPen);
     FPen := CreatePen(_prop_Style, _prop_Size, Color2RGB(_prop_Color));
+    Hlist.AddObject('', FPen);
   end;   
 end;
 
-destructor THIPC_TableCellStyle.Destroy;
+constructor THIPC_TableCellStyle.Create;
 begin
-  DeleteObject(FFont);
-  DeleteObject(FBrush);
-  DeleteObject(FPen);
+  HList := NewStrListEx;
+end;
+
+destructor THIPC_TableCellStyle.Destroy;
+var
+  i: integer;
+begin
+  if HList.Count <> 0 then
+    for i := 0 to HList.Count - 1 do
+      DeleteObject(HList.Objects[i]);	
+//  DeleteObject(FFont);
+//  DeleteObject(FBrush);
+//  DeleteObject(FPen);
+  HList.free;  
   inherited;
 end;
 
@@ -146,9 +162,9 @@ end;
 procedure THIPC_TableCellStyle._work_doSetStyle;
 var col,row,i:integer;
 begin
-  if FInit = false then begin InitGraph; FInit := true; end;
+//  if FInit = false then begin InitGraph; FInit := true; end;
     
-//  InitGraph;
+  InitGraph;
 
   col := ReadInteger(_Data, _data_Col, _prop_Col);
   row := ReadInteger(_Data, _data_Row, _prop_Row);
@@ -213,7 +229,7 @@ begin
 //      DeleteObject(FFont);
 //      FFont := CreateFontIndirect(CreateLogFont(_prop_Font));
 //    end;     
-  end;  
+  end;
 end;  
 
 procedure THIPC_TableCellStyle._work_doBgApply;
