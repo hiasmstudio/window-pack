@@ -10,7 +10,7 @@ type
     FFont:HFont;
     FBrush:HBRUSH;
     FPen:HPEN;
-//    FInit:boolean;
+    FInit:boolean;
     HList: PStrListEx;
     
     procedure ApplyTo(x,y:integer);
@@ -162,9 +162,9 @@ end;
 procedure THIPC_TableCellStyle._work_doSetStyle;
 var col,row,i:integer;
 begin
-//  if FInit = false then begin InitGraph; FInit := true; end;
+  if FInit = false then begin InitGraph; FInit := true; end;
     
-  InitGraph;
+//  InitGraph;
 
   col := ReadInteger(_Data, _data_Col, _prop_Col);
   row := ReadInteger(_Data, _data_Row, _prop_Row);
@@ -224,6 +224,7 @@ begin
       _prop_Font.Size := Size;
       _prop_Font.Charset := CharSet;
     end;
+  FInit := false;
 //    if _prop_FontApply then
 //    begin    
 //      DeleteObject(FFont);
@@ -240,6 +241,7 @@ end;
 procedure THIPC_TableCellStyle._work_doBackground;
 begin
   _prop_Background := ToInteger(_Data);
+  FInit := false;  
 end;
 
 procedure THIPC_TableCellStyle._work_doTransparent;
@@ -255,16 +257,19 @@ end;
 procedure THIPC_TableCellStyle._work_doColor;
 begin
   _prop_Color := ToInteger(_Data);
+  FInit := false;  
 end;
 
 procedure THIPC_TableCellStyle._work_doStyle;
 begin
   _prop_Style := ToInteger(_Data);
+  FInit := false;  
 end;
 
 procedure THIPC_TableCellStyle._work_doSize;                      
 begin
   _prop_Size := ToInteger(_Data);
+  FInit := false;  
 end;
 
 procedure THIPC_TableCellStyle._work_doAlphaBlendApply;
