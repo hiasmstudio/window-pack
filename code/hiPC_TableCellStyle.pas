@@ -247,6 +247,7 @@ end;
 procedure THIPC_TableCellStyle._work_doTransparent;
 begin
   _prop_Transparent := ReadBool(_Data);
+  FInit := false;
 end;
 
 procedure THIPC_TableCellStyle._work_doBorderApply;
@@ -376,7 +377,5 @@ procedure THIPC_TableCellStyle._work_doTableTrans;
 begin
   _prop_TableTrans := ReadBool(_Data);
 end;
-
-
 
 end.
