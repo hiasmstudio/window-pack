@@ -137,6 +137,10 @@ type
       property CellStyle[x,y:integer]:PCellStyle read GetCellStyle;
       property Rows:integer read GetRows;
 
+      property _InitCellBack:HBRUSH read FCellBack;
+      property _InitCellBorderPen:HPEN read FCellBorderPen;
+      property _InitCellFont:HFONT read FCellFont;
+
       property CellRect[x,y:integer]:TRect read GetCellRect;
       property AlphaBlendValue:byte write SetAlphaBlendValue;
   end;

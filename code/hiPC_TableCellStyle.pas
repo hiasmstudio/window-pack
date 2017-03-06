@@ -7,14 +7,13 @@ uses Windows,Kol,Share,Debug,hiDocumentTemplate,hiPrint_Table,PrintController;
 type
   THIPC_TableCellStyle = class(TPrintController)
    private
-    FFont:HFont;
-    FBrush:HBRUSH;
-    FPen:HPEN;
-    FInit:boolean;
-    HList: PStrListEx;
+//    FFont:HFont;
+//    FBrush:HBRUSH;
+//    FPen:HPEN;
+//    FInit:boolean;
     
     procedure ApplyTo(x,y:integer);
-    procedure InitGraph; 
+//    procedure InitGraph; 
    public
 
     _prop_VisibleTableApply: boolean;
@@ -58,8 +57,7 @@ type
     _data_Object:THI_Event;
     _event_onSetStyle:THI_Event;
 
-    constructor Create;
-    destructor Destroy; override;
+//    destructor Destroy; override;
 
     procedure _work_doSetStyle(var _Data:TData; Index:word);
     procedure _work_doFontApply(var _Data:TData; Index:word);
@@ -100,13 +98,13 @@ type
 
 implementation
 
+(*
 procedure THIPC_TableCellStyle.InitGraph;
 begin
   if _prop_FontApply then
   begin
 //    DeleteObject(FFont);
     FFont := CreateFontIndirect(CreateLogFont(_prop_Font));
-    Hlist.AddObject('', FFont);    
   end;
   if _prop_BgApply then
   begin
@@ -114,56 +112,53 @@ begin
     if _prop_Transparent then
       FBrush := GetStockObject(NULL_BRUSH)
     else FBrush := CreateSolidBrush(Color2RGB(_prop_Background));
-    Hlist.AddObject('', FBrush);
   end;
   if _prop_BorderApply then
   begin
 //    DeleteObject(FPen);
     FPen := CreatePen(_prop_Style, _prop_Size, Color2RGB(_prop_Color));
-    Hlist.AddObject('', FPen);
   end;   
 end;
 
-constructor THIPC_TableCellStyle.Create;
-begin
-  HList := NewStrListEx;
-end;
-
 destructor THIPC_TableCellStyle.Destroy;
-var
-  i: integer;
 begin
-  if HList.Count <> 0 then
-    for i := 0 to HList.Count - 1 do
-      DeleteObject(HList.Objects[i]);	
 //  DeleteObject(FFont);
 //  DeleteObject(FBrush);
 //  DeleteObject(FPen);
-  HList.free;  
   inherited;
 end;
+*)
 
 procedure THIPC_TableCellStyle.ApplyTo;
 begin
   with THIPrint_Table(FItem).FTable.CellStyle[x,y]^ do
-   begin
-     if _prop_FontApply then
-       begin      
-          Font := FFont;
-          FontColor := _prop_Font.Color;
-       end; 
-     if _prop_BgApply then
-        BackColor := FBrush;
-     if _prop_BorderApply then
-        Pen := FPen;
-   end;
+  begin
+    if _prop_FontApply then
+    begin      
+      if Font <> THIPrint_Table(FItem).FTable._InitCellFont then DeleteObject(Font);
+      Font := CreateFontIndirect(CreateLogFont(_prop_Font));
+      FontColor := _prop_Font.Color;
+    end; 
+    if _prop_BgApply then
+    begin
+       if BackColor <> THIPrint_Table(FItem).FTable._InitCellBack then DeleteObject(BackColor);
+       if _prop_Transparent then
+         BackColor := GetStockObject(NULL_BRUSH)
+       else
+	     BackColor := CreateSolidBrush(Color2RGB(_prop_Background));
+    end;   
+    if _prop_BorderApply then
+    begin
+      if Pen <> THIPrint_Table(FItem).FTable._InitCellBorderPen then DeleteObject(Pen);
+      Pen := CreatePen(_prop_Style, _prop_Size, Color2RGB(_prop_Color));
+	end;   
+  end;
 end;
 
 procedure THIPC_TableCellStyle._work_doSetStyle;
 var col,row,i:integer;
 begin
-  if FInit = false then begin InitGraph; FInit := true; end;
-    
+//  if FInit = false then begin InitGraph; FInit := true; end;
 //  InitGraph;
 
   col := ReadInteger(_Data, _data_Col, _prop_Col);
@@ -224,7 +219,7 @@ begin
       _prop_Font.Size := Size;
       _prop_Font.Charset := CharSet;
     end;
-  FInit := false;
+//  FInit := false;
 //    if _prop_FontApply then
 //    begin    
 //      DeleteObject(FFont);
@@ -241,13 +236,13 @@ end;
 procedure THIPC_TableCellStyle._work_doBackground;
 begin
   _prop_Background := ToInteger(_Data);
-  FInit := false;  
+//  FInit := false;  
 end;
 
 procedure THIPC_TableCellStyle._work_doTransparent;
 begin
   _prop_Transparent := ReadBool(_Data);
-  FInit := false;
+//  FInit := false;
 end;
 
 procedure THIPC_TableCellStyle._work_doBorderApply;
@@ -258,19 +253,19 @@ end;
 procedure THIPC_TableCellStyle._work_doColor;
 begin
   _prop_Color := ToInteger(_Data);
-  FInit := false;  
+//  FInit := false;  
 end;
 
 procedure THIPC_TableCellStyle._work_doStyle;
 begin
   _prop_Style := ToInteger(_Data);
-  FInit := false;  
+//  FInit := false;  
 end;
 
 procedure THIPC_TableCellStyle._work_doSize;                      
 begin
   _prop_Size := ToInteger(_Data);
-  FInit := false;  
+//  FInit := false;  
 end;
 
 procedure THIPC_TableCellStyle._work_doAlphaBlendApply;
