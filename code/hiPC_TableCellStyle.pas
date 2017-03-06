@@ -94,6 +94,8 @@ type
 	procedure _work_doVisibleTableApply(var _Data:TData; Index:word);
 	procedure _work_doVisibleTable(var _Data:TData; Index:word);
 
+    procedure _var_RowCount(var _Data:TData; Index:word);    
+    procedure _var_ColCount(var _Data:TData; Index:word); 
   end;
 
 implementation
@@ -371,6 +373,18 @@ end;
 procedure THIPC_TableCellStyle._work_doTableTrans;
 begin
   _prop_TableTrans := ReadBool(_Data);
+end;
+
+procedure THIPC_TableCellStyle._var_RowCount(var _Data:TData; Index:word);    
+begin
+  InitItem;
+  dtInteger(_Data, THIPrint_Table(FItem).FTable.Rows);
+end;
+
+procedure THIPC_TableCellStyle._var_ColCount(var _Data:TData; Index:word);
+begin
+  InitItem;
+  dtInteger(_Data, THIPrint_Table(FItem).FTable.HeadCount);
 end;
 
 end.

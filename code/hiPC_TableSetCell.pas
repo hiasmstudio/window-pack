@@ -20,6 +20,8 @@ type
 
     procedure _work_doText(var _Data:TData; Index:word);
     procedure _var_CurrentText(var _Data:TData; Index:word);
+    procedure _var_RowCount(var _Data:TData; Index:word);    
+    procedure _var_ColCount(var _Data:TData; Index:word);    
   end;
 
 implementation
@@ -44,6 +46,18 @@ begin
   x := ReadInteger(_Data, _data_Col, _prop_Col);
   y := ReadInteger(_Data, _data_Row, _prop_Row);
   dtString(_Data, THIPrint_Table(FItem).FTable.Cell[x, y]);
+end;
+
+procedure THIPC_TableSetCell._var_RowCount(var _Data:TData; Index:word);    
+begin
+  InitItem;
+  dtInteger(_Data, THIPrint_Table(FItem).FTable.Rows);
+end;
+
+procedure THIPC_TableSetCell._var_ColCount(var _Data:TData; Index:word);
+begin
+  InitItem;
+  dtInteger(_Data, THIPrint_Table(FItem).FTable.HeadCount);
 end;
 
 end.

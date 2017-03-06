@@ -16,6 +16,8 @@ type
     procedure _work_doAddRow(var _Data:TData; Index:word);
     procedure _work_doRemoveRow(var _Data:TData; Index:word);
     procedure _var_Row(var _Data:TData; Index:word);
+    procedure _var_RowCount(var _Data:TData; Index:word);    
+    procedure _var_ColCount(var _Data:TData; Index:word);
   end;
 
 implementation
@@ -37,5 +39,18 @@ procedure THIPC_TableRow._var_Row;
 begin
   dtInteger(_Data, FRow);
 end;
+
+procedure THIPC_TableRow._var_RowCount(var _Data:TData; Index:word);    
+begin
+  InitItem;
+  dtInteger(_Data, THIPrint_Table(FItem).FTable.Rows);
+end;
+
+procedure THIPC_TableRow._var_ColCount(var _Data:TData; Index:word);
+begin
+  InitItem;
+  dtInteger(_Data, THIPrint_Table(FItem).FTable.HeadCount);
+end;
+
 
 end.
