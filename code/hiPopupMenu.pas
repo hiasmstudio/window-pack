@@ -12,6 +12,7 @@ type
     Old:TOnMessage;
     FMenuList: string;
     ListMenuStr: array  of string;
+    _Arr: PArray;    
 
     procedure SetMenu(const Value:string);
     procedure AddMenuItem(const Caption:string);
@@ -38,7 +39,14 @@ type
     procedure _work_doAddItem(var _Data:TData; Index:word);
     procedure _work_doClear(var _Data:TData; Index:word);
     procedure _var_Handle(var _Data:TData; Index:word);
-//    property _prop_Menu:string write SetMenu;
+
+    procedure _Add(var Val:TData);
+    procedure _Set(var Item: TData; var Val: TData);
+    function _Get(Var Item: TData; var Val: TData): boolean;
+    function _Count:integer;
+
+    procedure _var_Array            (var _Data:TData; Index:word);
+    
   end;
 
 implementation
@@ -182,8 +190,8 @@ begin
              if Bmp.Pixels[i,j] = c then
 //               Bmp.Pixels[i,j] := clMenu;
                Bmp.Pixels[i,j] := clNone;
-        end;
-        PM.Items[k].BitmapItem := CopyImage(bmp.Handle,IMAGE_BITMAP,0,0,LR_CREATEDIBSECTION);
+       end;
+       PM.Items[k].BitmapItem := CopyImage(bmp.Handle,IMAGE_BITMAP,0,0,LR_CREATEDIBSECTION);
    end;
    end;
 end;
@@ -208,7 +216,6 @@ begin   // debug('ok');
    bmp.Free;
    Result := true;
 end;
-
 *)
 
 procedure THIPopupMenu._work_doPopup;
@@ -245,6 +252,55 @@ end;
 procedure THIPopupMenu._var_Handle;
 begin
    dtInteger(_Data,PM.ItemHandle[0]);
+end;
+
+procedure THIPopupMenu._Set;
+var
+  j, ind:integer;
+begin
+  ind := ToInteger(Item);
+  if (ind < 0) and (ind > PM.Count - 1) then exit;
+  PM.ItemText[ind] := ToString(Val);
+end;
+
+function THIPopupMenu._Get;
+var
+  ind: integer;
+begin
+  ind := ToInteger(Item);
+  if (ind >= 0 ) and (ind < PM.Count) then
+  begin
+    dtString(Val, PM.ItemText[ind]);
+    Result := true;
+  end
+  else
+    Result := false;
+end;
+
+function THIPopupMenu._Count:integer;
+begin
+   Result := PM.Count;
+end;
+
+procedure THIPopupMenu._Add;
+var
+  sdt: string;
+  j: integer;
+begin
+  sdt := ToString(Val);
+
+  if sdt = '-' then
+    PM.AddItem('-',nil,[moSeparator])
+  else
+    PM.AddItem(PChar(sdt),nil,[]);
+  Refbmp;
+end;
+
+procedure THIPopupMenu._var_Array;
+begin
+  if _Arr = nil then
+    _Arr := CreateArray(_Set,_Get,_Count,_Add);
+  dtArray(_Data, _Arr);
 end;
 
 end.
