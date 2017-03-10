@@ -6,6 +6,9 @@ interface
 uses
   Windows, Shellapi, Kol, Share, Debug;
 
+const
+  FILE_WRITE_ATTRIBUTES = 256;
+
 type 
   TVerInfo = packed record 
     vMajor, vMinor, vRelease, vBuild: Word;
@@ -133,7 +136,7 @@ var
 begin
   fn := ReadString(_Data, _data_FileName, _prop_FileName);
   
-  hFile := CreateFile(PChar(fn), GENERIC_WRITE, 0, nil, OPEN_EXISTING, 0, 0);
+  hFile := CreateFile(PChar(fn), FILE_WRITE_ATTRIBUTES, 0, nil, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, 0);
   CreateDate := ReadReal(_Data, _data_CreateDate);
   ModifyDate := ReadReal(_Data, _data_ModifyDate);
   AccessDate := ReadReal(_Data, _data_AccessDate);
