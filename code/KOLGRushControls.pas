@@ -2470,8 +2470,8 @@ begin
             end;
         WM_LBUTTONUP:
             if (Data.fStateInit = siButton) then begin
-                PGRushControl(Ctl_).DoPop;
                 Data.fStateInit := siNone;
+                PGRushControl(Ctl_).DoPop;
             end;
         WM_KEYDOWN:
             if (Msg.wParam = 32) and (Data.fStateInit = siNone) then begin
@@ -2480,8 +2480,8 @@ begin
             end;
         WM_KEYUP:
             if (Msg.wParam = 32) and (Data.fStateInit = siKey) then begin
-                PGRushControl(Ctl_).DoPop;
                 Data.fStateInit := siNone;
+                PGRushControl(Ctl_).DoPop;
             end;
         WM_SETFOCUS:
             begin
