@@ -47,22 +47,27 @@ type
     procedure getVar(var Data:TData; Index:word);
 
     procedure Select(var Data:TData; Index:word); virtual;
-    procedure Delete(var Data:TData; Index:word); virtual;
     procedure NSelect(var Data:TData; Index:word); virtual;
     procedure HSelect(var Data:TData; Index:word); virtual;
+
+    procedure Delete(var Data:TData; Index:word); virtual;
+    procedure NDelete(var Data:TData; Index:word); virtual;
     procedure HDelete(var Data:TData; Index:word); virtual;
-    procedure Handle(var Data:TData; Index:word);
+
     procedure Index(var Data:TData; Index:word); virtual;
     procedure Name(var Data:TData; Index:word);
+    procedure Handle(var Data:TData; Index:word);
+
     procedure EventIndex(var Data:TData; Index:word);
-    procedure EventHandle(var Data:TData; Index:word);
     procedure EventName(var Data:TData; Index:word);
+    procedure EventHandle(var Data:TData; Index:word);
+
     procedure ChildList(var Data:TData; Index:word);
+    procedure FullChildList(var Data:TData; Index:word);    
     procedure InitChildList(var Data:TData; Index:word);
     
     property Childs[index:integer]:THIEditPolyMulti read GetChilds;
     property ChildCount:integer read GetChildCount;
-    
     property Classes[index:integer]:string read GetClasses;
     property ClassCount:integer read GetClassCount;
   end;
@@ -164,6 +169,21 @@ begin
   _ReadData(Data, e);
 end;
 
+function THIPolymorphMulti.TestEvent;
+begin
+  Result := true;
+  while assigned(G) do
+  begin
+    if F=G.Hnd then
+    begin
+      _debug('Self destruction is not allowed !!!');
+      exit;
+    end;
+    G := G.Prv;
+  end;
+  Result := false;
+end;
+
 procedure THIPolymorphMulti.Select;
 var  ind:integer;
 begin
@@ -190,19 +210,13 @@ begin
     end;  
 end;
 
-function THIPolymorphMulti.TestEvent;
+procedure THIPolymorphMulti.HSelect;
 begin
-  Result := true;
-  while assigned(G) do
-  begin
-    if F=G.Hnd then
-    begin
-      _debug('Self destruction is not allowed !!!');
-      exit;
-    end;
-    G := G.Prv;
-  end;
-  Result := false;
+  FChild := THiEditPolyMulti(ToInteger(Data));
+  if FChilds.IndexOfObj(FChild) = -1 then
+    FChild := nil
+  else
+    _hi_OnEvent(FChild.Works[Index], Data);
 end;
 
 procedure THIPolymorphMulti.Delete;
@@ -220,13 +234,24 @@ begin
   FChilds.Delete(ind);
 end;
 
-procedure THIPolymorphMulti.HSelect;
+procedure THIPolymorphMulti.NDelete;
+var
+  F: THiEditPolyMulti;
+  i: integer;
+  s: string;
 begin
-  FChild := THiEditPolyMulti(ToInteger(Data));
-  if FChilds.IndexOfObj(FChild) = -1 then
-    FChild := nil
-  else
-    _hi_OnEvent(FChild.Works[Index], Data);
+  s := ToString(Data);
+  F := nil;
+  for i := 0 to FChilds.Count - 1 do
+    if s = FChilds.Items[i] then
+      F := THiEditPolyMulti(FChilds.Objects[i]);
+//  F := THiEditPolyMulti(ToInteger(Data));
+    if (FChilds.IndexOfObj(F) = -1) or TestEvent(F, EvHandle) then exit;
+    _hi_OnEvent(F.Works[Index], Data);
+    if FChild = F then
+      FChild := nil;
+    F.MainClass.Destroy;
+    FChilds.Delete(FChilds.IndexOfObj(F));
 end;
 
 procedure THIPolymorphMulti.HDelete;
@@ -241,11 +266,6 @@ begin
   FChilds.Delete(FChilds.IndexOfObj(F));
 end;
 
-procedure THIPolymorphMulti.Handle;
-begin
-  dtInteger(Data, integer(FChild));
-end;
-
 procedure THIPolymorphMulti.Index;
 begin
   dtInteger(Data, FChilds.IndexOfObj(FChild));
@@ -254,6 +274,11 @@ end;
 procedure THIPolymorphMulti.Name;
 begin
   dtString(Data, FChilds.Items[FChilds.IndexOfObj(FChild)]);
+end;
+
+procedure THIPolymorphMulti.Handle;
+begin
+  dtInteger(Data, integer(FChild));
 end;
 
 procedure THIPolymorphMulti.EventIndex;
@@ -286,6 +311,11 @@ end;
 procedure THIPolymorphMulti.ChildList;
 begin
   dtString(Data, _prop_Childrens);
+end;
+
+procedure THIPolymorphMulti.FullChildList;
+begin
+  dtString(Data, FStrList.Text);
 end;
 
 procedure THIPolymorphMulti.InitChildList;
