@@ -290,36 +290,14 @@ begin
 end;
 
 procedure THIMainForm.SetBorderStyle;
-const
-  NmMask = not(WS_CAPTION or WS_THICKFRAME or WS_MAXIMIZEBOX or WS_MINIMIZEBOX);
-  NmSet:array[0..9] of dword =(0,
-  WS_CAPTION or WS_MINIMIZEBOX,
-  WS_CAPTION or WS_THICKFRAME or WS_MAXIMIZEBOX or WS_MINIMIZEBOX,
-  WS_CAPTION,
-  WS_CAPTION,
-  WS_CAPTION or WS_THICKFRAME,
-  0,
-  WS_THICKFRAME,
-  0,
-  WS_THICKFRAME
-  );
-  ExMask = not(WS_EX_DLGMODALFRAME or WS_EX_WINDOWEDGE or WS_EX_TOOLWINDOW);
-  ExSet:array[0..9] of dword =(0,0,0,
-  WS_EX_WINDOWEDGE,
-  WS_EX_TOOLWINDOW,
-  WS_EX_TOOLWINDOW,
-  WS_EX_DLGMODALFRAME,
-  WS_EX_TOOLWINDOW,
-  WS_EX_CLIENTEDGE or WS_EX_DLGMODALFRAME,
-  WS_EX_CLIENTEDGE
-  );
 begin
-  if Value > 9 then exit;
+  if Value > Cardinal(Length(BorderStyle_Set)) then exit;
   with Control{$ifndef F_P}^{$endif} do
    begin
     GetWindowHandle;
-    Style   := NmSet[Value]or(NmMask and Style);
-    ExStyle := ExSet[Value]or(ExMask and ExStyle);
+    //BorderStyle_Set, *_Mask, *_ExSet, *_ExMask ג פאיכו Win.pas
+    Style   := BorderStyle_Set[Value]or(BorderStyle_Mask and Style);
+    ExStyle := BorderStyle_ExSet[Value]or(BorderStyle_ExMask and ExStyle);
    end;
 end;
 

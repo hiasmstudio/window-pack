@@ -160,6 +160,40 @@ type
 
 var  ListOfNameControls: PStrListEx;
 
+const
+  BorderStyle_Mask = not(WS_CAPTION or WS_THICKFRAME or WS_MAXIMIZEBOX or WS_MINIMIZEBOX);
+  BorderStyle_Set:array[0..9] of integer =(0,
+      WS_CAPTION or WS_MINIMIZEBOX,
+      WS_CAPTION or WS_THICKFRAME or WS_MAXIMIZEBOX or WS_MINIMIZEBOX,
+      WS_CAPTION,
+      WS_CAPTION,
+      WS_CAPTION or WS_THICKFRAME,
+      0,
+      WS_THICKFRAME,
+      0,
+      WS_THICKFRAME
+  );
+  
+  BorderStyle_ExMask = not(WS_EX_DLGMODALFRAME or WS_EX_WINDOWEDGE or WS_EX_TOOLWINDOW or WS_EX_CLIENTEDGE);
+  BorderStyle_ExSet:array[0..9] of integer =(0,0,0,
+      WS_EX_WINDOWEDGE,
+      WS_EX_TOOLWINDOW,
+      WS_EX_TOOLWINDOW,
+      WS_EX_DLGMODALFRAME,
+      WS_EX_TOOLWINDOW,
+      WS_EX_CLIENTEDGE or WS_EX_DLGMODALFRAME,
+      WS_EX_CLIENTEDGE
+  );
+  
+  WinStyle_ExMask = not(WS_EX_DLGMODALFRAME or WS_EX_CLIENTEDGE or WS_EX_LTRREADING or WS_EX_STATICEDGE);
+  WinStyle_ExSet:array[0..4] of integer =(
+      WS_EX_CLIENTEDGE,
+      WS_EX_LTRREADING,
+      WS_EX_STATICEDGE,
+      WS_EX_DLGMODALFRAME,
+      WS_EX_CLIENTEDGE or WS_EX_DLGMODALFRAME
+  );
+
 implementation
 
 var defHint:THIHintManager;
@@ -319,11 +353,8 @@ begin
       end;
 
       if _prop_Ctl3D = 0 then
-        case _prop_WinStyle of
-          1: Control.ExStyle := WS_EX_LTRREADING;
-          2: Control.ExStyle := WS_EX_STATICEDGE;
-          3: Control.ExStyle := WS_EX_DLGMODALFRAME;
-          4: Control.ExStyle := WS_EX_CLIENTEDGE OR WS_EX_DLGMODALFRAME;
+        if (_prop_WinStyle > 0) and (_prop_WinStyle < Cardinal(Length(WinStyle_ExSet))) then begin
+          Control.ExStyle := WinStyle_ExSet[_prop_WinStyle];
         end;
    end;
    if _prop_Name <> '' then ListOfNameControls.AddObject(LowerCase(_prop_Name), LongInt(Control));
