@@ -296,8 +296,8 @@ begin
    begin
     GetWindowHandle;
     //BorderStyle_Set, *_Mask, *_ExSet, *_ExMask ג פאיכו Win.pas
-    Style   := BorderStyle_Set[Value]or(BorderStyle_Mask and Style);
-    ExStyle := BorderStyle_ExSet[Value]or(BorderStyle_ExMask and ExStyle);
+    Style   := BorderStyle_Set[Value]or(BorderStyle_Mask and integer(Style));
+    ExStyle := BorderStyle_ExSet[Value]or(BorderStyle_ExMask and integer(ExStyle));
    end;
 end;
 
