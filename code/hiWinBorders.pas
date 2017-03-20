@@ -24,15 +24,15 @@ implementation
 procedure THIWinBorders.SetBorderStyle;
 begin
   if Value >= Cardinal(Length(BorderStyle_Set)) then exit;
-  SetWindowLong(h, GWL_STYLE, BorderStyle_Set[Value] or (BorderStyle_Mask and GetWindowLong(h, GWL_STYLE)));
-  SetWindowLong(h, GWL_EXSTYLE, BorderStyle_ExSet[Value] or (BorderStyle_ExMask and GetWindowLong(h, GWL_EXSTYLE)));
+  SetWindowLong(h, GWL_STYLE, BorderStyle_Set[Value] or (BorderStyle_Mask and dword(GetWindowLong(h, GWL_STYLE))));
+  SetWindowLong(h, GWL_EXSTYLE, BorderStyle_ExSet[Value] or (BorderStyle_ExMask and dword(GetWindowLong(h, GWL_EXSTYLE))));
   SetWindowPos(h, 0, 0,0,0,0, SWP_FRAMECHANGED or SWP_NOMOVE or SWP_NOSIZE or SWP_NOZORDER or SWP_NOOWNERZORDER);
 end;
 
 procedure THIWinBorders.SetWinStyle;
 begin
   if Value > Cardinal(Length(WinStyle_ExSet)) then exit;
-  SetWindowLong(h, GWL_EXSTYLE, WinStyle_ExSet[Value] or (WinStyle_ExMask and GetWindowLong(h, GWL_EXSTYLE)));
+  SetWindowLong(h, GWL_EXSTYLE, WinStyle_ExSet[Value] or (WinStyle_ExMask and dword(GetWindowLong(h, GWL_EXSTYLE))));
   SetWindowPos(h, 0, 0,0,0,0, SWP_FRAMECHANGED or SWP_NOMOVE or SWP_NOSIZE or SWP_NOZORDER or SWP_NOOWNERZORDER);
 end;
 

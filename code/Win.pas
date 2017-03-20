@@ -162,7 +162,7 @@ var  ListOfNameControls: PStrListEx;
 
 const
   BorderStyle_Mask = not(WS_CAPTION or WS_THICKFRAME or WS_MAXIMIZEBOX or WS_MINIMIZEBOX);
-  BorderStyle_Set:array[0..9] of integer =(0,
+  BorderStyle_Set:array[0..9] of dword =(0,
       WS_CAPTION or WS_MINIMIZEBOX,
       WS_CAPTION or WS_THICKFRAME or WS_MAXIMIZEBOX or WS_MINIMIZEBOX,
       WS_CAPTION,
@@ -175,7 +175,7 @@ const
   );
   
   BorderStyle_ExMask = not(WS_EX_DLGMODALFRAME or WS_EX_WINDOWEDGE or WS_EX_TOOLWINDOW or WS_EX_CLIENTEDGE);
-  BorderStyle_ExSet:array[0..9] of integer =(0,0,0,
+  BorderStyle_ExSet:array[0..9] of dword =(0,0,0,
       WS_EX_WINDOWEDGE,
       WS_EX_TOOLWINDOW,
       WS_EX_TOOLWINDOW,
@@ -186,7 +186,7 @@ const
   );
   
   WinStyle_ExMask = not(WS_EX_DLGMODALFRAME or WS_EX_CLIENTEDGE or WS_EX_LTRREADING or WS_EX_STATICEDGE);
-  WinStyle_ExSet:array[0..4] of integer =(
+  WinStyle_ExSet:array[0..4] of dword =(
       WS_EX_CLIENTEDGE,
       WS_EX_LTRREADING,
       WS_EX_STATICEDGE,
