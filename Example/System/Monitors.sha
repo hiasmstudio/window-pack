@@ -1,0 +1,217 @@
+Make(delphi)
+ver(4.05 build 186)
+Add(MainForm,2953706,50,189)
+{
+ Width=580
+ Height=590
+ Caption="Monitors"
+ Position=1
+ link(onCreate,15337541:doEvent1,[])
+}
+Add(Image,330810,294,77)
+{
+ Left=15
+ Top=15
+ Width=540
+ Height=425
+}
+Add(ComboBox,11548193,294,210)
+{
+ Left=45
+ Top=460
+ Width=90
+ Height=21
+ ReadOnly=0
+ Point(doSelect)
+}
+Add(Button,12865432,112,105)
+{
+ Left=230
+ Top=520
+ Width=100
+ TabOrder=-1
+ Caption="GetSceenShort"
+ link(onClick,14274399:doEvent1,[])
+}
+Add(For,9022255,196,210)
+{
+ IncludeEnd=1
+ link(onEvent,10360895:doWork2,[])
+ link(onStop,10724817:doSetFocus,[(235,223)(235,251)(102,251)(102,160)])
+ link(End,3460994:Count,[])
+}
+Add(Label,15382900,28,126)
+{
+ Left=150
+ Top=475
+ Width=13
+ Height=17
+ Caption="L:"
+}
+Add(Edit,1472934,378,252)
+{
+ Left=170
+ Top=460
+ Width=60
+ TabOrder=-1
+ Text=""
+ ReadOnly=0
+ link(onChange,2631098:doText,[])
+ link(Str,5069644:Value1,[])
+}
+Add(Label,10894502,35,133)
+{
+ Left=245
+ Top=475
+ Width=14
+ Height=17
+ Caption="T:"
+}
+Add(Edit,2631098,427,252)
+{
+ Left=265
+ Top=460
+ Width=60
+ TabOrder=-1
+ Text=""
+ ReadOnly=0
+ link(onChange,4264014:doText,[])
+ link(Str,5069644:Value2,[(433,243)(391,243)])
+}
+Add(Label,4425087,42,140)
+{
+ Left=340
+ Top=475
+ Width=18
+ Height=17
+ Caption="W:"
+}
+Add(Edit,4264014,476,252)
+{
+ Left=360
+ Top=460
+ Width=60
+ TabOrder=-1
+ Text=""
+ ReadOnly=0
+ link(onChange,15025655:doText,[])
+ link(Str,5069644:Value3,[(482,236)(398,236)])
+}
+Add(Label,12972572,49,147)
+{
+ Left=435
+ Top=475
+ Width=15
+ Height=17
+ Caption="H:"
+}
+Add(Edit,15025655,525,252)
+{
+ Left=455
+ Top=460
+ Width=60
+ TabOrder=-1
+ Text=""
+ ReadOnly=0
+ link(onChange,14157857:doText,[])
+ link(Str,5069644:Value4,[(531,229)(405,229)])
+}
+Add(Hub,14274399,161,105)
+{
+ link(onEvent1,3460994:doScreenShortMonitor,[])
+ link(onEvent2,3460994:doMonitorParametrs,[])
+}
+Add(MT_MultiMem,5069644,378,112)
+{
+ Count=9
+ link(onData,1472934:doText,[(452,118)(452,104)(368,104)(368,258)])
+}
+Add(Hub,15337541,161,203)
+{
+ link(onEvent1,1412263:doText,[(186,209)(186,188)])
+ link(onEvent2,9022255:doFor,[])
+}
+Add(VisualStrings,1412263,231,182)
+{
+ Lines=#2:-1|
+ Point(doText)
+ Point(onText)
+ link(onText,10360895:doWork1,[(277,188)])
+}
+Add(HubEx,10360895,273,210)
+{
+ link(onEvent,11548193:doAdd,[])
+}
+Add(Edit,14157857,574,252)
+{
+ Left=170
+ Top=485
+ Width=60
+ TabOrder=-1
+ Text=""
+ ReadOnly=0
+ link(onChange,15047585:doText,[])
+ link(Str,5069644:Value5,[(580,222)(412,222)])
+}
+Add(Edit,15047585,623,252)
+{
+ Left=265
+ Top=485
+ Width=60
+ TabOrder=-1
+ Text=""
+ ReadOnly=0
+ link(onChange,16728453:doText,[])
+ link(Str,5069644:Value6,[(629,215)(419,215)])
+}
+Add(Edit,16728453,672,252)
+{
+ Left=360
+ Top=485
+ Width=60
+ TabOrder=-1
+ Text=""
+ ReadOnly=0
+ link(onChange,1041645:doText,[])
+ link(Str,5069644:Value7,[(678,208)(426,208)])
+}
+Add(Edit,1041645,721,252)
+{
+ Left=455
+ Top=485
+ Width=60
+ TabOrder=-1
+ Text=""
+ ReadOnly=0
+ link(onChange,6742965:doText,[])
+ link(Str,5069644:Value8,[(727,201)(433,201)])
+}
+Add(Edit,6742965,770,252)
+{
+ Left=75
+ Top=485
+ Width=60
+ TabOrder=-1
+ Text=""
+ ReadOnly=0
+ link(Str,5069644:Value9,[(776,194)(440,194)])
+}
+Add(Monitors,3460994,203,105)
+{
+ Point(doMonitorParametrs)
+ Point(onParametrs)
+ Point(doWorkArea)
+ link(onScreenShort,330810:doLoad,[(242,111)(242,83)])
+ link(Monitor,11548193:String,[(209,68)(335,68)(335,271)(307,271)])
+ link(onParametrs,5069644:doValue,[])
+}
+Add(CheckBox,10724817,112,147)
+{
+ Left=50
+ Top=520
+ Width=90
+ TabOrder=-1
+ Caption="WorkArea"
+ Point(doSetFocus)
+ link(onCheck,3460994:doWorkArea,[(179,153)(179,125)])
+}
