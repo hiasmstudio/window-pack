@@ -156,7 +156,7 @@ INSERT INTO "elements" VALUES(122,'AlphaBitmap','Хранение Alpha-картинки в памят
 INSERT INTO "elements" VALUES(123,'AlphaResize','Изменение размера Alpha-картинки',4,22,NULL);
 INSERT INTO "elements" VALUES(124,'AlphaRotate','Поворот Alpha-картинки',4,25,NULL);
 INSERT INTO "elements" VALUES(125,'AlphaCopy','Копирование Alpha-картинки',4,26,NULL);
-INSERT INTO "elements" VALUES(126,'AlphaShadow','Получение Alpha-картинки с тенью',4,28,NULL);
+INSERT INTO "elements" VALUES(126,'AlphaShadow','Получение Alpha-картинки с тенью или оверлея',4,28,NULL);
 INSERT INTO "elements" VALUES(127,'*Graphics_Картинка','Картинка',4,29,'');
 INSERT INTO "elements" VALUES(128,'Img_Loader','Загрузка изображений различных форматов',4,30,NULL);
 INSERT INTO "elements" VALUES(129,'PictureStream','Файл картинки',4,32,'C02FB3C891FEA789603B221CA6BDB778');
