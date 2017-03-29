@@ -215,7 +215,7 @@ var
   M: TMonitor;
   i: integer;
 begin
-  i := ToInteger(_Data);
+  i := ReadInteger(_Data, _data_Monitor, _prop_Monitor);
   if (i < -1) or (i > FMonitors.Count - 1) then exit;
   if i = -1 then
   begin
