@@ -1,5 +1,5 @@
 Make(delphi)
-ver(4.05 build 186)
+ver(4.04 build 185)
 Add(MainForm,2953706,50,189)
 {
  Width=580
@@ -118,7 +118,7 @@ Add(Edit,15025655,525,252)
 }
 Add(Hub,14274399,161,105)
 {
- link(onEvent1,3460994:doScreenShortMonitor,[])
+ link(onEvent1,3460994:doScreenShotMonitor,[])
  link(onEvent2,3460994:doMonitorParametrs,[])
 }
 Add(MT_MultiMem,5069644,378,112)
@@ -201,7 +201,7 @@ Add(Monitors,3460994,203,105)
  Point(doMonitorParametrs)
  Point(onParametrs)
  Point(doWorkArea)
- link(onScreenShort,330810:doLoad,[(242,111)(242,83)])
+ link(onScreenShot,330810:doLoad,[(242,111)(242,83)])
  link(Monitor,11548193:String,[(209,68)(335,68)(335,271)(307,271)])
  link(onParametrs,5069644:doValue,[])
 }

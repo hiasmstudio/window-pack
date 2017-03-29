@@ -69,11 +69,11 @@ type
 	_prop_WorkArea: boolean;
 	_prop_Monitor: integer;
 	_data_Monitor: THI_Event;
-    _event_onScreenShort: THI_Event;
+    _event_onScreenShot: THI_Event;
     _event_onParametrs: THI_Event;
     constructor Create;
     destructor Destroy; override;
-    procedure _work_doScreenShortMonitor(var _Data:TData; idx:word);
+    procedure _work_doScreenShotMonitor(var _Data:TData; idx:word);
     procedure _work_doMonitorParametrs(var _Data:TData; idx:word);
     procedure _work_doWorkArea(var _Data:TData; idx:word);    
     procedure _var_Count(var _Data:TData; idx:word);
@@ -245,7 +245,7 @@ begin
   mt_free(mt);            
 end;
 
-procedure THiMonitors._work_doScreenShortMonitor;
+procedure THiMonitors._work_doScreenShotMonitor;
 var
   M: TMonitor;
   i: integer;
@@ -271,11 +271,11 @@ begin
       bmp := NewBitmap(M.GetWidth, M.GetHeight);
       bmp.Canvas.CopyRect(bmp.Canvas.ClipRect, tmp.Canvas, M.GetRect);
     end;  
-    _hi_onEvent(_event_onScreenShort, bmp);
+    _hi_onEvent(_event_onScreenShot, bmp);
     bmp.free;
   end
   else  
-    _hi_onEvent(_event_onScreenShort, tmp);
+    _hi_onEvent(_event_onScreenShot, tmp);
     
   ReleaseDC(0, DC);
   tmp.free;
