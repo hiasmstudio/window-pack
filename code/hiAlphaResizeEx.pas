@@ -43,7 +43,7 @@ type
 
 implementation
 
-uses hiResize;
+uses hiResizeEx;
 
 function AlphaBlend(hdcDest: HDC; nXOriginDest, nYOriginDest, nWidthDest, nHeightDest: Integer;
                     hdcSrc: HDC; nXOriginSrc, nYOriginSrc, nWidthSrc, nHeightSrc: Integer;
