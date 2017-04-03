@@ -12,6 +12,7 @@ type
     procedure SetIcon(value:HICON);
    public
     _data_FileName:THI_Event;
+    _data_Stream:THI_Event;
     _event_onBitmap:THI_Event;
 
     property _prop_Transparent:TColor write FTransparent;
@@ -24,6 +25,7 @@ type
     procedure _work_doBitmap(var _Data:TData; Index:word);
     procedure _work_doLoadFromBitmap(var _Data:TData; Index:word);
     procedure _work_doLoadFromStream(var _Data:TData; Index:word);
+    procedure _work_doSaveToStream(var _Data:TData; Index:word);
     procedure _var_Icon(var _Data:TData; Index:word);
     property _prop_Icon:HICON write SetIcon;
   end;
@@ -131,7 +133,7 @@ procedure THIIcon._work_doLoadFromStream;
 var
   st: PStream;
 begin
-   st := ToStream(_Data);
+   st := ReadStream(_data, _data_Stream, nil);
    if st = nil then exit;
    if Icon = nil then
      Icon := NewIcon
@@ -139,6 +141,16 @@ begin
      Icon.Clear; 
    st.Position := 0;
    Icon.LoadFromStream(st);
+end;
+
+procedure THIIcon._work_doSaveToStream;
+var
+  st: PStream;
+begin
+   st := ReadStream(_data, _data_Stream, nil);
+   if st = nil then exit;
+   st.Position := 0;
+   Icon.SaveToStream(st);
 end;
 
 end.
