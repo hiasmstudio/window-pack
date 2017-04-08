@@ -286,6 +286,8 @@ begin
 //     RE_AutoURLDetect := true;
      RE_FmtStandard;
      RE_FmtAutoColor := true;
+     RE_Font.FontName := Control.Font.FontName;  
+     RE_Font.Color := Control.Font.Color;
      OnRE_URLClick := _OnURLDetect; 
     end;
 end;
