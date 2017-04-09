@@ -1,6 +1,6 @@
 Make(delphi)
-ver(4.04 build 185)
-Add(MainForm,2953706,50,189)
+ver(4.05 build 186)
+Add(MainForm,2953706,49,189)
 {
  Width=580
  Height=590
@@ -17,9 +17,9 @@ Add(Image,330810,294,77)
 }
 Add(ComboBox,11548193,294,210)
 {
- Left=45
+ Left=15
  Top=460
- Width=90
+ Width=80
  Height=21
  ReadOnly=0
  Point(doSelect)
@@ -42,7 +42,7 @@ Add(For,9022255,196,210)
 }
 Add(Label,15382900,28,126)
 {
- Left=150
+ Left=190
  Top=475
  Width=13
  Height=17
@@ -50,7 +50,7 @@ Add(Label,15382900,28,126)
 }
 Add(Edit,1472934,378,252)
 {
- Left=170
+ Left=210
  Top=460
  Width=60
  TabOrder=-1
@@ -61,7 +61,7 @@ Add(Edit,1472934,378,252)
 }
 Add(Label,10894502,35,133)
 {
- Left=245
+ Left=285
  Top=475
  Width=14
  Height=17
@@ -69,7 +69,7 @@ Add(Label,10894502,35,133)
 }
 Add(Edit,2631098,427,252)
 {
- Left=265
+ Left=305
  Top=460
  Width=60
  TabOrder=-1
@@ -80,7 +80,7 @@ Add(Edit,2631098,427,252)
 }
 Add(Label,4425087,42,140)
 {
- Left=340
+ Left=380
  Top=475
  Width=18
  Height=17
@@ -88,7 +88,7 @@ Add(Label,4425087,42,140)
 }
 Add(Edit,4264014,476,252)
 {
- Left=360
+ Left=400
  Top=460
  Width=60
  TabOrder=-1
@@ -99,7 +99,7 @@ Add(Edit,4264014,476,252)
 }
 Add(Label,12972572,49,147)
 {
- Left=435
+ Left=475
  Top=475
  Width=15
  Height=17
@@ -107,7 +107,7 @@ Add(Label,12972572,49,147)
 }
 Add(Edit,15025655,525,252)
 {
- Left=455
+ Left=495
  Top=460
  Width=60
  TabOrder=-1
@@ -123,8 +123,8 @@ Add(Hub,14274399,161,105)
 }
 Add(MT_MultiMem,5069644,378,112)
 {
- Count=9
- link(onData,1472934:doText,[(452,118)(452,104)(368,104)(368,258)])
+ Count=10
+ link(onData,1472934:doText,[(459,118)(459,104)(368,104)(368,258)])
 }
 Add(Hub,15337541,161,203)
 {
@@ -144,7 +144,7 @@ Add(HubEx,10360895,273,210)
 }
 Add(Edit,14157857,574,252)
 {
- Left=170
+ Left=210
  Top=485
  Width=60
  TabOrder=-1
@@ -155,7 +155,7 @@ Add(Edit,14157857,574,252)
 }
 Add(Edit,15047585,623,252)
 {
- Left=265
+ Left=305
  Top=485
  Width=60
  TabOrder=-1
@@ -166,7 +166,7 @@ Add(Edit,15047585,623,252)
 }
 Add(Edit,16728453,672,252)
 {
- Left=360
+ Left=400
  Top=485
  Width=60
  TabOrder=-1
@@ -177,7 +177,7 @@ Add(Edit,16728453,672,252)
 }
 Add(Edit,1041645,721,252)
 {
- Left=455
+ Left=495
  Top=485
  Width=60
  TabOrder=-1
@@ -188,12 +188,13 @@ Add(Edit,1041645,721,252)
 }
 Add(Edit,6742965,770,252)
 {
- Left=75
- Top=485
+ Left=110
+ Top=460
  Width=60
  TabOrder=-1
  Text=""
  ReadOnly=0
+ link(onChange,7661858:doText,[])
  link(Str,5069644:Value9,[(776,194)(440,194)])
 }
 Add(Monitors,3460994,203,105)
@@ -214,4 +215,14 @@ Add(CheckBox,10724817,112,147)
  Caption="WorkArea"
  Point(doSetFocus)
  link(onCheck,3460994:doWorkArea,[(179,153)(179,125)])
+}
+Add(Edit,7661858,819,252)
+{
+ Left=15
+ Top=485
+ Width=155
+ TabOrder=-1
+ Text=""
+ ReadOnly=0
+ link(Str,5069644:Value10,[(825,187)(447,187)])
 }

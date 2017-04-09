@@ -14,25 +14,26 @@ const
 type
   HMONITOR = type Integer;
 
-  tagMONITORINFOA = record
+  tagMONITORINFOEXA = record
     cbSize: DWORD;
     rcMonitor: TRect;
     rcWork: TRect;
     dwFlags: DWORD;
+    szDevice: array [0..Pred(CCHDEVICENAME)] of AnsiChar;     
   end;
-  tagMONITORINFO = tagMONITORINFOA;
-  MONITORINFOA = tagMONITORINFOA;
-  MONITORINFO = MONITORINFOA;
-  LPMONITORINFOA = ^tagMONITORINFOA;
-  LPMONITORINFO = LPMONITORINFOA;
-  PMonitorInfoA = ^tagMONITORINFO;
-  PMonitorInfo = PMonitorInfoA;
-  TMonitorInfoA = tagMONITORINFO;
-  TMonitorInfo = TMonitorInfoA;
+  tagMONITORINFOEX = tagMONITORINFOEXA;
+  MONITORINFOEXA   = tagMONITORINFOEXA;
+  MONITORINFOEX    = MONITORINFOEXA;
+  LPMONITORINFOEXA = ^tagMONITORINFOEXA;
+  LPMONITORINFOEX  = LPMONITORINFOEXA;
+  PMonitorInfoExA  = ^tagMONITORINFOEX;
+  PMonitorInfoEx   = PMonitorInfoExA;
+  TMonitorInfoExA  = tagMONITORINFOEX;
+  TMonitorInfoEx   = TMonitorInfoExA;
 
 TMonitorEnumProc = function(hm: HMONITOR; dc: HDC; r: PRect; l: LPARAM): Boolean; stdcall;
 
-function GetMonitorInfo(hMonitor: HMONITOR; lpMonitorInfo: PMonitorInfoA): Boolean; stdcall;
+function GetMonitorInfo(hMonitor: HMONITOR; lpMonitorInfo: PMonitorInfoExA): Boolean; stdcall;
          external 'USER32.DLL' name 'GetMonitorInfoA';
 
 function EnumDisplayMonitors(hdc: HDC; lprcIntersect: PRect; lpfnEnumProc: TMonitorEnumProc;
@@ -58,7 +59,8 @@ type
     function GetWorkWidth: Integer;
     function GetWorkRect: TRect;
 
-    function GetStatus: Integer;	    
+    function GetStatus: Integer;
+    function GetDeviceName: String;		    
   end;
 
 type
@@ -83,7 +85,7 @@ implementation
 
 function TMonitor.GetLeft: Integer;
 var
-  MonInfo: TMonitorInfo;
+  MonInfo: TMonitorInfoEx;
 begin
   MonInfo.cbSize := SizeOf(MonInfo);
   GetMonitorInfo(FHandle, @MonInfo);
@@ -92,7 +94,7 @@ end;
 
 function TMonitor.GetWorkLeft: Integer;
 var
-  MonInfo: TMonitorInfo;
+  MonInfo: TMonitorInfoEx;
 begin
   MonInfo.cbSize := SizeOf(MonInfo);
   GetMonitorInfo(FHandle, @MonInfo);
@@ -101,7 +103,7 @@ end;
 
 function TMonitor.GetHeight: Integer;
 var
-  MonInfo: TMonitorInfo;
+  MonInfo: TMonitorInfoEx;
 begin
   MonInfo.cbSize := SizeOf(MonInfo);
   GetMonitorInfo(FHandle, @MonInfo);
@@ -110,7 +112,7 @@ end;
 
 function TMonitor.GetWorkHeight: Integer;
 var
-  MonInfo: TMonitorInfo;
+  MonInfo: TMonitorInfoEx;
 begin
   MonInfo.cbSize := SizeOf(MonInfo);
   GetMonitorInfo(FHandle, @MonInfo);
@@ -119,7 +121,7 @@ end;
 
 function TMonitor.GetTop: Integer;
 var
-  MonInfo: TMonitorInfo;
+  MonInfo: TMonitorInfoEx;
 begin
   MonInfo.cbSize := SizeOf(MonInfo);
   GetMonitorInfo(FHandle, @MonInfo);
@@ -128,7 +130,7 @@ end;
 
 function TMonitor.GetWorkTop: Integer;
 var
-  MonInfo: TMonitorInfo;
+  MonInfo: TMonitorInfoEx;
 begin
   MonInfo.cbSize := SizeOf(MonInfo);
   GetMonitorInfo(FHandle, @MonInfo);
@@ -137,7 +139,7 @@ end;
 
 function TMonitor.GetWidth: Integer;
 var
-  MonInfo: TMonitorInfo;
+  MonInfo: TMonitorInfoEx;
 begin
   MonInfo.cbSize := SizeOf(MonInfo);
   GetMonitorInfo(FHandle, @MonInfo);
@@ -146,7 +148,7 @@ end;
 
 function TMonitor.GetWorkWidth: Integer;
 var
-  MonInfo: TMonitorInfo;
+  MonInfo: TMonitorInfoEx;
 begin
   MonInfo.cbSize := SizeOf(MonInfo);
   GetMonitorInfo(FHandle, @MonInfo);
@@ -155,7 +157,7 @@ end;
 
 function TMonitor.GetRect: TRect;
 var
-  MonInfo: TMonitorInfo;
+  MonInfo: TMonitorInfoEx;
 begin
   MonInfo.cbSize := SizeOf(MonInfo);
   GetMonitorInfo(FHandle, @MonInfo);
@@ -164,7 +166,7 @@ end;
 
 function TMonitor.GetWorkRect: TRect;
 var
-  MonInfo: TMonitorInfo;
+  MonInfo: TMonitorInfoEx;
 begin
   MonInfo.cbSize := SizeOf(MonInfo);
   GetMonitorInfo(FHandle, @MonInfo);
@@ -173,11 +175,20 @@ end;
 
 function TMonitor.GetStatus: Integer;
 var
-  MonInfo: TMonitorInfo;
+  MonInfo: TMonitorInfoEx;
 begin
   MonInfo.cbSize := SizeOf(MonInfo);
   GetMonitorInfo(FHandle, @MonInfo);
   Result := MonInfo.dwFlags;
+end;
+
+function TMonitor.GetDeviceName: String;
+var
+  MonInfo: TMonitorInfoEx;
+begin
+  MonInfo.cbSize := SizeOf(MonInfo);
+  GetMonitorInfo(FHandle, @MonInfo);
+  Result := string(MonInfo.szDevice);
 end;
 
 //------------------------------------------------------------------------------
@@ -240,6 +251,7 @@ begin
     mt_int(mt, M.GetWorkHeight);
 
     mt_int(mt, M.GetStatus);
+    mt_string(mt, M.GetDeviceName);
   end;
   _hi_onEvent_(_event_onParametrs, dt);
   mt_free(mt);            
