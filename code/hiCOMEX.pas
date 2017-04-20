@@ -26,7 +26,7 @@ type
     ReadStr: string;
     MaskRd: DWORD;
     SendedWr: Integer;
-    procedure CloseCom;
+    function CloseCom: boolean;
     function SetCom(BaudRate: Integer; Parity, DataBits, StopBits: Char; DTR, RTS: string): boolean;
     function InitCom(BaudRate, PortNo: Integer; Parity, DataBits, StopBits: Char; DTR, RTS: string): boolean;
     function ExecuteRd(Sender: PThread): Integer;
@@ -50,7 +50,10 @@ type
     _event_onCTS:THI_Event;
     _event_onDCD:THI_Event;    
     _event_onRING:THI_Event;
-    _event_onSetComState:THI_Event;    
+    _event_onSetComState:THI_Event;
+    _event_onOpen:THI_Event;
+    _event_onClose:THI_Event;
+    _event_onError:THI_Event;        
     _data_BaudRate:THI_Event;
     _data_Port:THI_Event;
 
@@ -173,8 +176,9 @@ begin
   end;  
 end;
 
-procedure THICOMEX.CloseCom;
+function THICOMEX.CloseCom;
 begin
+  result := false;
   if Assigned(thrd) then
   begin
     thrd.Terminate;
@@ -191,23 +195,31 @@ begin
   PurgeComm(hFile, PURGE_TXCLEAR or PURGE_RXCLEAR);
   CloseHandle(hFile);
   hFile := INVALID_HANDLE_VALUE;
+  result := true;
 end;
 
 procedure THICOMEX._work_doOpen;
 begin
    CloseCom;
-   InitCom(ReadInteger(_Data,_data_BaudRate,_prop_BaudRate),
-           ReadInteger(_Data,_data_Port,_prop_Port + 1),
-           _nm[_prop_Parity + 1],
-           Int2Str(_prop_DataBits + 7)[1],
-           Int2Str(_prop_StopBits + 1)[1],
-           Copy(dtrrts, _prop_DTR * 3 + 1, 3),
-           Copy(dtrrts, _prop_RTS * 3 + 1, 3));
+   if InitCom(ReadInteger(_Data,_data_BaudRate,_prop_BaudRate),
+              ReadInteger(_Data,_data_Port,_prop_Port + 1),
+              _nm[_prop_Parity + 1],
+              Int2Str(_prop_DataBits + 7)[1],
+              Int2Str(_prop_StopBits + 1)[1],
+              Copy(dtrrts, _prop_DTR * 3 + 1, 3),
+              Copy(dtrrts, _prop_RTS * 3 + 1, 3))
+   then
+     _hi_onEvent(_event_onOpen)
+   else
+     _hi_onEvent(_event_onError, 0);
 end;
 
 procedure THICOMEX._work_doClose;
 begin
-  CloseCom;
+  if CloseCom then
+    _hi_onEvent(_event_onClose)
+  else
+    _hi_onEvent(_event_onError, 1);
 end;
 
 procedure THICOMEX._work_doRXClear;
