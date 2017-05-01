@@ -6,6 +6,7 @@ uses Windows, Messages, Kol, Share, Debug;
 
 type TXPMenu = class(Tdebug)
   protected
+    BackBrush:         HBRUSH;
     FC:                PControl;
     Menu:              PMenu;
     Old:               TOnMessage;
@@ -28,6 +29,7 @@ type TXPMenu = class(Tdebug)
     FCheckColor:       TColor;
     FSelCheckColor:    TColor;
     FSelColorText:     TColor;
+    fSeparatorColor:   TColor;
     FMinWidth:         Integer;
     FMinHeight:        Integer;
     FvtOffset:         Integer;
@@ -46,7 +48,9 @@ type TXPMenu = class(Tdebug)
     FFrame:            boolean;
     fEndItemRight:     boolean;
     fIconByIndex:      boolean;
-
+    fFillBackColor:    boolean;
+    fUseSeparatorColor:boolean;
+    
     procedure _Add(var Val:TData);
     procedure _Set(var Item: TData; var Val: TData);
     function _Get(Var Item: TData; var Val: TData): boolean;
@@ -65,6 +69,7 @@ type TXPMenu = class(Tdebug)
     function _mRows:integer;
     function _mCols:integer;
     function IndexToStr(idx:integer; s: string):string;
+    procedure SetBackColor(Value: TColor);
     
   public
 
@@ -87,32 +92,35 @@ type TXPMenu = class(Tdebug)
     function  _DrawItem(Sender: PObj; DC: HDC; const Rect: TRect;
      ItemIdx: Integer; DrawAction: TDrawAction; ItemState: TDrawState): Boolean;
 
-    property _prop_LineColorLight:  TColor     read fGutterColorLight write fGutterColorLight;
-    property _prop_LineColorDark:   TColor     read fGutterColorLight write FGutterColorDark;
-    property _prop_BackColor:       TColor     read FBackColor write FBackColor;
-    property _prop_BackColorImage:  TColor     read FBackColorImage write FBackColorImage;
-    property _prop_SelColorLight:   TColor     read GSelColorLight write SetSelColorLight;
-    property _prop_SelColorDark:    TColor     read FSelColorDark write FSelColorDark;
-    property _prop_CheckColor:      TColor     read FCheckColor write FCheckColor;
-    property _prop_SelCheckColor:   TColor     read FSelCheckColor write FSelCheckColor;
-    property _prop_SelColorText:    TColor     read FSelColorText write FSelColorText;
-    property _prop_LineStyle:       byte       read FLineStyle write FLineStyle;
-    property _prop_Font:            TFontRec   read DFont write SetFontRec;
-    property _prop_FlatSelect:      boolean    read fFlatSelect write fFlatSelect;
-    property _prop_BumpText:        boolean    read fBumpText write fBumpText;
-    property _prop_LongSeparator:   boolean    read FLongSepar write FLongSepar;
-    property _prop_Shift:           integer    read FShift write FShift;
-    property _prop_ImgSize:         integer    read FImgSize write FImgSize;
-    property _prop_AutoBackClrImg:  boolean    read fAutoBackClrImg write fAutoBackClrImg;
-    property _prop_vtOffset:        integer    read FvtOffset write FvtOffset;
-    property _prop_adWidth:         word       read FadWidth write FadWidth;
-    property _prop_Bitmaps:         PStrListEx write SetIBitmaps;
-    property _prop_PictureLeft:     HBITMAP    write SetPicture;
-    property _prop_GutterLineOn:    boolean    read fLineOn write fLineOn;
-    property _prop_Frame:           boolean    read fFrame write fFrame;
+    property _prop_LineColorLight:    TColor     read fGutterColorLight write fGutterColorLight;
+    property _prop_LineColorDark:     TColor     read fGutterColorLight write FGutterColorDark;
+    property _prop_BackColor:         TColor     read FBackColor write SetBackColor;
+    property _prop_SeparatorColor:    TColor     read fSeparatorColor write fSeparatorColor;
+    property _prop_FillBackColor:     boolean    read fFillBackColor write fFillBackColor;
+    property _prop_UseSeparatorColor: boolean    read fFillBackColor write fUseSeparatorColor;
+    property _prop_BackColorImage:    TColor     read FBackColorImage write FBackColorImage;
+    property _prop_SelColorLight:     TColor     read GSelColorLight write SetSelColorLight;
+    property _prop_SelColorDark:      TColor     read FSelColorDark write FSelColorDark;
+    property _prop_CheckColor:        TColor     read FCheckColor write FCheckColor;
+    property _prop_SelCheckColor:     TColor     read FSelCheckColor write FSelCheckColor;
+    property _prop_SelColorText:      TColor     read FSelColorText write FSelColorText;
+    property _prop_LineStyle:         byte       read FLineStyle write FLineStyle;
+    property _prop_Font:              TFontRec   read DFont write SetFontRec;
+    property _prop_FlatSelect:        boolean    read fFlatSelect write fFlatSelect;
+    property _prop_BumpText:          boolean    read fBumpText write fBumpText;
+    property _prop_LongSeparator:     boolean    read FLongSepar write FLongSepar;
+    property _prop_Shift:             integer    read FShift write FShift;
+    property _prop_ImgSize:           integer    read FImgSize write FImgSize;
+    property _prop_AutoBackClrImg:    boolean    read fAutoBackClrImg write fAutoBackClrImg;
+    property _prop_vtOffset:          integer    read FvtOffset write FvtOffset;
+    property _prop_adWidth:           word       read FadWidth write FadWidth;
+    property _prop_Bitmaps:           PStrListEx write SetIBitmaps;
+    property _prop_PictureLeft:       HBITMAP    write SetPicture;
+    property _prop_GutterLineOn:      boolean    read fLineOn write fLineOn;
+    property _prop_Frame:             boolean    read fFrame write fFrame;
 
-    property  ItemHeight:           Integer    read FMinHeight write FMinHeight;
-    property  ItemWidth:            Integer    read FMinWidth write FMinWidth;
+    property  ItemHeight:             Integer    read FMinHeight write FMinHeight;
+    property  ItemWidth:              Integer    read FMinWidth write FMinWidth;
 
     procedure SetPopUp(const Value:string);
     procedure SetMain(const Value:string);
@@ -122,6 +130,9 @@ type TXPMenu = class(Tdebug)
     procedure _work_doSelColorLight (var _Data:TData; Index:word);
     procedure _work_doSelColorDark  (var _Data:TData; Index:word);
     procedure _work_doBackColor     (var _Data:TData; Index:word);
+    procedure _work_doFillBackColor (var _Data:TData; Index:word);
+    procedure _work_doSeparatorColor(var _Data:TData; Index:word);
+    procedure _work_doUseSeparatorColor(var _Data:TData; Index:word);
     procedure _work_doBackColorImage(var _Data:TData; Index:word);
     procedure _work_doCheckColor    (var _Data:TData; Index:word);
     procedure _work_doSelCheckColor (var _Data:TData; Index:word);
@@ -169,22 +180,27 @@ type TXPMenu = class(Tdebug)
 
 implementation
 
-procedure TXPMenu._work_doSelColorLight; begin SetSelColorLight(ToInteger(_Data));end;
-procedure TXPMenu._work_doLineColorLight;begin FGutterColorLight:=ToInteger(_Data);end;
-procedure TXPMenu._work_doLineColorDark; begin FGutterColorDark :=ToInteger(_Data);end;
-procedure TXPMenu._work_doSelColorDark;  begin fSelColorDark    :=ToInteger(_Data);end;
-procedure TXPMenu._work_doBackColor;     begin fBackColor       :=ToInteger(_Data);end;
-procedure TXPMenu._work_doCheckColor;    begin fCheckColor      :=ToInteger(_Data);end;
-procedure TXPMenu._work_doSelCheckColor; begin fSelCheckColor   :=ToInteger(_Data);end;
-procedure TXPMenu._work_doSelColorText;  begin fSelColorText    :=ToInteger(_Data);end;
-procedure TXPMenu._work_doLineStyle;     begin fLineStyle       :=ToInteger(_Data);end;
-procedure TXPMenu._work_doShift;         begin fShift           :=ToInteger(_Data);end;
-procedure TXPMenu._work_doFlatSelect;    begin fFlatSelect      :=Readbool(_Data) ;end;
-procedure TXPMenu._work_doBumpText;      begin fBumpText        :=Readbool(_Data) ;end;
-procedure TXPMenu._work_doLongSeparator; begin fLongSepar       :=Readbool(_Data) ;end;
-procedure TXPMenu._work_doGutterLineOn;  begin fLineOn          :=Readbool(_Data) ;end;
-procedure TXPMenu._work_doFrame;         begin fFrame           :=Readbool(_Data) ;end;
-procedure TXPMenu._work_doBackColorImage;begin If not fAutoBackClrImg then fBackColorImage:= ToInteger(_Data);end;
+function SetMenuInfo(hMenu: HMENU; const lpcmi: TMenuInfo): BOOL; stdcall; external 'user32.dll' name 'SetMenuInfo';
+
+procedure TXPMenu._work_doSelColorLight;     begin SetSelColorLight(ToInteger(_Data));end;
+procedure TXPMenu._work_doLineColorLight;    begin FGutterColorLight:=ToInteger(_Data);end;
+procedure TXPMenu._work_doLineColorDark;     begin FGutterColorDark :=ToInteger(_Data);end;
+procedure TXPMenu._work_doSelColorDark;      begin fSelColorDark    :=ToInteger(_Data);end;
+procedure TXPMenu._work_doBackColor;         begin SetBackColor(ToInteger(_Data));end;
+procedure TXPMenu._work_doFillBackColor;     begin fFillBackColor   :=Readbool(_Data);end;
+procedure TXPMenu._work_doUseSeparatorColor; begin fUseSeparatorColor :=Readbool(_Data);end;
+procedure TXPMenu._work_doCheckColor;        begin fCheckColor      :=ToInteger(_Data);end;
+procedure TXPMenu._work_doSelCheckColor;     begin fSelCheckColor   :=ToInteger(_Data);end;
+procedure TXPMenu._work_doSelColorText;      begin fSelColorText    :=ToInteger(_Data);end;
+procedure TXPMenu._work_doLineStyle;         begin fLineStyle       :=ToInteger(_Data);end;
+procedure TXPMenu._work_doShift;             begin fShift           :=ToInteger(_Data);end;
+procedure TXPMenu._work_doSeparatorColor;    begin fSeparatorColor :=ToInteger(_Data);end;
+procedure TXPMenu._work_doFlatSelect;        begin fFlatSelect      :=Readbool(_Data) ;end;
+procedure TXPMenu._work_doBumpText;          begin fBumpText        :=Readbool(_Data) ;end;
+procedure TXPMenu._work_doLongSeparator;     begin fLongSepar       :=Readbool(_Data) ;end;
+procedure TXPMenu._work_doGutterLineOn;      begin fLineOn          :=Readbool(_Data) ;end;
+procedure TXPMenu._work_doFrame;             begin fFrame           :=Readbool(_Data) ;end;
+procedure TXPMenu._work_doBackColorImage;    begin If not fAutoBackClrImg then fBackColorImage:= ToInteger(_Data);end;
 
 procedure TXPMenu._work_doPictureLeft;
 begin
@@ -291,6 +307,25 @@ begin
 end;
 
 //******************************************************************************
+
+procedure TXPMenu.SetBackColor;
+var
+  MenuInfo: TMenuInfo;
+begin
+  fBackColor := Value;
+  DeleteObject(BackBrush);
+  BackBrush := CreateSolidBrush(Color2RGB(fBackColor));
+
+  if fFillBackColor then
+  begin
+    FillChar(MenuInfo, SizeOf(TMenuInfo), #0);
+    MenuInfo.cbSize := SizeOf(TMenuInfo);
+    MenuInfo.fMask :=  MIM_BACKGROUND;
+    MenuInfo.hbrBack := BackBrush;
+    SetMenuInfo(Menu.Handle, MenuInfo);
+    DrawMenuBar(Menu.Owner.Handle);
+  end;
+end;
 
 procedure TXPMenu._OnMenuItem;
 begin
@@ -458,6 +493,7 @@ end;
 
 destructor TXPMenu.Destroy;
 begin
+   DeleteObject(BackBrush);
    GFont.free;
    FBmpCheck.free;
    FBmpRadio.free;
@@ -500,6 +536,7 @@ var BitmapSize:tagBITMAP;
     c:byte;
     fFrom: TRGB;
     EmptyBMP:boolean;
+    MenuInfo: TMenuInfo;
 
   function GetGutterWidth(IsLine: Boolean): Integer;
   begin
@@ -531,6 +568,16 @@ const
 begin
 
   with PMenu(Sender){$ifndef F_P}^{$endif} do begin
+
+    if fFillBackColor then
+    begin
+      FillChar(MenuInfo, SizeOf(TMenuInfo), #0);
+      MenuInfo.cbSize := SizeOf(TMenuInfo);
+      MenuInfo.fMask :=  MIM_BACKGROUND;
+      MenuInfo.hbrBack := BackBrush;
+      SetMenuInfo(Handle, MenuInfo);
+    end;
+
     if (FleftBmpImage <> nil) and (TopParent.IndexOf( Parent )=-1) then PictWidth:= FleftBmpImage.Width else PictWidth:= 0;
     if Pointer(Bitmap)<>nil then
        GetObject(Bitmap , sizeof(tagBITMAP), @BitmapSize);
@@ -552,7 +599,10 @@ begin
        if (odsHotList in ItemState) then //если мышь над пунктом основного меню
           _Gradient(DC,Rect,true,0,FSelColorDark,FSelColorLight,GetShadeColor(FSelColorDark,150),FFrame,false,true)
        else begin
-          aBrush.Color := clBtnFace;
+          if fFillBackColor then
+            aBrush.Color := fBackColor
+          else
+            aBrush.Color := clBtnFace;
           FillRect(DC,Rect,aBrush.Handle);
        end
     else begin                           //ничем не примечательный пункт меню
@@ -631,7 +681,10 @@ begin
     oldFont:=SelectObject(DC,aFont.Handle);
 
     if IsSeparator and not DbSeparator then begin //если разделитель
-       aPen.Color := GetShadeColor(FGutterColorDark, 40);
+       if fUseSeparatorColor then
+         aPen.Color := Color2RGB(fSeparatorColor)
+       else
+         aPen.Color := GetShadeColor(FGutterColorDark, 40);
        SelectObject(DC,aPen.Handle);
        if FLongSepar then
           MyPolyline(DC,[MakePoint(PictWidth + 2, ARect.Top + (ARect.Bottom - ARect.Top) shr 1),
