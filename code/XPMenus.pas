@@ -16,6 +16,7 @@ type TXPMenu = class(Tdebug)
     IconsIdxArray:     Array of Array of integer;
     FImgSize:          integer;
     FShift:            integer;
+    fLeftMargin:       integer;
     GFont:             PGraphicTool;
     DFont:             TFontRec;
     FGutterColorLight: TColor;
@@ -111,6 +112,7 @@ type TXPMenu = class(Tdebug)
     property _prop_LongSeparator:     boolean    read FLongSepar write FLongSepar;
     property _prop_Shift:             integer    read FShift write FShift;
     property _prop_ImgSize:           integer    read FImgSize write FImgSize;
+    property _prop_LeftMargin:        integer    read fLeftMargin write fLeftMargin;
     property _prop_AutoBackClrImg:    boolean    read fAutoBackClrImg write fAutoBackClrImg;
     property _prop_vtOffset:          integer    read FvtOffset write FvtOffset;
     property _prop_adWidth:           word       read FadWidth write FadWidth;
@@ -146,6 +148,7 @@ type TXPMenu = class(Tdebug)
     procedure _work_doGutterLineOn  (var _Data:TData; Index:word);
     procedure _work_doShift         (var _Data:TData; Index:word);
     procedure _work_doFrame         (var _Data:TData; Index:word);
+    procedure _work_doLeftMargin    (var _Data:TData; Index:word);
 
     procedure _work_doNameItems     (var _Data:TData; Index:word);
     procedure _work_doCheckItems    (var _Data:TData; Index:word);
@@ -200,6 +203,7 @@ procedure TXPMenu._work_doBumpText;          begin fBumpText        :=Readbool(_
 procedure TXPMenu._work_doLongSeparator;     begin fLongSepar       :=Readbool(_Data) ;end;
 procedure TXPMenu._work_doGutterLineOn;      begin fLineOn          :=Readbool(_Data) ;end;
 procedure TXPMenu._work_doFrame;             begin fFrame           :=Readbool(_Data) ;end;
+procedure TXPMenu._work_doLeftMargin;        begin fLeftMargin      :=ToInteger(_Data) ;end;
 procedure TXPMenu._work_doBackColorImage;    begin If not fAutoBackClrImg then fBackColorImage:= ToInteger(_Data);end;
 
 procedure TXPMenu._work_doPictureLeft;
@@ -670,7 +674,7 @@ begin
                                  (Rect.Top + Rect.Bottom - FBmpCheck.Height) shr 1,FBmpCheck.DIBPixels[0,0]);
     end;
     ARect:=Rect;
-    if not TopLevel and not IsSeparator then Inc(ARect.Left, PictWidth + GutterWidth + 5); //отступ для текста
+    if not TopLevel and not IsSeparator then Inc(ARect.Left, PictWidth + GutterWidth + fLeftMargin); //отступ для текста
     aFont.Assign(GFont);
 
     with aFont{$ifndef F_P}^{$endif} do begin
