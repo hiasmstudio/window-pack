@@ -468,7 +468,8 @@ end;
 
 procedure THIWin._work_doFont;
 begin
-   if _IsFont(Data) then
+   if _IsFont(Data) then begin
+      _prop_Font := pfontrec(Data.idata)^; //+ добавил Галков
       with pfontrec(Data.idata)^ do begin
          Control.Font.Color := Color;
          SetFont(Control.Font,Style);
@@ -476,6 +477,7 @@ begin
          Control.Font.FontHeight := _hi_SizeFnt(Size);
          Control.Font.FontCharset := CharSet;
       end;
+   end;
 end;
 
 procedure THIWin._work_doAlign;
