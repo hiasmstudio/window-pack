@@ -101,6 +101,7 @@ begin
         
       sum := sum + items[i];  
     end; 
+   if sum = 0 then exit; // 05.05.2017 Tad
 
    if _prop_LegendShow then
      dec(x2, Round(_prop_LegendSize * fScale.x));
