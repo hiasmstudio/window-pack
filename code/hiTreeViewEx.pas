@@ -4,6 +4,13 @@ interface
 
 uses Windows,Kol,Share,Win;
 
+const
+  TV_FIRST                = $1100;      { TreeView messages }
+  TVM_SETBKCOLOR          = TV_FIRST + 29;
+  TVM_SETTEXTCOLOR        = TV_FIRST + 30;
+  TVM_SETINSERTMARKCOLOR  = TV_FIRST + 37;
+  TVM_SETLINECOLOR        = TV_FIRST + 40;
+
 type
   THITreeViewEx = class(THIWin)
    private
@@ -50,6 +57,7 @@ type
     _prop_Strings:string;
     _prop_Lines:boolean;
     _prop_LinesRoot:boolean;
+    _prop_LinesColor:TColor;    
     _prop_Tooltips:boolean;
     _prop_EditLabels:boolean;
     _prop_TrackSelect:boolean;
@@ -82,6 +90,9 @@ type
     
     procedure Init; override;
     destructor Destroy; override;
+    procedure _work_doColor(var Data:TData; Index:word);
+    procedure _work_doFont(var Data:TData; Index:word);
+    procedure _work_doLinesColor(var Data:TData; Index:word);
     procedure _work_doAdd(var _Data:TData; Index:word);
     procedure _work_doClear(var _Data:TData; Index:word);
     procedure _work_doDelete(var _Data:TData; Index:word);
@@ -117,6 +128,28 @@ type
 
 implementation
 
+
+procedure THITreeViewEx._work_doColor;
+begin
+  inherited;
+  Control.Perform(TVM_SETBKCOLOR, 0, Color2RGB(Control.Color));
+end;
+
+procedure THITreeViewEx._work_doFont;
+begin
+  inherited;
+  Control.Perform(TVM_SETTEXTCOLOR, 0, Control.Font.Color);  
+end;
+
+procedure THITreeViewEx._work_doLinesColor;
+begin
+  _prop_LinesColor := ToInteger(Data);
+  if _prop_LinesColor = clDefault then
+    Control.Perform(TVM_SETLINECOLOR, 0, CLR_DEFAULT)
+  else
+    Control.Perform(TVM_SETLINECOLOR, 0, Color2RGB(_prop_LinesColor)); 
+end;
+
 procedure THITreeViewEx.Init;
 var Lst:PStrList;
     Fl:TTreeViewOptions;
@@ -137,14 +170,20 @@ begin
    end;
 
    Control := NewTreeView(FParent,fl,IList,IListSt);
-   Control.OnTVExpanding := _OnExpanding;
-   Control.OnSelChange   := _OnClick;
-   Control.OnTVBeginEdit := _OnBeginEdit;
-   Control.OnTVEndEdit   := _OnEndEdit;
+   Control.OnTVExpanding   := _OnExpanding;
+   Control.OnSelChange     := _OnClick;
+   Control.OnTVBeginEdit   := _OnBeginEdit;
+   Control.OnTVEndEdit     := _OnEndEdit;
    Lst := NewStrList;
    Lst.Text := _prop_Strings;
    LoadFromText(Lst);
    inherited;
+   Control.Perform(TVM_SETBKCOLOR, 0, Color2RGB(Control.Color));
+   Control.Perform(TVM_SETTEXTCOLOR, 0, Control.Font.Color);
+   if _prop_LinesColor = clDefault then
+     Control.Perform(TVM_SETLINECOLOR, 0, CLR_DEFAULT)
+   else
+     Control.Perform(TVM_SETLINECOLOR, 0, Color2RGB(_prop_LinesColor));      
 end;
 
 destructor THITreeViewEx.Destroy;

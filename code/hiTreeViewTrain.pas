@@ -21,6 +21,12 @@ const
   IPATH_ERR_SUCCESS   = 0;
   IPATH_ERR_PARENT_NF = 1;
 
+  TV_FIRST                = $1100;      { TreeView messages }
+  TVM_SETBKCOLOR          = TV_FIRST + 29;
+  TVM_SETTEXTCOLOR        = TV_FIRST + 30;
+  TVM_SETINSERTMARKCOLOR  = TV_FIRST + 37;
+  TVM_SETLINECOLOR        = TV_FIRST + 40;
+  
 type
   PCardinal = ^cardinal;
   TITreeViewTrain = record
@@ -67,6 +73,8 @@ type
    public
     _prop_Lines:boolean;
     _prop_LinesRoot:boolean;
+    _prop_LinesColor:TColor;
+	    
     _prop_Tooltips:boolean;
     _prop_DragDrop:boolean;
     tmp:IIconsManager;
@@ -95,6 +103,9 @@ type
     
     procedure Init; override;
     destructor Destroy; override;
+    procedure _work_doColor(var Data:TData; Index:word);
+    procedure _work_doFont(var Data:TData; Index:word);    
+    procedure _work_doLinesColor(var Data:TData; Index:word);
     procedure _work_doClear(var _Data:TData; index:word);
     procedure _work_doExpand(var _Data:TData; index:word);
     procedure _work_doExpandNode(var _Data:TData; index:word);
@@ -113,6 +124,27 @@ destructor THITreeViewTrain.Destroy;
 begin
    FHash.Free;
    inherited;
+end;
+
+procedure THITreeViewTrain._work_doColor;
+begin
+  inherited;
+  Control.Perform(TVM_SETBKCOLOR, 0, Color2RGB(Control.Color));
+end;
+
+procedure THITreeViewTrain._work_doFont;
+begin
+  inherited;
+  Control.Perform(TVM_SETTEXTCOLOR, 0, Control.Font.Color);  
+end;
+
+procedure THITreeViewTrain._work_doLinesColor;
+begin
+  _prop_LinesColor := ToInteger(Data);
+  if _prop_LinesColor = clDefault then
+    Control.Perform(TVM_SETLINECOLOR, 0, CLR_DEFAULT)
+  else
+    Control.Perform(TVM_SETLINECOLOR, 0, Color2RGB(_prop_LinesColor)); 
 end;
 
 function THITreeViewTrain.getinterfaceTreeView:PITreeViewTrain; 
@@ -377,6 +409,12 @@ begin
    Control.OnTVBeginDrag := _OnBeginDrag;
    FHash := NewStrListEx;
    inherited;
+   Control.Perform(TVM_SETBKCOLOR, 0, Color2RGB(Control.Color));
+   Control.Perform(TVM_SETTEXTCOLOR, 0, Control.Font.Color);
+   if _prop_LinesColor = clDefault then
+     Control.Perform(TVM_SETLINECOLOR, 0, CLR_DEFAULT)
+   else
+     Control.Perform(TVM_SETLINECOLOR, 0, Color2RGB(_prop_LinesColor)); 
 end;
 
 procedure THITreeViewTrain.setIM(value:IIconsManager);
