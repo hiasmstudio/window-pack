@@ -18,6 +18,7 @@ type
   private
     FMaxColWidth: integer;
     FMinColWidth: integer;
+    FAutoWidthByHeader: boolean;
   public
     _prop_Action: byte;
     _prop_MSTControl: IMSTControl;
@@ -28,8 +29,9 @@ type
     _event_onResult,
     _event_onChangeColLst: THI_Event;
     
-    property _prop_MaxColWidth: integer write FMaxColWidth;
-    property _prop_MinColWidth: integer write FMinColWidth;
+    property _prop_AutoWidthByHeader: boolean write FAutoWidthByHeader;
+    property _prop_MaxColWidth: integer       write FMaxColWidth;
+    property _prop_MinColWidth: integer       write FMinColWidth;
 
     procedure _work_doColAction0(var _Data: TData; Index: word);  // AddCols
     procedure _work_doColAction1(var _Data: TData; Index: word);  // InsertCol
@@ -47,6 +49,7 @@ type
     procedure _var_CountCol(var _Data: TData; Index: word);
     procedure _work_doMaxColWidth(var _Data: TData; Index: word);
     procedure _work_doMinColWidth(var _Data: TData; Index: word);
+    procedure _work_doAutoWidthByHeader(var _Data: TData; Index: word);    
     procedure _var_EndIdxCol(var _Data: TData; Index: word); 
   end;
 
@@ -173,7 +176,7 @@ begin
   sControl := _prop_MSTControl.ctrlpoint;
   FCol := ReadInteger(_Data, _data_Index, _prop_Index);;
   l := sControl.LVOptions;
-  if (sControl.LVColCount <= 0) or (sControl.Count <= 0) or (FCol > sControl.LVColCount - 1) then exit;
+  if (sControl.LVColCount <= 0) or ((sControl.Count <= 0) and not FAutoWidthByHeader) or (FCol > sControl.LVColCount - 1) then exit;
   sControl.BeginUpdate;
     if FCol < 0 then
     begin
@@ -188,8 +191,19 @@ begin
     repeat
       sControl.LVColWidth[Col] := LVSCW_AUTOSIZE;
       if (sControl.LVStyle = lvsDetail) or (sControl.LVStyle = lvsDetailNoHeader) then
-        _Length:= sControl.LVColWidth[Col] + 2 * sControl.Canvas.TextExtent('M').cx
-      else
+	  begin
+        if FAutoWidthByHeader then
+		begin
+          sControl.LVColWidth[Col] := LVSCW_AUTOSIZE_USEHEADER;
+          if Col = (FCol - 1) then		                                                         
+            _Length := sControl.LVColWidth[Col]
+          else
+            _Length := sControl.LVColWidth[Col] + 2 * sControl.Canvas.TextExtent('M').cx;		  
+        end   
+        else
+          _Length := sControl.LVColWidth[Col] + 2 * sControl.Canvas.TextExtent('M').cx;
+	  end
+	  else
       begin   
         Row:= 0;
         _Length:= 0;
@@ -339,6 +353,11 @@ end;
 procedure THIMST_ColAction._work_doMinColWidth;
 begin
   FMinColWidth := ToInteger(_Data);
+end;
+
+procedure THIMST_ColAction._work_doAutoWidthByHeader;
+begin
+  FAutoWidthByHeader := ReadBool(_Data);
 end;
 
 end.
