@@ -82,8 +82,8 @@ begin
 end;
 
 procedure THIAlphaBitmap._work_doCreate;
-var
-  br: HBRUSH;
+//var
+//  br: HBRUSH;
 begin
   With Bmp{$ifndef F_P}^{$endif} do
   begin
@@ -93,13 +93,13 @@ begin
     PixelFormat := pf32bit;
     if not Bmp.Empty then
     begin
-      br := CreateSolidBrush(ReadInteger(_Data, _data_FillColor, _prop_FillColor));
-      SelectObject(Canvas.Handle, br);
-      Rectangle(Canvas.Handle, 0, 0, Width, Height);
-      DeleteObject(br);
-//      Canvas.Brush.Color := ReadInteger(_Data, _data_FillColor, _prop_FillColor);
-//      Canvas.Brush.BrushStyle := bsSolid;
-//      Canvas.FillRect(MakeRect(0,0,Bmp.Width,Bmp.Height));
+//      br := CreateSolidBrush(ReadInteger(_Data, _data_FillColor, _prop_FillColor));
+//      SelectObject(Canvas.Handle, br);
+//      Rectangle(Canvas.Handle, 0, 0, Width, Height);
+//      DeleteObject(br);
+      Canvas.Brush.Color := ReadInteger(_Data, _data_FillColor, _prop_FillColor);
+      Canvas.Brush.BrushStyle := bsSolid;
+      Canvas.FillRect(MakeRect(0,0,Width,Height));
     end;
   end;
 //  bmp.PixelFormat := pf32bit;
