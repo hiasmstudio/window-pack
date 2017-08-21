@@ -30,6 +30,7 @@ type
     procedure _work_doPosition(var _Data:TData; Index:word);
     procedure _var_Data(var _Data:TData; Index:word);
     procedure _var_Position(var _Data:TData; Index:word);
+    procedure _var_Size(var _Data:TData; Index:word);
   end;
 
 implementation
@@ -82,6 +83,14 @@ var st:PStream;
 begin
    st := ReadStream(_Data,_data_Stream);
    if st <> nil then Share.dtInteger(_Data,st.Position)
+   else dtNull(_Data);
+end;
+
+procedure THIDataToFileEx._var_Size;
+var st:PStream;
+begin
+   st := ReadStream(_Data,_data_Stream);
+   if st <> nil then Share.dtInteger(_Data,st.Size)
    else dtNull(_Data);
 end;
 
@@ -174,15 +183,31 @@ begin
 end;
 
 function THIDataToFileEx.dtAnsiString;
+var S:string;
 begin
-   if val = nil then Share.dtString(Result,st.ReadStrZ)
-   else st.WriteStrZ(ToString(val^));
+   dtNull(Result);
+   if val = nil then begin 
+      if st.Position < st.Size then
+         Share.dtString(Result,st.ReadStrZ);
+   end else begin 
+      S := ToString(val^);
+      if st.WriteStrZ(S)=dw(length(S)+1) then 
+         Share.dtInteger(Result,length(S)+1);
+   end;
 end;
 
 function THIDataToFileEx.dtLines;
+var S:string;
 begin
-   if val = nil then Share.dtString(Result,st.ReadStr)
-   else st.WriteStr(ToString(val^)+#13#10);
+   dtNull(Result);
+   if val = nil then begin 
+      if st.Position < st.Size then
+         Share.dtString(Result,st.ReadStr);
+   end else begin 
+      S := ToString(val^);
+      if st.WriteStr(S+#13#10)=dw(length(S)+2) then 
+         Share.dtInteger(Result,length(S)+2);
+   end;
 end;
 
 end.
