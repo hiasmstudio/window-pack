@@ -22,6 +22,7 @@ var   dt: TData;
       mTransform: PTransform;
 begin
    dt := _Data;
+   src := nil;
 TRY
    if not ImgGetDC(_Data) then exit;
    src := ReadBitmap(_Data,_data_SourceBitmap,nil);
