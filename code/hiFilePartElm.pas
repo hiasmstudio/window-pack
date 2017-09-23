@@ -94,8 +94,10 @@ begin
    begin 
      FPart := rparse(FPart, '.');
      FPart := '.' + FPart;
+   end
+   else
+     FPart := '';
      _hi_CreateEvent(_Data, @_event_onPart, FPart);
-   end;
 end;
 
 procedure THIFilePartElm._work_doPart4;  // ext name WOPoint
@@ -110,10 +112,10 @@ begin
      FPart := rparse(FPart, '\');
 
    if Pos('.', FPart) <> 0 then
-   begin 
-     FPart := rparse(FPart, '.');
-     _hi_CreateEvent(_Data, @_event_onPart, FPart);
-   end;
+     FPart := rparse(FPart, '.')
+   else
+     FPart := '';
+   _hi_CreateEvent(_Data, @_event_onPart, FPart);
 end;
 
 procedure THIFilePartElm._work_doPart5;  // short name
@@ -129,12 +131,8 @@ procedure THIFilePartElm._work_doPart6;  // path name WOExt
 begin
    FPart := ReadString(_Data, _data_FileName, '');
    if FPart = '' then exit;
-
-   if Pos('/', FPart) <> 0 then
-     rparse(FPart, '/')
-   else       
-     rparse(FPart, '\');
-   if Pos('.', FPart) <> 0 then  rparse(FPart, '.');
+   if (Copy(FPart, Length(FPart), 1) <> '/') and (Copy(FPart, Length(FPart), 1) <> '\')  then
+     rparse(FPart, '.');
    _hi_CreateEvent(_Data, @_event_onPart, FPart);
 end;
 //=========================================
