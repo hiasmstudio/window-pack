@@ -126,6 +126,7 @@ begin
    _hi_CreateEvent(_Data, @_event_onPart, FPart);
 end;
 
+(*
 //=======Добавил nesco & TAD 13.04.2016 ==========
 procedure THIFilePartElm._work_doPart6;  // path name WOExt
 begin
@@ -133,6 +134,29 @@ begin
    if FPart = '' then exit;
    if (Copy(FPart, Length(FPart), 1) <> '/') and (Copy(FPart, Length(FPart), 1) <> '\')  then
      rparse(FPart, '.');
+   _hi_CreateEvent(_Data, @_event_onPart, FPart);
+end;
+*)
+
+procedure THIFilePartElm._work_doPart6;  // path name WOExt
+var
+ ne: string;
+begin
+   FPart := ReadString(_Data, _data_FileName, '');
+   if FPart = '' then exit;
+
+   if Pos('/', FPart) <> 0 then
+   begin
+	  ne := rparse(FPart, '/');
+	  FPart := FPart + '/';
+   end
+   else
+   begin
+	  ne := rparse(FPart, '\');
+	  FPart := FPart + '\';
+   end;
+   if Pos('.', ne) <> 0 then rparse(ne, '.');
+   FPart := FPart + ne;
    _hi_CreateEvent(_Data, @_event_onPart, FPart);
 end;
 //=========================================
