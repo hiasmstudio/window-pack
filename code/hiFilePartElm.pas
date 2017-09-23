@@ -77,7 +77,7 @@ begin
      FPart := rparse(FPart, '/')
    else
      FPart := rparse(FPart, '\');
-   rparse(FPart, '.');
+   if Pos('.', FPart) <> 0 then rparse(FPart, '.');
    _hi_CreateEvent(_Data, @_event_onPart, FPart);
 end;
 
@@ -86,7 +86,13 @@ begin
    FPart := ReadString(_Data, _data_FileName, '');
    if FPart = '' then exit;
 //   FPart := ExtractFileExt(FPart);
-   FPart := '.' + rparse(FPart, '.');
+   if Pos('/', FPart) <> 0 then
+     FPart := rparse(FPart, '/')
+   else
+     FPart := rparse(FPart, '\');
+   FPart := rparse(FPart, '.');
+   if FPart <> '' then 
+     FPart := '.' + FPart;
    _hi_CreateEvent(_Data, @_event_onPart, FPart);
 end;
 
@@ -96,6 +102,10 @@ begin
    if FPart = '' then exit;
 //   FPart := ExtractFileExt(FPart);
 //   delete(FPart, 1, 1);
+   if Pos('/', FPart) <> 0 then
+     FPart := rparse(FPart, '/')
+   else
+     FPart := rparse(FPart, '\');
    FPart := rparse(FPart, '.');
    _hi_CreateEvent(_Data, @_event_onPart, FPart);
 end;
