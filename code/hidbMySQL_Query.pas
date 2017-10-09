@@ -91,10 +91,13 @@ begin
             Ms.FindFirst;
             oldy := 0;
            end;
-          repeat
+          {repeat
             Ms.FindNext;
             inc(oldy);
-          until y = oldy;
+          until y = oldy;}
+          // ------------ Исправил 3042 09.10.2017 ------------
+          while oldy < y do  begin Ms.FindNext; inc(oldy); end;
+          //
         end;
        dtString(Result,ms.Values[x]);
      end;
